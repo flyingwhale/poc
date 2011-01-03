@@ -2,7 +2,7 @@
 
 class Url extends Resource {
 
-  function setValue (){ 
+  function setValue() {
     return $_SERVER["REQUEST_URI"];
   }
 }

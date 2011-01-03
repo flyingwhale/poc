@@ -1,10 +1,14 @@
 <?php
+  apc_clear_cache();
   include ("../framework/src/autoload.php");
+  
+  $url  = new Url('/dev/pob/test/basic.php');
+  
+  $pob  = new Pob(new ApcCache($url),15);
 
-  $pob  = new Pob();
-  $url  = new Url("asdf");
-  $cond = new Condition();
-  $cond->set($url);
+  //$cond = new Condition();
+  //$cond->set($url);
+  
   
   echo ("AAAAAAAAAAAAAAAAAAAAAAABBBB"); ?>
   sdaf sda
@@ -19,5 +23,8 @@
   BBBBBBBBBBBBBBBBBBBBBBBBBBB
   <?php
   
-  echo "cucc"; ?>
+  echo "cucc"; 
+  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();
+  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();
+
   

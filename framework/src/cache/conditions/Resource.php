@@ -1,6 +1,6 @@
 <?php
 
-abstract class Resource {
+abstract class Resource implements Evaluatable {
 
   var $value;
   var $pattern;
@@ -16,8 +16,9 @@ abstract class Resource {
   
   abstract function setValue();
   
-  function evaluate() {
-    return preg_match($this->pattern, $this->value);
+  function evaluate() {         
+    //return preg_match($this->pattern, $this->value);
+    return ($this->pattern == $this->value);
   }
 
 }

@@ -11,13 +11,14 @@ function __autoload($class_name){
   }
   
   // ./cache directory
-  if($class_name == 'PobCacheInterface'){
+  if($class_name == 'PobCacheInterface' || $class_name == 'ApcCache'
+  || $class_name == 'PobCacheAbstract' ) {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
   
   // ./cache/conditions directory 
-  if($class_name == 'Condition'
-                         || $class_name == 'Resource' || $class_name == 'Url') {
+  if($class_name == 'Evaluatable'|| $class_name == 'Condition' 
+    || $class_name == 'Resource' || $class_name == 'Url') {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.'conditions'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
   

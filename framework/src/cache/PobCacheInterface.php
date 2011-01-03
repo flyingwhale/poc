@@ -1,10 +1,14 @@
 <?php
 interface PobCacheInterface {
   
-  public storeCache ($conditions);
+  public function storeCache ($output, $ttl);
   
-  public fetchCache ($conditions);
+  public function fetchCache ();
   
-  public clearCache ($conditions);
+  public function clearCache ();
+  
+  public function generateKey ();
+  
+  public function checkKey ();
   
 }

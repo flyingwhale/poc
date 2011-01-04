@@ -1,54 +1,84 @@
 <?php
+  
+  function PobcallbackCache($buffer)
+  { 
+    return Pob::PobcallbackCache($buffer);
+  }
 
+  function PobcallbackGenerate($buffer)
+  { 
+    return Pob::PobcallbackGenerate($buffer);
+  }
+  
+  $caches;
+  $ttl;
+  
 class Pob {
   
-  var $caches; 
+
   var $outout;
-  var $ttl;
-  var $buffering;
   
-  function callback($buffer)
-  {
-    for( $i=0; $i<sizeof($this->caches); $i++ ) {
-      if($this->caches[$i]->getEvaluatable()->evaluate()) {
-        $buffer.=' ____CACHED______';
-        $this->caches[$i]->storeCache($buffer,$this->ttl);
+  var $buffering;
+  var $foundMatch;
+  var $level;
+  
+  public static function PobcallbackCache($buffer)
+  { 
+    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+      if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
+        //$buffer.='<br>______CACHED______';
+        $GLOBALS['caches'][$i]->storeCache($buffer,$GLOBALS['ttl']);
       }
     }
-    return ($buffer);
+    return (
+      //' -------'.'generating'.' -------<br><br>'.''.
+      $buffer);
+  }
+
+  public static function PobcallbackGenerate($buffer)
+  { 
+    return (//' -------'.'cachedVersion'.' -------<br><br>'.''.
+      $buffer);
   }
   
   function __construct(PobCacheInterface $cache,$ttl) {
+ 
     $this->start = microtime();
-    $this->caches[] = $cache;
-    $this->ttl = $ttl;
+    $GLOBALS['caches'][] = $cache;
+    $GLOBALS['ttl'] = $ttl;
     
-    for( $i=0; $i<sizeof($this->caches); $i++ ) {
 
-      if($this->caches[$i]->getEvaluatable()->evaluate()) {
-        $this->output = $this->caches[$i]->fetchCache();
+    
+    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+      if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
+        $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
-          ob_start();
+          echo"AAAAA";
+          ob_start('PobcallbackGenerate');
           echo($this->output);
           die();
         }
       }
     }
     $this->buffering=true;
-    ob_start('SELF::callback');
+
+    ob_start('PobcallbackCache');
+
   }
 
   function __destruct() {
-    echo('<br>'.(microtime() - $this->start)*1000);
+      echo('<br>'.(microtime() - $this->start)*1000);
+      
+      if($this->buffering){
+        echo(' generated<br>');
+      }
+      else{
+        echo(' cached<br>');
+      }
+    ob_end_flush();
     
-    if($this->buffering){
-      echo(' generated');
-    }
-    else{
-      echo(' cached');
-    }
-    ob_flush();
   }
+  
 
 }
 

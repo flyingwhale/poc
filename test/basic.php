@@ -4,7 +4,9 @@
   
   $url  = new Url('/dev/pob/test/basic.php');
   
-  $pob  = new Pob(new ApcCache($url),15);
+  $pob  = new Pob(new ApcCache($url),5);
+  
+
 
   //$cond = new Condition();
   //$cond->set($url);
@@ -24,7 +26,5 @@
   <?php
   
   echo "cucc"; 
-  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();
-  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();  phpinfo();
+ // phpinfo();
 
-  

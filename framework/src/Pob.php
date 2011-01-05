@@ -26,19 +26,15 @@ class Pob {
   { 
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
-        //$buffer.='<br>______CACHED______';
         $GLOBALS['caches'][$i]->storeCache($buffer,$GLOBALS['ttl']);
       }
     }
-    return (
-      //' -------'.'generating'.' -------<br><br>'.''.
-      $buffer);
+    return ($buffer);
   }
 
   public static function PobcallbackGenerate($buffer)
   { 
-    return (//' -------'.'cachedVersion'.' -------<br><br>'.''.
-      $buffer);
+    return ($buffer);
   }
   
   function __construct(PobCacheInterface $cache,$ttl) {
@@ -47,18 +43,15 @@ class Pob {
     $GLOBALS['caches'][] = $cache;
     $GLOBALS['ttl'] = $ttl;
     
-
-    
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
-          echo"AAAAA";
           ob_start('PobcallbackGenerate');
           echo($this->output);
           die();
         }
-      }
+      } 
     }
     $this->buffering=true;
 

@@ -12,7 +12,8 @@ function __autoload($class_name){
   
   // ./cache directory
   if($class_name == 'PobCacheInterface' || $class_name == 'ApcCache'
-  || $class_name == 'PobCacheAbstract' ) {
+  || $class_name == 'PobCacheAbstract' 
+  || $class_name == 'PobCacheSpecificInterface') {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
   

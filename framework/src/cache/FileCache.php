@@ -5,7 +5,7 @@ class FileCache extends PobCacheAbstract {
   var $file;
   var $fileTtl;
   
-  function __construct(Evaluatable $evaluatable, $directory){
+  function __construct(Evaluatable $evaluatable, $directory) {
     parent::__construct($evaluatable);
     $this->directory = $directory;
     $this->file = $directory.'POB_CACHE#'.$this->key;
@@ -26,7 +26,7 @@ class FileCache extends PobCacheAbstract {
       unlink($this->file);
     }
   }
-  
+
   public function cacheSpecificStore($output, $ttl) {
     $fp = fopen($this->file, 'w');
     fwrite($fp, $output);
@@ -36,16 +36,13 @@ class FileCache extends PobCacheAbstract {
     
   }
 
-  public function cacheSpecificCheck() {
-    return file_exists($this->file);
-  }
   
   public function writeTtl($ttl){
     $fp = fopen($this->fileTtl, 'w');
     fwrite($fp, time()+$ttl);
     fclose($fp);
   }
-  
+
   public function checkTtl(){
     if(file_exists($this->fileTtl)){
       $handle = fopen($this->fileTtl, "r");

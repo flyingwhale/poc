@@ -8,7 +8,6 @@ interface PobCacheSpecificInterface {
   
   public function cacheSpecificStore( $output, $ttl);
   
-  public function cacheSpecificCheck();
   
 }
 

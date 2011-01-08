@@ -4,7 +4,7 @@
   
   $url  = new Url('/dev/pob/test/basic2.php');
   
-  $pob  = new Pob(new FileCache($url,'/tmp/'),100000);
+  $pob  = new Pob(new FileCache($url,'/tmp/'),5);
 
   
 ?>

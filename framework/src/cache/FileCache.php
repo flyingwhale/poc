@@ -1,23 +1,25 @@
 <?php
 class FileCache extends PobCacheAbstract {
 
+  const KEY_PREFIX = 'POB_CACHE#';
+  const TTL_PREFIX = 'POB_CACHE_TTL#';
+  
   var $directory;
   var $file;
   var $fileTtl;
+
   
   function __construct(Evaluatable $evaluatable, $directory) {
     parent::__construct($evaluatable);
     $this->directory = $directory;
-    $this->file = $directory.'POB_CACHE#'.$this->key;
-    $this->fileTtl = $directory.'POB_CACHE_TTL#'.$this->key;
+    $this->file = $directory.self::KEY_PREFIX.$this->key;
+    $this->fileTtl = $directory.'self::TTL_PREFIX'.$this->key;
   }
   
   public function cacheSpecificFetch() {
     if($this->checkTtl()) {
-      if($this->cacheSpecificCheck()) {
-        $handle = fopen($this->file, "r");
-        return fread($handle, filesize($this->file));
-      }
+      $handle = fopen($this->file, "r");
+      return fread($handle, filesize($this->file));
     }
   }
 

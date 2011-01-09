@@ -1,35 +1,37 @@
 <?php
 
-abstract class PobCacheAbstract implements PobCacheInterface,
-                                                     PobCacheSpecificInterface {
+class PobCache implements PobCacheInterface {
   
   var $evaluatable;
   var $key;
+  var $cache;
   
-  function __construct(Evaluatable $evaluatable){
+  function __construct(Evaluatable $evaluatable,
+                                             PobCacheSpecificInterface $cache) {
     $this->evaluatable = $evaluatable;
     $this->key = $this->generateKey();
+    $this->cache = $cache;
   }
   
   function getEvaluatable() {
     return $this->evaluatable;
   }
   
-  public function storeCache ($output, $ttl) {
+  public function storeCache ($output) {
     if ($this->evaluatable->evaluate()) {
-       $this->cacheSpecificStore($output, $ttl);
+       $this->cache->cacheSpecificStore($this->key, $output);
     }
   }
 
   public function fetchCache () {
     if($this->evaluatable->evaluate()){
-      return $this->cacheSpecificFetch();
+      return $this->cache->cacheSpecificFetch($this->key);
     }
   }
 
   public function clearCache () {
     if($this->evaluatable->evaluate()){
-      $this->cacheSpecificClear();
+      $this->cache->cacheSpecificClear();
     }
   }
 
@@ -37,9 +39,10 @@ abstract class PobCacheAbstract implements PobCacheInterface,
     $key=var_export($this->evaluatable,true);
     return md5($key);
   }
-
-  public function checkKey () {
-      return($this->cacheSpecificCheck());
+  
+  public function getCache() {
+    return $this->cache;
   }
+
   
 }

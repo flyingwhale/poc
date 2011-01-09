@@ -1,5 +1,5 @@
 <?php
-class FileCache extends PobCacheAbstract {
+class FileCache extends AbstractPobCacheSpecific {
 
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';
@@ -9,55 +9,54 @@ class FileCache extends PobCacheAbstract {
   var $fileTtl;
 
   
-  function __construct(Evaluatable $evaluatable, $directory) {
-    parent::__construct($evaluatable);
+  function __construct($ttl, $directory) {
     $this->directory = $directory;
-    $this->file = $directory.self::KEY_PREFIX.$this->key;
-    $this->fileTtl = $directory.'self::TTL_PREFIX'.$this->key;
+    $this->file = $directory.self::KEY_PREFIX;
+    $this->fileTtl = $directory.self::TTL_PREFIX;
+    $this->ttl = $ttl;
   }
   
-  public function cacheSpecificFetch() {
-    if($this->checkTtl()) {
-      $handle = fopen($this->file, "r");
-      return fread($handle, filesize($this->file));
+  public function cacheSpecificFetch($key) {
+    if($this->checkTtl($key)) {
+      $handle = fopen($this->file.$key, "r");
+      return fread($handle, filesize($this->file.$key));
     }
   }
 
-  public function cacheSpecificClear() {
+  public function cacheSpecificClear($key) {
     if($this->cacheSpecificCheck()) {
-      unlink($this->file);
+      unlink($this->file.$key);
+      unlink($this->fileTtl.$key);
     }
   }
 
-  public function cacheSpecificStore($output, $ttl) {
-    $fp = fopen($this->file, 'w');
+  public function cacheSpecificStore($key,$output) {
+    $fp = fopen($this->file.$key, 'w');
     fwrite($fp, $output);
     fclose($fp);
 
-    $this->writeTtl($ttl);
+    $this->writeTtl($this->ttl,$key);
     
   }
 
   
-  public function writeTtl($ttl){
-    $fp = fopen($this->fileTtl, 'w');
+  public function writeTtl($ttl,$key){
+    $fp = fopen($this->fileTtl.$key, 'w');
     fwrite($fp, time()+$ttl);
     fclose($fp);
   }
 
-  public function checkTtl(){
-    if(file_exists($this->fileTtl)){
-      $handle = fopen($this->fileTtl, "r");
-      $ttl=fread($handle, filesize($this->file));
+  public function checkTtl($key){
+    if(file_exists($this->fileTtl.$key)){
+      $handle = fopen($this->fileTtl.$key, "r");
+      $ttl=fread($handle, filesize($this->file.$key));
       if((int) $ttl>=time()){
         return true;
       } else {
-        unlink($this->file);
-        unlink($this->fileTtl);
+        unlink($this->file.$key);
+        unlink($this->fileTtl.$key);
       }
     }
     else return false;
   }
-  
-
 }

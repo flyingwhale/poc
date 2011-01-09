@@ -2,11 +2,11 @@
 
 interface PobCacheSpecificInterface {
   
-  public function cacheSpecificFetch();
+  public function cacheSpecificFetch($key);
 
-  public function cacheSpecificClear();
+  public function cacheSpecificClear($key);
   
-  public function cacheSpecificStore( $output, $ttl);
+  public function cacheSpecificStore($key, $output);
   
   
 }

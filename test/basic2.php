@@ -3,8 +3,7 @@
   include ("../framework/src/autoload.php");
   
   $url  = new Url('/dev/pob/test/basic2.php');
-  
-  $pob  = new Pob(new FileCache($url,'/tmp/'),5);
+  $pob  = new Pob(new PobCache($url,new FileCache(5,'/tmp/')));
 
   
 ?>

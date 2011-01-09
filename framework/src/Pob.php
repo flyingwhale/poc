@@ -11,7 +11,6 @@
   }
   
   $caches;
-  $ttl;
   
 class Pob {
   
@@ -21,12 +20,13 @@ class Pob {
   var $buffering;
   var $foundMatch;
   var $level;
+  var $start;
   
   public static function PobcallbackCache($buffer)
   { 
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
-        $GLOBALS['caches'][$i]->storeCache($buffer,$GLOBALS['ttl']);
+        $GLOBALS['caches'][$i]->storeCache($buffer);
       }
     }
     return ($buffer);
@@ -37,11 +37,10 @@ class Pob {
     return ($buffer);
   }
   
-  function __construct(PobCacheInterface $cache,$ttl) {
+  function __construct(PobCacheInterface $cache) {
  
     $this->start = microtime();
     $GLOBALS['caches'][] = $cache;
-    $GLOBALS['ttl'] = $ttl;
     
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {

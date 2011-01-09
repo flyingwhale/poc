@@ -1,28 +1,29 @@
 <?php
-class MemcachedCache extends PobCacheAbstract {
+class MemcachedCache extends AbstractPobCacheSpecific {
   
   var $memcache;
   var $compression=false;
   var $currentResult;
   
-  function __construct(Evaluatable $evaluatable, $server, $port = 11211) {
-    parent::__construct($evaluatable);
-    $this->memcache = new Memcache;
+  
+  function __construct($ttl, $server, $port = 11211) {
+    $this->memcache = new Memcache();
     $this->memcache->connect('localhost', $port) or die ('Could not connect to' 
                                                     + ' the memcached server.');
+    $this->ttl = $ttl;
   }
 
-  public function cacheSpecificFetch() {
-    return $this->memcache->get($this->key);
+  public function cacheSpecificFetch($key) {
+    return $this->memcache->get($key);
   }
 
-  public function cacheSpecificClear() {
-    $this->memcache->delete($this->key);
+  public function cacheSpecificClear($key) {
+    $this->memcache->delete($key);
   }
   
-  public function cacheSpecificStore($output, $ttl) {
+  public function cacheSpecificStore($key, $output) {
     //apc_add ($this->key, $output, $ttl);
-    $this->memcache->set($this->key, $output, $this->compression, $ttl);
+    $this->memcache->set($key, $output, $this->compression, $this->ttl);
   }
 
 }

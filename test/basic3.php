@@ -4,7 +4,7 @@
   
   $url  = new Url('/dev/pob/test/basic3.php');
   
-  $pob  = new Pob(new MemcachedCache($url,'localhost'),5);
+  $pob  = new Pob(new PobCache($url,new MemcachedCache(5)));
   
 echo'
 

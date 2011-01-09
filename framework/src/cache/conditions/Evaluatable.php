@@ -1,4 +1,5 @@
 <?php
-  interface Evaluatable {
-    function evaluate();
-  }
+interface Evaluatable {
+  function evaluate();
+  function getKey();
+}

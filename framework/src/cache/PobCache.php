@@ -2,47 +2,36 @@
 
 class PobCache implements PobCacheInterface {
   
-  var $evaluatable;
-  var $key;
-  var $cache;
+
+  var $specificCache;
   
-  function __construct(Evaluatable $evaluatable,
-                                             PobCacheSpecificInterface $cache) {
-    $this->evaluatable = $evaluatable;
-    $this->key = $this->generateKey();
-    $this->cache = $cache;
+  function __construct(AbstractPobCacheSpecific $specificCache) {
+    $this->specificCache = $specificCache;
   }
   
-  function getEvaluatable() {
-    return $this->evaluatable;
-  }
   
   public function storeCache ($output) {
-    if ($this->evaluatable->evaluate()) {
-       $this->cache->cacheSpecificStore($this->key, $output);
+    if ($this->specificCache->getEvaluatable()->evaluate()) {
+       $this->specificCache->cacheSpecificStore(
+                     $this->specificCache->getEvaluatable()->getKey(), $output);
     }
   }
 
   public function fetchCache () {
-    if($this->evaluatable->evaluate()){
-      return $this->cache->cacheSpecificFetch($this->key);
+    if($this->specificCache->getEvaluatable()->evaluate()){
+      return $this->specificCache->cacheSpecificFetch(
+                              $this->specificCache->getEvaluatable()->getKey());
     }
   }
 
   public function clearCache () {
-    if($this->evaluatable->evaluate()){
-      $this->cache->cacheSpecificClear();
+    if($this->specificCache->getEvaluatable()->evaluate()){
+      $this->specificCache->cacheSpecificClear();
     }
   }
 
-  public function generateKey () {
-    $key=var_export($this->evaluatable,true);
-    return md5($key);
-  }
-  
-  public function getCache() {
-    return $this->cache;
+  public function getSpecificCache() {
+    return $this->specificCache;
   }
 
-  
 }

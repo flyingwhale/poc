@@ -1,8 +1,9 @@
 <?php
 class ApcCache extends AbstractPobCacheSpecific {
   
-  function __construct($ttl) {
+  function __construct(Evaluatable $evaluatable,$ttl) {
     $this->ttl = $ttl;
+    $this->evaluatable = $evaluatable;
   }
   
   public function cacheSpecificFetch($key) {
@@ -14,7 +15,6 @@ class ApcCache extends AbstractPobCacheSpecific {
   }
   
   public function cacheSpecificStore($key, $output) {
-    echo($this->ttl).'ZIZIZIZIZIZIZIZI';
     apc_add ($key, $output, $this->ttl);
   }
 

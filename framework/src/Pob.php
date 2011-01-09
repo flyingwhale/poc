@@ -1,31 +1,29 @@
 <?php
-  
-  function PobcallbackCache($buffer)
-  { 
+
+  function PobcallbackCache($buffer) {
     return Pob::PobcallbackCache($buffer);
   }
 
   function PobcallbackGenerate($buffer)
-  { 
+  {
     return Pob::PobcallbackGenerate($buffer);
   }
-  
+
   $caches;
-  
+
 class Pob {
-  
 
   var $outout;
-  
+
   var $buffering;
   var $foundMatch;
   var $level;
   var $start;
-  
+
   public static function PobcallbackCache($buffer)
-  { 
+  {
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
         $GLOBALS['caches'][$i]->storeCache($buffer);
       }
     }
@@ -33,24 +31,23 @@ class Pob {
   }
 
   public static function PobcallbackGenerate($buffer)
-  { 
+  {
     return ($buffer);
   }
-  
+
   function __construct(PobCacheInterface $cache) {
- 
+
     $this->start = microtime();
     $GLOBALS['caches'][] = $cache;
-    
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getEvaluatable()->evaluate()) {
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
           ob_start('PobcallbackGenerate');
           echo($this->output);
           die();
         }
-      } 
+      }
     }
     $this->buffering=true;
 
@@ -60,7 +57,7 @@ class Pob {
 
   function __destruct() {
       echo('<br>'.(microtime() - $this->start)*1000);
-      
+
       if($this->buffering){
         echo(' generated<br>');
       }
@@ -68,9 +65,6 @@ class Pob {
         echo(' cached<br>');
       }
     ob_end_flush();
-    
   }
-  
-
 }
 

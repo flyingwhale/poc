@@ -56,7 +56,7 @@ class Pob {
   }
 
   function __destruct() {
-      echo('<br>'.(microtime() - $this->start)*1000);
+      echo('<br>'.(microtime() - $this->start));
 
       if($this->buffering){
         echo(' generated<br>');

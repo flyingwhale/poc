@@ -1,5 +1,8 @@
 <?php
 
-echo'Lorem ipsum dolor sit amet,'
+  include('lib/LoremIpsum.class.php');
+  $generator = new LoremIpsumGenerator;
+
+  echo $generator->getContent(300, 'plain');
 ?>
- consectetur adipiscing elit. Donec at velit at lectus pulvinar malesuada. Nunc vestibulum libero vitae nisl feugiat vitae egestas velit lacinia. Phasellus nibh velit, mollis nec hendrerit et, tincidunt id risus. Nam id lectus et felis interdum auctor. Nam vel magna ornare nulla mattis interdum sit amet vel quam. Etiam condimentum lacinia justo sit amet accumsan. Vestibulum ornare sagittis diam vitae adipiscing. Sed nec purus tellus. Morbi a dolor leo. Curabitur quis libero in nibh accumsan tempor. Duis at nibh orci, non tincidunt mauris. Nunc ornare pulvinar enim, quis condimentum tortor fringilla vitae. In condimentum tempus dolor, a blandit diam volutpat nec. Nulla quis lectus vitae risus dapibus tempus. Pellentesque consequat ante risus. Aenean vitae quam nunc.
+ Consectetur adipiscing elit.

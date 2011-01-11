@@ -1,9 +1,9 @@
 <?php
   apc_clear_cache();
   include ('../framework/src/autoload.php');
+  
+  $flexRes = new FlexResource('/dev/pob/test/basic3.php','$_SERVER["REQUEST_URI"]');
 
-  $url  = new Url('/dev/pob/test/basic3.php');
-
-  $pob  = new Pob(new PobCache(new MemcachedCache($url,5,'localhost')));
+  $pob  = new Pob(new PobCache(new MemcachedCache($flexRes,5,'localhost')));
 
   include('text.php');

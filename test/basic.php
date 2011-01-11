@@ -2,8 +2,8 @@
   
   include ("../framework/src/autoload.php");
 
-  $url  = new Url('/dev/pob/test/basic.php');
+  $flexRes = new FlexResource('/dev/pob/test/basic.php','$_SERVER["REQUEST_URI"]');
 
-  $pob  = new Pob(new PobCache(new ApcCache($url,22)));
+  $pob  = new Pob(new PobCache(new ApcCache($flexRes,5)));
 
   include('text.php');

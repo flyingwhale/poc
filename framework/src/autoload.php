@@ -21,9 +21,10 @@ function __autoload($class_name){
   }
   
   // ./cache/conditions directory 
-  if($class_name == 'Evaluatable'|| $class_name == 'Condition' 
-    || $class_name == 'Resource' || $class_name == 'Url') {
-    include_once($base.'cache'.DIRECTORY_SEPARATOR.'conditions'.DIRECTORY_SEPARATOR.$class_name.'.php');
+  if($class_name == 'Evaluatable' || $class_name == 'Condition' 
+     || $class_name == 'Resource' || $class_name == 'FlexResource') {
+    include_once($base.'cache'.DIRECTORY_SEPARATOR.'conditions'
+                                       .DIRECTORY_SEPARATOR.$class_name.'.php');
   }
   
 }

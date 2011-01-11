@@ -55,15 +55,17 @@ class Pob {
 
   }
 
-  function __destruct() {
-      echo('<br>'.(microtime() - $this->start));
-
-      if($this->buffering){
-        echo(' generated<br>');
+   function __destruct() {
+     echo('<br>This page has been ');
+     if($this->buffering){
+        echo(' <b> generated </b>');
       }
       else{
-        echo(' cached<br>');
+        echo(' fetched from the <b>cache</b> within ');
       }
+
+      echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
+
     ob_end_flush();
   }
 }

@@ -40,11 +40,14 @@ abstract class Resource implements Evaluatable {
     if($this->opertation == self::NOTNULL) {
       //TODO: implement      
     }
-    
   }
 
   function getKey() {
-    return md5(var_export($this,true));
+    $vars = get_object_vars($this);
+    foreach ($vars as $name=>$val) {
+      $str .= $name.$val; 
+    }
+    return md5($str);
   }
-
+  
 }

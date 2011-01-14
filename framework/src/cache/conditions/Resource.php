@@ -4,18 +4,19 @@ abstract class Resource implements Evaluatable {
 
   const EQUALATION = 1;
   const PREGMATCH = 2;
-  const BEGINS = 3;
-  const ISNULL = 3;
-  const NOTNULL = 3;
+  const CONTAINS = 3;
 
   var $value;
   var $pattern;
   var $operation;
+  var $key;
 
   function __construct ($pattern, $operation=self::EQUALATION) {
     $this->pattern = $pattern;
     $this->value = $this->setValue();
     $this->opertation = $operation;
+    $this->setKey();
+    echo $this->value.'AAAAAAAAAAAAAAAAAAAAAAAAAA';
   }
 
   function getValue() {
@@ -29,25 +30,25 @@ abstract class Resource implements Evaluatable {
       return ($this->pattern == $this->value);
     }
     if($this->opertation == self::PREGMATCH) {
-      //TODO: implement
+     return preg_match($this->pattern, $this->value);
     }
-    if($this->opertation == self::BEGINS) {
-      //TODO: implement
-    }
-    if($this->opertation == self::ISNULL) {
-      //TODO: implement
-    }
-    if($this->opertation == self::NOTNULL) {
-      //TODO: implement      
+    if($this->opertation == self::CONTAINS) {
+      //echo "<br>$this->value<br><br>";
+      return preg_match('/'.$this->pattern.'/', $this->value);
     }
   }
 
   function getKey() {
+    //echo $this->key;
+    return $this->key;
+  }
+  function setKey() {
     $vars = get_object_vars($this);
+    $str='';
     foreach ($vars as $name=>$val) {
       $str .= $name.$val; 
     }
-    return md5($str);
+    $this->key = md5($str);
   }
   
 }

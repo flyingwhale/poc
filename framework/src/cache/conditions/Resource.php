@@ -1,6 +1,6 @@
 <?php
 
-abstract class Resource implements Evaluatable {
+abstract class Resource extends Evaluatable {
 
   const EQUALATION = 1;
   const PREGMATCH = 2;

@@ -1,6 +1,6 @@
 <?php
 
-class Condition implements Evaluatable{
+class Condition extends Evaluatable {
 
   var $conditonTree;
 

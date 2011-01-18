@@ -18,7 +18,6 @@ class Condition implements Evaluatable{
   }
 
   function set (Evaluatable $evaluatable) {
-    //$this->conditonTree = array();
     $this->conditonTree[] = $evaluatable;
   }
 

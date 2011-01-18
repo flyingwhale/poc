@@ -6,8 +6,6 @@ class FlexResource extends Resource {
   
   function __construct ($pattern, $flexResource, $operation=self::EQUALATION) {
     parent::__construct($pattern, $operation);
-    $this->pattern = $pattern;
-    $this->opertation = $operation;
     $this->flexResource = $flexResource;
     $this->value = $this->setValue();
   }

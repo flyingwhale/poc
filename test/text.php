@@ -6,3 +6,4 @@
   echo $generator->getContent(600, 'plain');
 ?>
  Consectetur adipiscing elit.
+ 

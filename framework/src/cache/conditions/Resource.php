@@ -1,19 +1,9 @@
 <?php
+abstract class Resource extends Evaluatable implements SelfEvaluateable {
 
-abstract class Resource extends Evaluatable {
-
-  const EQUALATION = 1;
-  const PREGMATCH = 2;
-  const NOT_EMPTY=3;
-  const _EMPTY=4;
-  const _SET=5;
-  const NOT_SET=6;
-
-  var $value;
-  var $pattern;
   var $operation;
   var $key;
-
+  var $variablesArray;
   function __construct ($pattern, $operation=self::EQUALATION) {
     parent::__construct();
     $this->pattern = $pattern;
@@ -22,11 +12,6 @@ abstract class Resource extends Evaluatable {
     $this->setKey();
   }
 
-  function getValue() {
-    return $this->value;
-  }
-
-  abstract function setValue();
 
   function selfEvaluate() {
 

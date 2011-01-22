@@ -9,10 +9,6 @@
   //->_or(new FlexResource('|^php$|','$_SERVER["REQUEST_URI"]', Resource::PREGMATCH))
   ;
   
-  echo'<pre>';
-  var_dump($flexRes);
-  echo'</pre>';
-  
   $pob  = new Pob(new PobCache(new ApcCache($flexRes,5)));
 
   include('text.php');

@@ -35,9 +35,7 @@ class FileCache extends AbstractPobCacheSpecific {
     $fp = fopen($this->file.$key, 'w');
     fwrite($fp, $output);
     fclose($fp);
-
     $this->writeTtl($this->ttl,$key);
-    
   }
 
   

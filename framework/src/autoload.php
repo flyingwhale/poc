@@ -16,13 +16,18 @@ function __autoload($class_name){
   || $class_name == 'PobCacheSpecificInterface' 
   || $class_name == 'FileCache'|| $class_name == 'MemcachedCache'
   || $class_name == 'AbstractPobCacheSpecific'
+
   ) {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
   
   // ./cache/conditions directory 
   if($class_name == 'Evaluatable' || $class_name == 'Resource' 
-                                             || $class_name == 'FlexResource') {
+                     || $class_name == 'HasPattern' || $class_name == 'HasValue'
+                || $class_name == 'FlexResource' || $class_name == 'FlexPattern'
+                                            || $class_name == 'SelfEvaluateable'
+                
+                ) {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.'conditions'
                                        .DIRECTORY_SEPARATOR.$class_name.'.php');
   }

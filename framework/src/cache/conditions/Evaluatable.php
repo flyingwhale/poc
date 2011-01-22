@@ -1,5 +1,12 @@
 <?php
-abstract class Evaluatable {
+abstract class Evaluatable extends HasPattern{
+  
+  const EQUALATION = 1;
+  const PREGMATCH = 2;
+  const NOT_EMPTY=3;
+  const _EMPTY=4;
+  const _SET=5;
+  const NOT_SET=6;
   
   var $negation = false;
   
@@ -27,8 +34,6 @@ abstract class Evaluatable {
     $this->conditonArray[] = $evaluatable;
     return $this;
   }
-  
-  abstract function selfEvaluate();
   
   function evaluate() {
     $eval = null;

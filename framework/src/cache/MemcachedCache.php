@@ -6,7 +6,7 @@ class MemcachedCache extends AbstractPobCacheSpecific {
   var $currentResult;
   
   
-  function __construct(Evaluatable $evaluatable, $ttl, $server, $port = 11211) {
+  function __construct(Evaluateable $evaluatable, $ttl, $server, $port = 11211) {
     $this->memcache = new Memcache();
     $this->memcache->connect($server, $port) or die ('Could not connect to' 
                                                     + ' the memcached server.');

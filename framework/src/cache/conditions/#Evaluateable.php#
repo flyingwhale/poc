@@ -1,5 +1,5 @@
 <?php
-abstract class Evaluatable extends HasPattern{
+abstract class Evaluateable extends HasValue{
   
   const EQUALATION = 1;
   const PREGMATCH = 2;
@@ -7,29 +7,35 @@ abstract class Evaluatable extends HasPattern{
   const _EMPTY=4;
   const _SET=5;
   const NOT_SET=6;
-  
-  var $negation = false;
-  
-  var $conditonArray = array();
 
-  function __construct()  {
+  var $negation = false;
+  var $conditonArray = array();
+  var $operation;
+  var $key;
+  var $variablesArray;
+  protected $pattern;
+
+  function __construct($pattern, $operation=self::EQUALATION)  {
     $this->conditonArray[] = $this;
-    return $this;
+    $this->pattern = $pattern;
+    $this->value = $this->setValue();
+    $this->opertation = $operation;
+    $this->setKey();
   }
 
-  function _and (Evaluatable $evaluatable) {
+  function _and (Evaluateable $evaluatable) {
     $this->conditonArray[] = 'and';
     $this->conditonArray[] = $evaluatable;
     return $this;
   }
 
-  function _or (Evaluatable $evaluatable) {
+  function _or (Evaluateable $evaluatable) {
     $this->conditonArray[] = 'or';
     $this->conditonArray[] = $evaluatable;
     return $this;
   }
 
-  function _xor (Evaluatable $evaluatable) {
+  function _xor (Evaluateable $evaluatable) {
     $this->conditonArray[] = 'xor';
     $this->conditonArray[] = $evaluatable;
     return $this;
@@ -77,4 +83,30 @@ abstract class Evaluatable extends HasPattern{
       return $object->evaluate();
     }
   }
+  
+  function selfEvaluate() {
+
+    if($this->opertation == self::EQUALATION) {
+      return ($this->pattern == $this->value);
+    }
+
+    if($this->opertation == self::PREGMATCH) {
+     return preg_match($this->pattern, $this->value);
+    }
+  }
+
+  function getKey() {
+    return $this->key;
+  }
+  
+  function setKey() {
+    $vars = get_object_vars($this);
+    $str='';
+    foreach ($vars as $name=>$val) {
+      $str .= $name.$val; 
+    }
+    $this->key = md5($str);
+  }
+
+  
 }

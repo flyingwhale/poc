@@ -9,7 +9,7 @@ class FileCache extends AbstractPobCacheSpecific {
   var $fileTtl;
 
   
-  function __construct(Evaluatable $evaluatable, $ttl, $directory) {
+  function __construct(Evaluateable $evaluatable, $ttl, $directory) {
     $this->directory = $directory;
     $this->file = $directory.self::KEY_PREFIX;
     $this->fileTtl = $directory.self::TTL_PREFIX;

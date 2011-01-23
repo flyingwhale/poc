@@ -1,7 +1,7 @@
 <?php
 class ApcCache extends AbstractPobCacheSpecific {
   
-  function __construct(Evaluatable $evaluatable,$ttl) {
+  function __construct(Evaluateable $evaluatable,$ttl) {
     $this->ttl = $ttl;
     $this->evaluatable = $evaluatable;
   }

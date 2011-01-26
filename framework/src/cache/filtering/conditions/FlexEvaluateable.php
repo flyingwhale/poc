@@ -11,11 +11,7 @@ class FlexEvaluateable extends Evaluateable {
     $this->value = $this->setValue();
   }
 
-  function setValueDescription($value) {
-  }
-
   function setValue() {
     return eval("return $this->flexResource;");
   }
-
 }

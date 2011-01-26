@@ -1,5 +1,5 @@
 <?php
-abstract class HasValue {
+abstract class HasValue implements ToString{
   
   protected $value;
   
@@ -7,14 +7,22 @@ abstract class HasValue {
 
   abstract function setValue();
 
-  abstract function setValueDescription($value);
+  function setValueDescription($value) {
+    $this->valueDestription = $value;
+  }
 
   function getValue() {
     return $this->value;
   }
+  
   function getValueDescription() {
     return $this->valueDestription;
   }
-    
+
+  function toString() {
+    return serialize($this);
+  }
+
+  abstract function selfEvaluate();
 }
 ?>

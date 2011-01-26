@@ -1,18 +1,15 @@
 <?php
-abstract class Evaluateable extends HasValue{
+abstract class Evaluateable extends HasValue {
   
-  const EQUALATION = 1;
-  const PREGMATCH = 2;
-  const NOT_EMPTY=3;
-  const _EMPTY=4;
-  const _SET=5;
-  const NOT_SET=6;
+  const OP_EQUALATION = 1;
+  const OP_PREGMATCH = 2;
 
   var $negation = false;
   var $conditonArray = array();
   var $operation;
   var $key;
   var $variablesArray;
+  
   protected $pattern;
 
   function __construct($pattern, $operation=self::EQUALATION)  {
@@ -23,21 +20,24 @@ abstract class Evaluateable extends HasValue{
     $this->setKey();
   }
 
-  function _and (Evaluateable $evaluatable) {
+  function _and (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'and';
-    $this->conditonArray[] = $evaluatable;
+    $this->conditonArray[] = $evaluateable;
+    $this->setKey();
     return $this;
   }
 
-  function _or (Evaluateable $evaluatable) {
+  function _or (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'or';
-    $this->conditonArray[] = $evaluatable;
+    $this->conditonArray[] = $evaluateable;
+    $this->setKey();
     return $this;
   }
 
-  function _xor (Evaluateable $evaluatable) {
+  function _xor (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'xor';
-    $this->conditonArray[] = $evaluatable;
+    $this->conditonArray[] = $evaluateable;
+    $this->setKey();
     return $this;
   }
   
@@ -85,14 +85,14 @@ abstract class Evaluateable extends HasValue{
   }
   
   function selfEvaluate() {
-
-    if($this->opertation == self::EQUALATION) {
+    if($this->opertation == self::OP_EQUALATION) {
       return ($this->pattern == $this->value);
     }
 
-    if($this->opertation == self::PREGMATCH) {
-     return preg_match($this->pattern, $this->value);
+    elseif($this->opertation == self::OP_PREGMATCH) {
+      return preg_match($this->pattern, $this->value);
     }
+    
   }
 
   function getKey() {
@@ -100,13 +100,14 @@ abstract class Evaluateable extends HasValue{
   }
   
   function setKey() {
-    $vars = get_object_vars($this);
-    $str='';
-    foreach ($vars as $name=>$val) {
-      $str .= $name.$val; 
-    }
-    $this->key = md5($str);
+    $this->key = md5($this->toString());
+  } 
+  
+  function addVariable(FlexVariable $var) {
+    $this->variablesArray[] = $var;
+    $this->setKey();
   }
-
+  
   
 }
+

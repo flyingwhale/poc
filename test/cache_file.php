@@ -1,5 +1,5 @@
 <?php
-  apc_clear_cache();
+
   include ("../framework/src/autoload.php");
 
   $flexEval = new FlexEvaluateable

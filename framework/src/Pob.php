@@ -35,11 +35,16 @@ class Pob {
     return ($buffer);
   }
 
-  function __construct(PobCacheInterface $cache) {
-
+  function __construct(PobCacheInterface $cache=null) {
     $this->start = microtime();
-    $GLOBALS['caches'][] = $cache;
-    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+    if($cache != null) {
+      $this->addCache($cache);
+      $this->start();
+    }
+  }
+
+  public function start() {
+      for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
@@ -50,21 +55,23 @@ class Pob {
       }
     }
     $this->buffering=true;
-
     ob_start('PobcallbackCache');
+  }  
 
+  function addCache(PobCacheInterface $cache) {
+    $GLOBALS['caches'][] = $cache;
   }
+  
+  function __destruct() {
+    echo('<br>This page has been ');
+    if($this->buffering){
+       echo(' <b> generated </b>');
+    }
+    else{
+      echo(' fetched from the <b>cache</b> within ');
+    }
 
-   function __destruct() {
-     echo('<br>This page has been ');
-     if($this->buffering){
-        echo(' <b> generated </b>');
-      }
-      else{
-        echo(' fetched from the <b>cache</b> within ');
-      }
-
-      echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
+    echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
 
     ob_end_flush();
   }

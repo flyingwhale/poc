@@ -61,6 +61,10 @@ class Pob {
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
+          header('Cache-Control: no-cache, must-revalidate'); 
+          header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
+          $last_modified = gmdate('D, d M Y H:i:S');
+          header('Last-Modified: '.$last_modified.' GMT');
           ob_start('PobcallbackGenerate');
           echo($this->output);
           die();

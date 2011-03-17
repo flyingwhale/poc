@@ -117,7 +117,7 @@ abstract class Evaluateable extends HasValue {
     $this->key = md5($this->toString());
   } 
   
-  function addVariable(FlexVariable $var) {
+  function addVariable($var) {
     $this->variablesArray[] = $var;
     $this->setKey();
   }

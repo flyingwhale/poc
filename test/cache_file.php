@@ -17,6 +17,8 @@ limitations under the License.
 
   $flexEval = new FlexEvaluateable
        ('#^/dev/pob/test/#','$_SERVER["REQUEST_URI"]', Evaluateable::OP_PREGMATCH);
+  $flexEval->addVariable($_GET);
+
   $pob  = new Pob(new PobCache(new FileCache($flexEval,5,'/tmp/')));
 
   include('lib/text_generator.php');

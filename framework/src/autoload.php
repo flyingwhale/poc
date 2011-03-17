@@ -53,11 +53,4 @@ function __autoload($class_name){
     return 1;
   }
 
-  // ./cache/filtering/variables directory 
-  if($class_name == 'FlexVariable') {
-    include_once($base.'cache'.DIRECTORY_SEPARATOR.'filtering'
-      .DIRECTORY_SEPARATOR.'variables'.DIRECTORY_SEPARATOR.$class_name.'.php');
-    return 1;
-  }
-
 }

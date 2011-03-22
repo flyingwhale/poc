@@ -16,10 +16,16 @@ limitations under the License.
 
   /** This variable must be declared at the constructors of this class.*/
   var $ttl;
-  
+
   var $evaluatable;
-  
-  function getEvaluatable() {
+
+  function __construct(Evaluateable $eval,$ttl) {
+     $this->evaluatable = $eval;
+     $this->ttl = $ttl;
+     $this->evaluatable->setMyCache($this);
+  }
+
+  function getEvaluatable(){
     return $this->evaluatable;
   }
 }

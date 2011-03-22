@@ -13,43 +13,70 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  function PobcallbackCache($buffer) {
-    return Pob::PobcallbackCache($buffer);
-  }
+function PobcallbackCache($buffer) {
+  return Pob::PobcallbackCache($buffer);
+}
 
-  function PobcallbackGenerate($buffer)
-  {
-    return Pob::PobcallbackGenerate($buffer);
-  }
+function PobcallbackGenerate($buffer)
+{
+  return Pob::PobcallbackGenerate($buffer);
+}
 
-  $caches;
+$caches = null;
+$level = null;
+$debug = null;
+$start = null;
 
 class Pob {
-
   var $outout;
-
   var $buffering;
   var $foundMatch;
-  var $level;
   var $start;
+  var $started;
+
+  public function setDebug($debug) {
+    $GLOBALS['debug'] = $debug;
+  }
 
   public static function PobcallbackCache($buffer)
   {
-    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
-        $GLOBALS['caches'][$i]->storeCache($buffer);
+    if($GLOBALS['level'] == ob_get_level() - 1) {
+      for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+        if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
+         if($GLOBALS['debug']) {
+           $dbgMsg = '<br>This page has been '
+           .'<b> generated </b> in '
+           .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+           $res = $buffer.$dbgMsg;
+           $GLOBALS['caches'][$i]->storeCache($res);
+         } else {
+            $res = $buffer;
+            $GLOBALS['caches'][$i]->storeCache($res);
+          }
+        }
       }
+      //return ($buffer." ------------ ".$GLOBALS['level']." -------".ob_get_level());
+      return ($res);
     }
-    return ($buffer);
   }
 
-  public static function PobcallbackGenerate($buffer)
-  {
-    return ($buffer);
+  public static function PobcallbackGenerate($buffer) {
+    if($GLOBALS['debug']) {
+     $dbgMsg = '<br>This page has been '
+     .' <b> Fetched from the cache </b>'
+     .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+
+      return ($buffer.$dbgMsg);
+    } else {
+      return ($buffer);
+    }
   }
 
-  function __construct(PobCacheInterface $cache=null) {
-    $this->start = microtime();
+  function __construct(PobCacheInterface $cache = null,$debug = false) {
+    $GLOBALS['start'] = microtime();
+    if($debug) {
+      $this->setDebug($debug);
+    }
     if($cache != null) {
       $this->addCache($cache);
       $this->start();
@@ -57,7 +84,8 @@ class Pob {
   }
 
   public function start() {
-      for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+    $this->started = 1;
+    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
@@ -72,24 +100,26 @@ class Pob {
       }
     }
     $this->buffering=true;
+    $GLOBALS['level'] = ob_get_level();
     ob_start('PobcallbackCache');
-  }  
+  }
 
-  function addCache(PobCacheInterface $cache) {
+  public function addCache(PobCacheInterface $cache) {
     $GLOBALS['caches'][] = $cache;
   }
-  
+
   function __destruct() {
-    echo('<br>This page has been ');
-    if($this->buffering){
-       echo(' <b> generated </b>');
-    }
-    else{
-      echo(' fetched from the <b>cache</b> within ');
-    }
 
-    echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
-
+    if($this->debug) {
+      if($this->started)
+      {
+        echo('<br>This page has been ');
+        echo(' <b> generated </b>');
+        echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
+      } else {
+        echo('<b>You have not called the start() method of your Pob instance!!</b>');
+      }
+    } 
     ob_end_flush();
   }
 }

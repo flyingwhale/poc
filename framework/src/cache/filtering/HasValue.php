@@ -14,21 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 abstract class HasValue implements ToString{
-  
-  protected $value;
-  
-  protected $valueDestription;
 
-  abstract function setValue();
-
-  function setValueDescription($value) {
-    $this->valueDestription = $value;
-  }
+  var $value;
 
   function getValue() {
     return $this->value;
   }
-  
+
+  function setValue($value) {
+    $this->value = $value;
+  }
+
   function getValueDescription() {
     return $this->valueDestription;
   }

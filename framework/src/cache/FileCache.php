@@ -16,20 +16,18 @@ limitations under the License.
 
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';
-  
+
   var $directory;
   var $file;
   var $fileTtl;
 
-  
   function __construct(Evaluateable $evaluatable, $ttl, $directory) {
+    parent::__construct($evaluatable,$ttl);
     $this->directory = $directory;
     $this->file = $directory.self::KEY_PREFIX;
     $this->fileTtl = $directory.self::TTL_PREFIX;
-    $this->ttl = $ttl;
-    $this->evaluatable = $evaluatable;
   }
-  
+
   public function cacheSpecificFetch($key) {
     if($this->checkTtl($key)) {
       $handle = fopen($this->file.$key, "r");
@@ -37,8 +35,12 @@ limitations under the License.
     }
   }
 
-  public function cacheSpecificClear($key) {
-    if($this->cacheSpecificCheck()) {
+  public function cacheSpecificClearAll() {
+    //TODO: implement it!
+  }
+
+  public function cacheSpecificClearItem($key) {
+    if($this->checkTtl($key)) {
       unlink($this->file.$key);
       unlink($this->fileTtl.$key);
     }
@@ -51,7 +53,6 @@ limitations under the License.
     $this->writeTtl($this->ttl,$key);
   }
 
-  
   public function writeTtl($ttl,$key){
     $fp = fopen($this->fileTtl.$key, 'w');
     fwrite($fp, time()+$ttl);

@@ -15,32 +15,37 @@ limitations under the License.
 */
 
 class PobCache implements PobCacheInterface {
-  
 
   var $specificCache;
-  
-  function __construct(AbstractPobCacheSpecific $specificCache) {
+
+  function __construct (AbstractPobCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
+    
   }
-  
-  
-  public function storeCache ($output) {
+
+  public function storeCache($output) {
     if ($this->specificCache->getEvaluatable()->evaluate()) {
        $this->specificCache->cacheSpecificStore(
                      $this->specificCache->getEvaluatable()->getKey(), $output);
     }
   }
 
-  public function fetchCache () {
+  public function fetchCache() {
     if($this->specificCache->getEvaluatable()->evaluate()){
       return $this->specificCache->cacheSpecificFetch(
                               $this->specificCache->getEvaluatable()->getKey());
     }
   }
 
-  public function clearCache () {
+  public function clearCacheAll() {
     if($this->specificCache->getEvaluatable()->evaluate()){
-      $this->specificCache->cacheSpecificClear();
+      $this->specificCache->cacheSpecificClearAll();
+    }
+  }
+
+  public function clearCacheItem($key) {
+    if($this->specificCache->getEvaluatable()->evaluate()){
+      $this->specificCache->cacheSpecificClearItem($key);
     }
   }
 

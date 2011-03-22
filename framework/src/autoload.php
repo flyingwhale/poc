@@ -15,8 +15,7 @@ limitations under the License.
 */
 function __autoload($class_name){
 
-	//$base = '/home/it/dev/pob/framework/src'.DIRECTORY_SEPARATOR;
-	$base = '';
+  $base = '';
 
   // ./  directory
   if($class_name == 'Pob'){

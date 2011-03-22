@@ -13,48 +13,49 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-abstract class Evaluateable extends HasValue {
-  
+class Evaluateable extends HasValue {
+
   const OP_EQUALATION = 1;
   const OP_PREGMATCH = 2;
 
   var $negation = false;
   var $conditonArray = array();
   var $operation;
-  var $key;
-  var $variablesArray;
-  
+  var $distinguishVariables;
+  var $blacklistConditions = array();
   protected $pattern;
+  protected $key = null;
+  protected $myCache;
 
-  function __construct($pattern, $operation=self::EQUALATION)  {
+  function setMyCache($cache){
+    $this->myCache = $cache;
+  }
+
+  function __construct($pattern, $value, $operation=self::EQUALATION)  {
     $this->conditonArray[] = $this;
     $this->pattern = $pattern;
-    $this->value = $this->setValue();
     $this->opertation = $operation;
-    $this->setKey();
+    $this->setValue($value);
   }
 
   function _and (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'and';
     $this->conditonArray[] = $evaluateable;
-    $this->setKey();
     return $this;
   }
 
   function _or (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'or';
     $this->conditonArray[] = $evaluateable;
-    $this->setKey();
     return $this;
   }
 
   function _xor (Evaluateable $evaluateable) {
     $this->conditonArray[] = 'xor';
     $this->conditonArray[] = $evaluateable;
-    $this->setKey();
     return $this;
   }
-  
+
   function evaluate() {
     $eval = null;
     if(sizeof($this->conditonArray) == 1) {
@@ -66,16 +67,16 @@ abstract class Evaluateable extends HasValue {
          $left = $this->evaluation($this->conditonArray[$i]);
         } else {
           $i--;
-          $left = $eval;          
+          $left = $eval;
         }
         $op = $this->conditonArray[++$i];
-        $right = $this->evaluation($this->conditonArray[++$i]);               
+        $right = $this->evaluation($this->conditonArray[++$i]);
 
         if ($op == 'and') {
           $eval = $left AND $right;
         }
         else if ($op == 'or') {
-          $eval = $left OR $right;        
+          $eval = $left OR $right;
         }
         else if ($op == 'xor') {
            $eval = $left XOR $right;
@@ -88,7 +89,7 @@ abstract class Evaluateable extends HasValue {
   function negate($value=true) {
     $negation = $value;
   }
-  
+
   private function evaluation($object) {
 
     if($object === $this) {
@@ -97,8 +98,9 @@ abstract class Evaluateable extends HasValue {
       return $object->evaluate();
     }
   }
-  
+
   function selfEvaluate() {
+    $this->blacklistCacheInvalidation();
     if($this->opertation == self::OP_EQUALATION) {
       return ($this->pattern == $this->value);
     }
@@ -106,22 +108,32 @@ abstract class Evaluateable extends HasValue {
     elseif($this->opertation == self::OP_PREGMATCH) {
       return preg_match($this->pattern, $this->value);
     }
-    
   }
 
   function getKey() {
+    if(!$this->key) {
+      $this->key = md5($this->toString());
+    }
     return $this->key;
   }
-  
-  function setKey() {
-    $this->key = md5($this->toString());
-  } 
-  
-  function addVariable($var) {
-    $this->variablesArray[] = $var;
-    $this->setKey();
-  }
-  
-  
-}
 
+
+  function addDistinguishVariable($var) {
+    $this->distinguishVariables[] = $var;
+  }
+
+  function addBlacklistCondition($var) {
+    $this->blacklistConditions[] = $var;
+  }
+
+  private function blacklistCacheInvalidation(){
+
+    foreach($this->blacklistConditions as $blackRequest) {
+      if($blackRequest) {
+         //print($this->getKey().'++++');
+         $this->myCache->cacheSpecificClearItem($this->getKey());
+         break;
+      }
+    }
+  }
+}

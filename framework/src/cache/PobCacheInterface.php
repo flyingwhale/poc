@@ -17,10 +17,12 @@ interface PobCacheInterface {
 
   public function __construct(AbstractPobCacheSpecific $cache);
 
-  public function storeCache ($output);
+  public function storeCache($output);
 
-  public function fetchCache ();
+  public function fetchCache();
 
-  public function clearCache ();
+  public function clearCacheAll();
+
+  public function clearCacheItem($key);
 
 }

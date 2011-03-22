@@ -15,10 +15,10 @@ limitations under the License.
 */
   include ("../framework/src/autoload.php");
 
-  $flexEval = new FlexEvaluateable
-       ('#^/dev/pob/test/#','$_SERVER["REQUEST_URI"]', Evaluateable::OP_PREGMATCH);
-  $flexEval->addVariable($_GET);
+  $eval = new Evaluateable
+       ('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
+  $eval->addDistinguishVariable($_GET);
 
-  $pob  = new Pob(new PobCache(new FileCache($flexEval,5,'/tmp/')));
+  $pob  = new Pob(new PobCache(new FileCache($eval,5,'/tmp/')),true);
 
   include('lib/text_generator.php');

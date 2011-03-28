@@ -22,6 +22,16 @@ function PobcallbackGenerate($buffer)
   return Pob::PobcallbackGenerate($buffer);
 }
 
+function PobcallbackShowOutput($buffer) {
+  $dbgMsg = '';
+  if($GLOBALS['debug']) {
+     $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is Blacklisted.'
+     .' <b> Was Generated withtin </b>'
+     .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+  }
+  return $buffer.$dbgMsg;
+}
+
 $caches = null;
 $level = null;
 $debug = null;
@@ -38,24 +48,20 @@ class Pob {
     $GLOBALS['debug'] = $debug;
   }
 
-  public static function PobcallbackCache($buffer)
-  {
+  public static function PobcallbackCache($buffer) {
     if($GLOBALS['level'] == ob_get_level() - 1) {
       for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
         if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
-         if($GLOBALS['debug']) {
-           $dbgMsg = '<br>This page has been '
-           .'<b> generated </b> in '
-           .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
-           $res = $buffer.$dbgMsg;
-           $GLOBALS['caches'][$i]->storeCache($res);
-         } else {
-            $res = $buffer;
-            $GLOBALS['caches'][$i]->storeCache($res);
+          $dbgMsg = '';
+          if($GLOBALS['debug']) {
+            $dbgMsg = '<br>This page has been '
+            .'<b> generated within </b> in '
+            .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
           }
+          $res = $buffer.$dbgMsg;
+          $GLOBALS['caches'][$i]->storeCache($res);
         }
       }
-      //return ($buffer." ------------ ".$GLOBALS['level']." -------".ob_get_level());
       return ($res);
     }
   }
@@ -63,7 +69,7 @@ class Pob {
   public static function PobcallbackGenerate($buffer) {
     if($GLOBALS['debug']) {
      $dbgMsg = '<br>This page has been '
-     .' <b> Fetched from the cache </b>'
+     .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
 
       return ($buffer.$dbgMsg);
@@ -99,9 +105,20 @@ class Pob {
         }
       }
     }
-    $this->buffering=true;
-    $GLOBALS['level'] = ob_get_level();
-    ob_start('PobcallbackCache');
+    $startCache = true;
+    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->isBlacklisted()) {
+        $startCache = false;
+        $break;
+      }
+    }
+    if($startCache) {
+      $this->buffering = true;
+      $GLOBALS['level'] = ob_get_level();
+      ob_start('PobcallbackCache');
+    } else {
+      ob_start('PobcallbackShowOutput');
+    }
   }
 
   public function addCache(PobCacheInterface $cache) {

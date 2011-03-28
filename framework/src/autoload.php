@@ -31,25 +31,12 @@ function __autoload($class_name){
 
   ) {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
-    return 1;
   }
 
   // ./cache/filtering/ directory 
-  if($class_name == 'HasValue' || $class_name == 'ToString') {
+  if($class_name == 'HasValue' || $class_name == 'ToString' || $class_name == 'Evaluateable') {
     include_once($base.'cache'.DIRECTORY_SEPARATOR.'filtering'
       .DIRECTORY_SEPARATOR.$class_name.'.php');
-    return 1;
   }
-
-  // ./cache/filtering/conditions directory
-  if($class_name == 'Evaluateable'
-                     || $class_name == 'HasPattern' || $class_name == 'HasValue'
-            || $class_name == 'FlexEvaluateable' || $class_name == 'FlexPattern'
-                                            || $class_name == 'SelfEvaluateable'
-                ) {
-    include_once($base.'cache'.DIRECTORY_SEPARATOR.'filtering'
-      .DIRECTORY_SEPARATOR.'conditions'.DIRECTORY_SEPARATOR.$class_name.'.php');
-    return 1;
-  }
-
+return 1;
 }

@@ -103,9 +103,7 @@ class Evaluateable extends HasValue {
     $this->blacklistCacheInvalidation();
     if($this->opertation == self::OP_EQUALATION) {
       return ($this->pattern == $this->value);
-    }
-
-    elseif($this->opertation == self::OP_PREGMATCH) {
+    } elseif ($this->opertation == self::OP_PREGMATCH) {
       return preg_match($this->pattern, $this->value);
     }
   }
@@ -126,14 +124,21 @@ class Evaluateable extends HasValue {
     $this->blacklistConditions[] = $var;
   }
 
-  private function blacklistCacheInvalidation(){
-
-    foreach($this->blacklistConditions as $blackRequest) {
+  function isBlacklisted() {
+      foreach($this->blacklistConditions as $blackRequest) {
       if($blackRequest) {
-         //print($this->getKey().'++++');
-         $this->myCache->cacheSpecificClearItem($this->getKey());
+         return true;
          break;
       }
     }
+    return false;
+  }
+
+  private function blacklistCacheInvalidation(){
+    if($this->isBlacklisted()) {
+      $this->myCache->cacheSpecificClearItem($this->getKey());
+      return true;
+    }
+    return false;
   }
 }

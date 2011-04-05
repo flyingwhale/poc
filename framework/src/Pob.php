@@ -127,15 +127,7 @@ class Pob {
 
   function __destruct() {
 
-    if($this->debug) {
-      if($this->started)
-      {
-        echo('<br>This page has been ');
-        echo(' <b> generated </b>');
-        echo('<b>'.((microtime() - $this->start) * 1000).'</b> milliseconds.');
-      } else {
-        echo('<b>You have not called the start() method of your Pob instance!!</b>');
-      }
+    if($GLOBALS['debug']) {
     } 
     ob_end_flush();
   }

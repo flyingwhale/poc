@@ -15,28 +15,39 @@ limitations under the License.
 */
 function __autoload($class_name){
 
-  $base = '';
-
   // ./  directory
   if($class_name == 'Pob'){
-    include_once($base.$class_name.'.php');
+    include_once($class_name.'.php');
   }
 
   // ./cache directory
-  if($class_name == 'PobCacheInterface' || $class_name == 'ApcCache'
-  || $class_name == 'PobCache'
-  || $class_name == 'PobCacheSpecificInterface'
-  || $class_name == 'FileCache'|| $class_name == 'MemcachedCache'
-  || $class_name == 'AbstractPobCacheSpecific'
+  elseif($class_name == 'PobCacheInterface' ||
+         $class_name == 'PobCache') {
+    include_once('cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
+  }
 
-  ) {
-    include_once($base.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
+  // ./cache/cacheImplementation directory
+  elseif($class_name == 'FileCache'||
+         $class_name == 'MemcachedCache' ||
+         $class_name == 'AbstractPobCacheSpecific' ||
+         $class_name == 'PobCacheSpecificInterface'||
+         $class_name == 'ApcCache' ) {
+    include_once('cache'.DIRECTORY_SEPARATOR.'cacheImplementation'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 
   // ./cache/filtering/ directory 
-  if($class_name == 'HasValue' || $class_name == 'ToString' || $class_name == 'Evaluateable') {
-    include_once($base.'cache'.DIRECTORY_SEPARATOR.'filtering'
+  elseif($class_name == 'HasValue' ||
+         $class_name == 'ToString' ||
+         $class_name == 'ToHash' ||
+         $class_name == 'Evaluateable') {
+    include_once('cache'.DIRECTORY_SEPARATOR.'filtering'
       .DIRECTORY_SEPARATOR.$class_name.'.php');
+  }
+
+  // ./cache/tagging/ directory 
+  elseif($class_name == 'AbstractDb' ||
+     $class_name == 'SqliteTagging') {
+    include_once('cache'.DIRECTORY_SEPARATOR.'tagging'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 return 1;
 }

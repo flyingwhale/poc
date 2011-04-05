@@ -13,25 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-abstract class HasValue extends ToHash{
 
-  var $value;
-
-  function getValue() {
-    return $this->value;
+abstract Class ToHash implements ToString{
+  function toHash(){
+    return md5($this->toString());
   }
-
-  function setValue($value) {
-    $this->value = $value;
-  }
-
-  function getValueDescription() {
-    return $this->valueDestription;
-  }
-
-  function toString() {
-    return serialize($this);
-  }
-
-  abstract function selfEvaluate();
 }

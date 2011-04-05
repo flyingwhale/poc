@@ -110,7 +110,7 @@ class Evaluateable extends HasValue {
 
   function getKey() {
     if(!$this->key) {
-      $this->key = md5($this->toString());
+      $this->key = $this->toHash();
     }
     return $this->key;
   }

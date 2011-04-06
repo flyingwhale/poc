@@ -50,8 +50,11 @@ class Pob {
 
   public static function PobcallbackCache($buffer) {
     if($GLOBALS['level'] == ob_get_level() - 1) {
+      $res = '';
       for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-        if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
+        $cache = $GLOBALS['caches'][$i]->getSpecificCache();
+        $eval = $cache->getEvaluateable();
+        if($eval->evaluate()) {
           $dbgMsg = '';
           if($GLOBALS['debug']) {
             $dbgMsg = '<br>This page has been '
@@ -60,6 +63,7 @@ class Pob {
           }
           $res = $buffer.$dbgMsg;
           $GLOBALS['caches'][$i]->storeCache($res);
+          $eval->cacheAddTags();
         }
       }
       return ($res);
@@ -92,6 +96,7 @@ class Pob {
   public function start() {
     $this->started = 1;
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+      $GLOBALS['caches'][$i]->cacheTagsInvalidation();
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {

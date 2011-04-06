@@ -29,6 +29,10 @@ class Evaluateable extends HasValue {
   private $pattern;
   private $myCache;
 
+  function getMyCache(){
+    return $this->myCache;
+  }
+
   function setMyCache($cache){
     $this->myCache = $cache;
   }
@@ -117,36 +121,37 @@ class Evaluateable extends HasValue {
     return $this->key;
   }
 
-
-  function addDistinguishVariable($var){
+  public function addDistinguishVariable($var){
     $this->distinguishVariables[] = $var;
   }
 
-  function addBlacklistCondition($var){
+  public function addBlacklistCondition($var){
     $this->blacklistConditions[] = $var;
   }
 
-  function addCacheAddTags($condition,$tags){
-    $this->cacheAddTags[] = new Tagger($condition, $tags, $this);
+  public function addCacheTags($condition,$tags){
+    if($condition){
+      $this->cacheAddTags[] = new Tagger($tags, $this);
+    }
   }
 
-  function addCacheInvalidationTags($condition,$tags){
-    $this->cacheInvalidationTags[] = new Tagger($condition, $tags, $this);
+  public function addCacheInvalidationTags($condition,$tags){
+    if($condition){
+      $this->cacheInvalidationTags[] = new Tagger($tags, $this);
+    }
   }
 
-
-  function cacheAdd(){
+  public function cacheAddTags(){
     foreach($this->cacheAddTags as $tagger){
       $tagger->tagCache();
     }
   }
 
-  function cacheInvalidation(){
+  function cacheTagsInvalidation(){
     foreach($this->cacheInvalidationTags as $tagger){
-      $tagger->invalidateCache();
+      $tagger->cacheInvalidation();
     }
   }
-
 
   function isBlacklisted() {
       foreach($this->blacklistConditions as $blackRequest) {
@@ -164,5 +169,9 @@ class Evaluateable extends HasValue {
       return true;
     }
     return false;
+  }
+
+  function toString(){
+    return serialize($this->distinguishVariables).$this->pattern.$this->value.$this->operation;
   }
 }

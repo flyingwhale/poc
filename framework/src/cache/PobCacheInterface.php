@@ -25,4 +25,6 @@ interface PobCacheInterface {
 
   public function clearCacheItem($key);
 
+  public function cacheTagsInvalidation();
+
 }

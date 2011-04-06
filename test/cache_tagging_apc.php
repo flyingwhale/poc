@@ -16,10 +16,23 @@ limitations under the License.
   include ("../framework/src/autoload.php");
 
   $sqliteTagging = new SqliteTagging();
-  $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
+  $eval = new Evaluateable('#.*#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
+  $eval->addCacheTags(true,"Kuka,Buvar");
+  $eval->addCacheTags(true,"Karacsonyfa,Mezesmadzag");
+  $eval->addCacheInvalidationTags($_GET,"Karacsonyfa,Mezesmadzag");
+  $eval->addCacheInvalidationTags($_GET,"Kuka,Buvar");
 
-  $pob  = new Pob(new PobCache(new ApcCache($eval,5)),true);
+  $apcCache = new ApcCache($eval,5);
 
-  print_r($sqliteTagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));
+  //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
+
+  $pobCache = new PobCache($apcCache);
+
+  //$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
+
+  $pob  = new Pob($pobCache, true);
+
+  //$pob->addCacheInvalidationTags($_GET,"Mezesmadzag,csicsa");
+  //print_r($sqlite3Tagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));
 
   include('lib/text_generator.php');

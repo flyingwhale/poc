@@ -52,4 +52,8 @@ class PobCache implements PobCacheInterface {
     return $this->specificCache;
   }
 
+  public function cacheTagsInvalidation(){
+    $this->specificCache->getEvaluateable()->cacheTagsInvalidation();
+  }
+
 }

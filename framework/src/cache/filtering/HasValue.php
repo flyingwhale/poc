@@ -29,9 +29,5 @@ abstract class HasValue extends ToHash{
     return $this->valueDestription;
   }
 
-  function toString() {
-    return serialize($this);
-  }
-
   abstract function selfEvaluate();
 }

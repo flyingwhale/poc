@@ -1,21 +1,28 @@
 <?php
-abstract class Tagger {
+class Tagger {
 
   private $evaluateable;
   private $tags;
+  private $logger;
 
-  function __construct($condition, $tags, Evaluatable $evaluateable) {
-    if($condition){
+  function __construct($tags, Evaluateable $evaluateable) {
       $this->tags = $tags;
       $this->evaluateable = $evaluateable;
-    }
+      $this->logger = new Logger('/tmp/logs/logTagger');
   }
 
   function tagCache(){
-    $this->evaluateable 
+    $this->getTagDb()->addCacheToTags($this->tags, $this->evaluateable->getKey());
+    $this->logger->lwrite("TagCache()");
   }
 
-  function invalidateCache(){
-    $this->evaluateable
+  function cacheInvalidation(){
+    $this->logger->lwrite("cacheInvalidation()");
+    $this->getTagDb()->tagInvalidate($this->tags);
+  }
+
+  private function getTagDb(){
+    return $this->evaluateable->getMyCache()->getTagDb();
+    $this->logger->lwrite("getTaDB()");
   }
 }

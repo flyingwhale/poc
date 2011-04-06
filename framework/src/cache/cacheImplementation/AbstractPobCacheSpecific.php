@@ -41,6 +41,7 @@ abstract class AbstractPobCacheSpecific implements PobCacheSpecificInterface {
     } else {
       $this->tagDb = $tagDb;
     }
+    $this->tagDb->setCache($this);
   }
 
   function getTagDb(){

@@ -18,14 +18,16 @@ class Evaluateable extends HasValue {
   const OP_EQUALATION = 1;
   const OP_PREGMATCH = 2;
 
-  var $negation = false;
-  var $conditonArray = array();
-  var $operation;
-  var $distinguishVariables;
-  var $blacklistConditions = array();
-  protected $pattern;
-  protected $key = null;
-  protected $myCache;
+  private $operation;
+  private $conditonArray = array();
+  private $distinguishVariables = array();
+  private $blacklistConditions = array();
+  private $cacheAddTags = array();
+  private $cacheInvalidationTags = array();
+
+  private $key = null;
+  private $pattern;
+  private $myCache;
 
   function setMyCache($cache){
     $this->myCache = $cache;
@@ -116,13 +118,35 @@ class Evaluateable extends HasValue {
   }
 
 
-  function addDistinguishVariable($var) {
+  function addDistinguishVariable($var){
     $this->distinguishVariables[] = $var;
   }
 
-  function addBlacklistCondition($var) {
+  function addBlacklistCondition($var){
     $this->blacklistConditions[] = $var;
   }
+
+  function addCacheAddTags($condition,$tags){
+    $this->cacheAddTags[] = new Tagger($condition, $tags, $this);
+  }
+
+  function addCacheInvalidationTags($condition,$tags){
+    $this->cacheInvalidationTags[] = new Tagger($condition, $tags, $this);
+  }
+
+
+  function cacheAdd(){
+    foreach($this->cacheAddTags as $tagger){
+      $tagger->tagCache();
+    }
+  }
+
+  function cacheInvalidation(){
+    foreach($this->cacheInvalidationTags as $tagger){
+      $tagger->invalidateCache();
+    }
+  }
+
 
   function isBlacklisted() {
       foreach($this->blacklistConditions as $blackRequest) {

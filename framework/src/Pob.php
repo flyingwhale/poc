@@ -51,7 +51,7 @@ class Pob {
   public static function PobcallbackCache($buffer) {
     if($GLOBALS['level'] == ob_get_level() - 1) {
       for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-        if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
+        if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
           $dbgMsg = '';
           if($GLOBALS['debug']) {
             $dbgMsg = '<br>This page has been '
@@ -92,7 +92,7 @@ class Pob {
   public function start() {
     $this->started = 1;
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->evaluate()) {
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
           header('Cache-Control: no-cache, must-revalidate'); 
@@ -107,7 +107,7 @@ class Pob {
     }
     $startCache = true;
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluatable()->isBlacklisted()) {
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->isBlacklisted()) {
         $startCache = false;
         $break;
       }
@@ -126,10 +126,6 @@ class Pob {
   }
 
   function __destruct() {
-
-    if($GLOBALS['debug']) {
-    } 
     ob_end_flush();
   }
 }
-

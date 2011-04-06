@@ -22,6 +22,7 @@ function __autoload($class_name){
 
   // ./cache directory
   elseif($class_name == 'PobCacheInterface' ||
+         $class_name == 'AbstractPobCacheSpecific' ||
          $class_name == 'PobCache') {
     include_once('cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
@@ -29,7 +30,6 @@ function __autoload($class_name){
   // ./cache/cacheImplementation directory
   elseif($class_name == 'FileCache'||
          $class_name == 'MemcachedCache' ||
-         $class_name == 'AbstractPobCacheSpecific' ||
          $class_name == 'PobCacheSpecificInterface'||
          $class_name == 'ApcCache' ) {
     include_once('cache'.DIRECTORY_SEPARATOR.'cacheImplementation'.DIRECTORY_SEPARATOR.$class_name.'.php');
@@ -46,7 +46,8 @@ function __autoload($class_name){
 
   // ./cache/tagging/ directory 
   elseif($class_name == 'AbstractDb' ||
-     $class_name == 'SqliteTagging') {
+         $class_name == 'Tagger' ||
+         $class_name == 'SqliteTagging') {
     include_once('cache'.DIRECTORY_SEPARATOR.'tagging'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 return 1;

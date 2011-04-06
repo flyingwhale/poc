@@ -20,31 +20,30 @@ class PobCache implements PobCacheInterface {
 
   function __construct (AbstractPobCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
-    
   }
 
   public function storeCache($output) {
-    if ($this->specificCache->getEvaluatable()->evaluate()) {
+    if ($this->specificCache->getEvaluateable()->evaluate()) {
        $this->specificCache->cacheSpecificStore(
-                     $this->specificCache->getEvaluatable()->getKey(), $output);
+                     $this->specificCache->getEvaluateable()->getKey(), $output);
     }
   }
 
   public function fetchCache() {
-    if($this->specificCache->getEvaluatable()->evaluate()){
+    if($this->specificCache->getEvaluateable()->evaluate()){
       return $this->specificCache->cacheSpecificFetch(
-                              $this->specificCache->getEvaluatable()->getKey());
+                              $this->specificCache->getEvaluateable()->getKey());
     }
   }
 
   public function clearCacheAll() {
-    if($this->specificCache->getEvaluatable()->evaluate()){
+    if($this->specificCache->getEvaluataeble()->evaluate()){
       $this->specificCache->cacheSpecificClearAll();
     }
   }
 
   public function clearCacheItem($key) {
-    if($this->specificCache->getEvaluatable()->evaluate()){
+    if($this->specificCache->getEvaluateable()->evaluate()){
       $this->specificCache->cacheSpecificClearItem($key);
     }
   }

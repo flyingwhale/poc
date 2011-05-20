@@ -17,10 +17,16 @@ limitations under the License.
 
   $sqliteTagging = new SqliteTagging();
   $eval = new Evaluateable('#.*#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
-  $eval->addCacheTags(true,"Kuka,Buvar");
-  $eval->addCacheTags(true,"Karacsonyfa,Mezesmadzag");
-  $eval->addCacheInvalidationTags($_GET,"Karacsonyfa,Mezesmadzag");
-  $eval->addCacheInvalidationTags($_GET,"Kuka,Buvar");
+  $eval->addCacheTags(true,'user,customer');
+  $eval->addCacheTags(true,'invetntory,article');
+  if(isset($_GET)){
+    if(isset($_GET['delcache'])){
+      if($_GET['delcache']){
+        $eval->addCacheInvalidationTags(true,'user,customer');
+        $eval->addCacheInvalidationTags(true,'invetntory,article');
+      }
+    }
+  }
 
   $apcCache = new ApcCache($eval,5);
 

@@ -130,8 +130,10 @@ class Evaluateable extends HasValue {
   }
 
   public function addCacheTags($condition,$tags){
-    if($condition){
-      $this->cacheAddTags[] = new Tagger($tags, $this);
+    if(isset($condition)){
+      if($condition){
+        $this->cacheAddTags[] = new Tagger($tags, $this);
+      }
     }
   }
 

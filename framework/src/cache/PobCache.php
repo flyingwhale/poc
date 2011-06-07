@@ -24,6 +24,7 @@ class PobCache implements PobCacheInterface {
 
   public function storeCache($output) {
     if ($this->specificCache->getEvaluateable()->evaluate()) {
+     echo " -- s t o r e --";
        $this->specificCache->cacheSpecificStore(
                      $this->specificCache->getEvaluateable()->getKey(), $output);
     }

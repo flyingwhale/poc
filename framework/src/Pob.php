@@ -82,6 +82,13 @@ class Pob {
     }
   }
 
+  /**
+  @param PobCacheInterface $cache this placeholder class contains the various
+  caches.
+  @param bool $debug If true debug messages are provided in the output, only
+  for develompment purposes.
+  @return null
+  */
   function __construct(PobCacheInterface $cache = null,$debug = false) {
     $GLOBALS['start'] = microtime();
     if($debug) {

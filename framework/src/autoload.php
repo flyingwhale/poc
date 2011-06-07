@@ -21,6 +21,8 @@ function __autoload($class_name){
 
   }
 
+ // if($class_name == 'OutputInterface' || $class_name == 'OutputInterface')
+
   // ./  directory
   elseif($class_name == 'Pob'){
     include_once($class_name.'.php');

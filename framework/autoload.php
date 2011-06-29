@@ -13,25 +13,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-function __autoload($class_name){
 
-  if($class_name == 'Logger'){
-//    include_once('..'.DIRECTORY_SEPARATOR.'utility'.DIRECTORY_SEPARATOR.$class_name.'.php');
-    include_once('utility'.DIRECTORY_SEPARATOR.$class_name.'.php');
+function autoload_pob($class_name){
 
+  if (isset($GLOBALS['unittest'])){
+    $dir = 'framework'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR;
+  } else {
+    $dir = 'src'.DIRECTORY_SEPARATOR;
   }
 
- // if($class_name == 'OutputInterface' || $class_name == 'OutputInterface')
-
+  if($class_name == 'Logger'){
+    include_once($dir.'utility'.DIRECTORY_SEPARATOR.$class_name.'.php');
+  }
   // ./  directory
   elseif($class_name == 'Pob'){
-    include_once($class_name.'.php');
+    include_once($dir.$class_name.'.php');
   }
 
   // ./cache directory
   elseif($class_name == 'PobCacheInterface' ||
          $class_name == 'PobCache') {
-    include_once('cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
+    include_once($dir.'cache'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 
   // ./cache/cacheImplementation directory
@@ -40,7 +42,7 @@ function __autoload($class_name){
          $class_name == 'AbstractPobCacheSpecific' ||
          $class_name == 'PobCacheSpecificInterface'||
          $class_name == 'ApcCache' ) {
-    include_once('cache'.DIRECTORY_SEPARATOR.'cacheImplementation'.DIRECTORY_SEPARATOR.$class_name.'.php');
+    include_once($dir.'cache'.DIRECTORY_SEPARATOR.'cacheImplementation'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 
   // ./cache/filtering/ directory 
@@ -48,7 +50,7 @@ function __autoload($class_name){
          $class_name == 'ToString' ||
          $class_name == 'ToHash' ||
          $class_name == 'Evaluateable') {
-    include_once('cache'.DIRECTORY_SEPARATOR.'filtering'
+    include_once($dir.'cache'.DIRECTORY_SEPARATOR.'filtering'
       .DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 
@@ -56,7 +58,12 @@ function __autoload($class_name){
   elseif($class_name == 'AbstractDb' ||
          $class_name == 'Tagger' ||
          $class_name == 'SqliteTagging'){
-    include_once('cache'.DIRECTORY_SEPARATOR.'tagging'.DIRECTORY_SEPARATOR.$class_name.'.php');
+    include_once($dir.'cache'.DIRECTORY_SEPARATOR.'tagging'.DIRECTORY_SEPARATOR.$class_name.'.php');
   }
 return 1;
 }
+
+//This is required, because we use PHPUnit and cannot use the built in __autoload function
+//for more information see the php.net.
+
+spl_autoload_register('autoload_pob');

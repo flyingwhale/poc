@@ -14,17 +14,20 @@
    limitations under the License.
    */
 
-include 'framework/src/autoload.php';
+$unittest = 1;
+
+include 'framework/autoload.php';
+
 class testClassTest extends PHPUnit_Framework_TestCase{
 
   public function testStart01(){
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     //ini_set('implicit_flush', false);
+
     $apc = new ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
     $pob = new Pob(new PobCache($apc),true);
     echo $testString;
     $this->assertFalse(false);
-    //ini_set('implicit_flush', true);
     unset($pob);
   }
 

@@ -14,10 +14,9 @@
    limitations under the License.
    */
 
-include '../src/autoload.php';
+include 'framework/src/autoload.php';
+class testClassTest extends PHPUnit_Framework_TestCase{
 
-class testClassTest extends PHPUnit_Framework_Testcase
-{
   public function testStart01(){
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     //ini_set('implicit_flush', false);

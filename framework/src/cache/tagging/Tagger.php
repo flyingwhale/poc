@@ -1,4 +1,7 @@
 <?php
+
+use POC\cache\filtering\Evaluateable;
+
 class Tagger {
 
   private $evaluateable;

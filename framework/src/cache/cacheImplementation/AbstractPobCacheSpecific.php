@@ -13,6 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+use POC\cache\filtering\Evaluateable;
+
 abstract class AbstractPobCacheSpecific implements PobCacheSpecificInterface {
 
   /** This variable must be declared at the constructors of this class.*/

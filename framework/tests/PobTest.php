@@ -13,27 +13,28 @@
    See the License for the specific language governing permissions and
    limitations under the License.
    */
+namespace unittest;
 
-$unittest = 1;
+const UNITTESTING = 1;
 
-include 'framework/autoload.php';
+include 'framework/autoload_.php';
 
-class testClassTest extends PHPUnit_Framework_TestCase{
+class testClassTest extends \PHPUnit_Framework_TestCase{
 
   public function testStart01(){
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     //ini_set('implicit_flush', false);
 
-    $apc = new ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
-    $pob = new Pob(new PobCache($apc),true);
+    $apc = new \ApcCache(new \Evaluateable('aaaa', 'aaaa', \Evaluateable::OP_EQUALATION),5);
+    $pob = new \Pob(new \PobCache($apc),true);
     echo $testString;
     $this->assertFalse(false);
     unset($pob);
   }
 
   public function testStart02(){
-    $apc = new ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
-    $pob = new Pob(new PobCache($apc),true);
+    $apc = new \ApcCache(new \Evaluateable('aaaa', 'aaaa', \Evaluateable::OP_EQUALATION),5);
+    $pob = new \Pob(new \PobCache($apc),true);
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     echo $testString;
     unset($pob);

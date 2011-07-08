@@ -13,6 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+namespace POC\cache\filtering;
+
 class Evaluateable extends HasValue {
 
   const OP_EQUALATION = 1;
@@ -132,14 +135,14 @@ class Evaluateable extends HasValue {
   public function addCacheTags($condition,$tags){
     if(isset($condition)){
       if($condition){
-        $this->cacheAddTags[] = new Tagger($tags, $this);
+        $this->cacheAddTags[] = new \Tagger($tags, $this);
       }
     }
   }
 
   public function addCacheInvalidationTags($condition,$tags){
     if($condition){
-      $this->cacheInvalidationTags[] = new Tagger($tags, $this);
+      $this->cacheInvalidationTags[] = new \Tagger($tags, $this);
     }
   }
 

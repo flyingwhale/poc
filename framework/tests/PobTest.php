@@ -14,10 +14,11 @@
    limitations under the License.
    */
 namespace unittest;
+use POC\cache\filtering\Evaluateable;
 
 const UNITTESTING = 1;
 
-include 'framework/autoload_.php';
+include 'framework/autoload.php';
 
 class testClassTest extends \PHPUnit_Framework_TestCase{
 
@@ -25,7 +26,7 @@ class testClassTest extends \PHPUnit_Framework_TestCase{
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     //ini_set('implicit_flush', false);
 
-    $apc = new \ApcCache(new \Evaluateable('aaaa', 'aaaa', \Evaluateable::OP_EQUALATION),5);
+    $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
     $pob = new \Pob(new \PobCache($apc),true);
     echo $testString;
     $this->assertFalse(false);
@@ -33,7 +34,7 @@ class testClassTest extends \PHPUnit_Framework_TestCase{
   }
 
   public function testStart02(){
-    $apc = new \ApcCache(new \Evaluateable('aaaa', 'aaaa', \Evaluateable::OP_EQUALATION),5);
+    $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
     $pob = new \Pob(new \PobCache($apc),true);
     $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
     echo $testString;

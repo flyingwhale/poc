@@ -32,6 +32,7 @@ abstract class AbstractPobCacheSpecific implements PobCacheSpecificInterface {
      $this->evaluateable = $eval;
      $this->ttl = $ttl;
      $this->evaluateable->setMyCache($this);
+     $l = new Logger(); $l->lwrite('TTL:'.$this->ttl);
   }
 
   function getEvaluateable(){

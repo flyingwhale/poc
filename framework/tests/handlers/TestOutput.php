@@ -1,5 +1,8 @@
 <?php
-class ServerOutput implements OutputInterface {
+
+namespace unittest\handler;
+
+class TestOutput implements \OutputInterface {
 
   function getLevel(){
     return ob_get_level();
@@ -9,8 +12,8 @@ class ServerOutput implements OutputInterface {
     ob_start($callbackFunctname);
   }
 
-  function StopBuffer(){
-    die();
+  function stopBuffer(){
+    ob_flush();
   }
 
 }

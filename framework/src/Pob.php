@@ -17,7 +17,7 @@ function PobcallbackCache($buffer) {
   return Pob::PobcallbackCache($buffer);
 }
 
-function PobcallbackGenerate($buffer)
+function  PobcallbackGenerate($buffer)
 {
   return Pob::PobcallbackGenerate($buffer);
 }
@@ -38,7 +38,8 @@ $debug = null;
 $start = null;
 
 class Pob {
-  var $outout;
+  var $outputHandler;
+  var $output;
   var $buffering;
   var $foundMatch;
   var $start;
@@ -62,6 +63,8 @@ class Pob {
             .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
           }
           $res = $buffer.$dbgMsg;
+          $l=new Logger();
+          $l->lwrite("store");
           $GLOBALS['caches'][$i]->storeCache($res);
           $eval->cacheAddTags();
         }
@@ -75,7 +78,6 @@ class Pob {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
-
       return ($buffer.$dbgMsg);
     } else {
       return ($buffer);
@@ -87,17 +89,18 @@ class Pob {
   caches.
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
-  @return null
   */
-  function __construct(PobCacheInterface $cache = null,$debug = false) {
+  function __construct(PobCacheInterface $cache = null, OutputInterface $output,
+                                                                $debug = false) {
+    $l = new Logger();
+    $l->lwrite('Pob consturcor has started');
     $GLOBALS['start'] = microtime();
-    if($debug) {
       $this->setDebug($debug);
-    }
     if($cache != null) {
       $this->addCache($cache);
       $this->start();
     }
+    $this->outputHandler = $output;
   }
 
   public function start() {
@@ -111,9 +114,10 @@ class Pob {
           header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
           $last_modified = gmdate('D, d M Y H:i:S');
           header('Last-Modified: '.$last_modified.' GMT');
-          ob_start('PobcallbackGenerate');
+          $outputHandler->start('PobcallbackGenerate');
+          //ob_start('PobcallbackGenerate');
           echo($this->output);
-          die();
+          $outputHandler->stopBuffer();
         }
       }
     }

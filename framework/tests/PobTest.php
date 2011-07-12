@@ -15,31 +15,30 @@
    */
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
-
+use unittest\handler\TestOutput;
 const UNITTESTING = 1;
 
 include 'framework/autoload.php';
 
 class testClassTest extends \PHPUnit_Framework_TestCase{
 
-  public function testStart01(){
-    $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
-    //ini_set('implicit_flush', false);
+  private function cacheBurn(){
+    $testString="\ntest test test test test test test test test test test test test test test test";
+//  $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
+    $apc = new \ApcCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5);
 
-    $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
-    $pob = new \Pob(new \PobCache($apc),true);
+    $pob = new \Pob(new \PobCache($apc), new TestOutput(), true);
     echo $testString;
-    $this->assertFalse(false);
     unset($pob);
   }
 
-  public function testStart02(){
-    $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
-    $pob = new \Pob(new \PobCache($apc),true);
-    $testString="\n\n\n\ntest test test test test test test test test test test test test test test test \n\n\n\n";
-    echo $testString;
+  public function testStart01(){
+
+    for ($i = 0; $i < 2; $i++){
+      $this->cacheBurn();
+    }
+    $this->assertFalse(false);
     unset($pob);
-    //phpinfo();
   }
 }
 ?>

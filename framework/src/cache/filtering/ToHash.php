@@ -17,6 +17,8 @@ namespace POC\cache\filtering;
 
 abstract Class ToHash implements ToString{
   function toHash(){
+    $l = new \Logger();
+    $l->lwrite( md5($this->toString()));
     return md5($this->toString());
   }
 }

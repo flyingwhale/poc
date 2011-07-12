@@ -24,14 +24,17 @@ class PobCache implements PobCacheInterface {
 
   public function storeCache($output) {
     if ($this->specificCache->getEvaluateable()->evaluate()) {
-     echo " -- s t o r e --";
        $this->specificCache->cacheSpecificStore(
                      $this->specificCache->getEvaluateable()->getKey(), $output);
+      $l = new Logger();
+      $l->lwrite($this->specificCache->getEvaluateable()->getKey().": ".$output );
     }
   }
 
   public function fetchCache() {
     if($this->specificCache->getEvaluateable()->evaluate()){
+      $l = new Logger();
+      $l->lwrite($this->specificCache->getEvaluateable()->getKey()." value is :".$this->specificCache->cacheSpecificFetch($this->specificCache->getEvaluateable()->getKey()));
       return $this->specificCache->cacheSpecificFetch(
                               $this->specificCache->getEvaluateable()->getKey());
     }

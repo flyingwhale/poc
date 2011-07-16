@@ -13,7 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-function PobcallbackCache($buffer) {
+namespace POC;
+
+function PobcallbackCache($buffer){
   return Pob::PobcallbackCache($buffer);
 }
 
@@ -63,8 +65,6 @@ class Pob {
             .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
           }
           $res = $buffer.$dbgMsg;
-          $l=new Logger();
-          $l->lwrite("store");
           $GLOBALS['caches'][$i]->storeCache($res);
           $eval->cacheAddTags();
         }
@@ -90,10 +90,9 @@ class Pob {
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(PobCacheInterface $cache = null, OutputInterface $output,
+  function __construct(\PobCacheInterface $cache = null, \OutputInterface $output,
                                                                 $debug = false) {
-    $l = new Logger();
-    $l->lwrite('Pob consturcor has started');
+    $this->outputHandler = $output;
     $GLOBALS['start'] = microtime();
       $this->setDebug($debug);
     if($cache != null) {
@@ -110,14 +109,14 @@ class Pob {
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
-          header('Cache-Control: no-cache, must-revalidate'); 
-          header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
-          $last_modified = gmdate('D, d M Y H:i:S');
-          header('Last-Modified: '.$last_modified.' GMT');
-          $outputHandler->start('PobcallbackGenerate');
+          \header('Cache-Control: no-cache, must-revalidate'); 
+          \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
+          $last_modified = \gmdate('D, d M Y H:i:S');
+          \header('Last-Modified: '.$last_modified.' GMT');
+          $this->outputHandler->startBuffer('\POC\PobcallbackGenerate');
           //ob_start('PobcallbackGenerate');
           echo($this->output);
-          $outputHandler->stopBuffer();
+          $this->outputHandler->stopBuffer();
         }
       }
     }
@@ -131,17 +130,17 @@ class Pob {
     if($startCache) {
       $this->buffering = true;
       $GLOBALS['level'] = ob_get_level();
-      ob_start('PobcallbackCache');
+      $this->outputHandler->startBuffer('\POC\PobcallbackCache');
     } else {
-      ob_start('PobcallbackShowOutput');
+      $this->outputHandler->startBuffer('\POC\PobcallbackShowOutput');
     }
   }
 
-  public function addCache(PobCacheInterface $cache) {
+  public function addCache(\PobCacheInterface $cache) {
     $GLOBALS['caches'][] = $cache;
   }
 
   function __destruct() {
-    ob_end_flush();
+    \ob_end_flush();
   }
 }

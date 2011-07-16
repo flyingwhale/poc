@@ -16,29 +16,30 @@
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
+use POC\Pob;
 const UNITTESTING = 1;
+
+\ob_start();
 
 include 'framework/autoload.php';
 
 class testClassTest extends \PHPUnit_Framework_TestCase{
 
-  private function cacheBurn(){
-    $testString="\ntest test test test test test test test test test test test test test test test";
-//  $apc = new \ApcCache(new Evaluateable('aaaa', 'aaaa', Evaluateable::OP_EQUALATION),5);
-    $apc = new \ApcCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5);
-
-    $pob = new \Pob(new \PobCache($apc), new TestOutput(), true);
+  private function cacheBurner(){
+    $testString="\n\ntestString\n\n";
+    //$apc = new \ApcCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5);
+    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),50,'/tmp/');
+    $pob = new Pob(new \PobCache($apc), new TestOutput(), true);
     echo $testString;
     unset($pob);
   }
 
   public function testStart01(){
 
-    for ($i = 0; $i < 2; $i++){
-      $this->cacheBurn();
+    for ($i = 0; $i < 100; $i++){
+      $this->cacheBurner();
     }
     $this->assertFalse(false);
-    unset($pob);
   }
 }
 ?>

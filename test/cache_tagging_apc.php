@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
+  use POC\Pob;
 
   include ("../framework/autoload.php");
 
@@ -38,7 +39,7 @@ limitations under the License.
 
   //$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
 
-  $pob  = new Pob($pobCache, true);
+  $pob  = new Pob($pobCache, new ServerOutput(),  true);
 
   //$pob->addCacheInvalidationTags($_GET,"Mezesmadzag,csicsa");
   //print_r($sqlite3Tagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));

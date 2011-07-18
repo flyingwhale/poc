@@ -47,52 +47,8 @@ class Evaluateable extends HasValue {
     $this->setValue($value);
   }
 
-  function _and (Evaluateable $evaluateable) {
-    $this->conditonArray[] = 'and';
-    $this->conditonArray[] = $evaluateable;
-    return $this;
-  }
-
-  function _or (Evaluateable $evaluateable) {
-    $this->conditonArray[] = 'or';
-    $this->conditonArray[] = $evaluateable;
-    return $this;
-  }
-
-  function _xor (Evaluateable $evaluateable) {
-    $this->conditonArray[] = 'xor';
-    $this->conditonArray[] = $evaluateable;
-    return $this;
-  }
-
   function evaluate() {
-    $eval = null;
-    if(sizeof($this->conditonArray) == 1) {
-      $eval = $this->conditonArray[0]->selfEvaluate();
-    } else {
-      for($i = 0; $i < sizeof($this->conditonArray); $i++)
-      {
-        if($eval == null) {
-         $left = $this->evaluation($this->conditonArray[$i]);
-        } else {
-          $i--;
-          $left = $eval;
-        }
-        $op = $this->conditonArray[++$i];
-        $right = $this->evaluation($this->conditonArray[++$i]);
-
-        if ($op == 'and') {
-          $eval = $left AND $right;
-        }
-        else if ($op == 'or') {
-          $eval = $left OR $right;
-        }
-        else if ($op == 'xor') {
-           $eval = $left XOR $right;
-        }
-      }
-    }
-    return $eval;
+    return $this->conditonArray[0]->selfEvaluate();
   }
 
   function negate($value=true) {
@@ -179,4 +135,5 @@ class Evaluateable extends HasValue {
   function toString(){
     return serialize($this->distinguishVariables).$this->pattern.$this->value.$this->operation;
   }
+
 }

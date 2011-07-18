@@ -50,7 +50,6 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
   var $outputHandler;
   var $output;
   var $buffering;
-  var $foundMatch;
   var $start;
   var $started;
 
@@ -70,6 +69,9 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
     $this->callbackShowOutputFunctionName = $fn;
   }
 
+  public function setOutputHandler(\OutputInterface $oh){
+    $this->outputHandler = $oh;
+  }
 
   public function setDebug($debug) {
     $GLOBALS['debug'] = $debug;
@@ -117,7 +119,7 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
   function __construct(\PobCacheInterface $cache = null, \OutputInterface $output,
                                                                 $debug = false) {
     $this->outputHandler = $output;
-      $this->setDebug($debug);
+    $this->setDebug($debug);
     if($cache != null) {
       $this->addCache($cache);
       $this->start();

@@ -40,12 +40,36 @@ $debug = null;
 $start = null;
 
 class Pob {
+
+
+const DEF_CACHE_FUNCTION_NAME = '\POC\PobcallbackCache';
+const DEF_GENERATE_FUNCTION_NAME = '\POC\PobcallbackGenerate';
+const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
+
+
   var $outputHandler;
   var $output;
   var $buffering;
   var $foundMatch;
   var $start;
   var $started;
+
+  var $callbackCacheFunctionName;
+  var $callbackGenerateFunctionName;
+  var $callbackShowOutputFunctionName;
+
+  public function setCallbackCacheFunctionName($fn){
+    $this->callbackCacheFunctionName = $fn;
+  }
+
+  public function setCallbackGenerateFunctionName($fn){
+    $this->callbackGenerateFunctionName = $fn;
+  }
+
+  public function setCallbackShowOutputFunctionName($fn){
+    $this->callbackShowOutputFunctionName = $fn;
+  }
+
 
   public function setDebug($debug) {
     $GLOBALS['debug'] = $debug;
@@ -93,7 +117,6 @@ class Pob {
   function __construct(\PobCacheInterface $cache = null, \OutputInterface $output,
                                                                 $debug = false) {
     $this->outputHandler = $output;
-    $GLOBALS['start'] = microtime();
       $this->setDebug($debug);
     if($cache != null) {
       $this->addCache($cache);
@@ -103,6 +126,20 @@ class Pob {
   }
 
   public function start() {
+    $GLOBALS['start'] = microtime();
+
+    if(!$this->callbackCacheFunctionName){
+      $this->setCallbackCacheFunctionName(self::DEF_CACHE_FUNCTION_NAME);
+    }
+
+    if(!$this->callbackGenerateFunctionName){
+      $this->setCallbackGenerateFunctionName(self::DEF_GENERATE_FUNCTION_NAME);
+    }
+
+    if(!$this->callbackShowOutputFunctionName){
+      $this->setCallbackShowOutputFunctionName(self::DEF_SHOW_OUTPUT_FUNCTION_NAME);
+    }
+
     $this->started = 1;
     for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
       $GLOBALS['caches'][$i]->cacheTagsInvalidation();
@@ -113,7 +150,7 @@ class Pob {
           \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
           $last_modified = \gmdate('D, d M Y H:i:S');
           \header('Last-Modified: '.$last_modified.' GMT');
-          $this->outputHandler->startBuffer('\POC\PobcallbackGenerate');
+          $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
           //ob_start('PobcallbackGenerate');
           echo($this->output);
           $this->outputHandler->stopBuffer();
@@ -130,9 +167,9 @@ class Pob {
     if($startCache) {
       $this->buffering = true;
       $GLOBALS['level'] = ob_get_level();
-      $this->outputHandler->startBuffer('\POC\PobcallbackCache');
+      $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
     } else {
-      $this->outputHandler->startBuffer('\POC\PobcallbackShowOutput');
+      $this->outputHandler->startBuffer($this->callbackShowOutputFunctionName);
     }
   }
 

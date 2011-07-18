@@ -34,12 +34,16 @@ class testClassTest extends \PHPUnit_Framework_TestCase{
     unset($pob);
   }
 
-  public function testStart01(){
+  public function test_01_fill(){
 
-    for ($i = 0; $i < 100; $i++){
+//    for ($i = 0; $i < 1; $i++){
       $this->cacheBurner();
-    }
-    $this->assertFalse(false);
+//    }
+//    $this->assertFalse(false);
+  }
+
+  public function test_02_fill(){
+    $this->cacheBurner();
   }
 }
 ?>

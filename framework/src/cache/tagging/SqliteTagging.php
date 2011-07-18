@@ -4,11 +4,9 @@ class SqliteTagging extends AbstractDb {
   private $dbFile;
   private $tagIDs = array();
   private $base;
-  private $logger;
 
   function __construct($file="/tmp/POB01") {
     $this->dbFile = $file;
-    $this->logger = new Logger('/tmp/logs/logSqliteTagging');
     parent::__construct();
   }
 
@@ -55,7 +53,6 @@ class SqliteTagging extends AbstractDb {
       $result = $this->base->query($query);
       $row = $result->fetch();
       if(!$row){
-//        $this->logger->lwrite('addtags1');
         $this->base->queryexec('INSERT INTO tags VALUES (null, "'.$tag.'")');
         $tagIds[$tag] = $this->base->lastInsertRowID();
       }
@@ -135,7 +132,6 @@ class SqliteTagging extends AbstractDb {
           $rows = $result->fetchAll();
 
           foreach($rows as $row){
-            $this->logger->lwrite('deletting cache: '.$row['hash_key']);
             $this->cache->cacheSpecificClearItem($row['hash_key']);
           }
         }
@@ -148,26 +144,19 @@ class SqliteTagging extends AbstractDb {
   }
 
   function flushOutdated() {
-    //$this->logger->lwrite('flushoutdated()');
   }
 
   function dbinfo(){
         $query = 'SELECT * FROM tags';
-        $this->logger->lwrite($query);
         $result = $this->base->query($query);
         $rowsa = $result->fetchAll();
-        $this->logger->lwrite('Tags: '.serialize($rowsa));
 
         $query = 'SELECT * FROM caches';
-        $this->logger->lwrite($query);
         $result = $this->base->query($query);
         $rowsb = $result->fetchAll();
-        $this->logger->lwrite('Caches: '.serialize($rowsb));
 
         $query = 'SELECT * FROM tags_has_caches';
-        $this->logger->lwrite($query);
         $result = $this->base->query($query);
         $rowsc = $result->fetchAll();
-        $this->logger->lwrite('Tags has Caches: '.serialize($rowsc));
   }
 }

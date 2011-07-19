@@ -19,7 +19,13 @@ use unittest\handler\TestOutput;
 use POC\Pob;
 const UNITTESTING = 1;
 
+//\ob_start('unittest\remove_output');
 \ob_start();
+
+
+function remove_output($o){
+  return "\ntests begin\n".$o."\ntestes re done\n\n";
+}
 
 include 'framework/autoload.php';
 
@@ -28,22 +34,17 @@ class testClassTest extends \PHPUnit_Framework_TestCase{
   private function cacheBurner(){
     $testString="\n\ntestString\n\n";
     //$apc = new \ApcCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5);
-    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),50,'/tmp/');
+    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5,'/tmp/');
     $pob = new Pob(new \PobCache($apc), new TestOutput(), true);
     echo $testString;
     unset($pob);
   }
 
   public function test_01_fill(){
-
-//    for ($i = 0; $i < 1; $i++){
-      $this->cacheBurner();
-//    }
+    for ($i = 0; $i < 1; $i++){
+        $this->cacheBurner();
+    }
 //    $this->assertFalse(false);
-  }
-
-  public function test_02_fill(){
-    $this->cacheBurner();
   }
 }
 ?>

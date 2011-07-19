@@ -41,17 +41,14 @@ $start = null;
 
 class Pob {
 
-
-const DEF_CACHE_FUNCTION_NAME = '\POC\PobcallbackCache';
-const DEF_GENERATE_FUNCTION_NAME = '\POC\PobcallbackGenerate';
-const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
-
+  const DEF_CACHE_FUNCTION_NAME = '\POC\PobcallbackCache';
+  const DEF_GENERATE_FUNCTION_NAME = '\POC\PobcallbackGenerate';
+  const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
 
   var $outputHandler;
   var $output;
   var $buffering;
   var $start;
-  var $started;
 
   var $callbackCacheFunctionName;
   var $callbackGenerateFunctionName;
@@ -85,17 +82,17 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
         $eval = $cache->getEvaluateable();
         if($eval->evaluate()) {
           $dbgMsg = '';
-          if($GLOBALS['debug']) {
-            $dbgMsg = '<br>This page has been '
-            .'<b> generated within </b> in '
-            .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
-          }
-          $res = $buffer.$dbgMsg;
+		  if($GLOBALS['debug']) {
+		    $dbgMsg = '<br>This page has been '
+		    .'<b> generated within </b> in '
+		    .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+		  }
+		  $res = $buffer.$dbgMsg;
           $GLOBALS['caches'][$i]->storeCache($res);
           $eval->cacheAddTags();
         }
       }
-      return ($res);
+     return ($res);
     }
   }
 
@@ -104,6 +101,10 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+
+      $l = new \Logger();
+      $l->lwrite("$buffer".$dbgMsg.microtime());
+ 
       return ($buffer.$dbgMsg);
     } else {
       return ($buffer);
@@ -127,6 +128,27 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
     $this->outputHandler = $output;
   }
 
+  private function fetchCache() {
+   $started = 0;
+    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+      $GLOBALS['caches'][$i]->cacheTagsInvalidation();
+      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
+        $this->output = $GLOBALS['caches'][$i]->fetchCache();
+        if($this->output) {
+          $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
+          \header('Cache-Control: no-cache, must-revalidate'); 
+          \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
+          $last_modified = \gmdate('D, d M Y H:i:S');
+          \header('Last-Modified: '.$last_modified.' GMT');
+          $started = 1;
+          echo($this->output);
+          $this->outputHandler->stopBuffer();
+        }
+      }
+    }
+    return $started;
+  }
+
   public function start() {
     $GLOBALS['start'] = microtime();
 
@@ -142,36 +164,21 @@ const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
       $this->setCallbackShowOutputFunctionName(self::DEF_SHOW_OUTPUT_FUNCTION_NAME);
     }
 
-    $this->started = 1;
-    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      $GLOBALS['caches'][$i]->cacheTagsInvalidation();
-      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
-        $this->output = $GLOBALS['caches'][$i]->fetchCache();
-        if($this->output) {
-          \header('Cache-Control: no-cache, must-revalidate'); 
-          \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
-          $last_modified = \gmdate('D, d M Y H:i:S');
-          \header('Last-Modified: '.$last_modified.' GMT');
-          $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
-          //ob_start('PobcallbackGenerate');
-          echo($this->output);
-          $this->outputHandler->stopBuffer();
+    if(!$this->fetchCache()){
+      $startCache = true;
+      for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
+        if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->isBlacklisted()) {
+          $startCache = false;
+          $break;
         }
       }
-    }
-    $startCache = true;
-    for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
-      if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->isBlacklisted()) {
-        $startCache = false;
-        $break;
+      if($startCache) {
+        $this->buffering = true;
+        $GLOBALS['level'] = ob_get_level();
+        $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
+      } else {
+        $this->outputHandler->startBuffer($this->callbackShowOutputFunctionName);
       }
-    }
-    if($startCache) {
-      $this->buffering = true;
-      $GLOBALS['level'] = ob_get_level();
-      $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
-    } else {
-      $this->outputHandler->startBuffer($this->callbackShowOutputFunctionName);
     }
   }
 

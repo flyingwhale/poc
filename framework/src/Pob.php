@@ -74,7 +74,7 @@ class Pob {
     $GLOBALS['debug'] = $debug;
   }
 
-  public static function PobcallbackCache($buffer) {
+  public static function PobcallbackGenerate($buffer) {
     if($GLOBALS['level'] == ob_get_level() - 1) {
       $res = '';
       for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
@@ -96,15 +96,11 @@ class Pob {
     }
   }
 
-  public static function PobcallbackGenerate($buffer) {
+  public static function PobcallbackCache($buffer) {
     if($GLOBALS['debug']) {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
-
-      $l = new \Logger();
-      $l->lwrite("$buffer".$dbgMsg.microtime());
- 
       return ($buffer.$dbgMsg);
     } else {
       return ($buffer);
@@ -135,7 +131,7 @@ class Pob {
       if($GLOBALS['caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
-          $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
+          $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
           \header('Cache-Control: no-cache, must-revalidate'); 
           \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
           $last_modified = \gmdate('D, d M Y H:i:S');
@@ -175,7 +171,7 @@ class Pob {
       if($startCache) {
         $this->buffering = true;
         $GLOBALS['level'] = ob_get_level();
-        $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
+        $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
       } else {
         $this->outputHandler->startBuffer($this->callbackShowOutputFunctionName);
       }

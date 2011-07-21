@@ -19,25 +19,35 @@ use unittest\handler\TestOutput;
 use POC\Pob;
 const UNITTESTING = 1;
 
-//\ob_start('unittest\remove_output');
+//\ob_start('\unittest\hide_output');
 \ob_start();
 
+function hide_output($o){  
+}
 
-function remove_output($o){
-  return "\ntests begin\n".$o."\ntestes re done\n\n";
+function analyze_output($o){
+  $GLOBALS['analyzeThisOutput'] = $o;
 }
 
 include 'framework/autoload.php';
 
-class testClassTest extends \PHPUnit_Framework_TestCase{
+class TestClassTest extends \PHPUnit_Framework_TestCase{
+  
+  private $analyzeThisOutput;
+
+  static function  setAnalyzeThisOutput($o){
+    $this->analyzeThisOutput = $o;  
+  }
 
   private function cacheBurner(){
+    \ob_start('\unittest\analyze_output');
     $testString="\n\ntestString\n\n";
-    //$apc = new \ApcCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5);
     $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5,'/tmp/');
     $pob = new Pob(new \PobCache($apc), new TestOutput(), true);
     echo $testString;
     unset($pob);
+    \ob_end_flush();
+    //echo  $GLOBALS['analyzeThisOutput']."HEHEHEHE";
   }
 
   public function test_01_fill(){

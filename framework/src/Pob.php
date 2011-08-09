@@ -48,7 +48,6 @@ class Pob {
   var $outputHandler;
   var $output;
   var $buffering;
-  var $start;
 
   var $callbackCacheFunctionName;
   var $callbackGenerateFunctionName;
@@ -132,13 +131,15 @@ class Pob {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
           $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
+
           \header('Cache-Control: no-cache, must-revalidate'); 
           \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
-          $last_modified = \gmdate('D, d M Y H:i:S');
-          \header('Last-Modified: '.$last_modified.' GMT');
+          //$last_modified = \gmdate('D, d M Y H:i:S');
+          //\header('Last-Modified: '.$last_modified.' GMT');
           $started = 1;
           echo($this->output);
           $this->outputHandler->stopBuffer();
+          //\ob_end_flush();
         }
       }
     }
@@ -183,6 +184,12 @@ class Pob {
   }
 
   function __destruct() {
+    if(isset($GLOBALS['level'])) {
     \ob_end_flush();
+    }
+  }
+
+  public function destruct() {
+    $this->__destruct();
   }
 }

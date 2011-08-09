@@ -25,8 +25,13 @@ const UNITTESTING = 1;
 function hide_output($o){  
 }
 
-function analyze_output($o){
+function set_output($o){
   $GLOBALS['analyzeThisOutput'] = $o;
+}
+
+function get_output(){
+  $tmp = $GLOBALS['analyzeThisOutput'];
+  return $tmp;
 }
 
 include 'framework/autoload.php';
@@ -40,21 +45,45 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
   }
 
   private function cacheBurner(){
-    \ob_start('\unittest\analyze_output');
+    \ob_start('\unittest\set_output');
     $testString="\n\ntestString\n\n";
     $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5,'/tmp/');
     $pob = new Pob(new \PobCache($apc), new TestOutput(), true);
     echo $testString;
-    unset($pob);
+    $pob->destruct();
     \ob_end_flush();
+    //unset($pob);
+
     //echo  $GLOBALS['analyzeThisOutput']."HEHEHEHE";
   }
 
   public function test_01_fill(){
-    for ($i = 0; $i < 1; $i++){
-        $this->cacheBurner();
-    }
-//    $this->assertFalse(false);
+    
+//  $this->cacheBurner();
+    $this->cacheBurner();
+    $output1 = get_output();
+    echo($output1.'w');
+
+//  $this->cacheBurner();
+    $output2 = get_output();
+    echo($output1.'WW');
+
+//  $this->cacheBurner();
+    $output3 = get_output();
+    echo($output1.'WwW');
+
+//    $output3 = get_output();
+echo '1'.$output1.'2'.$output2.'3'.$output3;
+//    $this->assertTrue('testString', $output1);
+//    $this->assertTrue('testString', $output2);
+//    $this->assertTrue('testString', $output3);
+    $this->assertTrue($output1 == $output2);
+   
+    //$this->assertTrue($output2 == $output3);
+    //for ($i = 0; $i < 1; $i++){
+    //    $this->cacheBurner();
+    //}
+    //$this->assertFalse(false);
   }
 }
 ?>

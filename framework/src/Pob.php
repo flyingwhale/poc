@@ -81,12 +81,15 @@ class Pob {
         $eval = $cache->getEvaluateable();
         if($eval->evaluate()) {
           $dbgMsg = '';
-		  if($GLOBALS['debug']) {
-		    $dbgMsg = '<br>This page has been '
-		    .'<b> generated within </b> in '
-		    .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
-		  }
-		  $res = $buffer.$dbgMsg;
+          if($GLOBALS['debug']) {
+            $dbgMsg = '<br>This page has been '
+            .'<b> generated within </b> in '
+            .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
+          }
+          $res = $buffer.$dbgMsg;
+          $fp = fopen('/tmp/data_'.md5($res).'.txt', 'w');
+          fwrite($fp, $res);
+          fclose($fp);
           $GLOBALS['caches'][$i]->storeCache($res);
           $eval->cacheAddTags();
         }
@@ -136,6 +139,7 @@ class Pob {
           \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
           //$last_modified = \gmdate('D, d M Y H:i:S');
           //\header('Last-Modified: '.$last_modified.' GMT');
+          \header('Content-Encoding: gzip');
           $started = 1;
           echo($this->output);
           $this->outputHandler->stopBuffer();

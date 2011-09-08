@@ -87,9 +87,8 @@ class Pob {
             .'<b>'.((microtime() - $GLOBALS['start']) * 1000).'</b> milliseconds.';
           }
           $res = $buffer.$dbgMsg;
-          $fp = fopen('/tmp/data_'.md5($res).'.txt', 'w');
-          fwrite($fp, $res);
-          fclose($fp);
+          $arr = headers_list();
+          $GLOBALS['caches'][$i]->storeHeadersForPreservation($arr);
           $GLOBALS['caches'][$i]->storeCache($res);
           $eval->cacheAddTags();
         }
@@ -134,12 +133,18 @@ class Pob {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
           $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
-
           \header('Cache-Control: no-cache, must-revalidate'); 
           \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
           //$last_modified = \gmdate('D, d M Y H:i:S');
           //\header('Last-Modified: '.$last_modified.' GMT');
-          \header('Content-Encoding: gzip');
+          if($GLOBALS['caches'][$i]->headersToSend){
+            foreach($GLOBALS['caches'][$i]->headersToSend as $header){
+              \header($header);
+              //$l = new Logger();
+              //$l->lwrite($header." DDD");
+            }
+          }
+          
           $started = 1;
           echo($this->output);
           $this->outputHandler->stopBuffer();

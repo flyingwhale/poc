@@ -27,4 +27,5 @@ interface PobCacheInterface {
 
   public function cacheTagsInvalidation();
 
+  public function storeHeaderVariable($headerVariable);
 }

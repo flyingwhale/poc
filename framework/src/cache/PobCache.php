@@ -17,6 +17,9 @@ limitations under the License.
 class PobCache implements PobCacheInterface {
 
   var $specificCache;
+  var $headerToPreserve;
+  var $headersToStore;
+  var $headersTosend;
 
   function __construct (AbstractPobCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
@@ -25,14 +28,21 @@ class PobCache implements PobCacheInterface {
   public function storeCache($output) {
     if ($this->specificCache->getEvaluateable()->evaluate()) {
        $this->specificCache->cacheSpecificStore(
-                     $this->specificCache->getEvaluateable()->getKey(), $output);
+                   $this->specificCache->getEvaluateable()->getKey(), $output);
+       if($this->headersToStore){
+         $this->specificCache->cacheSpecificStore(
+           $this->specificCache->getEvaluateable()->getKey().'h', 
+                                              serialize($this->headersToStore));
+       }
     }
   }
 
   public function fetchCache() {
     if($this->specificCache->getEvaluateable()->evaluate()){ 
+      $this->headersToSend = unserialize($this->specificCache->cacheSpecificFetch(
+                            $this->specificCache->getEvaluateable()->getKey().'h'));
       return $this->specificCache->cacheSpecificFetch(
-                              $this->specificCache->getEvaluateable()->getKey());
+                            $this->specificCache->getEvaluateable()->getKey());
     }
   }
 
@@ -56,4 +66,28 @@ class PobCache implements PobCacheInterface {
     $this->specificCache->getEvaluateable()->cacheTagsInvalidation();
   }
 
+  public function storeHeaderVariable($headerVariable){ //TODO: check for all possible valid header variables.
+    $this->headersToPreserve[] = $headerVariable;
+  }
+
+  public function storeHeadersForPreservation($responseHeaders){
+   
+   $l = new Logger();
+
+    if($this->headersToPreserve){
+      $headerTmp;
+      foreach ($responseHeaders as $header){
+        $headerTmp[] = explode(':', $header);
+      }
+
+      foreach($this->headersToPreserve as $findThisHeader){
+        foreach ($headerTmp as $preserveThisHeader){
+          if($preserveThisHeader[0] == $findThisHeader){
+            $this->headersToStore[] = $findThisHeader.':'.$preserveThisHeader[1];
+            $l->lwrite(serialize($this->headersToStore));
+          }
+        }
+      }
+    }
+  }
 }

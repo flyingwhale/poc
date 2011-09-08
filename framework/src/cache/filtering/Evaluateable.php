@@ -40,7 +40,8 @@ class Evaluateable extends HasValue {
     $this->myCache = $cache;
   }
 
-  function __construct($pattern, $value, $operation=self::EQUALATION)  {
+  function __construct($pattern = 1, $value = 1, $operation=self::OP_EQUALATION)  {
+  
     $this->conditonArray[] = $this;
     $this->pattern = $pattern;
     $this->opertation = $operation;

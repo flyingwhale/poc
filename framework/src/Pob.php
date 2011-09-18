@@ -88,9 +88,21 @@ class Pob {
           }
           $res = $buffer.$dbgMsg;
           $arr = headers_list();
-          $GLOBALS['caches'][$i]->storeHeadersForPreservation($arr);
-          $GLOBALS['caches'][$i]->storeCache($res);
-          $eval->cacheAddTags();
+          //header_remove ('Content-Encoding');
+          //$l = new \Logger();
+          //$l->lwrite(gzuncompress($res)) ;
+
+          //TODO: This functionality still not works, has to be finished.
+          //$l->lwrite(\gzdecode($res)) ;
+          //die( \gzuncompress($res) );
+          //if(!$GLOBALS['caches'][$i]->isOutputBlacklisted(gzuncompress($res))){
+
+            $GLOBALS['caches'][$i]->storeHeadersForPreservation($arr);
+            $GLOBALS['caches'][$i]->removeHeaders($arr);
+            $GLOBALS['caches'][$i]->storeCache($res);
+            $eval->cacheAddTags();
+
+       // }
         }
       }
      return ($res);
@@ -133,18 +145,14 @@ class Pob {
         $this->output = $GLOBALS['caches'][$i]->fetchCache();
         if($this->output) {
           $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
-          \header('Cache-Control: no-cache, must-revalidate'); 
-          \header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
-          //$last_modified = \gmdate('D, d M Y H:i:S');
-          //\header('Last-Modified: '.$last_modified.' GMT');
+          $arr = headers_list();
           if($GLOBALS['caches'][$i]->headersToSend){
             foreach($GLOBALS['caches'][$i]->headersToSend as $header){
               \header($header);
-              //$l = new Logger();
-              //$l->lwrite($header." DDD");
             }
+            $GLOBALS['caches'][$i]->removeHeaders($arr);
           }
-          
+
           $started = 1;
           echo($this->output);
           $this->outputHandler->stopBuffer();

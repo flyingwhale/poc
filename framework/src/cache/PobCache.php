@@ -19,7 +19,11 @@ class PobCache implements PobCacheInterface {
   var $specificCache;
   var $headerToPreserve;
   var $headersToStore;
-  var $headersTosend;
+  var $headersToSend;
+  var $headersToRemove;
+  var $outputBlacklist;
+  var $eTag;
+  var $isEtagGeneration = 1;
 
   function __construct (AbstractPobCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
@@ -29,20 +33,29 @@ class PobCache implements PobCacheInterface {
     if ($this->specificCache->getEvaluateable()->evaluate()) {
        $this->specificCache->cacheSpecificStore(
                    $this->specificCache->getEvaluateable()->getKey(), $output);
+       //TODO: still not working.
+       if($this->isEtagGeneration){
+         $this->specificCache->cacheSpecificStore(
+           $this->specificCache->getEvaluateable()->getKey().'e',
+                                                $this->etagGeneration($output));
+       }
+
        if($this->headersToStore){
          $this->specificCache->cacheSpecificStore(
-           $this->specificCache->getEvaluateable()->getKey().'h', 
+           $this->specificCache->getEvaluateable()->getKey().'h',
                                               serialize($this->headersToStore));
        }
     }
   }
 
   public function fetchCache() {
-    if($this->specificCache->getEvaluateable()->evaluate()){ 
+    if($this->specificCache->getEvaluateable()->evaluate()){
       $this->headersToSend = unserialize($this->specificCache->cacheSpecificFetch(
-                            $this->specificCache->getEvaluateable()->getKey().'h'));
+                        $this->specificCache->getEvaluateable()->getKey().'h'));
+      $this->eTag = ($this->specificCache->cacheSpecificFetch(
+                        $this->specificCache->getEvaluateable()->getKey().'e'));
       return $this->specificCache->cacheSpecificFetch(
-                            $this->specificCache->getEvaluateable()->getKey());
+                             $this->specificCache->getEvaluateable()->getKey());
     }
   }
 
@@ -70,10 +83,19 @@ class PobCache implements PobCacheInterface {
     $this->headersToPreserve[] = $headerVariable;
   }
 
-  public function storeHeadersForPreservation($responseHeaders){
-   
-   $l = new Logger();
+  public function storeHeaderToRemove($headerVariable){
+    $this->headersToRemove[] = $headerVariable;
+  }
 
+  public function removeHeaders($reponseHeaders){
+    if($this->headersToRemove){
+      foreach($this->headersToRemove as $removeThisHeader){
+        header_remove($removeThisHeader);
+      }
+    }
+  }
+
+  public function storeHeadersForPreservation($responseHeaders){
     if($this->headersToPreserve){
       $headerTmp;
       foreach ($responseHeaders as $header){
@@ -83,9 +105,35 @@ class PobCache implements PobCacheInterface {
       foreach($this->headersToPreserve as $findThisHeader){
         foreach ($headerTmp as $preserveThisHeader){
           if($preserveThisHeader[0] == $findThisHeader){
-            $this->headersToStore[] = $findThisHeader.':'.$preserveThisHeader[1];
-            $l->lwrite(serialize($this->headersToStore));
+            $this->headersToStore[] = $findThisHeader.': '.$preserveThisHeader[1];
           }
+        }
+      }
+    }
+  }
+
+//TODO: still not works
+  public function etagGeneration($output){
+    if($this->isEtagGeneration){
+      $etag = md5($output);
+      $this->headersToStore[] = 'Etag : '.$etag;
+      $l = new Logger(); $l->lwrite("G: ".print_r($this->headersToStore),true);
+      return $etag;
+    }
+  }
+
+  public function storeOutputBlacklistCondition($condition){
+    $this->outputBlacklist[] = $condition;
+  }
+
+  //still not properly implemented feature..
+  public function isOutputBlacklisted ($output){
+    if( $this->outputBlacklist ){
+      foreach( $this->outputBlacklist as $condititon ){
+        $result = preg_match($condition, $output);
+        if($result){
+          die('HERE');
+          return false;
         }
       }
     }

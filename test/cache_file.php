@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
-  use POC\Pob;
+  use POC\Poc;
 
   include ("../framework/autoload.php");
   $eval = new Evaluateable
        ('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
   $eval->addDistinguishVariable($_GET);
 
-  $pob  = new Pob(new PobCache(new FileCache($eval, 5, '/tmp/')),new ServerOutput(), true);
+  $pob  = new Poc(new PocCache(new FileCache($eval, 5, '/tmp/')),new ServerOutput(), true);
 
   include('lib/text_generator.php');

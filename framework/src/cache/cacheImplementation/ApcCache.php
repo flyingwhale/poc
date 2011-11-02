@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-class ApcCache extends AbstractPobCacheSpecific {
+class ApcCache extends AbstractPocCacheSpecific {
 
   public function cacheSpecificFetch($key) {
     return apc_fetch($key);

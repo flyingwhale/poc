@@ -13,10 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
    */
+
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
-use POC\Pob;
+use POC\Poc;
 const UNITTESTING = 1;
 
 //\ob_start('\unittest\hide_output');
@@ -44,17 +45,14 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $this->analyzeThisOutput = $o;  
   }
 
-  private function cacheBurner(){
+  private function cacheBurner($testString='\n\ntestString\n\n'){
     \ob_start('\unittest\set_output');
-    $testString="\n\ntestString\n\n";
-    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', Evaluateable::OP_PREGMATCH),5,'/tmp/');
-    $pob = new Pob(new \PobCache($apc), new TestOutput(), true);
+    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', 
+                                         Evaluateable::OP_PREGMATCH),5,'/tmp/');
+    $pob = new Poc(new \PocCache($apc), new TestOutput(), true);
     echo $testString;
     $pob->destruct();
     \ob_end_flush();
-    //unset($pob);
-
-    //echo  $GLOBALS['analyzeThisOutput']."HEHEHEHE";
   }
 
   public function test_01_fill(){

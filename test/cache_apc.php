@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
-  use POC\Pob;
+  use POC\Poc;
 
   include ("../framework/autoload.php");
 //  $flexRes = new FlexResource('|^/dev/pob/test/basic.php$|', '$_SERVER["REQUEST_URI"]', Resource::OP_PREGMATCH);
   $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
-  $pob  = new Pob(new PobCache(new ApcCache($eval, 5)), new ServerOutput(), true);
+  $pob  = new Poc(new PocCache(new ApcCache($eval, 5)), new ServerOutput(), true);
 
   include('lib/text_generator.php');

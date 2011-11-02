@@ -15,16 +15,16 @@ limitations under the License.
 */
 namespace POC;
 
-function PobcallbackCache($buffer){
-  return Pob::PobcallbackCache($buffer);
+function PoccallbackCache($buffer){
+  return Poc::PoccallbackCache($buffer);
 }
 
-function  PobcallbackGenerate($buffer)
+function  PoccallbackGenerate($buffer)
 {
-  return Pob::PobcallbackGenerate($buffer);
+  return Poc::PoccallbackGenerate($buffer);
 }
 
-function PobcallbackShowOutput($buffer) {
+function PoccallbackShowOutput($buffer) {
   $dbgMsg = '';
   if($GLOBALS['debug']) {
      $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is Blacklisted.'
@@ -39,11 +39,11 @@ $level = null;
 $debug = null;
 $start = null;
 
-class Pob {
+class Poc {
 
-  const DEF_CACHE_FUNCTION_NAME = '\POC\PobcallbackCache';
-  const DEF_GENERATE_FUNCTION_NAME = '\POC\PobcallbackGenerate';
-  const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PobcallbackShowOutput';
+  const DEF_CACHE_FUNCTION_NAME = '\POC\PoccallbackCache';
+  const DEF_GENERATE_FUNCTION_NAME = '\POC\PoccallbackGenerate';
+  const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PoccallbackShowOutput';
 
   var $outputHandler;
   var $output;
@@ -73,7 +73,7 @@ class Pob {
     $GLOBALS['debug'] = $debug;
   }
 
-  public static function PobcallbackGenerate($buffer) {
+  public static function PoccallbackGenerate($buffer) {
     if($GLOBALS['level'] == ob_get_level() - 1) {
       $res = '';
       for( $i=0; $i<sizeof($GLOBALS['caches']); $i++ ) {
@@ -97,7 +97,7 @@ class Pob {
     }
   }
 
-  public static function PobcallbackCache($buffer) {
+  public static function PoccallbackCache($buffer) {
     if($GLOBALS['debug']) {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
@@ -109,12 +109,12 @@ class Pob {
   }
 
   /**
-  @param PobCacheInterface $cache this placeholder class contains the various
+  @param PocCacheInterface $cache this placeholder class contains the various
   caches.
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\PobCacheInterface $cache = null, \OutputInterface $output,
+  function __construct(\PocCacheInterface $cache = null, \OutputInterface $output,
                                                                 $debug = false) {
     $this->outputHandler = $output;
     $this->setDebug($debug);
@@ -188,7 +188,7 @@ class Pob {
     }
   }
 
-  public function addCache(\PobCacheInterface $cache) {
+  public function addCache(\PocCacheInterface $cache) {
     $GLOBALS['caches'][] = $cache;
   }
 

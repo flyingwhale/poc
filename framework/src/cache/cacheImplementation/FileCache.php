@@ -15,7 +15,7 @@ limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
 
-class FileCache extends AbstractPobCacheSpecific {
+class FileCache extends AbstractPocCacheSpecific {
 
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';

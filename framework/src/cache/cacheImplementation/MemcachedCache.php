@@ -15,7 +15,7 @@ limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
 
-class MemcachedCache extends AbstractPobCacheSpecific {
+class MemcachedCache extends AbstractPocCacheSpecific {
 
   var $memcache;
   var $compression=false;

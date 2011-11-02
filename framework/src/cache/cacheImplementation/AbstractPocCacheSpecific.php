@@ -16,7 +16,7 @@ limitations under the License.
 
 use POC\cache\filtering\Evaluateable;
 
-abstract class AbstractPobCacheSpecific implements PobCacheSpecificInterface {
+abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface {
 
   /** This variable must be declared at the constructors of this class.*/
   var $ttl;

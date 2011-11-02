@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-class PobCache implements PobCacheInterface {
+class PocCache implements PocCacheInterface {
 
   var $specificCache;
-  var $headerToPreserve;
+  var $headersToPreserve;
   var $headersToStore;
   var $headersTosend;
 
-  function __construct (AbstractPobCacheSpecific $specificCache) {
+  function __construct (AbstractPocCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
   }
 
@@ -66,7 +66,8 @@ class PobCache implements PobCacheInterface {
     $this->specificCache->getEvaluateable()->cacheTagsInvalidation();
   }
 
-  public function storeHeaderVariable($headerVariable){ //TODO: check for all possible valid header variables.
+  public function storeHeaderVariable($headerVariable){ 
+//TODO: check for all possible valid header variables.
     $this->headersToPreserve[] = $headerVariable;
   }
 

@@ -64,10 +64,15 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $this->cacheBurner("\ntest1\n");
     $output2 = get_output();
 
+for($i = 0; $i < 3; $i++){
+//  $this->cacheBurner();
+//  sleep(1);
+}
     sleep(2);
 
     $this->cacheBurner("\ntest3\n");
     $output3 = get_output();
+
 
 $l = new \Logger();
 //    $output3 = get_output();

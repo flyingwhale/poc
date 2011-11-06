@@ -202,7 +202,11 @@ class Poc {
 
   function __destruct() {
     if(isset($GLOBALS['level'])) {
-    \ob_end_flush();
+       if($GLOBALS['level']){
+         //$this->outputHandler->stopBuffer();
+         //if(!$this->buffering){
+         \ob_end_flush(); 
+       }
     }
   }
 

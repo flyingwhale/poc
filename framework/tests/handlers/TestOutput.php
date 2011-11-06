@@ -13,7 +13,7 @@ class TestOutput implements \OutputInterface {
   }
 
   function stopBuffer(){
-    ob_end_flush();
+    ob_flush();
   }
 
 }

@@ -118,7 +118,6 @@ class PocCache implements PocCacheInterface {
     if($this->isEtagGeneration){
       $etag = md5($output);
       $this->headersToStore[] = 'Etag : '.$etag;
-      $l = new Logger(); $l->lwrite("G: ".print_r($this->headersToStore),true);
       return $etag;
     }
   }

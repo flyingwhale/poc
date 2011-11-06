@@ -45,11 +45,11 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $this->analyzeThisOutput = $o;  
   }
 
-  private function cacheBurner($testString='\n\ntestString\n\n'){
+  private function cacheBurner($testString="\n\ntestString\n\n"){
     \ob_start('\unittest\set_output');
     $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', 
-                                         Evaluateable::OP_PREGMATCH),5,'/tmp/');
-    $pob = new Poc(new \PocCache($apc), new TestOutput(), true);
+                                         Evaluateable::OP_PREGMATCH),1,'/tmp/');
+    $pob = new Poc(new \PocCache($apc), new TestOutput(), false);
     echo $testString;
     $pob->destruct();
     \ob_end_flush();
@@ -58,24 +58,22 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
   public function test_01_fill(){
     
 //  $this->cacheBurner();
-    $this->cacheBurner();
+    $this->cacheBurner("\ntest1\n");
     $output1 = get_output();
-    echo($output1.'w');
 
-//  $this->cacheBurner();
+    $this->cacheBurner("\ntest1\n");
     $output2 = get_output();
-    echo($output1.'WW');
 
-//  $this->cacheBurner();
+    sleep(2);
+
+    $this->cacheBurner("\ntest3\n");
     $output3 = get_output();
-    echo($output1.'WwW');
 
+$l = new \Logger();
 //    $output3 = get_output();
-echo '1'.$output1.'2'.$output2.'3'.$output3;
-//    $this->assertTrue('testString', $output1);
-//    $this->assertTrue('testString', $output2);
-//    $this->assertTrue('testString', $output3);
+$l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
     $this->assertTrue($output1 == $output2);
+    $this->assertTrue($output1 != $output3);
    
     //$this->assertTrue($output2 == $output3);
     //for ($i = 0; $i < 1; $i++){

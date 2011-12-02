@@ -149,18 +149,14 @@ $level = null;
           $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
           $arr = headers_list();
           if($GLOBALS['poc_caches'][$i]->headersToSend){
-//    $this->assertTrue('testString', $output3);
-
             foreach($GLOBALS['poc_caches'][$i]->headersToSend as $header){
-              \header($header);
+              $this->outputHandler->header($header);
             }
             $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
           }
-
           $started = 1;
           echo($this->output);
           $this->outputHandler->stopBuffer();
-          //\ob_end_flush();
         }
       }
     }

@@ -13,4 +13,8 @@ class ServerOutput implements OutputInterface {
     die();
   }
 
+  function header($header){
+    \header($header);
+  }
+
 }

@@ -4,6 +4,8 @@ namespace unittest\handler;
 
 class TestOutput implements \OutputInterface {
 
+  private $header = null;
+
   function getLevel(){
     return ob_get_level();
   }
@@ -15,5 +17,8 @@ class TestOutput implements \OutputInterface {
   function stopBuffer(){
     ob_flush();
   }
-
+  
+  function header($header){
+    $this->header = $header;
+  }
 }

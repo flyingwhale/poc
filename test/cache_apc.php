@@ -19,6 +19,6 @@ limitations under the License.
   include ("../framework/autoload.php");
 //  $flexRes = new FlexResource('|^/dev/pob/test/basic.php$|', '$_SERVER["REQUEST_URI"]', Resource::OP_PREGMATCH);
   $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
-  $pob  = new Poc(new PocCache(new ApcCache($eval, 5)), new ServerOutput(), true);
+  $pob  = new Poc(new \POC\cache\PocCache(new ApcCache($eval, 5)), new \POC\handlers\ServerOutput(), true);
 
   include('lib/text_generator.php');

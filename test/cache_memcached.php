@@ -19,7 +19,7 @@ limitations under the License.
 
   $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
 
-  $pob  = new Poc(new PocCache(new MemcachedCache($eval, 5, 'localhost')), new ServerOutput(), true);
+  $pob  = new Poc(new \POC\cache\PocCache(new MemcachedCache($eval, 5, 'localhost')), new \POC\handlers\ServerOutput(), true);
 
   include('lib/text_generator.php');
 

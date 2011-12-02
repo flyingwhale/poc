@@ -31,8 +31,8 @@ function set_output($o){
 }
 
 function get_output(){
-  $tmp = $GLOBALS['analyzeThisOutput'];
-  return $tmp;
+  if (isset($GLOBALS['analyzeThisOutput']))
+    return $GLOBALS['analyzeThisOutput'];
 }
 
 include 'framework/autoload.php';
@@ -56,27 +56,28 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
   }
 
   public function test_01_fill(){
+    $this->cacheBurner();
+    sleep(2);
     
-//  $this->cacheBurner();
     $this->cacheBurner("\ntest1\n");
     $output1 = get_output();
 
-    $this->cacheBurner("\ntest1\n");
+    for ($i = 0; $i < 20; $i++){
+      $this->cacheBurner();
+    }
+
+    $this->cacheBurner("\ntest2\n");
     $output2 = get_output();
 
-for($i = 0; $i < 3; $i++){
-//  $this->cacheBurner();
-//  sleep(1);
-}
     sleep(2);
 
     $this->cacheBurner("\ntest3\n");
     $output3 = get_output();
 
-
-$l = new \Logger();
-//    $output3 = get_output();
-$l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
+    $l = new \Logger();
+    
+    $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
+    
     $this->assertTrue($output1 == $output2);
     $this->assertTrue($output1 != $output3);
    

@@ -65,7 +65,7 @@ class FileCache extends AbstractPocCacheSpecific {
   public function checkTtl($key){
     if(file_exists($this->fileTtl.$key)){
       $handle = fopen($this->fileTtl.$key, "r");
-      $ttl=fread($handle, filesize($this->file.$key));
+      $ttl=fread($handle, filesize($this->fileTtl.$key));
       if((int) $ttl>=time()){
         return true;
       } else {

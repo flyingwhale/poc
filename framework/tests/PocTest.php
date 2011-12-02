@@ -49,7 +49,7 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     \ob_start('\unittest\set_output');
     $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', 
                                          Evaluateable::OP_PREGMATCH),1,'/tmp/');
-    $pob = new Poc(new \PocCache($apc), new TestOutput(), false);
+    $pob = new Poc(new \POC\cache\PocCache($apc), new TestOutput(), false);
     echo $testString;
     $pob->destruct();
     \ob_end_flush();

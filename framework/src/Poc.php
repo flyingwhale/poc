@@ -128,7 +128,7 @@ $level = null;
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\PocCacheInterface $cache = null, \POC\handlers\OutputInterface 
+  function __construct(\POC\cache\PocCacheInterface $cache = null, \POC\handlers\OutputInterface 
                                                      $output, $debug = false) {
     $this->outputHandler = $output;
     $this->setDebug($debug);
@@ -197,7 +197,7 @@ $level = null;
     }
   }
 
-  public function addCache(\PocCacheInterface $cache) {
+  public function addCache(\POC\cache\PocCacheInterface $cache) {
     $GLOBALS['poc_caches'][] = $cache;
   }
 

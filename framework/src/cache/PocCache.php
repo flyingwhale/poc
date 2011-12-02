@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+namespace POC\cache;
+
+
 class PocCache implements PocCacheInterface {
 
   var $specificCache;
@@ -25,7 +28,7 @@ class PocCache implements PocCacheInterface {
   var $eTag;
   var $isEtagGeneration = 1;
 
-  function __construct (AbstractPocCacheSpecific $specificCache) {
+  function __construct (\AbstractPocCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
   }
 

@@ -2,7 +2,7 @@
 
 namespace unittest\handler;
 
-class TestOutput implements \OutputInterface {
+class TestOutput implements \POC\handlers\OutputInterface {
 
   private $header = null;
 
@@ -22,3 +22,4 @@ class TestOutput implements \OutputInterface {
     $this->header = $header;
   }
 }
+

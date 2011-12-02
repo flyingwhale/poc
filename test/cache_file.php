@@ -15,7 +15,7 @@ limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
   use POC\Poc;
-
+  use POC\handlers\ServerOutput;
   include ("../framework/autoload.php");
   $eval = new Evaluateable
        ('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);

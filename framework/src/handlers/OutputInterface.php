@@ -1,4 +1,7 @@
 <?php
+
+namespace POC\Handlers;
+
 interface OutputInterface {
 
 function getLevel();

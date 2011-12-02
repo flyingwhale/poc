@@ -1,4 +1,5 @@
 <?php
+namespace POC\handlers;
 class ServerOutput implements OutputInterface {
 
   function getLevel(){

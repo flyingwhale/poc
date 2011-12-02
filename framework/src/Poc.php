@@ -128,8 +128,8 @@ $level = null;
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\PocCacheInterface $cache = null, \OutputInterface $output,
-                                                                $debug = false) {
+  function __construct(\PocCacheInterface $cache = null, \POC\handlers\OutputInterface 
+                                                     $output, $debug = false) {
     $this->outputHandler = $output;
     $this->setDebug($debug);
     if($cache != null) {

@@ -38,6 +38,15 @@ function get_output(){
 include 'framework/autoload.php';
 
 class TestClassTest extends \PHPUnit_Framework_TestCase{
+
+  protected function setUp()
+  {
+   
+    $this->cacheBurner("1",new \FileCache(new Evaluateable('#php$#', 'tester.php',
+                                        Evaluateable::OP_PREGMATCH),1,'/tmp/'));
+    sleep(2);
+  }
+ 
   
   private $analyzeThisOutput;
 
@@ -45,33 +54,33 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $this->analyzeThisOutput = $o;  
   }
 
-  private function cacheBurner($testString="\n\ntestString\n\n"){
-    \ob_start('\unittest\set_output');
-    $apc = new \FileCache(new Evaluateable('#php$#', 'tester.php', 
-                                         Evaluateable::OP_PREGMATCH),1,'/tmp/');
-    $pob = new Poc(new \POC\cache\PocCache($apc), new TestOutput(), false);
+  private function cacheBurner($testString="\n\ntestString\n\n", $cacheHandler) {
+    \ob_start('\unittest\set_output'); 
+    $pob = 
+         new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
     echo $testString;
     $pob->destruct();
     \ob_end_flush();
   }
 
   public function test_01_fill(){
-    $this->cacheBurner();
-    sleep(2);
-    
-    $this->cacheBurner("\ntest1\n");
+
+    $cacheHandler = new \FileCache(new Evaluateable('#php$#', 'tester.php',
+                                        Evaluateable::OP_PREGMATCH),1,'/tmp/');  
+
+    $this->cacheBurner("\ntest1\n",$cacheHandler);
     $output1 = get_output();
 
     for ($i = 0; $i < 20; $i++){
-      $this->cacheBurner();
+      $this->cacheBurner($i,$cacheHandler);
     }
 
-    $this->cacheBurner("\ntest2\n");
+    $this->cacheBurner("\ntest2\n",$cacheHandler);
     $output2 = get_output();
 
     sleep(2);
 
-    $this->cacheBurner("\ntest3\n");
+    $this->cacheBurner("\ntest3\n",$cacheHandler);
     $output3 = get_output();
 
     $l = new \Logger();
@@ -81,11 +90,6 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $this->assertTrue($output1 == $output2);
     $this->assertTrue($output1 != $output3);
    
-    //$this->assertTrue($output2 == $output3);
-    //for ($i = 0; $i < 1; $i++){
-    //    $this->cacheBurner();
-    //}
-    //$this->assertFalse(false);
   }
 }
 ?>

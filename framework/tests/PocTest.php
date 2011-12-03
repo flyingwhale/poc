@@ -39,25 +39,17 @@ include 'framework/autoload.php';
 
 class TestClassTest extends \PHPUnit_Framework_TestCase{
 
-  protected function setUp()
-  {
-   
-    $this->cacheBurner("1",new \FileCache(new Evaluateable('#php$#', 'tester.php',
-                                        Evaluateable::OP_PREGMATCH),1,'/tmp/'));
-    sleep(2);
-  }
- 
-  
   private $analyzeThisOutput;
 
   static function  setAnalyzeThisOutput($o){
     $this->analyzeThisOutput = $o;  
   }
 
-  private function cacheBurner($testString="\n\ntestString\n\n", $cacheHandler) {
+  private function cacheBurner($testString="\n\ntestString\n\n", 
+                                                                $cacheHandler) {
     \ob_start('\unittest\set_output'); 
     $pob = 
-         new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
+       new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
     echo $testString;
     $pob->destruct();
     \ob_end_flush();
@@ -65,31 +57,43 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
 
   public function test_01_fill(){
 
-    $cacheHandler = new \FileCache(new Evaluateable('#php$#', 'tester.php',
-                                        Evaluateable::OP_PREGMATCH),1,'/tmp/');  
 
-    $this->cacheBurner("\ntest1\n",$cacheHandler);
-    $output1 = get_output();
+    $eval = new Evaluateable('#php$#', 'tester.php',
+                                                   Evaluateable::OP_PREGMATCH);
+    $handlers = array();
 
-    for ($i = 0; $i < 20; $i++){
-      $this->cacheBurner($i,$cacheHandler);
+    $handlers[] = new \FileCache($eval,1,'/tmp/');    
+    $handlers[] = new \ApcCache($eval, 1);
+    $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
+
+    foreach($handlers as $cacheHandler) {
+
+      $this->cacheBurner("1",$cacheHandler);
+      sleep(2);
+
+
+      $this->cacheBurner("\ntest1\n",$cacheHandler);
+      $output1 = get_output();
+
+      for ($i = 0; $i < 20; $i++){
+        $this->cacheBurner($i,$cacheHandler);
+      }
+
+      $this->cacheBurner("\ntest2\n",$cacheHandler);
+      $output2 = get_output();
+
+      sleep(2);
+
+      $this->cacheBurner("\ntest3\n",$cacheHandler);
+      $output3 = get_output();
+
+      $l = new \Logger();
+    
+      $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
+    
+      $this->assertTrue($output1 == $output2);
+      $this->assertTrue($output1 != $output3);
     }
-
-    $this->cacheBurner("\ntest2\n",$cacheHandler);
-    $output2 = get_output();
-
-    sleep(2);
-
-    $this->cacheBurner("\ntest3\n",$cacheHandler);
-    $output3 = get_output();
-
-    $l = new \Logger();
-    
-    $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
-    
-    $this->assertTrue($output1 == $output2);
-    $this->assertTrue($output1 != $output3);
-   
   }
 }
 ?>

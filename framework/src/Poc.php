@@ -15,19 +15,19 @@ limitations under the License.
 */
 namespace POC;
 
-function pocCallbackCache($buffer){
+function pocCallbackCache($buffer) {
   return Poc::pocCallbackCache($buffer);
 }
 
-function  pocCallbackGenerate($buffer)
-{
+function  pocCallbackGenerate($buffer) {
   return Poc::pocCallbackGenerate($buffer);
 }
 
 function pocCallbackShowOutput($buffer) {
   $dbgMsg = '';
-  if($GLOBALS['poc_debug']) {
-     $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is Blacklisted.'
+  if ($GLOBALS['poc_debug']) {
+     $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is 
+                                                                   Blacklisted.'
      .' <b> Was Generated withtin </b>'
      .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).'</b> milliseconds.';
   }
@@ -36,9 +36,8 @@ function pocCallbackShowOutput($buffer) {
 
 $debug = null;
 
-class Poc {
-
-
+class Poc 
+{
   var $outputHandler;
   var $output;
   var $buffering;
@@ -46,22 +45,22 @@ class Poc {
   public function setDebug($debug) {
     $this->debug = $debug;
     $GLOBALS['poc_debug'] = $debug;
-//    $this->assertTrue('testString', $output3);
   }
 
   public static function pocCallbackGenerate($buffer) {
-    if($GLOBALS['poc_level'] == ob_get_level() - 1) {
+    if ($GLOBALS['poc_level'] == ob_get_level() - 1) {
       $res = '';
-      for( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
+      for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
 //    $this->assertTrue('testString', $output3);
         $cache = $GLOBALS['poc_caches'][$i]->getSpecificCache();
         $eval = $cache->getEvaluateable();
-        if($eval->evaluate()) {
+        if ($eval->evaluate()) {
           $dbgMsg = '';
-          if($GLOBALS['poc_debug']) {
+          if ($GLOBALS['poc_debug']) {
             $dbgMsg = '<br>This page has been '
             .'<b> generated within </b> in '
-            .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).'</b> milliseconds.';
+            .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).
+                                                           '</b> milliseconds.';
 $level = null;
           }
           $res = $buffer.$dbgMsg;
@@ -73,15 +72,13 @@ $level = null;
           //TODO: This functionality still not works, has to be finished.
           //$l->lwrite(\gzdecode($res)) ;
           //die( \gzuncompress($res) );
-          //if(!$GLOBALS['caches'][$i]->isOutputBlacklisted(gzuncompress($res))){
-
+          //if(!$GLOBALS['caches'][$i]->isOutputBlacklisted(gzuncompress($res)))
+          //{
           $GLOBALS['poc_caches'][$i]->storeHeadersForPreservation($arr);
-            $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
-//    $this->assertTrue('testString', $output3);
-            $GLOBALS['poc_caches'][$i]->storeCache($res);
-            $eval->cacheAddTags();
-
-       // }
+          $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
+          $GLOBALS['poc_caches'][$i]->storeCache($res);
+          $eval->cacheAddTags();
+          //
         }
       }
      return ($res);
@@ -89,7 +86,7 @@ $level = null;
   }
 
   public static function pocCallbackCache($buffer) {
-    if($GLOBALS['poc_debug']) {
+    if ($GLOBALS['poc_debug']) {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).'</b> milliseconds.';
@@ -105,11 +102,11 @@ $level = null;
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\POC\cache\PocCacheInterface $cache = null, \POC\handlers\OutputInterface 
-                                                     $output, $debug = false) {
+  function __construct(\POC\cache\PocCacheInterface $cache = null, 
+                        \POC\handlers\OutputInterface $output, $debug = false) {
     $this->outputHandler = $output;
     $this->setDebug($debug);
-    if($cache != null) {
+    if ($cache != null) {
       $this->addCache($cache);
       $this->start();
     }
@@ -118,15 +115,16 @@ $level = null;
 
   private function fetchCache() {
    $started = 0;
-    for( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
+    for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
       $GLOBALS['poc_caches'][$i]->cacheTagsInvalidation();
-      if($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
+      if ($GLOBALS['poc_caches'][$i]->getSpecificCache()->
+                                                getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['poc_caches'][$i]->fetchCache();
-        if($this->output) {
+        if ($this->output) {
           $this->outputHandler->startBuffer('\POC\pocCallbackCache');
           $arr = headers_list();
-          if($GLOBALS['poc_caches'][$i]->headersToSend){
-            foreach($GLOBALS['poc_caches'][$i]->headersToSend as $header){
+          if ($GLOBALS['poc_caches'][$i]->headersToSend) {
+            foreach ($GLOBALS['poc_caches'][$i]->headersToSend as $header) {
               $this->outputHandler->header($header);
             }
             $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
@@ -141,18 +139,19 @@ $level = null;
   }
 
   public function start() {
+
     $GLOBALS['poc_start'] = microtime();
 
-
-    if(!$this->fetchCache()){
+    if (!$this->fetchCache()) {
       $startCache = true;
-      for( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
-        if($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->isBlacklisted()) {
+      for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
+        if ($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->
+                                                              isBlacklisted()) {
           $startCache = false;
           $break;
         }
       }
-      if($startCache) {
+      if ($startCache) {
         $this->buffering = true;
         $GLOBALS['poc_level'] = ob_get_level();
         $this->outputHandler->startBuffer('\POC\pocCallbackGenerate');
@@ -167,8 +166,8 @@ $level = null;
   }
 
   function __destruct() {
-    if(isset($GLOBALS['poc_level'])) {
-       if($GLOBALS['poc_level']){
+    if (isset($GLOBALS['poc_level'])) {
+       if ($GLOBALS['poc_level']) {
          //$this->outputHandler->stopBuffer();
          //if(!$this->buffering){
          \ob_end_flush(); 

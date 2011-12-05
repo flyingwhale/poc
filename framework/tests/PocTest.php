@@ -18,6 +18,7 @@ namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
 use POC\Poc;
+
 const UNITTESTING = 1;
 
 //\ob_start('\unittest\hide_output');
@@ -55,8 +56,8 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     \ob_end_flush();
   }
 
-  public function test_01_fill(){
 
+  public function test_01_fill(){
 
     $eval = new Evaluateable('#php$#', 'tester.php',
                                                    Evaluateable::OP_PREGMATCH);

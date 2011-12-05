@@ -15,16 +15,16 @@ limitations under the License.
 */
 namespace POC;
 
-function PoccallbackCache($buffer){
-  return Poc::PoccallbackCache($buffer);
+function pocCallbackCache($buffer){
+  return Poc::pocCallbackCache($buffer);
 }
 
-function  PoccallbackGenerate($buffer)
+function  pocCallbackGenerate($buffer)
 {
-  return Poc::PoccallbackGenerate($buffer);
+  return Poc::pocCallbackGenerate($buffer);
 }
 
-function PoccallbackShowOutput($buffer) {
+function pocCallbackShowOutput($buffer) {
   $dbgMsg = '';
   if($GLOBALS['poc_debug']) {
      $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is Blacklisted.'
@@ -38,33 +38,10 @@ $debug = null;
 
 class Poc {
 
-  const DEF_CACHE_FUNCTION_NAME = '\POC\PoccallbackCache';
-  const DEF_GENERATE_FUNCTION_NAME = '\POC\PoccallbackGenerate';
-  const DEF_SHOW_OUTPUT_FUNCTION_NAME = '\POC\PoccallbackShowOutput';
 
   var $outputHandler;
   var $output;
   var $buffering;
-
-  var $callbackCacheFunctionName;
-  var $callbackGenerateFunctionName;
-  var $callbackShowOutputFunctionName;
-
-  public function setCallbackCacheFunctionName($fn){
-    $this->callbackCacheFunctionName = $fn;
-  }
-
-  public function setCallbackGenerateFunctionName($fn){
-    $this->callbackGenerateFunctionName = $fn;
-  }
-
-  public function setCallbackShowOutputFunctionName($fn){
-    $this->callbackShowOutputFunctionName = $fn;
-  }
-
-  public function setOutputHandler(\OutputInterface $oh){
-    $this->outputHandler = $oh;
-  }
 
   public function setDebug($debug) {
     $this->debug = $debug;
@@ -72,7 +49,7 @@ class Poc {
 //    $this->assertTrue('testString', $output3);
   }
 
-  public static function PoccallbackGenerate($buffer) {
+  public static function pocCallbackGenerate($buffer) {
     if($GLOBALS['poc_level'] == ob_get_level() - 1) {
       $res = '';
       for( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
@@ -111,7 +88,7 @@ $level = null;
     }
   }
 
-  public static function PoccallbackCache($buffer) {
+  public static function pocCallbackCache($buffer) {
     if($GLOBALS['poc_debug']) {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
@@ -146,7 +123,7 @@ $level = null;
       if($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->evaluate()) {
         $this->output = $GLOBALS['poc_caches'][$i]->fetchCache();
         if($this->output) {
-          $this->outputHandler->startBuffer($this->callbackCacheFunctionName);
+          $this->outputHandler->startBuffer('\POC\pocCallbackCache');
           $arr = headers_list();
           if($GLOBALS['poc_caches'][$i]->headersToSend){
             foreach($GLOBALS['poc_caches'][$i]->headersToSend as $header){
@@ -166,22 +143,10 @@ $level = null;
   public function start() {
     $GLOBALS['poc_start'] = microtime();
 
-    if(!$this->callbackCacheFunctionName){
-      $this->setCallbackCacheFunctionName(self::DEF_CACHE_FUNCTION_NAME);
-    }
-
-    if(!$this->callbackGenerateFunctionName){
-      $this->setCallbackGenerateFunctionName(self::DEF_GENERATE_FUNCTION_NAME);
-    }
-
-    if(!$this->callbackShowOutputFunctionName){
-      $this->setCallbackShowOutputFunctionName(self::DEF_SHOW_OUTPUT_FUNCTION_NAME);
-    }
 
     if(!$this->fetchCache()){
       $startCache = true;
       for( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
-//    $this->assertTrue('testString', $output3);
         if($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->isBlacklisted()) {
           $startCache = false;
           $break;
@@ -190,9 +155,9 @@ $level = null;
       if($startCache) {
         $this->buffering = true;
         $GLOBALS['poc_level'] = ob_get_level();
-        $this->outputHandler->startBuffer($this->callbackGenerateFunctionName);
+        $this->outputHandler->startBuffer('\POC\pocCallbackGenerate');
       } else {
-        $this->outputHandler->startBuffer($this->callbackShowOutputFunctionName);
+        $this->outputHandler->startBuffer('\POC\pocCallbackShowOutput');
       }
     }
   }

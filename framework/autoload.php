@@ -25,6 +25,8 @@ spl_autoload_register(
                 'poccachespecificinterface' => '/src/cache/cacheImplementation/PocCacheSpecificInterface.php',
                 'sqlitetagging' => '/src/cache/tagging/SqliteTagging.php',
                 'tagger' => '/src/cache/tagging/Tagger.php',
+                'unittest\\apccachetest' => '/tests/cache/cacheImplmentation/ApcCacheTest.php',
+                'unittest\\cachetest' => '/tests/cache/cacheImplmentation/CacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\testclasstest' => '/tests/PocTest.php'
             );

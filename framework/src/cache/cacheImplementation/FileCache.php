@@ -39,8 +39,16 @@ class FileCache extends AbstractPocCacheSpecific {
   }
 
   public function cacheSpecificClearAll() {
-    //TODO: implement it!
-  }
+
+     foreach (glob($this->directory.'/'.self::KEY_PREFIX.'*') as $filename) {
+       unlink($filename);
+     }
+
+     foreach (glob($this->directory.'/'.self::TTL_PREFIX.'*') as $filename) {
+       unlink($filename);
+     }
+
+   }
 
   public function cacheSpecificClearItem($key) {
     if($this->checkTtl($key)) {

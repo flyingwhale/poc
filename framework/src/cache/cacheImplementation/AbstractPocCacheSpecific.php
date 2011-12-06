@@ -16,7 +16,8 @@ limitations under the License.
 
 use POC\cache\filtering\Evaluateable;
 
-abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface {
+abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface 
+{
 
   /** This variable must be declared at the constructors of this class.*/
   var $ttl;
@@ -39,7 +40,7 @@ abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface {
   }
 
   function setTagDb(AbstractDb $tagDb = null){
-    if($tagDb == null){
+    if ($tagDb == null) {
       $this->tagDb = new SqliteTagging();
     } else {
       $this->tagDb = $tagDb;
@@ -48,7 +49,7 @@ abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface {
   }
 
   function getTagDb(){
-    if(!$this->tagDb){
+    if (!$this->tagDb) {
       $this->setTagDb();
     }
     return $this->tagDb;

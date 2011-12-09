@@ -29,7 +29,7 @@ class ApcCache extends AbstractPocCacheSpecific {
   }
 
   public function cacheSpecificStore($key, $output) {
-    apc_add ($key, $output, $this->ttl);
+    apc_store ($key, $output, $this->ttl);
   }
 
 }

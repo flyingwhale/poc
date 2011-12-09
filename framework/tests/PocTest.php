@@ -21,13 +21,16 @@ use POC\Poc;
 
 const UNITTESTING = 1;
 
-//\ob_start('\unittest\hide_output');
 \ob_start();
 
-function hide_output($o){  
+function hide_output($o){
 }
 
 function set_output($o){
+  $l = new \Logger();
+
+  $l->lwrite( $o );
+
   $GLOBALS['analyzeThisOutput'] = $o;
 }
 
@@ -43,13 +46,13 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
   private $analyzeThisOutput;
 
   static function  setAnalyzeThisOutput($o){
-    $this->analyzeThisOutput = $o;  
+    $this->analyzeThisOutput = $o;
   }
 
-  private function cacheBurner($testString="\n\ntestString\n\n", 
+  private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
-    \ob_start('\unittest\set_output'); 
-    $pob = 
+    \ob_start('\unittest\set_output');
+    $pob =
        new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
     echo $testString;
     $pob->destruct();
@@ -63,21 +66,19 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
                                                    Evaluateable::OP_PREGMATCH);
     $handlers = array();
 
-    $handlers[] = new \FileCache($eval,1,'/tmp/');    
+    $handlers[] = new \FileCache($eval,1,'/tmp/');
     $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
-    //$handlers[] = new \ApcCache($eval, 1);
-    //TODO: check why ApcCache Is not working;    
+    $handlers[] = new ApcCache($eval, 1);
 
     foreach($handlers as $cacheHandler) {
-
       $this->cacheBurner("1",$cacheHandler);
-      sleep(2);
 
+      sleep(2);
 
       $this->cacheBurner("\ntest1\n",$cacheHandler);
       $output1 = get_output();
 
-      for ($i = 0; $i < 20; $i++){
+      for ($i = 0; $i < 2; $i++){
         $this->cacheBurner($i,$cacheHandler);
       }
 
@@ -88,15 +89,12 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
 
       $this->cacheBurner("\ntest3\n",$cacheHandler);
       $output3 = get_output();
-      $l = new \Logger(); $l->lwrite(' + '.$output3.' + ');
-
       $l = new \Logger();
-    
+
       $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
-    
       $this->assertTrue($output1 == $output2);
       $this->assertTrue($output1 != $output3);
     }
   }
 }
-?>
+

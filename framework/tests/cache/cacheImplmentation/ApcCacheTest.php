@@ -23,7 +23,7 @@ class ApcCacheTest extends CacheTest
 {
  
   function setUp_() {
-    $this->cache = new \ApcCache(new Evaluateable('#php$#', 'tester.php',
+    $this->cache = new ApcCache(new Evaluateable('#php$#', 'tester.php',
                                      Evaluateable::OP_PREGMATCH), parent::TTL);
     $this->cache->cacheSpecificClearAll();
   }

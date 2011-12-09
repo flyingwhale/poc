@@ -41,31 +41,18 @@ class Evaluateable extends HasValue {
   }
 
   function __construct($pattern = 1, $value = 1, $operation=self::OP_EQUALATION)  {
-  
+
     $this->conditonArray[] = $this;
     $this->pattern = $pattern;
     $this->opertation = $operation;
     $this->setValue($value);
   }
 
-  function evaluate() {
+  public function evaluate() {
     return $this->conditonArray[0]->selfEvaluate();
   }
 
-  function negate($value=true) {
-    $negation = $value;
-  }
-
-  private function evaluation($object) {
-
-    if($object === $this) {
-      return $object->selfEvaluate();
-    } else {
-      return $object->evaluate();
-    }
-  }
-
-  function selfEvaluate() {
+  public function selfEvaluate() {
     $this->blacklistCacheInvalidation();
     if($this->opertation == self::OP_EQUALATION) {
       return ($this->pattern == $this->value);
@@ -74,7 +61,7 @@ class Evaluateable extends HasValue {
     }
   }
 
-  function getKey() {
+  public function getKey() {
     if(!$this->key) {
       $this->key = $this->toHash();
     }
@@ -109,13 +96,13 @@ class Evaluateable extends HasValue {
     }
   }
 
-  function cacheTagsInvalidation(){
+  public function cacheTagsInvalidation(){
     foreach($this->cacheInvalidationTags as $tagger){
       $tagger->cacheInvalidation();
     }
   }
 
-  function isBlacklisted() {
+  public function isBlacklisted() {
       foreach($this->blacklistConditions as $blackRequest) {
       if($blackRequest) {
          return true;

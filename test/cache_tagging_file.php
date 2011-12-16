@@ -31,11 +31,11 @@ limitations under the License.
     }
   }
 
-  $apcCache = new ApcCache($eval,5);
+  $cache = new FileCache($eval, 5, '/tmp/');
 
   //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
 
-  $pobCache = new PocCache($apcCache);
+  $pobCache = new PocCache($cache);
 
   //$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
 

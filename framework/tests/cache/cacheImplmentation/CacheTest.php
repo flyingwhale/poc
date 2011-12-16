@@ -20,69 +20,49 @@ use POC\cache\filtering\Evaluateable;
 
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {
- 
+
   public $TESTKEY = 'testkey';
   const TESTDATA = 'testdata';
   const TTL = 1;
 
   public $cache = null;
- 
+
   abstract function setUp_();
-  
+
   protected function setUp() {
     $this->TESTKEY .= rand().rand();
     $this->setUp_();
+    $this->cache->cacheSpecificClearAll();
   }
 
-function apc_expire($key) {
-    $cache = apc_cache_info('user');
-    if (empty($cache['cache_list'])) {
-        return false;
-    }
-    foreach ($cache['cache_list'] as $entry) {
-        if ($entry['info'] != $key) {
-            continue;
-        }
-        if ($entry['ttl'] == 0) {
-            return 0;
-        }
-        $expire = $entry['creation_time']+$entry['ttl'];
-        return date('l jS \of F Y h:i:s A',$expire);
-    }
-    return false;
-}
- 
   public function testCacheSpecificFetch() {
-    $l =new \Logger();
-
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == 
-                                                                self::TESTDATA);
-
-    sleep(self::TTL+2);
+    $fetchedFromCache = $this->cache->cacheSpecificFetch($this->TESTKEY);
+    $this->assertTrue($fetchedFromCache == self::TESTDATA);
+    sleep(self::TTL+1);
     $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
   }
 
-  public function testCacheSpecificClearAll() { 
+  public function testCacheSpecificClearAll() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
     $this->cache->cacheSpecificClearAll();
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) != 
+    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) !=
                                                                 self::TESTDATA);
     $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
   }
 
-  public function testCacheSpecificClearItem() { 
+  public function testCacheSpecificClearItem() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
     $this->cache->cacheSpecificClearItem($this->TESTKEY);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) != 
+    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) !=
                                                                 self::TESTDATA);
     $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
-	
+
   }
 
   public function testCacheSpecificStore() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == 
+    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) ==
                                                                 self::TESTDATA);
   }
 }

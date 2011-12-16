@@ -52,7 +52,7 @@ class Evaluateable extends HasValue {
     return $this->conditonArray[0]->selfEvaluate();
   }
 
-  public function selfEvaluate() {
+  private function selfEvaluate() {
     $this->blacklistCacheInvalidation();
     if($this->opertation == self::OP_EQUALATION) {
       return ($this->pattern == $this->value);

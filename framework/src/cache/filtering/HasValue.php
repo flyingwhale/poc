@@ -31,5 +31,4 @@ abstract class HasValue extends ToHash{
     return $this->valueDestription;
   }
 
-  abstract function selfEvaluate();
 }

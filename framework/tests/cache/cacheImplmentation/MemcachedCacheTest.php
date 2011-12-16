@@ -19,14 +19,13 @@ use POC\cache\filtering\Evaluateable;
 
 include 'framework/autoload.php';
 
-class MemcachedCacheTest extends CacheTest 
+class MemcachedCacheTest extends CacheTest
 {
- 
+
   function setUp_() {
     $this->cache = new \MemcachedCache(new Evaluateable('#php$#', 'tester.php',
                                      Evaluateable::OP_PREGMATCH), parent::TTL, 'localhost');
-    $this->cache->cacheSpecificClearAll();
   }
- 
+
 }
 

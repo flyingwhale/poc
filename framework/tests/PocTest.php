@@ -27,9 +27,8 @@ function hide_output($o){
 }
 
 function set_output($o){
-  $l = new \Logger();
-
-  $l->lwrite( $o );
+  //$l = new \Logger();
+  //$l->lwrite( $o );
 
   $GLOBALS['analyzeThisOutput'] = $o;
 }

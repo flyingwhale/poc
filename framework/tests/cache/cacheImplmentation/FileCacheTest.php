@@ -19,14 +19,13 @@ use POC\cache\filtering\Evaluateable;
 
 include 'framework/autoload.php';
 
-class FileCacheTest extends CacheTest 
+class FileCacheTest extends CacheTest
 {
- 
+
   function setUp_() {
     $this->cache = new \FileCache(new Evaluateable('#php$#', 'tester.php',
                                Evaluateable::OP_PREGMATCH), parent::TTL,'/tmp/');
-    $this->cache->cacheSpecificClearAll();
   }
- 
+
 }
 

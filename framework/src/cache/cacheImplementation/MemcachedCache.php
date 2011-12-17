@@ -20,13 +20,13 @@ class MemcachedCache extends AbstractPocCacheSpecific {
   var $memcache;
   var $compression=false;
   var $currentResult;
-  private $isNotConnected;
+  private $isConnected;
 
   function __construct(Evaluateable $evaluatable, $ttl, $server, $port = 11211) {
     parent::__construct($evaluatable,$ttl);
     $this->memcache = new Memcache();
-    $this->memcache->connect($server, $port);
-    $this->isNotConnected = 1;
+    $this->isConnected = $this->memcache->connect($server, $port);;
+    $this->throwDbException();
   }
 
   public function cacheSpecificFetch($key) {
@@ -46,7 +46,7 @@ class MemcachedCache extends AbstractPocCacheSpecific {
   }
 
   function  isCacheAvailable(){
-    return $this->isNotConnected;
+    return $this->isConnected;
   }
 
 }

@@ -67,7 +67,8 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     try{
       $handlers[] = new \FileCache($eval,1,'/tmp/');
       $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
-
+//      $handlers[] = new \RediskaCache($eval, 1, 'localhost');
+      
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
 

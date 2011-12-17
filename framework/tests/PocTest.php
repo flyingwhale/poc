@@ -40,7 +40,7 @@ function get_output(){
 
 include 'framework/autoload.php';
 
-class TestClassTest extends \PHPUnit_Framework_TestCase{
+class PocTest extends \PHPUnit_Framework_TestCase{
 
   private $analyzeThisOutput;
 
@@ -67,7 +67,8 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     try{
       $handlers[] = new \FileCache($eval,1,'/tmp/');
       $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
-
+      $handlers[] = new \RediskaCache($eval, 1, array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
+      
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
 

@@ -1,27 +1,35 @@
 <?php
-class SqliteTagging extends AbstractDb {
+class MysqlTagging extends AbstractDb {
 
-  private $dbFile;
+  private $db;
+  private $host;
+  private $user;
+  private $pass;
+  private $link;
   private $tagIDs = array();
-  private $base;
 
-  function __construct($file="/tmp/POB01") {
-    $this->dbFile = $file;
+  function __construct($db='localhost',$host='localhost',$user='root',$pass='root') {
+    $this->db = $db;
+    $this->host = $localhost;
+    $this->user = $user;
+    $this->pass = $pass;
     parent::__construct();
   }
 
   function checkDb(){
-    $ret = file_exists($this->dbFile);
-    $this->openDb();
+    $this->link = mysql_connect($this->host, $this->user, $this->pass);
+    if (!$this->link) {
+      die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!")
+    }
+    $ret = 1;
     return $ret;
   }
 
   private function openDb(){
-    $this->base = new SQLiteDatabase($this->dbFile, 0666, $err);
-    if ($err) {
-      echo($err.' sdaf asdf sdf sdf sdaf ');
+    $selectedDB = mysql_select_db($this->db, $link);
+    if (!$selectedDb) {
+     return false
     }
-//    $this->createDb();
     return true;
   }
 
@@ -55,8 +63,7 @@ class SqliteTagging extends AbstractDb {
       if(!$row){
         $this->base->queryexec('INSERT INTO tags VALUES (null, "'.$tag.'")');
         $tagIds[$tag] = $this->base->lastInsertRowID();
-      }
-      else{
+      } else {
         $tagIds[$tag] = $row[0]['ID'];
       }
     }

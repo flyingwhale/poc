@@ -64,35 +64,37 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
     $eval = new Evaluateable('#php$#', 'tester.php',
                                                    Evaluateable::OP_PREGMATCH);
     $handlers = array();
+    try{
+      $handlers[] = new \FileCache($eval,1,'/tmp/');
+      $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
 
-    $handlers[] = new \FileCache($eval,1,'/tmp/');
-    $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
+      foreach($handlers as $cacheHandler) {
+        $this->cacheBurner("1",$cacheHandler);
 
-    foreach($handlers as $cacheHandler) {
-      $this->cacheBurner("1",$cacheHandler);
+        sleep(2);
 
-      sleep(2);
+        $this->cacheBurner("\ntest1\n",$cacheHandler);
+        $output1 = get_output();
 
-      $this->cacheBurner("\ntest1\n",$cacheHandler);
-      $output1 = get_output();
+        for ($i = 0; $i < 2; $i++){
+          $this->cacheBurner($i,$cacheHandler);
+        }
 
-      for ($i = 0; $i < 2; $i++){
-        $this->cacheBurner($i,$cacheHandler);
+        $this->cacheBurner("\ntest2\n",$cacheHandler);
+        $output2 = get_output();
+
+        sleep(2);
+
+        $this->cacheBurner("\ntest3\n",$cacheHandler);
+        $output3 = get_output();
+        $l = new \Logger();
+
+        $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
+        $this->assertTrue($output1 == $output2);
+        $this->assertTrue($output1 != $output3);
       }
-
-      $this->cacheBurner("\ntest2\n",$cacheHandler);
-      $output2 = get_output();
-
-      sleep(2);
-
-      $this->cacheBurner("\ntest3\n",$cacheHandler);
-      $output3 = get_output();
-      $l = new \Logger();
-
-      $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
-      $this->assertTrue($output1 == $output2);
-      $this->assertTrue($output1 != $output3);
+    } catch (Exception $e) {
+      $this->assertTrue(false);
     }
   }
 }
-

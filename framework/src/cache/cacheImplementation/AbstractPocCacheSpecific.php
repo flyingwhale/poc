@@ -16,13 +16,12 @@ limitations under the License.
 
 use POC\cache\filtering\Evaluateable;
 
-abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface 
+abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface
 {
-
   /** This variable must be declared at the constructors of this class.*/
   var $ttl;
 
-  /** This variable represents the Evaluateable type object belongs to the 
+  /** This variable represents the Evaluateable type object belongs to the
   object*/
   var $evaluateable;
 
@@ -53,5 +52,11 @@ abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface
       $this->setTagDb();
     }
     return $this->tagDb;
+  }
+
+  function throwDbException(){
+    if(!$this->isCacheAvailable()){
+      throw new Exception("The cache database is not reachable!");
+    }
   }
 }

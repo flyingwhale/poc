@@ -15,15 +15,16 @@ limitations under the License.
 */
 
 interface PocCacheSpecificInterface {
-  
+
   public function cacheSpecificFetch($key);
 
   public function cacheSpecificClearAll();
-  
+
   public function cacheSpecificClearItem($key);
 
   public function cacheSpecificStore($key, $output);
-  
-  
+
+  public function isCacheAvailable();
+
 }
 

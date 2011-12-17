@@ -27,6 +27,7 @@ class FileCache extends AbstractPocCacheSpecific {
   function __construct(Evaluateable $evaluatable, $ttl, $directory) {
     parent::__construct($evaluatable,$ttl);
     $this->directory = $directory;
+    $this->throwDbException();
     $this->file = $directory.self::KEY_PREFIX;
     $this->fileTtl = $directory.self::TTL_PREFIX;
   }
@@ -40,7 +41,7 @@ class FileCache extends AbstractPocCacheSpecific {
 
   public function cacheSpecificClearAll() {
 
-     array_map( "unlink", glob($this->directory.''.self::KEY_PREFIX.'*')  ); 
+     array_map( "unlink", glob($this->directory.''.self::KEY_PREFIX.'*')  );
      array_map( "unlink", glob($this->directory.''.self::TTL_PREFIX.'*')  );
 
    }
@@ -77,5 +78,9 @@ class FileCache extends AbstractPocCacheSpecific {
       }
     }
     else return false;
+  }
+
+  function  isCacheAvailable(){
+    return is_writable($this->directory);
   }
 }

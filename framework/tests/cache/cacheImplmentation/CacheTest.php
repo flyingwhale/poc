@@ -31,7 +31,11 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
 
   protected function setUp() {
     $this->TESTKEY .= rand().rand();
-    $this->setUp_();
+    try{
+      $this->setUp_();
+    } catch (Exception $e) {
+      $this->asertTrue(false);
+    }
     $this->cache->cacheSpecificClearAll();
   }
 

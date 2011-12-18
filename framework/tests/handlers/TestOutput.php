@@ -11,13 +11,13 @@ class TestOutput implements \POC\handlers\OutputInterface {
   }
 
   function startBuffer($callbackFunctname){
-    ob_start($callbackFunctname);
+    ob_start(array('\POC\Poc',$callbackFunctname));
   }
 
   function stopBuffer(){
     ob_flush();
   }
-  
+
   function header($header){
     $this->header = $header;
   }

@@ -15,70 +15,54 @@ limitations under the License.
 */
 namespace POC;
 
-function pocCallbackCache($buffer) {
-  return Poc::pocCallbackCache($buffer);
-}
 
-function  pocCallbackGenerate($buffer) {
-  return Poc::pocCallbackGenerate($buffer);
-}
-
-function pocCallbackShowOutput($buffer) {
-  $dbgMsg = '';
-  if ($GLOBALS['poc_debug']) {
-     $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is 
-                                                                   Blacklisted.'
-     .' <b> Was Generated withtin </b>'
-     .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).'</b> milliseconds.';
-  }
-  return $buffer.$dbgMsg;
-}
-
-$debug = null;
-
-class Poc 
+class Poc
 {
-  var $outputHandler;
-  var $output;
-  var $buffering;
+  private $outputHandler;
+  private $output;
+  private $buffering;
+  static private $debug;
+  static private $start;
+  static private $caches;
+  static private $level;
 
   public function setDebug($debug) {
-    $this->debug = $debug;
-    $GLOBALS['poc_debug'] = $debug;
+    self::$debug = $debug;
+  }
+
+  public static function pocCallbackShowOutput($buffer) {
+    $dbgMsg = '';
+    if (self::$debug) {
+       $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is
+                                                                   Blacklisted.'
+       .' <b> Was Generated withtin </b>'
+       .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
+    }
+    return $buffer.$dbgMsg;
   }
 
   public static function pocCallbackGenerate($buffer) {
-    if ($GLOBALS['poc_level'] == ob_get_level() - 1) {
+    if (self::$level == \ob_get_level() - 1) {
       $res = '';
-      for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
-//    $this->assertTrue('testString', $output3);
-        $cache = $GLOBALS['poc_caches'][$i]->getSpecificCache();
+      for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+        $cache = self::$caches[$i]->getSpecificCache();
         $eval = $cache->getEvaluateable();
         if ($eval->evaluate()) {
           $dbgMsg = '';
-          if ($GLOBALS['poc_debug']) {
+
+          if (self::$debug) {
             $dbgMsg = '<br>This page has been '
             .'<b> generated within </b> in '
-            .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).
+            .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
-$level = null;
+
           }
           $res = $buffer.$dbgMsg;
-          $arr = headers_list();
-          //header_remove ('Content-Encoding');
-          //$l = new \Logger();
-          //$l->lwrite(gzuncompress($res)) ;
-
-          //TODO: This functionality still not works, has to be finished.
-          //$l->lwrite(\gzdecode($res)) ;
-          //die( \gzuncompress($res) );
-          //if(!$GLOBALS['caches'][$i]->isOutputBlacklisted(gzuncompress($res)))
-          //{
-          $GLOBALS['poc_caches'][$i]->storeHeadersForPreservation($arr);
-          $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
-          $GLOBALS['poc_caches'][$i]->storeCache($res);
+          $arr = \headers_list();
+          self::$caches[$i]->storeHeadersForPreservation($arr);
+          self::$caches[$i]->removeHeaders($arr);
+          self::$caches[$i]->storeCache($res);
           $eval->cacheAddTags();
-          //
         }
       }
      return ($res);
@@ -86,10 +70,10 @@ $level = null;
   }
 
   public static function pocCallbackCache($buffer) {
-    if ($GLOBALS['poc_debug']) {
+    if (self::$debug) {
      $dbgMsg = '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
-     .'<b>'.((microtime() - $GLOBALS['poc_start']) * 1000).'</b> milliseconds.';
+     .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
       return ($buffer.$dbgMsg);
     } else {
       return ($buffer);
@@ -102,7 +86,7 @@ $level = null;
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\POC\cache\PocCacheInterface $cache = null, 
+  function __construct(\POC\cache\PocCacheInterface $cache = null,
                         \POC\handlers\OutputInterface $output, $debug = false) {
     $this->outputHandler = $output;
     $this->setDebug($debug);
@@ -115,19 +99,19 @@ $level = null;
 
   private function fetchCache() {
    $started = 0;
-    for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
-      $GLOBALS['poc_caches'][$i]->cacheTagsInvalidation();
-      if ($GLOBALS['poc_caches'][$i]->getSpecificCache()->
+    for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+      self::$caches[$i]->cacheTagsInvalidation();
+      if (self::$caches[$i]->getSpecificCache()->
                                                 getEvaluateable()->evaluate()) {
-        $this->output = $GLOBALS['poc_caches'][$i]->fetchCache();
+        $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
-          $this->outputHandler->startBuffer('\POC\pocCallbackCache');
+          $this->outputHandler->startBuffer('pocCallbackCache');
           $arr = headers_list();
-          if ($GLOBALS['poc_caches'][$i]->headersToSend) {
-            foreach ($GLOBALS['poc_caches'][$i]->headersToSend as $header) {
+          if (self::$caches[$i]->headersToSend) {
+            foreach (self::$caches[$i]->headersToSend as $header) {
               $this->outputHandler->header($header);
             }
-            $GLOBALS['poc_caches'][$i]->removeHeaders($arr);
+            self::$caches[$i]->removeHeaders($arr);
           }
           $started = 1;
           echo($this->output);
@@ -140,37 +124,38 @@ $level = null;
 
   public function start() {
 
-    $GLOBALS['poc_start'] = microtime();
+    self::$start = microtime();
 
     if (!$this->fetchCache()) {
       $startCache = true;
-      for ( $i=0; $i<sizeof($GLOBALS['poc_caches']); $i++ ) {
-        if ($GLOBALS['poc_caches'][$i]->getSpecificCache()->getEvaluateable()->
+      for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+        if (self::$caches[$i]->getSpecificCache()->getEvaluateable()->
                                                               isBlacklisted()) {
+
           $startCache = false;
           $break;
         }
       }
       if ($startCache) {
         $this->buffering = true;
-        $GLOBALS['poc_level'] = ob_get_level();
-        $this->outputHandler->startBuffer('\POC\pocCallbackGenerate');
+        self::$level = \ob_get_level();
+        $this->outputHandler->startBuffer('pocCallbackGenerate');
       } else {
-        $this->outputHandler->startBuffer('\POC\pocCallbackShowOutput');
+        $this->outputHandler->startBuffer('pocCallbackShowOutput');
       }
     }
   }
 
   public function addCache(\POC\cache\PocCacheInterface $cache) {
-    $GLOBALS['poc_caches'][] = $cache;
+    self::$caches[] = $cache;
   }
 
   function __destruct() {
-    if (isset($GLOBALS['poc_level'])) {
-       if ($GLOBALS['poc_level']) {
+    if (isset(self::$level)) {
+       if (self::$level) {
          //$this->outputHandler->stopBuffer();
          //if(!$this->buffering){
-         \ob_end_flush(); 
+         \ob_end_flush();
        }
     }
   }

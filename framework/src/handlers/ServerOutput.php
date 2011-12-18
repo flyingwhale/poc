@@ -7,7 +7,7 @@ class ServerOutput implements OutputInterface {
   }
 
   function startBuffer($callbackFunctname){
-    ob_start($callbackFunctname);
+    ob_start(array('\POC\Poc', $callbackFunctname));
   }
 
   function StopBuffer(){

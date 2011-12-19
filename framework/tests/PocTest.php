@@ -48,6 +48,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
+
+    $this->setOutput = '';
     \ob_start(array('\unittest\PocTest','setOutput'));
     $output = new TestOutput();
     $pob =

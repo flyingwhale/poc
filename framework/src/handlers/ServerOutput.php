@@ -18,4 +18,8 @@ class ServerOutput implements OutputInterface {
     \header($header);
   }
 
+  function obEnd(){
+    \ob_end_flush();
+  }
+
 }

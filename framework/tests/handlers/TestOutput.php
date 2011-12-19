@@ -24,5 +24,11 @@ class TestOutput implements \POC\handlers\OutputInterface
   public function getHeader() {
     return $this->header;
   }
+
+  function obEnd(){
+    //\ob_end_flush();
+    \ob_flush();
+  }
+
 }
 

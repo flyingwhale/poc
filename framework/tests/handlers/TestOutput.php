@@ -2,24 +2,27 @@
 
 namespace unittest\handler;
 
-class TestOutput implements \POC\handlers\OutputInterface {
-
+class TestOutput implements \POC\handlers\OutputInterface
+{
   private $header = null;
 
-  function getLevel(){
+  function getLevel() {
     return ob_get_level();
   }
 
-  function startBuffer($callbackFunctname){
+  function startBuffer($callbackFunctname) {
     ob_start(array('\POC\Poc',$callbackFunctname));
   }
 
-  function stopBuffer(){
+  function stopBuffer() {
     ob_flush();
   }
 
-  function header($header){
+  function header($header) {
     $this->header = $header;
+  }
+  public function getHeader() {
+    return $this->header;
   }
 }
 

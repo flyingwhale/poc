@@ -21,44 +21,45 @@ use POC\Poc;
 
 const UNITTESTING = 1;
 
-/* ob_start at the beginning has to be done in order to avoid the headers to be sent, because the
-   PHPUnit already has got some output when it starts. */
 \ob_start();
+
+function hide_output($o){
+}
+
+function set_output($o){
+  //$l = new \Logger();
+  //$l->lwrite( $o );
+
+  $GLOBALS['analyzeThisOutput'] = $o;
+}
+
+function get_output(){
+  if (isset($GLOBALS['analyzeThisOutput']))
+    return $GLOBALS['analyzeThisOutput'];
+}
 
 include 'framework/autoload.php';
 
 class PocTest extends \PHPUnit_Framework_TestCase{
 
-  private static $analizeThisOutput;
-  private static $analizeThisHeader;
+  private $analyzeThisOutput;
 
-  static function  setOutput($o){
-    self::$analizeThisOutput = $o;
-  }
-
-  static function getOutput(){
-    if (isset(self::$analizeThisOutput))
-      return self::$analizeThisOutput;
-  }
-
-  private function getHeader(){
-    return $this->analizeThisHeader;
+  static function  setAnalyzeThisOutput($o){
+    $this->analyzeThisOutput = $o;
   }
 
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
-    \ob_start(array('\unittest\PocTest','setOutput'));
-    $output = new TestOutput();
+    \ob_start('\unittest\set_output');
     $pob =
-       new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
+       new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
     echo $testString;
-    $this->analizeThisHeader = $output->getHeader();
     $pob->destruct();
     \ob_end_flush();
   }
 
 
-  public function testBasicPocFunctionality(){
+  public function test_01_fill(){
 
     $eval = new Evaluateable('#php$#', 'tester.php',
                                                    Evaluateable::OP_PREGMATCH);
@@ -66,26 +67,27 @@ class PocTest extends \PHPUnit_Framework_TestCase{
     try{
       $handlers[] = new \FileCache($eval,1,'/tmp/');
       $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
-      $handlers[] = new \RediskaCache($eval, 1, 'localhost');
-
+      $handlers[] = new \RediskaCache($eval, 1, array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
+      
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
+
         sleep(2);
 
         $this->cacheBurner("\ntest1\n",$cacheHandler);
-        $output1 = $this->getOutput();
-        $this->assertTrue(!is_array($this->analizeThisHeader));
+        $output1 = get_output();
 
         for ($i = 0; $i < 2; $i++){
           $this->cacheBurner($i,$cacheHandler);
         }
 
         $this->cacheBurner("\ntest2\n",$cacheHandler);
-        $output2 = $this->getOutput();
+        $output2 = get_output();
+
         sleep(2);
 
         $this->cacheBurner("\ntest3\n",$cacheHandler);
-        $output3 = $this->getOutput();
+        $output3 = get_output();
         $l = new \Logger();
 
         $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );

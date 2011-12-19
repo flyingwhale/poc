@@ -18,26 +18,24 @@ use POC\cache\filtering\Evaluateable;
 require_once 'Rediska.php';
 
 class RediskaCache extends AbstractPocCacheSpecific {
-  
+
   private $rediska;
   private $isNotConnected;
 
-  function __construct(Evaluateable $evaluatable, $ttl, $options) {
+  function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
     parent::__construct($evaluatable,$ttl);
-    
-    $options = array(
-      'namespace' => 'Application_',
-      'servers'   => array(
-        array('host' => '127.0.0.1', 'port' => 6379)
-      )
-    );
-    
-    $className = 'Rediska';
-    
-    if(!class_exists($className)) {
-      throw new Exception(sprintf("%s class not exists", $className));      
+
+    if (!isset($options['servers']))
+    {
+      $options['servers'] = array(array('host' => 'localhost', 'port' => 6379));
     }
-    
+
+    $className = 'Rediska';
+
+    if(!class_exists($className)) {
+      throw new Exception(sprintf("%s class not exists", $className));
+    }
+
     $this->rediska = new $className($options);
     $this->isNotConnected = 1;
   }
@@ -45,7 +43,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
   public function cacheSpecificFetch($key) {
     $keyObj = new Rediska_Key($key);
     $value = $keyObj->getValue();
-    
+
     return $value;
   }
 
@@ -62,7 +60,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
     $keyObj = new Rediska_Key($key);
     $keyObj->setValue($output);
     $keyObj->expire($this->ttl);
-    
+
   }
 
   function  isCacheAvailable(){
@@ -70,4 +68,3 @@ class RediskaCache extends AbstractPocCacheSpecific {
   }
 
 }
-?>

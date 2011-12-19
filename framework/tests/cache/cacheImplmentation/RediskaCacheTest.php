@@ -21,10 +21,8 @@ include 'framework/autoload.php';
 
 class RediskaCacheTest extends CacheTest
 {
-
   function setUp_() {
     $this->cache = new \RediskaCache(new Evaluateable('#php$#', 'tester.php',
-                               Evaluateable::OP_PREGMATCH), parent::TTL, array());
+                               Evaluateable::OP_PREGMATCH), parent::TTL, array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
   }
-
 }

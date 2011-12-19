@@ -21,31 +21,38 @@ use POC\Poc;
 
 const UNITTESTING = 1;
 
+/* ob_start at the beginning has to be done in order to avoid the headers to be sent, because the
+   PHPUnit already has got some output when it starts. */
 \ob_start();
-
-
 
 include 'framework/autoload.php';
 
 class PocTest extends \PHPUnit_Framework_TestCase{
 
-  private static $analyzeThisOutput;
+  private static $analizeThisOutput;
+  private static $analizeThisHeader;
 
   static function  setOutput($o){
-    self::$analyzeThisOutput = $o;
+    self::$analizeThisOutput = $o;
   }
 
   static function getOutput(){
-    if (isset(self::$analyzeThisOutput))
-      return self::$analyzeThisOutput;
+    if (isset(self::$analizeThisOutput))
+      return self::$analizeThisOutput;
+  }
+
+  private function getHeader(){
+    return $this->analizeThisHeader;
   }
 
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
     \ob_start(array('\unittest\PocTest','setOutput'));
+    $output = new TestOutput();
     $pob =
-       new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
+       new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
     echo $testString;
+    $this->analizeThisHeader = $output->getHeader();
     $pob->destruct();
     \ob_end_flush();
   }
@@ -62,11 +69,11 @@ class PocTest extends \PHPUnit_Framework_TestCase{
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
-
         sleep(2);
 
         $this->cacheBurner("\ntest1\n",$cacheHandler);
         $output1 = $this->getOutput();
+        $this->assertTrue(!is_array($this->analizeThisHeader));
 
         for ($i = 0; $i < 2; $i++){
           $this->cacheBurner($i,$cacheHandler);
@@ -74,7 +81,6 @@ class PocTest extends \PHPUnit_Framework_TestCase{
 
         $this->cacheBurner("\ntest2\n",$cacheHandler);
         $output2 = $this->getOutput();
-
         sleep(2);
 
         $this->cacheBurner("\ntest3\n",$cacheHandler);

@@ -23,34 +23,26 @@ const UNITTESTING = 1;
 
 \ob_start();
 
-function hide_output($o){
-}
 
-function set_output($o){
-  //$l = new \Logger();
-  //$l->lwrite( $o );
-
-  $GLOBALS['analyzeThisOutput'] = $o;
-}
-
-function get_output(){
-  if (isset($GLOBALS['analyzeThisOutput']))
-    return $GLOBALS['analyzeThisOutput'];
-}
 
 include 'framework/autoload.php';
 
-class TestClassTest extends \PHPUnit_Framework_TestCase{
+class PocTest extends \PHPUnit_Framework_TestCase{
 
-  private $analyzeThisOutput;
+  private static $analyzeThisOutput;
 
-  static function  setAnalyzeThisOutput($o){
-    $this->analyzeThisOutput = $o;
+  static function  setOutput($o){
+    self::$analyzeThisOutput = $o;
+  }
+
+  static function getOutput(){
+    if (isset(self::$analyzeThisOutput))
+      return self::$analyzeThisOutput;
   }
 
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
-    \ob_start('\unittest\set_output');
+    \ob_start(array('\unittest\PocTest','setOutput'));
     $pob =
        new Poc(new \POC\cache\PocCache($cacheHandler), new TestOutput(), false);
     echo $testString;
@@ -59,7 +51,7 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
   }
 
 
-  public function test_01_fill(){
+  public function testBasicPocFunctionality(){
 
     $eval = new Evaluateable('#php$#', 'tester.php',
                                                    Evaluateable::OP_PREGMATCH);
@@ -74,19 +66,19 @@ class TestClassTest extends \PHPUnit_Framework_TestCase{
         sleep(2);
 
         $this->cacheBurner("\ntest1\n",$cacheHandler);
-        $output1 = get_output();
+        $output1 = $this->getOutput();
 
         for ($i = 0; $i < 2; $i++){
           $this->cacheBurner($i,$cacheHandler);
         }
 
         $this->cacheBurner("\ntest2\n",$cacheHandler);
-        $output2 = get_output();
+        $output2 = $this->getOutput();
 
         sleep(2);
 
         $this->cacheBurner("\ntest3\n",$cacheHandler);
-        $output3 = get_output();
+        $output3 = $this->getOutput();
         $l = new \Logger();
 
         $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );

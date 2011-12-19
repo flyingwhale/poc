@@ -35,7 +35,7 @@ class Poc
     if (self::$debug) {
        $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is
                                                                    Blacklisted.'
-       .' <b> Was Generated withtin </b>'
+       .' <b> Was Generated within </b>'
        .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
     }
     return $buffer.$dbgMsg;
@@ -153,8 +153,6 @@ class Poc
   function __destruct() {
     if (isset(self::$level)) {
        if (self::$level) {
-         //$this->outputHandler->stopBuffer();
-         //if(!$this->buffering){
          \ob_end_flush();
        }
     }

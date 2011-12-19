@@ -82,7 +82,7 @@ class PocCache implements PocCacheInterface {
     $this->specificCache->getEvaluateable()->cacheTagsInvalidation();
   }
 
-  public function storeHeaderVariable($headerVariable){ 
+  public function storeHeaderVariable($headerVariable){
 //TODO: check for all possible valid header variables.
     $this->headersToPreserve[] = $headerVariable;
   }
@@ -135,7 +135,6 @@ class PocCache implements PocCacheInterface {
       foreach( $this->outputBlacklist as $condititon ){
         $result = preg_match($condition, $output);
         if($result){
-          die('HERE');
           return false;
         }
       }

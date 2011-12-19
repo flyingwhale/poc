@@ -33,7 +33,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private static $analizeThisOutput;
   private static $analizeThisHeader;
 
-  static function  setOutput($o){
+  static function setOutput($o){
     self::$analizeThisOutput = $o;
   }
 
@@ -46,15 +46,26 @@ class PocTest extends \PHPUnit_Framework_TestCase
     return $this->analizeThisHeader;
   }
 
+  private function setHeader($header){
+    $this->analizeThisHeader = $header;
+    $l = new \Logger(); $l->lwrite($header);
+  }
+
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
+
+    $this->setOutput('');
     \ob_start(array('\unittest\PocTest','setOutput'));
     $output = new TestOutput();
-    $pob =
-       new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
-    echo $testString;
+    $pob = new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
+    if($output->getOutputFlow()){
+      echo $testString;
+    } else {
+     $this->setOutput($output->getOutput());
+     $pob->destruct();
+    }
     $this->analizeThisHeader = $output->getHeader();
-    $pob->destruct();
+
     \ob_end_flush();
   }
 
@@ -79,7 +90,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_array($this->analizeThisHeader));
 
         for ($i = 0; $i < 2; $i++){
-          $this->cacheBurner($i,$cacheHandler);
+          $this->cacheBurner($i.'Whatever',$cacheHandler);
         }
 
         $this->cacheBurner("\ntest2\n",$cacheHandler);

@@ -18,7 +18,7 @@ namespace POC;
 
 class Poc
 {
-  private $outputHandler;
+  static private $outputHandler;
   private $output;
   private $buffering;
   static private $debug;
@@ -31,55 +31,55 @@ class Poc
   }
 
   public static function pocCallbackShowOutput($buffer) {
-    $dbgMsg = '';
+    $return = $buffer;
     if (self::$debug) {
-       $dbgMsg = '<br>This page has not been cached because one  Evaluatebale is
+       $return .= '<br>This page has not been cached because one  Evaluatebale is
                                                                    Blacklisted.'
        .' <b> Was Generated within </b>'
        .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
     }
+    self::$outputHandler->cacheCallback($return);
     return $buffer.$dbgMsg;
   }
 
   public static function pocCallbackGenerate($buffer) {
     if (self::$level == \ob_get_level() - 1) {
-      $res = '';
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         $cache = self::$caches[$i]->getSpecificCache();
         $eval = $cache->getEvaluateable();
         if ($eval->evaluate()) {
-          $dbgMsg = '';
+          $return = $buffer;
 
           if (self::$debug) {
-            $dbgMsg = '<br>This page has been '
+            $return .= '<br>This page has been '
             .'<b> generated within </b> in '
             .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
 
           }
-          $res = $buffer.$dbgMsg;
-          $arr = \headers_list();
 
+          $arr = \headers_list();
           self::$caches[$i]->storeHeadersForPreservation($arr);
           self::$caches[$i]->removeHeaders($arr);
-          self::$caches[$i]->storeCache($res);
+          self::$caches[$i]->storeCache($return);
 
           $eval->cacheAddTags();
         }
       }
-     return ($res);
+      self::$outputHandler->cacheCallback($return);
+      return ($return);
     }
   }
 
   public static function pocCallbackCache($buffer) {
+    $return = $buffer;
     if (self::$debug) {
-     $dbgMsg = '<br>This page has been '
+     $return .=  '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
-      return ($buffer.$dbgMsg);
-    } else {
-      return ($buffer);
     }
+    self::$outputHandler->cacheCallback($return);
+    return $return;
   }
 
   /**
@@ -90,13 +90,13 @@ class Poc
   */
   function __construct(\POC\cache\PocCacheInterface $cache = null,
                         \POC\handlers\OutputInterface $output, $debug = false) {
-    $this->outputHandler = $output;
+    self::$outputHandler = $output;
     $this->setDebug($debug);
     if ($cache != null) {
       $this->addCache($cache);
       $this->start();
     }
-    $this->outputHandler = $output;
+    self::$outputHandler = $output;
   }
 
   private function fetchCache() {
@@ -107,17 +107,17 @@ class Poc
                                                 getEvaluateable()->evaluate()) {
         $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
-          $this->outputHandler->startBuffer('pocCallbackCache');
+          self::$outputHandler->startBuffer('pocCallbackCache');
           $arr = headers_list();
           if (self::$caches[$i]->headersToSend) {
             foreach (self::$caches[$i]->headersToSend as $header) {
-              $this->outputHandler->header($header);
+              self::$outputHandler->header($header);
             }
             self::$caches[$i]->removeHeaders($arr);
           }
           $started = 1;
           echo($this->output);
-          $this->outputHandler->stopBuffer();
+          self::$outputHandler->stopBuffer();
         }
       }
     }
@@ -141,9 +141,9 @@ class Poc
       if ($startCache) {
         $this->buffering = true;
         self::$level = \ob_get_level();
-        $this->outputHandler->startBuffer('pocCallbackGenerate');
+        self::$outputHandler->startBuffer('pocCallbackGenerate');
       } else {
-        $this->outputHandler->startBuffer('pocCallbackShowOutput');
+        self::$outputHandler->startBuffer('pocCallbackShowOutput');
       }
     }
   }

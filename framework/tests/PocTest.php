@@ -27,7 +27,8 @@ const UNITTESTING = 1;
 
 include 'framework/autoload.php';
 
-class PocTest extends \PHPUnit_Framework_TestCase{
+class PocTest extends \PHPUnit_Framework_TestCase
+{
 
   private static $analizeThisOutput;
   private static $analizeThisHeader;
@@ -66,6 +67,8 @@ class PocTest extends \PHPUnit_Framework_TestCase{
     try{
       $handlers[] = new \FileCache($eval,1,'/tmp/');
       $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
+      $handlers[] = new \RediskaCache($eval, 1, array('servers' =>
+                         array(array('host' => 'localhost', 'port' => 6379))));
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

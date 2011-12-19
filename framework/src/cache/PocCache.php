@@ -16,7 +16,6 @@ limitations under the License.
 
 namespace POC\cache;
 
-
 class PocCache implements PocCacheInterface {
 
   var $specificCache;

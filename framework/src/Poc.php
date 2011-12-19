@@ -59,9 +59,11 @@ class Poc
           }
           $res = $buffer.$dbgMsg;
           $arr = \headers_list();
+
           self::$caches[$i]->storeHeadersForPreservation($arr);
           self::$caches[$i]->removeHeaders($arr);
           self::$caches[$i]->storeCache($res);
+
           $eval->cacheAddTags();
         }
       }

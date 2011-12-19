@@ -43,7 +43,9 @@ class RediskaCache extends AbstractPocCacheSpecific {
   public function cacheSpecificFetch($key) {
     $keyObj = new Rediska_Key($key);
     $value = $keyObj->getValue();
-
+    if (is_array($value)){
+      $value = serialize($value);
+    }
     return $value;
   }
 

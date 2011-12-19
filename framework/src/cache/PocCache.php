@@ -140,4 +140,8 @@ class PocCache implements PocCacheInterface {
       }
     }
   }
+
+  public function setEtagGeneration($boolean = true){
+   $this->isEtagGeneration = $boolean;
+  }
 }

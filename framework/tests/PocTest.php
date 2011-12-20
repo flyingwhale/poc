@@ -44,7 +44,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   private function getOutput() {
-      return $this->analizeThisOutput;
+    return $this->analizeThisOutput;
   }
 
   private function getHeader() {
@@ -55,8 +55,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->analizeThisHeader = $header;
   }
 
-  private function cacheBurner($testString="\n\ntestString\n\n",
-                                                                $cacheHandler) {
+  private function cacheBurner($testString = "testString", $cacheHandler) {
 
     $this->setOutput('');
     $output = new TestOutput();

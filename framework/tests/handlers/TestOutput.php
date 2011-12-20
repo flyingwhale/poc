@@ -29,7 +29,6 @@ class TestOutput implements \POC\handlers\OutputInterface
   }
 
   function obEnd(){
-    //\ob_end_flush();
     $this->outputFlow = 0;
     \ob_flush();
   }

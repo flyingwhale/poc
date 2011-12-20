@@ -30,6 +30,11 @@ include 'framework/autoload.php';
 class PocTest extends \PHPUnit_Framework_TestCase
 {
 
+
+  const TESTSTRING1 = 1;
+  const TESTSTRING2 = 2;
+  const TESTSTRING3 = 3;
+
   private static $analizeThisOutput;
   private static $analizeThisHeader;
 
@@ -38,7 +43,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   static function getOutput(){
-    if (isset(self::$analizeThisOutput))
       return self::$analizeThisOutput;
   }
 
@@ -48,30 +52,28 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   private function setHeader($header){
     $this->analizeThisHeader = $header;
-    $l = new \Logger(); $l->lwrite($header);
   }
 
   private function cacheBurner($testString="\n\ntestString\n\n",
                                                                 $cacheHandler) {
 
     $this->setOutput('');
-    \ob_start(array('\unittest\PocTest','setOutput'));
     $output = new TestOutput();
     $pob = new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
     if($output->getOutputFlow()){
       echo $testString;
+      $pob->destruct();
+      $this->setOutput($output->getOutput());
     } else {
      $this->setOutput($output->getOutput());
      $pob->destruct();
     }
     $this->analizeThisHeader = $output->getHeader();
 
-    \ob_end_flush();
   }
 
 
   public function testBasicPocFunctionality(){
-
     $eval = new Evaluateable('#php$#', 'tester.php',
                                                    Evaluateable::OP_PREGMATCH);
     $handlers = array();
@@ -85,23 +87,21 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $this->cacheBurner("1",$cacheHandler);
         sleep(2);
 
-        $this->cacheBurner("\ntest1\n",$cacheHandler);
+        $this->cacheBurner(self::TESTSTRING1,$cacheHandler);
         $output1 = $this->getOutput();
         $this->assertTrue(!is_array($this->analizeThisHeader));
 
         for ($i = 0; $i < 2; $i++){
-          $this->cacheBurner($i.'Whatever',$cacheHandler);
+          $this->cacheBurner(self::TESTSTRING1.'Whatever',$cacheHandler);
         }
 
-        $this->cacheBurner("\ntest2\n",$cacheHandler);
+        $this->cacheBurner(self::TESTSTRING2,$cacheHandler);
         $output2 = $this->getOutput();
         sleep(2);
 
-        $this->cacheBurner("\ntest3\n",$cacheHandler);
+        $this->cacheBurner(self::TESTSTRING3,$cacheHandler);
         $output3 = $this->getOutput();
-        $l = new \Logger();
 
-        $l->lwrite( '1'.$output1.'2'.$output2.'3'.$output3 );
         $this->assertTrue($output1 == $output2);
         $this->assertTrue($output1 != $output3);
       }

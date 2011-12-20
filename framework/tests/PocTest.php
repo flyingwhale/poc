@@ -35,22 +35,22 @@ class PocTest extends \PHPUnit_Framework_TestCase
   const TESTSTRING2 = 2;
   const TESTSTRING3 = 3;
 
-  private static $analizeThisOutput;
-  private static $analizeThisHeader;
+  private $analizeThisOutput;
+  private $analizeThisHeader;
 
-  static function setOutput($o){
-    self::$analizeThisOutput = $o;
+  private function setOutput($o) {
+    $this->analizeThisOutput = $o;
   }
 
-  static function getOutput(){
-      return self::$analizeThisOutput;
+  private function getOutput() {
+      return $this->analizeThisOutput;
   }
 
-  private function getHeader(){
+  private function getHeader() {
     return $this->analizeThisHeader;
   }
 
-  private function setHeader($header){
+  private function setHeader($header) {
     $this->analizeThisHeader = $header;
   }
 
@@ -68,7 +68,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
      $this->setOutput($output->getOutput());
      $pob->destruct();
     }
-    $this->analizeThisHeader = $output->getHeader();
 
   }
 

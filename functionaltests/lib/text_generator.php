@@ -16,7 +16,7 @@ limitations under the License.
   include('LoremIpsum.class.php');
   $generator = new LoremIpsumGenerator;
 
-  echo $generator->getContent(300, 'plain');
+  echo $generator->getContent(1300, 'plain');
 ?>
  Consectetur adipiscing elit.
- 
+

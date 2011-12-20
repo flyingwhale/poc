@@ -30,10 +30,11 @@ include 'framework/autoload.php';
 class PocTest extends \PHPUnit_Framework_TestCase
 {
 
-
   const TESTSTRING1 = 1;
   const TESTSTRING2 = 2;
   const TESTSTRING3 = 3;
+
+  const TTL = 1;
 
   private $analizeThisOutput;
   private $analizeThisHeader;
@@ -63,8 +64,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
     if($output->getOutputFlow()){
       echo $testString;
       $pob->destruct();
+      $this->setHeader($output->getHeader());
       $this->setOutput($output->getOutput());
     } else {
+     $this->setHeader($output->getHeader());
      $this->setOutput($output->getOutput());
      $pob->destruct();
     }
@@ -77,18 +80,18 @@ class PocTest extends \PHPUnit_Framework_TestCase
                                                    Evaluateable::OP_PREGMATCH);
     $handlers = array();
     try{
-      $handlers[] = new \FileCache($eval,1,'/tmp/');
-      $handlers[] = new \MemcachedCache($eval, 1, 'localhost');
-      $handlers[] = new \RediskaCache($eval, 1, array('servers' =>
+      $handlers[] = new \FileCache($eval, self::TTL ,'/tmp/');
+      $handlers[] = new \MemcachedCache($eval, self::TTL, 'localhost');
+      $handlers[] = new \RediskaCache($eval, self::TTL, array('servers' =>
                          array(array('host' => 'localhost', 'port' => 6379))));
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
-        sleep(2);
+        sleep(self::TTL + 1);
 
         $this->cacheBurner(self::TESTSTRING1,$cacheHandler);
         $output1 = $this->getOutput();
-        $this->assertTrue(!is_array($this->analizeThisHeader));
+        $this->assertTrue(!is_array($this->getHeader()));
 
         for ($i = 0; $i < 2; $i++){
           $this->cacheBurner(self::TESTSTRING1.'Whatever',$cacheHandler);
@@ -96,7 +99,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
         $this->cacheBurner(self::TESTSTRING2,$cacheHandler);
         $output2 = $this->getOutput();
-        sleep(2);
+        sleep(self::TTL + 1);
 
         $this->cacheBurner(self::TESTSTRING3,$cacheHandler);
         $output3 = $this->getOutput();

@@ -12,6 +12,7 @@ spl_autoload_register(
                 'filecache' => '/src/cache/cacheImplementation/FileCache.php',
                 'logger' => '/src/utility/Logger.php',
                 'memcachedcache' => '/src/cache/cacheImplementation/MemcachedCache.php',
+                'mongocache' => '/src/cache/cacheImplementation/MongoDBCache.php',
                 'mysqltagging' => '/src/cache/tagging/MysqlTagging.php',
                 'poc\\cache\\filtering\\evaluateable' => '/src/cache/filtering/Evaluateable.php',
                 'poc\\cache\\filtering\\hasvalue' => '/src/cache/filtering/HasValue.php',
@@ -30,7 +31,8 @@ spl_autoload_register(
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',
-                'unittest\\testclasstest' => '/tests/PocTest.php'
+                'unittest\\poctest' => '/tests/PocTest.php',
+                'unittest\\rediskacachetest' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
             );
         }
         $cn = strtolower($class);

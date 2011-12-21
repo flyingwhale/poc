@@ -83,7 +83,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $handlers[] = new \MemcachedCache($eval, self::TTL, 'localhost');
       $handlers[] = new \RediskaCache($eval, self::TTL, array('servers' =>
                          array(array('host' => 'localhost', 'port' => 6379))));
-
+      $handlers[] = new \MongoCache($eval, self::TTL);
+      
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
         sleep(self::TTL + 1);

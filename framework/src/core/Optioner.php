@@ -18,11 +18,17 @@ namespace POC\core;
 
 class Optioner {
 
-  public function optionsMerge(&$srcArray, $defaultValues){
+
+  public function __construct(OptionAble $oa){
+     $oa->setOptions($this->optionsMerge($oa->getOptions(), $oa->getDefaultOptions()));
+  }
+
+  public function optionsMerge($srcArray, $defaultValues){
     foreach($defaultValues as $key => $value){
       if(!isset($srcArray[$key])) {
         $srcArray[$key] = $value;
       }
     }
+    return $srcArray;
   }
 }

@@ -15,12 +15,27 @@ limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
+use POC\core\OptionAble;
 
-class MongoCache extends AbstractPocCacheSpecific
+class MongoCache extends AbstractPocCacheSpecific implements OptionAble
 {
   private $isNotConnected;
   private $options;
   private $mongo;
+
+  private $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
+
+  public function getOptions(){
+    return $this->options;
+  }
+
+  public function setOptions($options){
+    $this->options = $options;
+  }
+
+  public function getDefaultOptions(){
+    return $this->defaultOptions;
+  }
 
   function __construct(Evaluateable $evaluatable, $ttl, $options = array())
   {
@@ -29,10 +44,13 @@ class MongoCache extends AbstractPocCacheSpecific
     $this->isNotConnected = 0;
 
     $this->options = $options;
-    Optioner::optionsMerge($this->options ,array('db_name'=>'poc','collection_name'=>'key_value'));
 
-    //var_dump($this->options);
-    //die();
+    new Optioner($this);
+
+    //Optioner::optionsMerge($this->options ,array('db_name'=>'poc','collection_name'=>'key_value'));
+
+   // var_dump($this->options);
+   // die();
     try
     {
       $className = 'Mongo';

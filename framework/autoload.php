@@ -20,6 +20,7 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
                 'poc\\cache\\poccache' => '/src/cache/PocCache.php',
                 'poc\\cache\\poccacheinterface' => '/src/cache/PocCacheInterface.php',
+                'poc\\core\\optioner' => '/src/core/Optioner.php',
                 'poc\\handlers\\outputinterface' => '/src/handlers/OutputInterface.php',
                 'poc\\handlers\\serveroutput' => '/src/handlers/ServerOutput.php',
                 'poc\\poc' => '/src/Poc.php',
@@ -31,6 +32,7 @@ spl_autoload_register(
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',
+                'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
                 'unittest\\rediskacachetest' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
             );

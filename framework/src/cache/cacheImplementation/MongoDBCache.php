@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
+use POC\core\Optioner;
 
 class MongoCache extends AbstractPocCacheSpecific
 {
@@ -27,18 +28,11 @@ class MongoCache extends AbstractPocCacheSpecific
 
     $this->isNotConnected = 0;
 
-    if (!isset($options['db_name']))
-    {
-      $options['db_name'] = 'poc';
-    }
-
-    if (!isset($options['collection_name']))
-    {
-      $options['collection_name'] = 'key_value';
-    }
-
     $this->options = $options;
-    
+    Optioner::optionsMerge($this->options ,array('db_name'=>'poc','collection_name'=>'key_value'));
+
+    //var_dump($this->options);
+    //die();
     try
     {
       $className = 'Mongo';
@@ -53,7 +47,7 @@ class MongoCache extends AbstractPocCacheSpecific
     {
       $this->throwDbException();
     }
-    
+
   }
 
   public function cacheSpecificFetch($key)
@@ -61,7 +55,7 @@ class MongoCache extends AbstractPocCacheSpecific
     $value = '';
 
     $keyValue = $this->findKeyValueObj($key);
-    
+
     if ($keyValue && $keyValue['expire'] > time())
     {
       $value =  $keyValue['value'];
@@ -82,16 +76,16 @@ class MongoCache extends AbstractPocCacheSpecific
     $criteria = array(
 			'key'=> $key
     );
-    
+
     $keyValueCollection = $this->getCollection();
     $keyValueCollection->remove($criteria);
-    
+
   }
 
   public function cacheSpecificStore($key, $output)
   {
     $keyValueCollection = $this->getCollection();
-    
+
     $keyValue = $this->findKeyValueObj($key);
 
     if (!$keyValue)
@@ -108,7 +102,7 @@ class MongoCache extends AbstractPocCacheSpecific
     }
 
     $keyValueCollection->save($keyValue);
-    
+
   }
 
   function  isCacheAvailable()
@@ -129,18 +123,18 @@ class MongoCache extends AbstractPocCacheSpecific
 
     return $collection;
   }
-  
+
   private function findKeyValueObj($key)
   {
     $keyValueCollection = $this->getCollection();
-    
+
     $filter = array(
             'key'=> $key
     );
-    
+
     $keyValue = $keyValueCollection->findOne($filter);
-    
+
     return $keyValue;
   }
-  
+
 }

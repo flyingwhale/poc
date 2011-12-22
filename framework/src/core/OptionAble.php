@@ -2,7 +2,7 @@
 
 namespace POC\core;
 
-class OptionAble
+class OptionAble implements OptionAbleInterface
 {
 
   public function getOptions(){

@@ -18,10 +18,22 @@ namespace POC\core;
 
 class Optioner {
 
+  public function isInterfaceImoplemented(){
+
+  }
 
   public function __construct(OptionAble $oa){
-     $oa->setOptions($this->optionsMerge($oa->getOptions(), $oa->getDefaultOptions()));
-  }
+    $implementedinterfaces = (class_implements(get_class($oa)));
+
+    if(isset($implementedinterfaces['POC\core\OptionAbleInterface'])){
+      $oa->setOptions($this->optionsMerge($oa->getOptions(),
+                                                     $oa->getDefaultOptions()));
+     } else {
+       throw new \Exception("Please Pass to the Optioner an instance of the
+       OptionAbleInterface");
+     }
+
+   }
 
   public function optionsMerge($srcArray, $defaultValues){
     foreach($defaultValues as $key => $value){

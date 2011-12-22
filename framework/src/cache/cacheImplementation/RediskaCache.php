@@ -22,7 +22,9 @@ class RediskaCache extends AbstractPocCacheSpecific {
 
   private $rediska;
   private $isNotConnected;
-  protected $defaultOptions = array('host'=>'localhost','port'=>'6379');
+  protected $defaultOptions = array('servers' =>
+                                     array(array('host'=>'localhost',
+                                                              'port'=>'6379')));
 
   function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
     parent::__construct($evaluatable,$ttl);

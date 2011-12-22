@@ -23,17 +23,9 @@ limitations under the License.
     new \POC\cache\PocCache(
       new RediskaCache(
         $eval,
-        5,
-        array(
-          'servers' => array(
-            array(
-              'host' => 'localhost',
-              'port' => 6379
-            )
-          )
+        5
         )
-      )
-    ),
+      ),
     new \POC\handlers\ServerOutput(),
     true
   );

@@ -31,7 +31,7 @@ limitations under the License.
     }
   }
 
-  $cache = new FileCache($eval, 5, '/tmp/');
+  $cache = new FileCache($eval, 5);
 
   //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
 

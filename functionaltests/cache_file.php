@@ -23,6 +23,6 @@ limitations under the License.
        ('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
   $eval->addDistinguishVariable($_GET);
 
-  $pob  = new Poc(new PocCache(new FileCache($eval, 5, '/tmp/')),new ServerOutput(), true);
+  $pob  = new Poc(new PocCache(new FileCache($eval, 5)),new ServerOutput(), true);
 
   include('lib/text_generator.php');

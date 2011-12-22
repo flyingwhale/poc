@@ -24,7 +24,7 @@ class FileCacheTest extends CacheTest
 
   function setUp_() {
     $this->cache = new \FileCache(new Evaluateable('#php$#', 'tester.php',
-                               Evaluateable::OP_PREGMATCH), parent::TTL,'/tmp/');
+                               Evaluateable::OP_PREGMATCH), parent::TTL);
   }
 
 }

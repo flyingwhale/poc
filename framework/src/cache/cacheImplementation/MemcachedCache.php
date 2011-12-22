@@ -14,18 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
+use POC\core\Optioner;
 
 class MemcachedCache extends AbstractPocCacheSpecific {
 
-  var $memcache;
-  var $compression=false;
-  var $currentResult;
+  private $memcache;
+  private $compression=false;
+  private $currentResult;
   private $isConnected;
+  protected $defaultOptions = array('server'=>'localhost',
+                                    'port'=>'11211',
+                                   // ''=>'',
+                                   // ''=>'',
+                                   );
 
-  function __construct(Evaluateable $evaluatable, $ttl, $server, $port = 11211) {
+  function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
+    $this->options = $options;
+    new Optioner($this);
     parent::__construct($evaluatable,$ttl);
     $this->memcache = new Memcache();
-    $this->isConnected = $this->memcache->connect($server, $port);;
+    $this->isConnected = $this->memcache->connect($this->options['server'], $this->options['port']);;
     $this->throwDbException();
   }
 

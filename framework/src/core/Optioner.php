@@ -22,12 +22,20 @@ class Optioner {
 
   }
 
-  public function __construct(OptionAble $oa){
+  public function __construct($oa){
     $implementedinterfaces = (class_implements(get_class($oa)));
 
     if(isset($implementedinterfaces['POC\core\OptionAbleInterface'])){
-      $oa->setOptions($this->optionsMerge($oa->getOptions(),
-                                                     $oa->getDefaultOptions()));
+
+      //if(is_array($oa)){
+      if(1){
+        $options = $this->optionsMerge($oa->getOptions(), $oa->getDefaultOptions());
+      } else {
+        throw new \Exception('Please add an array or nothing to the
+                                                               $options parameter');
+      }
+
+      $oa->setOptions($options);
      } else {
        throw new \Exception("Please Pass to the Optioner an instance of the
        OptionAbleInterface");

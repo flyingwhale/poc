@@ -14,22 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
+use POC\core\Optioner;
 
 class FileCache extends AbstractPocCacheSpecific {
 
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';
 
-  private $directory;
   private $file;
   private $fileTtl;
+  protected $defaultOptions = array('directory'=>'/tmp/');
 
-  function __construct(Evaluateable $evaluatable, $ttl, $directory) {
+  function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
     parent::__construct($evaluatable,$ttl);
-    $this->directory = $directory;
+
+    $this->options = $options;
+
+    new Optioner($this);
+
     $this->throwDbException();
-    $this->file = $directory.self::KEY_PREFIX;
-    $this->fileTtl = $directory.self::TTL_PREFIX;
+    $this->file = $this->options['directory'].self::KEY_PREFIX;
+    $this->fileTtl = $this->options['directory'].self::TTL_PREFIX;
   }
 
   public function cacheSpecificFetch($key) {
@@ -41,8 +46,8 @@ class FileCache extends AbstractPocCacheSpecific {
 
   public function cacheSpecificClearAll() {
 
-     array_map( "unlink", glob($this->directory.''.self::KEY_PREFIX.'*')  );
-     array_map( "unlink", glob($this->directory.''.self::TTL_PREFIX.'*')  );
+     array_map( "unlink", glob($this->options['directory'].''.self::KEY_PREFIX.'*')  );
+     array_map( "unlink", glob($this->options['directory'].''.self::TTL_PREFIX.'*')  );
 
    }
 
@@ -81,6 +86,6 @@ class FileCache extends AbstractPocCacheSpecific {
   }
 
   function  isCacheAvailable(){
-    return is_writable($this->directory);
+    return is_writable($this->options['directory']);
   }
 }

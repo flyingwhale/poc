@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 use POC\cache\filtering\Evaluateable;
+use POC\core\Optioner;
 
 require_once 'Rediska.php';
 
@@ -21,14 +22,13 @@ class RediskaCache extends AbstractPocCacheSpecific {
 
   private $rediska;
   private $isNotConnected;
+  protected $defaultOptions = array('host'=>'localhost','port'=>'6379');
 
   function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
     parent::__construct($evaluatable,$ttl);
 
-    if (!isset($options['servers']))
-    {
-      $options['servers'] = array(array('host' => 'localhost', 'port' => 6379));
-    }
+    $this->options = $options;
+    new Optioner($this);
 
     $className = 'Rediska';
 

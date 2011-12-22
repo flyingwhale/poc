@@ -29,9 +29,9 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
   /** The databese that stores the caches*/
   var $tagDb;
 
-  var $options;
+  protected $options = array();
 
-  protected $defaultOptions;
+  protected $defaultOptions = array();
 
   function __construct(Evaluateable $eval,$ttl,$tagDb = null) {
      $this->evaluateable = $eval;

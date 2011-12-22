@@ -24,7 +24,7 @@ class MemcachedCacheTest extends CacheTest
 
   function setUp_() {
     $this->cache = new \MemcachedCache(new Evaluateable('#php$#', 'tester.php',
-                                     Evaluateable::OP_PREGMATCH), parent::TTL, 'localhost');
+                                     Evaluateable::OP_PREGMATCH), parent::TTL);
   }
 
 }

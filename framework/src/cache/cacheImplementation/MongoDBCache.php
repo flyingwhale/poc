@@ -17,13 +17,12 @@ use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
 use POC\core\OptionAble;
 
-class MongoCache extends AbstractPocCacheSpecific implements OptionAble
+class MongoCache extends AbstractPocCacheSpecific
 {
   private $isNotConnected;
-  private $options;
   private $mongo;
 
-  private $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
+  protected $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
 
   public function getOptions(){
     return $this->options;

@@ -21,6 +21,7 @@ spl_autoload_register(
                 'poc\\cache\\poccache' => '/src/cache/PocCache.php',
                 'poc\\cache\\poccacheinterface' => '/src/cache/PocCacheInterface.php',
                 'poc\\core\\optionable' => '/src/core/OptionAble.php',
+                'poc\\core\\optionableinterface' => '/src/core/OptionAbleInterface.php',
                 'poc\\core\\optioner' => '/src/core/Optioner.php',
                 'poc\\handlers\\outputinterface' => '/src/handlers/OutputInterface.php',
                 'poc\\handlers\\serveroutput' => '/src/handlers/ServerOutput.php',

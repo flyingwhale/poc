@@ -15,8 +15,9 @@ limitations under the License.
 */
 
 use POC\cache\filtering\Evaluateable;
+use POC\core\OptionAble;
 
-abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface
+abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
 {
   /** This variable must be declared at the constructors of this class.*/
   var $ttl;
@@ -27,6 +28,10 @@ abstract class AbstractPocCacheSpecific implements PocCacheSpecificInterface
 
   /** The databese that stores the caches*/
   var $tagDb;
+
+  var $options;
+
+  protected $defaultOptions;
 
   function __construct(Evaluateable $eval,$ttl,$tagDb = null) {
      $this->evaluateable = $eval;

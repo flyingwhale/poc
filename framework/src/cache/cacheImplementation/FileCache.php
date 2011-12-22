@@ -20,9 +20,9 @@ class FileCache extends AbstractPocCacheSpecific {
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';
 
-  var $directory;
-  var $file;
-  var $fileTtl;
+  private $directory;
+  private $file;
+  private $fileTtl;
 
   function __construct(Evaluateable $evaluatable, $ttl, $directory) {
     parent::__construct($evaluatable,$ttl);

@@ -26,7 +26,7 @@ class Poc
   static private $caches;
   static private $level;
 
-  public function setDebug($debug) {
+  private function setDebug($debug) {
     self::$debug = $debug;
   }
 
@@ -124,7 +124,7 @@ class Poc
     return $started;
   }
 
-  public function start() {
+  private function start() {
 
     self::$start = microtime();
 
@@ -148,11 +148,11 @@ class Poc
     }
   }
 
-  public function addCache(\POC\cache\PocCacheInterface $cache) {
+  private function addCache(\POC\cache\PocCacheInterface $cache) {
     self::$caches[] = $cache;
   }
 
-  function __destruct() {
+  public function __destruct() {
     if (isset(self::$level)) {
        if (self::$level) {
          \ob_end_flush();

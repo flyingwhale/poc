@@ -1,5 +1,6 @@
 <?php
 
+
 namespace unittest\handler;
 
 class TestOutput implements \POC\handlers\OutputInterface

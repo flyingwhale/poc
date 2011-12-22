@@ -4,8 +4,10 @@ abstract class AbstractDb {
   var $cache;
 
   function __construct() {
-    if(!$this->checkdb()) {
-      $this->createDb();
+    if($this->checkdb()) {
+      if(!$this->openDb()){
+        $this->createDb();
+      }
     } else {
       $this->flushOutdated();
     }

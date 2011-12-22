@@ -46,25 +46,28 @@ class Poc
     if (self::$level == \ob_get_level() - 1) {
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         $cache = self::$caches[$i]->getSpecificCache();
-        $eval = $cache->getEvaluateable();
-        if ($eval->evaluate()) {
-          $return = $buffer;
+        //if(self::$caches[$i]->isOutputBlacklisted($buffer))
+        {
+          $eval = $cache->getEvaluateable();
+          if ($eval->evaluate()) {
+            $return = $buffer;
 
-          if (self::$debug) {
-            $return .= '<br>This page has been '
-            .'<b> generated within </b> in '
-            .'<b>'.((microtime() - self::$start) * 1000).
+            if (self::$debug) {
+              $return .= '<br>This page has been '
+              .'<b> generated within </b> in '
+              .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
+            }
 
+            $arr = \headers_list();
+            self::$caches[$i]->storeHeadersForPreservation($arr);
+            self::$caches[$i]->removeHeaders($arr);
+            self::$caches[$i]->storeCache($return);
+
+            $eval->cacheAddTags();
           }
-
-          $arr = \headers_list();
-          self::$caches[$i]->storeHeadersForPreservation($arr);
-          self::$caches[$i]->removeHeaders($arr);
-          self::$caches[$i]->storeCache($return);
-
-          $eval->cacheAddTags();
         }
+        self::$outputHandler->cacheCallback($return);
       }
       self::$outputHandler->cacheCallback($return);
       return ($return);

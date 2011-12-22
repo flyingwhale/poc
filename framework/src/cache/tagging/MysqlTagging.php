@@ -8,9 +8,10 @@ class MysqlTagging extends AbstractDb {
   private $link;
   private $tagIDs = array();
 
-  function __construct($db='localhost',$host='localhost',$user='root',$pass='root') {
+  function __construct($db='PobTagging',$host='localhost',$user='root',$pass='root') {
+
     $this->db = $db;
-    $this->host = $localhost;
+    $this->host = $host;
     $this->user = $user;
     $this->pass = $pass;
     parent::__construct();
@@ -19,52 +20,68 @@ class MysqlTagging extends AbstractDb {
   function checkDb(){
     $this->link = mysql_connect($this->host, $this->user, $this->pass);
     if (!$this->link) {
-      die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!")
+      die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!");
     }
-    $ret = 1;
-    return $ret;
+    return true;
   }
 
-  private function openDb(){
-    $selectedDB = mysql_select_db($this->db, $link);
-    if (!$selectedDb) {
-     return false
+  protected function openDb(){
+    $selectedDB = mysql_select_db($this->db, $this->link);
+    if (!$selectedDB) {
+     return false;
     }
     return true;
   }
 
   function createDb(){
-    $query = 'CREATE TABLE tags(
-              ID INTEGER PRIMARY KEY,
-              tag CHARACTER(32)
-              )';
-    $this->base->queryexec($query);
+    $query = 'CREATE DATABASE `'.$this->db.'` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci';
+    mysql_query($query, $this->link);
 
-    $query = 'CREATE TABLE tags_has_caches(
-              tagID INTEGER,
-              cacheID INTEGER
-              )';
-    $this->base->queryexec($query);
+    $this->openDb();
 
-    $query = 'CREATE TABLE caches(
-              ID INTEGER PRIMARY KEY,
-              hash_key CHARACTER(32)
-              )';
-    $this->base->queryexec($query);
+    $query ='CREATE TABLE IF NOT EXISTS `caches` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `hash` char(64) COLLATE utf8_bin NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
+    mysql_query($query, $this->link);
+
+    $query = 'CREATE TABLE IF NOT EXISTS `tags` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `tag` char(10) COLLATE utf8_bin NOT NULL,
+     PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
+    mysql_query($query, $this->link);
+
+    $query = 'CREATE TABLE IF NOT EXISTS `tags_has_caches` (
+    `tag_id` int(11) NOT NULL,
+    `cache_id` int(11) NOT NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1';
+    mysql_query($query, $this->link);
+
+  }
+
+  private function fetchArray($query){
+    $result = mysql_query($query);
+    $return = array();
+    while($row = mysql_fetch_array($result)){
+      $return[] = $row;
+    }
+    return $return;
   }
 
   protected function addTags($tags) {
     $tagArray = $this->splitTags($tags);
     $tagIds;
     foreach($tagArray as $tag){
-      $query = 'SELECT ID FROM tags where tag = "'.$tag.'"';
-      $result = $this->base->query($query);
-      $row = $result->fetch();
+      $query = 'SELECT id FROM tags where tag = "'.$tag.'"';
+      $row = $this->fetchArray($query);
       if(!$row){
-        $this->base->queryexec('INSERT INTO tags VALUES (null, "'.$tag.'")');
-        $tagIds[$tag] = $this->base->lastInsertRowID();
+        mysql_query('INSERT INTO tags VALUES (null, "'.$tag.'")');
+        echo(mysql_error($this->link));
+        $tagIds[$tag] = mysql_insert_id($this->link);;
       } else {
-        $tagIds[$tag] = $row[0]['ID'];
+        $tagIds[$tag] = $row[0]['id'];
       }
     }
     return($tagIds);
@@ -74,26 +91,23 @@ class MysqlTagging extends AbstractDb {
   function addCacheToTags($tags, $cacheKey) {
     $tagIds = $this->addTags($tags);
     foreach($tagIds as $tagId){
-      $query = 'SELECT ID FROM caches where hash_key = "'.$cacheKey.'"';
-      $result = $this->base->query($query);
-      $rowCache = $result->fetch();
+      $query = 'SELECT id FROM caches where hash = "'.$cacheKey.'"';
+      $result = $this->fetchArray($query);
       $cacheId;
-      if(!$rowCache){
-        $this->base->query('INSERT INTO caches VALUES (null, "'.$cacheKey.'")');
-        $cacheId = $this->base->lastInsertRowID();
+      if(!$result){
+         mysql_query('INSERT INTO caches VALUES (null, "'.$cacheKey.'")');
+         $cacheId = $this->base->lastInsertRowID();
       }
       else{
-        $cacheId = $rowCache['ID'];
+        $cacheId = $result[0]['id'];
       }
       $query = 'SELECT * FROM tags_has_caches where tagID = "'.$tagId.
-                                                                   '" AND cacheID="'.$rowCache['ID'].'"';
-      $result = $this->base->query($query);
-      $row = null;
-      $row = $result->fetch();
+                                          '" AND cacheID="'.$cacheId.'"';
+      $row = $this->fetchArray($query);
       if(!$row){
         $query = 'INSERT INTO tags_has_caches
                   VALUES("'.$tagId.'", "'.$cacheId.'")';
-        $this->base->queryexec($query);
+        mysql_query($query);
       }
     }
   }
@@ -110,9 +124,7 @@ class MysqlTagging extends AbstractDb {
         $tagsWhere .= 'tag = "'.$tag.'" ';
       }
       $query = 'select ID from tags where '.$tagsWhere;
-      $result = $this->base->query($query);
-      $rows = null;
-      $rows = $result->fetchAll();
+      $rows = $this->fetchArray($query);
 
       $tags_has_cachesWhere = '';
       if($rows){
@@ -120,27 +132,23 @@ class MysqlTagging extends AbstractDb {
           if($index){
             $tags_has_cachesWhere .= 'or ';
           }
-          $tags_has_cachesWhere .= 'tagID = "'.$row['ID'].'" ';
+          $tags_has_cachesWhere .= 'tagID = "'.$row['id'].'" ';
         }
         $query = 'SELECT cacheID FROM tags_has_caches WHERE '.$tags_has_cachesWhere.'GROUP BY cacheID';
-        $result = $this->base->query($query);
-        $rows = null;
-        $rows = $result->fetchAll();
+        $rows = $this->fetchArray($query);
         if($rows){
           $cacheWhere = '';
           foreach($rows as $index => $row){
             if($index){
               $cacheWhere .='or ';
             }
-            $cacheWhere .='ID = "'.$row['cacheID'].'" ';
+            $cacheWhere .='id = "'.$row['cache_id'].'" ';
           }
-          $query = 'SELECT hash_key FROM caches WHERE '.$cacheWhere;
-          $result = $this->base->query($query);
-          $rows = null;
-          $rows = $result->fetchAll();
+          $query = 'SELECT hash FROM caches WHERE '.$cacheWhere;
+          $rows = $this->fetchArray($query);
 
           foreach($rows as $row){
-            $this->cache->cacheSpecificClearItem($row['hash_key']);
+            $this->cache->cacheSpecificClearItem($row['hash']);
           }
         }
       }
@@ -156,15 +164,15 @@ class MysqlTagging extends AbstractDb {
 
   function dbinfo(){
         $query = 'SELECT * FROM tags';
-        $result = $this->base->query($query);
-        $rowsa = $result->fetchAll();
+ //       $result = $this->base->query($query);
+   //     $rowsa = $result->fetchAll();
 
         $query = 'SELECT * FROM caches';
-        $result = $this->base->query($query);
-        $rowsb = $result->fetchAll();
+     //   $result = $this->base->query($query);
+       // $rowsb = $result->fetchAll();
 
         $query = 'SELECT * FROM tags_has_caches';
-        $result = $this->base->query($query);
-        $rowsc = $result->fetchAll();
+   //     $result = $this->base->query($query);
+     //   $rowsc = $result->fetchAll();
   }
 }

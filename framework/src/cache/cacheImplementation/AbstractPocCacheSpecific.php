@@ -20,14 +20,14 @@ use POC\core\OptionAble;
 abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
 {
   /** This variable must be declared at the constructors of this class.*/
-  var $ttl;
+  protected $ttl;
 
   /** This variable represents the Evaluateable type object belongs to the
   object*/
-  var $evaluateable;
+  private $evaluateable;
 
   /** The databese that stores the caches*/
-  var $tagDb;
+  private  $tagDb;
 
   protected $options = array();
 
@@ -43,9 +43,9 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
     return $this->evaluateable;
   }
 
-  function setTagDb(AbstractDb $tagDb = null){
+  private function setTagDb(AbstractDb $tagDb = null){
     if ($tagDb == null) {
-      $this->tagDb = new SqliteTagging();
+      $this->tagDb = new MysqlTagging();
     } else {
       $this->tagDb = $tagDb;
     }

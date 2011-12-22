@@ -15,18 +15,19 @@ limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
   use POC\Poc;
+  use POC\cache\PocCache;
+  use POC\handlers\ServerOutput;
 
   include ("../framework/autoload.php");
 
-  $sqliteTagging = new SqliteTagging();
-  $eval = new Evaluateable('#.*#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
+  $eval = new Evaluateable();
   $eval->addCacheTags(true,'user,customer');
-  $eval->addCacheTags(true,'invetntory,article');
+  //$eval->addCacheTags(true,'invetntory,article');
   if(isset($_GET)){
     if(isset($_GET['delcache'])){
       if($_GET['delcache']){
-        $eval->addCacheInvalidationTags(true,'user,customer');
-        $eval->addCacheInvalidationTags(true,'invetntory,article');
+          $eval->addCacheInvalidationTags(true,'user,customer');
+  //      $eval->addCacheInvalidationTags(true,'invetntory,article');
       }
     }
   }

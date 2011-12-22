@@ -17,7 +17,7 @@
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
 
-include 'framework/autoload.php';
+include_once '../../../autoload.php';
 
 class MemcachedCacheTest extends CacheTest
 {

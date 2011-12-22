@@ -25,7 +25,8 @@ const UNITTESTING = 1;
    PHPUnit already has got some output when it starts. */
 \ob_start();
 
-include 'framework/autoload.php';
+include_once '../autoload.php';
+include_once './framework/autoload.php';
 
 class PocTest extends \PHPUnit_Framework_TestCase
 {

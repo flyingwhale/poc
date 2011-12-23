@@ -16,6 +16,7 @@
 
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
+use POC\cache\cacheimplementation\MemcachedCache;
 
 include_once '../../../autoload.php';
 
@@ -23,7 +24,7 @@ class MemcachedCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new \MemcachedCache(new Evaluateable('#php$#', 'tester.php',
+    $this->cache = new MemcachedCache(new Evaluateable('#php$#', 'tester.php',
                                      Evaluateable::OP_PREGMATCH), parent::TTL);
   }
 

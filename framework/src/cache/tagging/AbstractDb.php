@@ -5,7 +5,7 @@ abstract class AbstractDb {
 
   function __construct() {
     if($this->checkdb()) {
-      if(!$this->openDb()){
+      if(!$this->openDb()) {
         $this->createDb();
       }
     } else {
@@ -13,7 +13,7 @@ abstract class AbstractDb {
     }
   }
 
-  function setCache($cache){
+  function setCache($cache) {
     $this->cache = $cache;
   }
 

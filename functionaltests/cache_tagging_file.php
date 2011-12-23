@@ -17,6 +17,7 @@ limitations under the License.
   use POC\Poc;
   use POC\cache\PocCache;
   use POC\handlers\ServerOutput;
+  use POC\cache\cacheimplementation\FileCache;
 
   include ("../framework/autoload.php");
 

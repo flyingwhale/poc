@@ -18,6 +18,10 @@ namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
 use POC\Poc;
+use POC\cache\cacheimplementation\FileCache;
+use POC\cache\cacheimplementation\MemcachedCache;
+use POC\cache\cacheimplementation\RediskaCache;
+use POC\cache\cacheimplementation\MongoCache;
 
 const UNITTESTING = 1;
 
@@ -80,10 +84,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
                                                    Evaluateable::OP_PREGMATCH);
     $handlers = array();
     try{
-      $handlers[] = new \FileCache($eval, self::TTL);
-      $handlers[] = new \MemcachedCache($eval, self::TTL);
-      $handlers[] = new \RediskaCache($eval, self::TTL);
-      $handlers[] = new \MongoCache($eval, self::TTL);
+      $handlers[] = new FileCache($eval, self::TTL);
+      $handlers[] = new MemcachedCache($eval, self::TTL);
+      $handlers[] = new RediskaCache($eval, self::TTL);
+      $handlers[] = new MongoCache($eval, self::TTL);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

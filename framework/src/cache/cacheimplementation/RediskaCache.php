@@ -13,48 +13,63 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+namespace POC\cache\cacheimplementation;
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
 
-class MemcachedCache extends AbstractPocCacheSpecific {
+require_once 'Rediska.php';
 
-  private $memcache;
-  private $compression=false;
-  private $currentResult;
-  private $isConnected;
-  protected $defaultOptions = array('server'=>'localhost',
-                                    'port'=>'11211',
-                                   // ''=>'',
-                                   // ''=>'',
-                                   );
+class RediskaCache extends AbstractPocCacheSpecific {
+
+  private $rediska;
+  private $isNotConnected;
+  protected $defaultOptions = array('servers' =>
+                                     array(array('host'=>'localhost',
+                                                              'port'=>'6379')));
 
   function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
+    parent::__construct($evaluatable,$ttl);
+
     $this->options = $options;
     new Optioner($this);
-    parent::__construct($evaluatable,$ttl);
-    $this->memcache = new Memcache();
-    $this->isConnected = $this->memcache->connect($this->options['server'], $this->options['port']);;
-    $this->throwDbException();
+
+    $className = 'Rediska';
+
+    if(!class_exists($className)) {
+      throw new Exception(sprintf("%s class not exists", $className));
+    }
+
+    $this->rediska = new $className($options);
+    $this->isNotConnected = 1;
   }
 
   public function cacheSpecificFetch($key) {
-    return $this->memcache->get($key);
+    $keyObj = new \Rediska_Key($key);
+    $value = $keyObj->getValue();
+    if (is_array($value)){
+      $value = serialize($value);
+    }
+    return $value;
   }
 
   public function cacheSpecificClearAll() {
-    $this->memcache->flush();
+    $this->rediska->flushdb();
   }
 
   public function cacheSpecificClearItem($key) {
-    $this->memcache->delete($key);
+    $keyObj = new \Rediska_Key($key);
+    $keyObj->delete();
   }
 
   public function cacheSpecificStore($key, $output) {
-    $this->memcache->set($key, $output, $this->compression, $this->ttl);
+    $keyObj = new \Rediska_Key($key);
+    $keyObj->setValue($output);
+    $keyObj->expire($this->ttl);
+
   }
 
   function  isCacheAvailable(){
-    return $this->isConnected;
+    return $this->isNotConnected;
   }
 
 }

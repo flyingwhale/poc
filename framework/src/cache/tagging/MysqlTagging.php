@@ -1,6 +1,11 @@
 <?php
 class MysqlTagging extends AbstractDb {
 
+  const DEFDB = 'PobTagging';
+  const DEFHOST = 'localhost';
+  const DEFUSER = 'root';
+  const DEFPASS = 'root';
+
   private $db;
   private $host;
   private $user;
@@ -8,7 +13,8 @@ class MysqlTagging extends AbstractDb {
   private $link;
   private $tagIDs = array();
 
-  function __construct($db='PobTagging',$host='localhost',$user='root',$pass='root') {
+  function __construct($db = self::DEFDB, $host = self::DEFHOST,
+                                 $user = self::DEFUSER, $pass = self::DEFPASS) {
 
     $this->db = $db;
     $this->host = $host;

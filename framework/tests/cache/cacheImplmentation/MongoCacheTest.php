@@ -16,13 +16,14 @@
 
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
+use POC\cache\cacheimplementation\MongoCache;
 
 include_once '../../../autoload.php';
 
 class MongoCacheTest extends CacheTest
 {
   function setUp_() {
-    $this->cache = new \MongoCache(new Evaluateable('#php$#', 'tester.php',
+    $this->cache = new MongoCache(new Evaluateable('#php$#', 'tester.php',
                                Evaluateable::OP_PREGMATCH), parent::TTL);
   }
 }

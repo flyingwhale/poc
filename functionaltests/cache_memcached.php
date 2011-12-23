@@ -15,6 +15,7 @@ limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
   use POC\Poc;
+  use POC\cache\cacheimplementation\MemcachedCache;
   include ('../framework/autoload.php');
 
   $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"],

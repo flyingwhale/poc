@@ -15,17 +15,19 @@
    */
 
 namespace unittest;
-use POC\cache\filtering\Evaluateable;
-use POC\cache\cacheimplementation\FileCache;
+
 include_once '../../../autoload.php';
 
-class FileCacheTest extends CacheTest
+class MysqlTaggingTest extends CacheTest
 {
+  private $tagDb;
+  private $mockDbName;
 
   function setUp_() {
-    $this->cache = new FileCache(new Evaluateable('#php$#', 'tester.php',
-                               Evaluateable::OP_PREGMATCH), parent::TTL);
+   // $this->mockDbName = \MysqlTagging::DEFDB;
+   // $this->tagDb = new \MysqlTagging($this->mockDbName);
   }
+
 
 }
 

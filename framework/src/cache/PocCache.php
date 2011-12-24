@@ -17,7 +17,8 @@ limitations under the License.
 namespace POC\cache;
 
 use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
-class PocCache implements PocCacheInterface {
+use POC\cache\filtering\Filter;
+class PocCache {
 
   var $specificCache;
   var $headersToPreserve;
@@ -26,44 +27,49 @@ class PocCache implements PocCacheInterface {
   var $headersToRemove;
   var $outputBlacklist;
   var $eTag;
-  var $isEtagGeneration = 1;
+  private $isEtagGeneration = 1;
+  private $filter;
 
-  function __construct (AbstractPocCacheSpecific $specificCache) {
+  function __construct (AbstractPocCacheSpecific $specificCache, Filter $filter) {
     $this->specificCache = $specificCache;
+    $this->filter = $filter;
   }
 
+  public function getFilter(){
+    return $this->filter;
+  }
   public function storeCache($output) {
-    if ($this->specificCache->getEvaluateable()->evaluate()) {
+    if ($this->filter->evaluate()) {
        $this->specificCache->cacheSpecificStore(
-                   $this->specificCache->getEvaluateable()->getKey(), $output);
+                   $this->specificCache->getHasher()->getKey(), $output);
        //TODO: still not working.
        if($this->isEtagGeneration){
          $this->specificCache->cacheSpecificStore(
-           $this->specificCache->getEvaluateable()->getKey().'e',
+           $this->specificCache->getHasher()->getKey().'e',
                                                 $this->etagGeneration($output));
        }
 
        if($this->headersToStore){
          $this->specificCache->cacheSpecificStore(
-           $this->specificCache->getEvaluateable()->getKey().'h',
+           $this->specificCache->getHasher()->getKey().'h',
                                               serialize($this->headersToStore));
-       }
+      }
     }
   }
 
   public function fetchCache() {
-    if($this->specificCache->getEvaluateable()->evaluate()){
+    if($this->filter->evaluate()){
       $this->headersToSend = unserialize($this->specificCache->cacheSpecificFetch(
-                        $this->specificCache->getEvaluateable()->getKey().'h'));
+                        $this->specificCache->getHasher()->getKey().'h'));
       $this->eTag = ($this->specificCache->cacheSpecificFetch(
-                        $this->specificCache->getEvaluateable()->getKey().'e'));
+                        $this->specificCache->getHasher()->getKey().'e'));
       return $this->specificCache->cacheSpecificFetch(
-                             $this->specificCache->getEvaluateable()->getKey());
+                             $this->specificCache->getHasher()->getKey());
     }
   }
 
   public function clearCacheAll() {
-    if($this->specificCache->getEvaluataeble()->evaluate()){
+    if($this->filter->evaluate()){
       $this->specificCache->cacheSpecificClearAll();
     }
   }
@@ -79,7 +85,7 @@ class PocCache implements PocCacheInterface {
   }
 
   public function cacheTagsInvalidation(){
-    $this->specificCache->getEvaluateable()->cacheTagsInvalidation();
+    $this->specificCache->cacheTagsInvalidation();
   }
 
   public function storeHeaderVariable($headerVariable){

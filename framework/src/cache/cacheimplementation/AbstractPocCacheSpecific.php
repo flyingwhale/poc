@@ -17,16 +17,14 @@ limitations under the License.
 namespace POC\cache\cacheimplementation;
 
 use POC\cache\filtering\Evaluateable;
+use POC\cache\filtering\Hasher;
+use POC\cache\tagging\Tagger;
 use POC\core\OptionAble;
 
 abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
 {
   /** This variable must be declared at the constructors of this class.*/
   protected $ttl;
-
-  /** This variable represents the Evaluateable type object belongs to the
-  object*/
-  private $evaluateable;
 
   /** The databese that stores the caches*/
   private  $tagDb;
@@ -35,14 +33,37 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   protected $defaultOptions = array();
 
-  function __construct(Evaluateable $eval,$ttl,$tagDb = null) {
-     $this->evaluateable = $eval;
+  protected $hasher;
+
+  protected $cacheInvalidationTags = array();
+
+  function __construct(Hasher $hasher,$ttl,$tagDb = null) {
+     $this->hasher = $hasher;
      $this->ttl = $ttl;
-     $this->evaluateable->setMyCache($this);
+     $this->tagDb = $tagDb;
   }
 
-  function getEvaluateable(){
-    return $this->evaluateable;
+  public function addCacheInvalidationTags($condition,$tags){
+    if($condition){
+      $this->cacheInvalidationTags[] = new \Tagger($tags,$this->hasher,$this->ttl);
+    }
+  }
+
+  public function cacheAddTags(){
+    foreach($this->cacheAddTags as $tagger){
+      $tagger->tagCache();
+    }
+  }
+
+  public function cacheTagsInvalidation(){
+    foreach($this->cacheInvalidationTags as $tagger){
+      $tagger->cacheInvalidation();
+    }
+  }
+
+
+  function getHasher(){
+    return $this->hasher;
   }
 
   private function setTagDb(AbstractDb $tagDb = null){

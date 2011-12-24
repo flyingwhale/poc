@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 namespace POC\cache\cacheimplementation;
-use POC\cache\filtering\Evaluateable;
+use POC\cache\tagging\Tagger;
 use POC\core\Optioner;
 
 class FileCache extends AbstractPocCacheSpecific {
@@ -24,11 +24,12 @@ class FileCache extends AbstractPocCacheSpecific {
 
   private $file;
   private $fileTtl;
+  private $tagger;
   protected $defaultOptions = array('directory'=>'/tmp/');
 
-  function __construct(Evaluateable $evaluatable, $ttl, $options = array()) {
-    parent::__construct($evaluatable,$ttl);
-
+  function __construct($hasher, $ttl,$tagger=null, $options = array()) {
+    parent::__construct($hasher, $ttl, $tagger);
+    $this->tagger = $tagger;
     $this->options = $options;
 
     new Optioner($this);

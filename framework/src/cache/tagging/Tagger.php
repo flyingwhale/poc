@@ -1,26 +1,27 @@
 <?php
 
-use POC\cache\filtering\Evaluateable;
+use POC\cache\filtering\Hasher;
 
 class Tagger {
 
   private $evaluateable;
   private $tags;
+  private $ttl;
+  private $tagDb;
 
-  function __construct($tags, Evaluateable $evaluateable) {
+  function __construct($tags, Hasher $hasher, $tagDb, $ttl) {
       $this->tags = $tags;
-      $this->evaluateable = $evaluateable;
+      $this->hasher = $hasher;
+      $this->ttl = $ttl;
+      $this->tagDb = $tagDb;
   }
 
   function tagCache(){
-    $this->getTagDb()->addCacheToTags($this->tags, $this->evaluateable->getKey());
+    $this->tagDb->addCacheToTags($this->tags, $this->hasher->getKey());
   }
 
   function cacheInvalidation(){
-    $this->getTagDb()->tagInvalidate($this->tags);
+    $this->tagDb->tagInvalidate($this->tags);
   }
 
-  private function getTagDb(){
-    return $this->evaluateable->getMyCache()->getTagDb();
-  }
 }

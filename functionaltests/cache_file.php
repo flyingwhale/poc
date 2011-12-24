@@ -13,17 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  use POC\cache\filtering\Evaluateable;
+  use POC\cache\filtering\Hasher;
+  use POC\cache\filtering\filter;
   use POC\Poc;
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
   use POC\cache\cacheimplementation\FileCache;
+  //TODO: fixIt!
+  //use POC\cache\tagging\MysqlTagging;
+  use \MysqlTagging;
 
   include ("../framework/autoload.php");
-  $eval = new Evaluateable
-       ('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
-  $eval->addDistinguishVariable($_GET);
-
-  $pob  = new Poc(new PocCache(new FileCache($eval, 5)),new ServerOutput(), true);
+  $hasher = new Hasher();
+  $filter = new Filter();
+  $hasher->addDistinguishVariable($_GET);
+  $pob  = new Poc(new PocCache(new FileCache($hasher, 5, new MysqlTagging),$filter),new ServerOutput(),
+                                                                                                    true);
 
   include('lib/text_generator.php');

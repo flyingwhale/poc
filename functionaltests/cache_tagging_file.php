@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
   use POC\cache\filtering\Evaluateable;
+  use POC\cache\filtering\Hasher;
   use POC\Poc;
   use POC\cache\PocCache;
   use POC\handlers\ServerOutput;

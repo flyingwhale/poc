@@ -45,11 +45,10 @@ class Poc
   public static function pocCallbackGenerate($buffer) {
     if (self::$level == \ob_get_level() - 1) {
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-        $cache = self::$caches[$i]->getSpecificCache();
+        //TODO:fixit
         //if(self::$caches[$i]->isOutputBlacklisted($buffer))
+        if(self::$caches[$i]->getFilter()->evaluate())
         {
-          $eval = $cache->getEvaluateable();
-          if ($eval->evaluate()) {
             $return = $buffer;
 
             if (self::$debug) {
@@ -57,14 +56,13 @@ class Poc
               .'<b> generated within </b> in '
               .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
-            }
 
             $arr = \headers_list();
             self::$caches[$i]->storeHeadersForPreservation($arr);
             self::$caches[$i]->removeHeaders($arr);
             self::$caches[$i]->storeCache($return);
 
-            $eval->cacheAddTags();
+            self::$caches[$i]->getSpecificCache();
           }
         }
         self::$outputHandler->cacheCallback($return);
@@ -91,7 +89,7 @@ class Poc
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\POC\cache\PocCacheInterface $cache = null,
+  function __construct(\POC\cache\PocCache $cache = null,
                         \POC\handlers\OutputInterface $output, $debug = false) {
     self::$outputHandler = $output;
     $this->setDebug($debug);
@@ -106,8 +104,7 @@ class Poc
    $started = 0;
     for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
       self::$caches[$i]->cacheTagsInvalidation();
-      if (self::$caches[$i]->getSpecificCache()->
-                                                getEvaluateable()->evaluate()) {
+      if (self::$caches[$i]->getFilter()->evaluate()) {
         $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
@@ -134,8 +131,7 @@ class Poc
     if (!$this->fetchCache()) {
       $startCache = true;
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-        if (self::$caches[$i]->getSpecificCache()->getEvaluateable()->
-                                                              isBlacklisted()) {
+        if (self::$caches[$i]->getFilter()->isBlacklisted()) {
 
           $startCache = false;
           $break;
@@ -151,7 +147,7 @@ class Poc
     }
   }
 
-  private function addCache(\POC\cache\PocCacheInterface $cache) {
+  private function addCache(\POC\cache\PocCache $cache) {
     self::$caches[] = $cache;
   }
 

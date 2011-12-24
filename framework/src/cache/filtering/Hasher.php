@@ -14,21 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Poc\cache;
+namespace POC\cache\filtering;
 
-interface PocCacheInterface {
+class Hasher extends HasValue {
 
-  public function __construct(\AbstractPocCacheSpecific $cache);
+  private $distinguishVariables = array();
+  private $key;
 
-  public function storeCache($output);
+  public function getKey() {
+    if(!$this->key) {
+      $this->key = $this->toHash();
+    }
+    return $this->key;
+  }
 
-  public function fetchCache();
+  public function addDistinguishVariable($var){
+    $this->distinguishVariables[] = $var;
+  }
 
-  public function clearCacheAll();
+  function toString(){
+    return serialize($this->distinguishVariables);
+  }
 
-  public function clearCacheItem($key);
-
-  public function cacheTagsInvalidation();
-
-  public function storeHeaderVariable($headerVariable);
 }

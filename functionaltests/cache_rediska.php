@@ -15,6 +15,7 @@ limitations under the License.
 */
 
   use POC\cache\filtering\Evaluateable;
+  use POC\cache\filtering\Hasher;
   use POC\Poc;
   use POC\cache\cacheimplementation\RediskaCache;
   include ('../framework/autoload.php');

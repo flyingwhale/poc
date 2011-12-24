@@ -16,6 +16,7 @@ limitations under the License.
 namespace POC\cache\cacheimplementation;
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
+use POC\cache\tagging\Tagger;
 
 class MongoCache extends AbstractPocCacheSpecific
 {
@@ -24,9 +25,9 @@ class MongoCache extends AbstractPocCacheSpecific
 
   protected $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
 
-  function __construct(Evaluateable $evaluatable, $ttl, $options = array())
+  function __construct($hasher, $ttl,$tagger, $options = array())
   {
-    parent::__construct($evaluatable,$ttl);
+    parent::__construct($hasher,$ttl,$tagger);
 
     $this->isNotConnected = 0;
 
@@ -47,7 +48,7 @@ class MongoCache extends AbstractPocCacheSpecific
     catch ( MongoConnectionException $e )
     {
       $this->throwDbException();
-    }
+
 
   }
 

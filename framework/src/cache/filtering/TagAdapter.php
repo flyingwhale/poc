@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace POC\cache\filtering;
 
-class Evaluateable extends HasValue {
+class TagAdapter extends HasValue {
 
   const OP_EQUALATION = 1;
   const OP_PREGMATCH = 2;

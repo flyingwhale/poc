@@ -14,21 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-  use POC\cache\filtering\Evaluateable;
   use POC\cache\filtering\Hasher;
+  use POC\cache\filtering\filter;
   use POC\Poc;
+  use POC\handlers\ServerOutput;
+  use POC\cache\PocCache;
+  use \MysqlTagging;
   use POC\cache\cacheimplementation\RediskaCache;
   include ('../framework/autoload.php');
 
-  $eval = new Evaluateable('#php$#',$_SERVER["REQUEST_URI"], Evaluateable::OP_PREGMATCH);
+  $hasher = new Hasher();
+  $filter = new Filter();
+  $hasher->addDistinguishVariable($_GET);
+
   $pob  = new Poc(
-    new \POC\cache\PocCache(
+    new PocCache(
       new RediskaCache(
-        $eval,
-        5
-        )
+        $hasher,
+        5,
+        new MysqlTagging()
+        ), $filter
       ),
-    new \POC\handlers\ServerOutput(),
+    new ServerOutput(),
     true
   );
 

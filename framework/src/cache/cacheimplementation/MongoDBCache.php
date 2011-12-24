@@ -49,7 +49,7 @@ class MongoCache extends AbstractPocCacheSpecific
     {
       $this->throwDbException();
 
-
+  }
   }
 
   public function cacheSpecificFetch($key)

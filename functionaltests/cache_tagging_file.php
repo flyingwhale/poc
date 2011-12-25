@@ -13,16 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+  ini_set('display_errors', 1);
+  error_reporting(E_ALL);
+  
+
   use POC\cache\filtering\Evaluateable;
   use POC\Poc;
   use POC\cache\PocCache;
   use POC\handlers\ServerOutput;
   use POC\cache\cacheimplementation\FileCache;
 
+  use POC\cache\tagging\driver\mySQL\CacheTable;
+  use POC\cache\tagging\MysqlTagging;
+  
   include ("../framework/autoload.php");
+
+/*  
+  $mt = new MysqlTagging();
+  $mt->addCacheToTags('user,customer', '31291a18c630c9b65a7792d9f247903a');
+  exit;
+*/  
 
   $eval = new Evaluateable();
   $eval->addCacheTags(true,'user,customer');
+
   //$eval->addCacheTags(true,'invetntory,article');
   if(isset($_GET)){
     if(isset($_GET['delcache'])){
@@ -32,7 +47,7 @@ limitations under the License.
       }
     }
   }
-
+  
   $cache = new FileCache($eval, 5);
 
   //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");

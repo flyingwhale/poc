@@ -44,7 +44,7 @@ spl_autoload_register(
                 'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\mysqltaggingtest' => '/tests/cache/tagging/MysqlTaggingTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
-                'unittest\\rediskacachetest' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
+                'unittest\\rediskacachete' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
             );
         }
         $cn = strtolower($class);

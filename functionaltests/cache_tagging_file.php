@@ -29,9 +29,17 @@ limitations under the License.
 
   include ("../framework/autoload.php");
 
-/*
+  
+  if (0)
+  {
   $mt = new MysqlTagging();
   $mt->addCacheToTags('user,customer', '31291a18c630c9b65a7792d9f247903a');
+  $mt->tagInvalidate('user');
+//  $mt->flushOutdated();
+  exit;
+  }
+/*  
+//  $mt->addCacheToTags('user,customer', '31291a18c630c9b65a7792d9f247903a');
   exit;
 */
 
@@ -45,19 +53,23 @@ limitations under the License.
       }
     }
   }
+
   */
 
-  $hasher = new Hasher();
   $filter = new Filter();
+  
+  $hasher = new Hasher();
   $hasher->addDistinguishVariable($_GET);
 
-  $cache = new FileCache($hasher, 5, new MysqlTagging);
+  $tagging = new MysqlTagging();
+  $tagging->addCacheToTags('user,customer', $hasher->getKey());
+  
+  $cache = new FileCache($hasher, 5, $tagging);
 
   //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
 
   $pocCache = new PocCache($cache,$filter);
-
-  //$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
+  
 
   $pob  = new Poc($pocCache, new ServerOutput(),  true);
 

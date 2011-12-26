@@ -96,7 +96,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
       $handlers[] = new FileCache($hasher, self::TTL,null);
       $handlers[] = new MemcachedCache($hasher, self::TTL,null);
-      //$handlers[] = new RediskaCache($hasher, self::TTL,null);
+      $handlers[] = new RediskaCache($hasher, self::TTL,null);
       $handlers[] = new MongoCache($hasher, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {

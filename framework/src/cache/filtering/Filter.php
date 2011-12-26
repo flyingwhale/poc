@@ -24,7 +24,7 @@ class Filter{
 
 
   public function evaluate() {
-    return !$this->blacklistCacheInvalidation();
+    return !$this->isBlacklisted();
   }
 
   public function addBlacklistCondition($var){
@@ -32,10 +32,9 @@ class Filter{
   }
 
   public function isBlacklisted() {
-      foreach($this->blacklistConditions as $blackRequest) {
+    foreach($this->blacklistConditions as $blackRequest) {
       if($blackRequest) {
          return true;
-         break;
       }
     }
     return false;

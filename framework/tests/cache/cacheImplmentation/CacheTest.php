@@ -13,22 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
    */
-
 namespace unittest;
-use POC\cache\filtering\Evaluateable;
+use POC\cache\filtering\Hasher;
 
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {
 
-  public $TESTKEY = 'testkey';
   const TESTDATA = 'testdata';
   const TTL = 1;
-
   public $cache = null;
+  public $TESTKEY = 'testkey';
+  public $hasher;
 
   abstract function setUp_();
 
   protected function setUp() {
+    $this->hasher = new Hasher();
+
     $this->TESTKEY .= rand().rand();
     try{
       $this->setUp_();

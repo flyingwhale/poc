@@ -16,9 +16,9 @@
 
 namespace unittest;
 
-include_once '../../../autoload.php';
+//include_once '../../../autoload.php';
 
-class MysqlTaggingTest extends CacheTest
+class MysqlTaggingTest
 {
   private $tagDb;
   private $mockDbName;

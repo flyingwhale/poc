@@ -56,16 +56,14 @@ class Poc
               .'<b> generated within </b> in '
               .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
-
+            }
             $arr = \headers_list();
             self::$caches[$i]->storeHeadersForPreservation($arr);
             self::$caches[$i]->removeHeaders($arr);
             self::$caches[$i]->storeCache($return);
-
             self::$caches[$i]->getSpecificCache();
           }
-        }
-        self::$outputHandler->cacheCallback($return);
+
       }
       self::$outputHandler->cacheCallback($return);
       return ($return);
@@ -132,7 +130,6 @@ class Poc
       $startCache = true;
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         if (self::$caches[$i]->getFilter()->isBlacklisted()) {
-
           $startCache = false;
           $break;
         }

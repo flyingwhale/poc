@@ -17,13 +17,14 @@
 namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use POC\cache\cacheimplementation\RediskaCache;
+use POC\cache\tagging\MysqlTagging;
 
-include_once '../../../autoload.php';
+//include_once '../../../autoload.php';
 
-class RediskaCacheTest extends CacheTest
+class RediskaCacheTe extends CacheTest
 {
   function setUp_() {
-    $this->cache = new RediskaCache(new Evaluateable('#php$#', 'tester.php',
-                               Evaluateable::OP_PREGMATCH), parent::TTL, array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
+    $this->cache = new RediskaCache($this->hasher, parent::TTL, new MysqlTagging(),
+    array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
   }
 }

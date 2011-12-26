@@ -18,10 +18,14 @@ namespace unittest;
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
 use POC\Poc;
+use POc\cache\PocCache;
 use POC\cache\cacheimplementation\FileCache;
 use POC\cache\cacheimplementation\MemcachedCache;
 use POC\cache\cacheimplementation\RediskaCache;
 use POC\cache\cacheimplementation\MongoCache;
+use POC\cache\filtering\Hasher;
+use POC\cache\filtering\Filter;
+use POC\cache\tagging\MysqlTagging;
 
 const UNITTESTING = 1;
 
@@ -29,7 +33,7 @@ const UNITTESTING = 1;
    PHPUnit already has got some output when it starts. */
 \ob_start();
 
-include_once '../autoload.php';
+//include_once '../autoload.php';
 include_once './framework/autoload.php';
 
 class PocTest extends \PHPUnit_Framework_TestCase
@@ -61,10 +65,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   private function cacheBurner($testString = "testString", $cacheHandler) {
-
+    $filter = new Filter();
     $this->setOutput('');
     $output = new TestOutput();
-    $pob = new Poc(new \POC\cache\PocCache($cacheHandler), $output, false);
+    $pob = new Poc(new PocCache($cacheHandler, $filter), $output, false);
     if($output->getOutputFlow()){
       echo $testString;
       $pob->destruct();
@@ -80,14 +84,20 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
 
   public function testBasicPocFunctionality(){
-    $eval = new Evaluateable('#php$#', 'tester.php',
-                                                   Evaluateable::OP_PREGMATCH);
+
+    $hasher = new Hasher();
+    $filter = new Filter();
+
     $handlers = array();
     try{
-      $handlers[] = new FileCache($eval, self::TTL);
-      $handlers[] = new MemcachedCache($eval, self::TTL);
-      $handlers[] = new RediskaCache($eval, self::TTL);
-      $handlers[] = new MongoCache($eval, self::TTL);
+
+      $hasher = new Hasher();
+      $tagger = new MysqlTagging();
+
+      $handlers[] = new FileCache($hasher, self::TTL,null);
+      $handlers[] = new MemcachedCache($hasher, self::TTL,null);
+      //$handlers[] = new RediskaCache($hasher, self::TTL,null);
+      $handlers[] = new MongoCache($hasher, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);
@@ -107,6 +117,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
         $this->cacheBurner(self::TESTSTRING3,$cacheHandler);
         $output3 = $this->getOutput();
+
+        echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
 
         $this->assertTrue($output1 == $output2);
         $this->assertTrue($output1 != $output3);

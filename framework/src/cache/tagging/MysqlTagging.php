@@ -1,7 +1,17 @@
 <?php
+namespace POC\cache\tagging;
+
+use POC\cache\tagging\driver\mySQL\model\Cache;
+use POC\cache\tagging\driver\mySQL\model\Tag;
+use POC\cache\tagging\driver\mysql\model\TagCache;
+use POC\cache\tagging\driver\mySQL\CacheModelManager;
+use POC\cache\tagging\driver\mySQL\TagModelManager;
+use POC\cache\tagging\driver\mySQL\TagsHasCachesModelManager;
+
+
 class MysqlTagging extends AbstractDb {
 
-  const DEFDB = 'PobTagging';
+  const DEFDB   = 'pob_tagging';
   const DEFHOST = 'localhost';
   const DEFUSER = 'root';
   const DEFPASS = 'root';
@@ -12,112 +22,131 @@ class MysqlTagging extends AbstractDb {
   private $pass;
   private $link;
   private $tagIDs = array();
+  private $tryOfCon = 0;
+  private $PDO;
 
   function __construct($db = self::DEFDB, $host = self::DEFHOST,
-                                 $user = self::DEFUSER, $pass = self::DEFPASS) {
+  $user = self::DEFUSER, $pass = self::DEFPASS) {
 
-    $this->db = $db;
+    $this->db   = $db;
     $this->host = $host;
     $this->user = $user;
     $this->pass = $pass;
-    parent::__construct();
-  }
 
-  function checkDb(){
-    $this->link = mysql_connect($this->host, $this->user, $this->pass);
-    if (!$this->link) {
-      die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!");
+    $this->dsn = 'mysql:dbname='.$db.';host='.$host;
+    if ($this->tryOfCon < 1)
+    {
+      $this->connectDb();
     }
-    return true;
-  }
-
-  protected function openDb(){
-    $selectedDB = mysql_select_db($this->db, $this->link);
-    if (!$selectedDB) {
-     return false;
+    else
+    {
+      throw new Exception('Mysql database connection failed.');
     }
-    return true;
   }
 
-  function createDb(){
-    $query = 'CREATE DATABASE `'.$this->db.'` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci';
-    mysql_query($query, $this->link);
-
-    $this->openDb();
-
-    $query ='CREATE TABLE IF NOT EXISTS `caches` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `hash` char(64) COLLATE utf8_bin NOT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
-    mysql_query($query, $this->link);
-
-    $query = 'CREATE TABLE IF NOT EXISTS `tags` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `tag` char(10) COLLATE utf8_bin NOT NULL,
-     PRIMARY KEY (`id`)
-     ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
-    mysql_query($query, $this->link);
-
-    $query = 'CREATE TABLE IF NOT EXISTS `tags_has_caches` (
-    `tag_id` int(11) NOT NULL,
-    `cache_id` int(11) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1';
-    mysql_query($query, $this->link);
-
-  }
-
-  private function fetchArray($query){
-    $result = mysql_query($query);
-    $return = array();
-    while($row = mysql_fetch_array($result)){
-      $return[] = $row;
+  protected function connectDb()
+  {
+    try {
+      $this->PDO = new \PDO($this->dsn, $this->user, $this->pass);
     }
-    return $return;
-  }
-
-  protected function addTags($tags) {
-    $tagArray = $this->splitTags($tags);
-    $tagIds;
-    foreach($tagArray as $tag){
-      $query = 'SELECT id FROM tags where tag = "'.$tag.'"';
-      $row = $this->fetchArray($query);
-      if(!$row){
-        mysql_query('INSERT INTO tags VALUES (null, "'.$tag.'")');
-        echo(mysql_error($this->link));
-        $tagIds[$tag] = mysql_insert_id($this->link);;
-      } else {
-        $tagIds[$tag] = $row[0]['id'];
+    catch(\PDOException $Exception) {
+      $this->tryOfCon++;
+      if ($Exception->getCode() == 1049)
+      {
+        $dsn = 'mysql:;host='.$this->host;
+        $this->PDO = new \PDO($dsn, $this->user, $this->pass);
+        $this->createDb();
+        $this->cmm = new CacheModelManager($this->PDO);
+        $this->tmm = new TagModelManager($this->PDO);
+        $this->tcmm = new TagsHasCachesModelManager($this->PDO);
+        $this->createTables();
       }
     }
-    return($tagIds);
+    $this->cmm = new CacheModelManager($this->PDO);
+    $this->tmm = new TagModelManager($this->PDO);
+    $this->tcmm = new TagsHasCachesModelManager($this->PDO);
+
   }
 
-
-  function addCacheToTags($tags, $cacheKey) {
-    $tagIds = $this->addTags($tags);
-    foreach($tagIds as $tagId){
-      $query = 'SELECT id FROM caches where hash = "'.$cacheKey.'"';
-      $result = $this->fetchArray($query);
-      $cacheId;
-      if(!$result){
-         mysql_query('INSERT INTO caches VALUES (null, "'.$cacheKey.'")');
-         $cacheId = $this->base->lastInsertRowID();
-      }
-      else{
-        $cacheId = $result[0]['id'];
-      }
-      $query = 'SELECT * FROM tags_has_caches where tagID = "'.$tagId.
-                                          '" AND cacheID="'.$cacheId.'"';
-      $row = $this->fetchArray($query);
-      if(!$row){
-        $query = 'INSERT INTO tags_has_caches
-                  VALUES("'.$tagId.'", "'.$cacheId.'")';
-        mysql_query($query);
-      }
+  protected function initDbStructure()
+  {
+    if ($this->createDb())
+    {
+      $this->createTables();
     }
   }
 
+  protected function createDb()
+  {
+    $query = 'CREATE DATABASE `'.$this->db.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
+    $this->PDO->exec($query) or
+    die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!");
+
+    $query = 'USE '.$this->db;
+    $this->PDO->exec($query);
+  }
+
+  protected function createTables()
+  {
+    $this->cmm->createTable();
+    $this->tmm->createTable();
+    $this->tcmm->createTable();
+  }
+
+  function splitTags($tags){
+    return explode(',',$tags);
+  }
+
+  function addCacheToTags($tagNamesString, $hash, $ttl = 5)
+  {
+    $expires = time()+$ttl;
+    $cache = $this->cmm->findOneBy('hash', $hash);
+
+    $isNewCache = false;
+    $isCacheRenew = false;
+
+    if (!$cache)
+    {
+      $isNewCache = true;
+      $cache = new Cache();
+      $cache->hash = $hash;
+      $cache->expires = $expires;
+      $this->cmm->save($cache);
+    }
+    else {
+      if ($cache->expires < time())
+      {
+        $isCacheRenew = true;
+        $cache->expires = $expires;
+        $this->cmm->save($cache);
+      }
+    }
+
+    $tagNames = $this->splitTags($tagNamesString);
+
+    $tags = array();
+    $tagsCaches = array();
+    foreach($tagNames as $tagName)
+    {
+      $tag = $this->tmm->findOneBy('tag', $tagName);
+
+      if (!$tag)
+      {
+        $tag = new Tag();
+        $tag->tag = $tagName;
+        $this->tmm->save($tag);
+
+        $tagCache = new TagCache();
+        $tagCache->cache_id = $cache->id;
+        $tagCache->tag_id = $tag->id;
+        $tagsCaches[] = $tagCache;
+      }
+
+      $tags[] = $tag;
+    }
+
+    $this->tcmm->save($tagsCaches);
+  }
 
   function tagInvalidate($tags) {
     $tagArray = $this->splitTags($tags);
@@ -161,24 +190,8 @@ class MysqlTagging extends AbstractDb {
     }
   }
 
-  function splitTags($tags){
-    return explode(',',$tags);
-  }
 
   function flushOutdated() {
   }
 
-  function dbinfo(){
-        $query = 'SELECT * FROM tags';
- //       $result = $this->base->query($query);
-   //     $rowsa = $result->fetchAll();
-
-        $query = 'SELECT * FROM caches';
-     //   $result = $this->base->query($query);
-       // $rowsb = $result->fetchAll();
-
-        $query = 'SELECT * FROM tags_has_caches';
-   //     $result = $this->base->query($query);
-     //   $rowsc = $result->fetchAll();
-  }
 }

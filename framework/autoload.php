@@ -7,9 +7,7 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'abstractdb' => '/src/cache/tagging/AbstractDb.php',
                 'logger' => '/src/utility/Logger.php',
-                'mysqltagging' => '/src/cache/tagging/MysqlTagging.php',
                 'poc\\cache\\cacheimplementation\\abstractpoccachespecific' => '/src/cache/cacheimplementation/AbstractPocCacheSpecific.php',
                 'poc\\cache\\cacheimplementation\\filecache' => '/src/cache/cacheimplementation/FileCache.php',
                 'poc\\cache\\cacheimplementation\\memcachedcache' => '/src/cache/cacheimplementation/MemcachedCache.php',
@@ -23,6 +21,15 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\tohash' => '/src/cache/filtering/ToHash.php',
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
                 'poc\\cache\\poccache' => '/src/cache/PocCache.php',
+                'poc\\cache\\tagging\\abstractdb' => '/src/cache/tagging/AbstractDb.php',
+                'poc\\cache\\tagging\\driver\\mysql\\cachemodelmanager' => '/src/cache/tagging/driver/mySQL/CacheModelManager.php',
+                'poc\\cache\\tagging\\driver\\mysql\\model\\cache' => '/src/cache/tagging/driver/mySQL/Cache.php',
+                'poc\\cache\\tagging\\driver\\mysql\\model\\tag' => '/src/cache/tagging/driver/mySQL/Tag.php',
+                'poc\\cache\\tagging\\driver\\mysql\\model\\tagcache' => '/src/cache/tagging/driver/mySQL/TagCache.php',
+                'poc\\cache\\tagging\\driver\\mysql\\modelmanager' => '/src/cache/tagging/driver/mySQL/ModelManager.php',
+                'poc\\cache\\tagging\\driver\\mysql\\tagmodelmanager' => '/src/cache/tagging/driver/mySQL/TagModelManager.php',
+                'poc\\cache\\tagging\\driver\\mysql\\tagshascachesmodelmanager' => '/src/cache/tagging/driver/mySQL/TagsHasCachesModelManager.php',
+                'poc\\cache\\tagging\\mysqltagging' => '/src/cache/tagging/MysqlTagging.php',
                 'poc\\core\\optionable' => '/src/core/OptionAble.php',
                 'poc\\core\\optionableinterface' => '/src/core/OptionAbleInterface.php',
                 'poc\\core\\optioner' => '/src/core/Optioner.php',

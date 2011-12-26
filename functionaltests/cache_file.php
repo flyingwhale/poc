@@ -19,9 +19,7 @@ limitations under the License.
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
   use POC\cache\cacheimplementation\FileCache;
-  //TODO: fixIt!
-  //use POC\cache\tagging\MysqlTagging;
-  use \MysqlTagging;
+  use POC\cache\tagging\MysqlTagging;
 
   include ("../framework/autoload.php");
   $hasher = new Hasher();

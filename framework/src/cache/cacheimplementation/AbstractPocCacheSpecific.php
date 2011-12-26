@@ -20,6 +20,7 @@ use POC\cache\filtering\Evaluateable;
 use POC\cache\filtering\Hasher;
 use POC\cache\tagging\Tagger;
 use POC\core\OptionAble;
+use POC\cache\tagging\MysqlTagging;
 
 abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
 {
@@ -68,7 +69,7 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   private function setTagDb(AbstractDb $tagDb = null){
     if ($tagDb == null) {
-      $this->tagDb = new \MysqlTagging();
+      $this->tagDb = new MysqlTagging();
     } else {
       $this->tagDb = $tagDb;
     }

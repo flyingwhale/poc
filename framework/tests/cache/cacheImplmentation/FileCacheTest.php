@@ -15,16 +15,16 @@
    */
 
 namespace unittest;
-use POC\cache\filtering\Evaluateable;
 use POC\cache\cacheimplementation\FileCache;
-include_once '../../../autoload.php';
+use POC\cache\tagging\MysqlTagging;
+
+//include_once '../../../autoload.php';
 
 class FileCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new FileCache(new Evaluateable('#php$#', 'tester.php',
-                               Evaluateable::OP_PREGMATCH), parent::TTL);
+    $this->cache = new FileCache($this->hasher, parent::TTL, new MysqlTagging());
   }
 
 }

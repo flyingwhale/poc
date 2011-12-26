@@ -19,8 +19,7 @@ limitations under the License.
   use POC\Poc;
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
-  use \MysqlTagging;
-
+  use POC\cache\tagging\MysqlTagging;
   use POC\cache\cacheimplementation\MemcachedCache;
   include ('../framework/autoload.php');
 

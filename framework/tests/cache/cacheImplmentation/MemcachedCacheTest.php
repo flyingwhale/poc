@@ -15,17 +15,16 @@
    */
 
 namespace unittest;
-use POC\cache\filtering\Evaluateable;
 use POC\cache\cacheimplementation\MemcachedCache;
+use POC\cache\tagging\MysqlTagging;
 
-include_once '../../../autoload.php';
+//include_once '../../../autoload.php';
 
 class MemcachedCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new MemcachedCache(new Evaluateable('#php$#', 'tester.php',
-                                     Evaluateable::OP_PREGMATCH), parent::TTL);
+    $this->cache = new MemcachedCache($this->hasher, parent::TTL, new MysqlTagging());
   }
 
 }

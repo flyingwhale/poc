@@ -8,25 +8,24 @@ POC that stands for PHP Output Caching.
 The aim of this project is to create an easy to use generic output caching component for  PHP applications.
 
 ## Features
-
-    * Caching of the output on certain circumstances that you define
-    * Cache invalidation by TTL (of course)
-    * Blacklisting / cache invalidation by application state
-    * Blacklisting by Output content
-    * For caching it utilizes many interface, those are:
-        * Memcached
-        * Redis
-        * MongoDb
-        * It's own filesystem based engine.
-        * APC (experimental, performs and works well on a webserver, but unfortunately the cli interface is not behaves like it should and cannot be unit tested properly so I don't include it in the master)
-    * Cache tagging
-        * For this feature we utilize MySQL, but more are coming
+ * Caching of the output on certain circumstances that you define
+ * Cache invalidation by TTL (of course)
+ * Blacklisting / cache invalidation by application state
+ * Blacklisting by Output content
+ * For caching it utilizes many interface, those are:
+   * Memcached
+   * Redis
+   * MongoDb
+   * It's own filesystem based engine.
+ * APC (experimental, performs and works well on a webserver, but unfortunately the cli interface is not behaves like it should and cannot be unit tested properly so I don't include it in the master)
+ * Cache tagging
+    * For this feature we utilize MySQL, but more are coming
     * Cache Invalidation by tags
     * Minimal overhead on the performance
     * Easy (one line) to turn off/on
     * Controls headers
 
-Even more features are coming ,so stay tuned.
+Even more features are coming, so stay tuned.
 
 ## INSTALLATION
 

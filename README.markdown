@@ -8,25 +8,24 @@ POC that stands for PHP Output Caching.
 The aim of this project is to create an easy to use generic output caching component for  PHP applications.
 
 ## Features
-
-    * Caching of the output on certain circumstances that you define
-    * Cache invalidation by TTL (of course)
-    * Blacklisting / cache invalidation by application state
-    * Blacklisting by Output content
-    * For caching it utilizes many interface, those are:
-        * Memcached
-        * Redis
-        * MongoDb
-        * It's own filesystem based engine.
-        * APC (experimental, performs and works well on a webserver, but unfortunately the cli interface is not behaves like it should and cannot be unit tested properly so I don't include it in the master)
-    * Cache tagging
-        * For this feature we utilize MySQL, but more are coming
+ * Caching of the output on certain circumstances that you define
+ * Cache invalidation by TTL (of course)
+ * Blacklisting / cache invalidation by application state
+ * Blacklisting by Output content
+ * For caching it utilizes many interface, those are:
+   * Memcached
+   * Redis
+   * MongoDb
+   * It's own filesystem based engine.
+ * APC (experimental, performs and works well on a webserver, but unfortunately the cli interface is not behaves like it should and cannot be unit tested properly so I don't include it in the master)
+ * Cache tagging
+    * For this feature we utilize MySQL, but more are coming
     * Cache Invalidation by tags
     * Minimal overhead on the performance
     * Easy (one line) to turn off/on
     * Controls headers
 
-Even more features are coming ,so stay tuned.
+Even more features are coming, so stay tuned.
 
 ## INSTALLATION
 
@@ -36,8 +35,12 @@ Just copy the framework library anywhere where it is reachable from your project
 
 * ./bin: At the moment contains a small script that generates the autoload file for the prject.
 * ./framework: Here it is. Essentially you need the src in it folder if you are a user the tests folder is for unittests.
+
 * ./functionaltests: this directory dontains some php files that can persent the basic functionality of the framework with the cache engines implemented.
+
+
 ## DEVELOPMENT
+
 If you want to develop the project you should make shoure that the current tests are running with your changeset, and you have added more tests if it is a new feature.
 
 PHP unit:
@@ -83,9 +86,9 @@ Install Mongod server to the localchost and the PHP module as well
 
 Install Mysql (for the tagging)
 
-Aftehr this you can run the unittests,
+After this you can run the unittests,
 
-Also the funtionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
+Also the functionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
 
 ## COPYRIGHT ##
 

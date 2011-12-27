@@ -147,6 +147,15 @@ class MysqlTagging extends AbstractDb {
 
     $this->tcmm->save($tagsCaches);
   }
+  private function fetchArray($query){
+    $result = mysql_query($query);
+    $return = array();
+    while($row = mysql_fetch_array($result)){
+      $return[] = $row;
+    }
+    return $return;
+  }
+
 
   function tagInvalidate($tags) {
     $tagArray = $this->splitTags($tags);

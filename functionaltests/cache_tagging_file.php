@@ -35,25 +35,24 @@ limitations under the License.
   exit;
 */
 
-/*
-  //$eval->addCacheTags(true,'invetntory,article');
+
+$hasher = new Hasher();
+$filter = new Filter();
+$hasher->addDistinguishVariable($_GET);
+
+$cache = new FileCache($hasher, 5, new MysqlTagging);
+
+
   if(isset($_GET)){
     if(isset($_GET['delcache'])){
       if($_GET['delcache']){
-          $eval->addCacheInvalidationTags(true,'user,customer');
-  //      $eval->addCacheInvalidationTags(true,'invetntory,article');
+          $cache->addCacheInvalidationTags(true,'user');
       }
     }
   }
-  */
 
-  $hasher = new Hasher();
-  $filter = new Filter();
-  $hasher->addDistinguishVariable($_GET);
 
-  $cache = new FileCache($hasher, 5, new MysqlTagging);
-
-  //$apcCache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
+  $cache->addCacheAddTags(true,"user,customer");
 
   $pocCache = new PocCache($cache,$filter);
 

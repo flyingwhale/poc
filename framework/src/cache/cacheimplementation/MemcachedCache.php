@@ -16,22 +16,20 @@ limitations under the License.
 namespace POC\cache\cacheimplementation;
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
-use POC\cache\tagging\Tagger;
 
 class MemcachedCache extends AbstractPocCacheSpecific {
 
   private $memcache;
   private $compression=false;
-  private $currentResult;
   private $isConnected;
   protected $defaultOptions = array('server'=>'localhost',
                                     'port'=>'11211',
                                    );
 
-  function __construct( $ttl,$hasher,$tagger, $options = array()) {
+  function __construct( $ttl,$hasher,$tagDb, $options = array()) {
     $this->options = $options;
     new Optioner($this);
-    parent::__construct($ttl,$hasher,$tagger);
+    parent::__construct($ttl,$hasher,$tagDb);
     $this->memcache = new \Memcache();
     $this->isConnected = $this->memcache->connect($this->options['server'], $this->options['port']);;
     $this->throwDbException();

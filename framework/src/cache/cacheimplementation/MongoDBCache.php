@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 namespace POC\cache\cacheimplementation;
-use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
-use POC\cache\tagging\Tagger;
+
 
 class MongoCache extends AbstractPocCacheSpecific
 {

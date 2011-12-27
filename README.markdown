@@ -36,8 +36,12 @@ Just copy the framework library anywhere where it is reachable from your project
 
 * ./bin: At the moment contains a small script that generates the autoload file for the prject.
 * ./framework: Here it is. Essentially you need the src in it folder if you are a user the tests folder is for unittests.
+
 * ./functionaltests: this directory dontains some php files that can persent the basic functionality of the framework with the cache engines implemented.
+
+
 ## DEVELOPMENT
+
 If you want to develop the project you should make shoure that the current tests are running with your changeset, and you have added more tests if it is a new feature.
 
 PHP unit:
@@ -83,9 +87,9 @@ Install Mongod server to the localchost and the PHP module as well
 
 Install Mysql (for the tagging)
 
-Aftehr this you can run the unittests,
+After this you can run the unittests,
 
-Also the funtionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
+Also the functionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
 
 ## COPYRIGHT ##
 

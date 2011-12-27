@@ -1,10 +1,10 @@
 <?php
+namespace POC\cache\tagging;
 
 use POC\cache\filtering\Hasher;
 
 class Tagger {
 
-  private $evaluateable;
   private $tags;
   private $ttl;
   private $tagDb;

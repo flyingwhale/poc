@@ -17,7 +17,6 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\filter' => '/src/cache/filtering/Filter.php',
                 'poc\\cache\\filtering\\hasher' => '/src/cache/filtering/Hasher.php',
                 'poc\\cache\\filtering\\hasvalue' => '/src/cache/filtering/HasValue.php',
-                'poc\\cache\\filtering\\tagadapter' => '/src/cache/filtering/TagAdapter.php',
                 'poc\\cache\\filtering\\tohash' => '/src/cache/filtering/ToHash.php',
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
                 'poc\\cache\\poccache' => '/src/cache/PocCache.php',
@@ -30,13 +29,13 @@ spl_autoload_register(
                 'poc\\cache\\tagging\\driver\\mysql\\tagmodelmanager' => '/src/cache/tagging/driver/mySQL/TagModelManager.php',
                 'poc\\cache\\tagging\\driver\\mysql\\tagshascachesmodelmanager' => '/src/cache/tagging/driver/mySQL/TagsHasCachesModelManager.php',
                 'poc\\cache\\tagging\\mysqltagging' => '/src/cache/tagging/MysqlTagging.php',
+                'poc\\cache\\tagging\\tagger' => '/src/cache/tagging/Tagger.php',
                 'poc\\core\\optionable' => '/src/core/OptionAble.php',
                 'poc\\core\\optionableinterface' => '/src/core/OptionAbleInterface.php',
                 'poc\\core\\optioner' => '/src/core/Optioner.php',
                 'poc\\handlers\\outputinterface' => '/src/handlers/OutputInterface.php',
                 'poc\\handlers\\serveroutput' => '/src/handlers/ServerOutput.php',
                 'poc\\poc' => '/src/Poc.php',
-                'tagger' => '/src/cache/tagging/Tagger.php',
                 'unittest\\cachetest' => '/tests/cache/cacheImplmentation/CacheTest.php',
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
@@ -44,7 +43,7 @@ spl_autoload_register(
                 'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\mysqltaggingtest' => '/tests/cache/tagging/MysqlTaggingTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
-                'unittest\\rediskacachetest' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
+                'unittest\\rediskacachete' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
             );
         }
         $cn = strtolower($class);

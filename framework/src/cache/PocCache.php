@@ -68,25 +68,10 @@ class PocCache {
     }
   }
 
-  public function clearCacheAll() {
-    if($this->filter->evaluate()){
-      $this->specificCache->cacheSpecificClearAll();
-    }
-  }
-
-  public function clearCacheItem($key) {
-    if($this->specificCache->getEvaluateable()->evaluate()){
-      $this->specificCache->cacheSpecificClearItem($key);
-    }
-  }
-
   public function getSpecificCache() {
     return $this->specificCache;
   }
 
-  public function cacheTagsInvalidation(){
-    $this->specificCache->cacheTagsInvalidation();
-  }
 
   public function storeHeaderVariable($headerVariable){
 //TODO: check for all possible valid header variables.
@@ -107,7 +92,6 @@ class PocCache {
 
   public function storeHeadersForPreservation($responseHeaders){
     if($this->headersToPreserve){
-      $headerTmp;
       foreach ($responseHeaders as $header){
         $headerTmp[] = explode(':', $header);
       }
@@ -135,14 +119,15 @@ class PocCache {
     $this->outputBlacklist[] = $condition;
   }
 
+  //TODO:implement this functionality
   //still not properly implemented feature..
   public function isOutputBlacklisted ($output){
     if( $this->outputBlacklist ){
       foreach( $this->outputBlacklist as $condititon ){
-        $result = preg_match($condition, $output);
-        if($result){
+        //$result = preg_match($condition, $output);
+        //if($result){
           return false;
-        }
+        //}
       }
     }
   }
@@ -150,4 +135,5 @@ class PocCache {
   public function setEtagGeneration($boolean = true){
    $this->isEtagGeneration = $boolean;
   }
+
 }

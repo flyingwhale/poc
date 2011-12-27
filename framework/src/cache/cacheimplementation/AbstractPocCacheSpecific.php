@@ -18,9 +18,9 @@ namespace POC\cache\cacheimplementation;
 
 use POC\cache\filtering\Evaluateable;
 use POC\cache\filtering\Hasher;
-use POC\cache\tagging\Tagger;
 use POC\core\OptionAble;
 use POC\cache\tagging\MysqlTagging;
+use POC\cache\tagging\Tagger;
 
 abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
 {
@@ -38,17 +38,25 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   protected $cacheInvalidationTags = array();
 
+  protected $cacheAddTags = array();
+
   function __construct(Hasher $hasher,$ttl,$tagDb = null) {
      $this->hasher = $hasher;
      $this->ttl = $ttl;
      $this->tagDb = $tagDb;
   }
 
-  public function addCacheInvalidationTags($condition,$tags){
-    if($condition){
-      $this->cacheInvalidationTags[] = new \Tagger($tags,$this->hasher,$this->ttl);
+    public function addCacheInvalidationTags($condition,$tags){
+        if($condition){
+            $this->cacheInvalidationTags[] = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+        }
     }
-  }
+
+    public function addCacheAddTags($condition,$tags){
+        if($condition){
+            $this->cacheAddTags[] = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+        }
+    }
 
   public function cacheAddTags(){
     foreach($this->cacheAddTags as $tagger){

@@ -61,7 +61,7 @@ class Poc
             self::$caches[$i]->storeHeadersForPreservation($arr);
             self::$caches[$i]->removeHeaders($arr);
             self::$caches[$i]->storeCache($return);
-            self::$caches[$i]->getSpecificCache();
+            self::$caches[$i]->getSpecificCache()->cacheAddTags();
           }
 
       }
@@ -101,7 +101,7 @@ class Poc
   private function fetchCache() {
    $started = 0;
     for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-      self::$caches[$i]->cacheTagsInvalidation();
+      self::$caches[$i]->getSpecificCache()->cacheTagsInvalidation();
       if (self::$caches[$i]->getFilter()->evaluate()) {
         $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
@@ -131,7 +131,7 @@ class Poc
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         if (self::$caches[$i]->getFilter()->isBlacklisted()) {
           $startCache = false;
-          $break;
+          break;
         }
       }
       if ($startCache) {

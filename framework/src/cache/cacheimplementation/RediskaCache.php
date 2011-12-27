@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 namespace POC\cache\cacheimplementation;
-use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
 
 require_once 'Rediska.php';
@@ -27,8 +26,8 @@ class RediskaCache extends AbstractPocCacheSpecific {
                                      array(array('host'=>'localhost',
                                                               'port'=>'6379')));
 
-  function __construct($hasher, $ttl, $tagger, $options = array()) {
-    parent::__construct($hasher,$ttl,$tagger);
+  function __construct($hasher, $ttl, $tagDb, $options = array()) {
+    parent::__construct($hasher,$ttl,$tagDb);
 
     $this->options = $options;
     new Optioner($this);

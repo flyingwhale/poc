@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace POC\cache\cacheimplementation;
 
-use POC\cache\filtering\Evaluateable;
+use POC\cache\filtering\Filter;
 use POC\cache\filtering\Hasher;
 use POC\core\OptionAble;
 use POC\cache\tagging\MysqlTagging;
@@ -36,14 +36,21 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   protected $hasher;
 
+  protected $filter;
+
   protected $cacheInvalidationTags = array();
 
   protected $cacheAddTags = array();
 
-  function __construct(Hasher $hasher,$ttl,$tagDb = null) {
+  function __construct(Hasher $hasher,Filter $filter,$ttl,$tagDb = null) {
      $this->hasher = $hasher;
      $this->ttl = $ttl;
      $this->tagDb = $tagDb;
+     $this->filter = $filter;
+  }
+
+  function getFilter(){
+    return $this->filter;
   }
 
     public function addCacheInvalidationTags($condition,$tags){

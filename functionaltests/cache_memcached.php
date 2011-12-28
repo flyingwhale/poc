@@ -15,7 +15,7 @@ limitations under the License.
 */
 
   use POC\cache\filtering\Hasher;
-  use POC\cache\filtering\filter;
+  use POC\cache\filtering\Filter;
   use POC\Poc;
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
@@ -27,7 +27,7 @@ limitations under the License.
   $filter = new Filter();
   $hasher->addDistinguishVariable($_GET);
 
-  $pob  = new Poc(new \POC\cache\PocCache(new MemcachedCache($hasher, 5,new MysqlTagging),$filter),
+  $pob  = new Poc(new \POC\cache\PocCache(new MemcachedCache($hasher, $filter, 5, new MysqlTagging)),
                                         new ServerOutput(), true);
 
   include('lib/text_generator.php');

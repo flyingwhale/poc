@@ -15,6 +15,7 @@
    */
 
 namespace unittest;
+use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\MongoCache;
 use POC\cache\tagging\MysqlTagging;
 
@@ -23,6 +24,6 @@ use POC\cache\tagging\MysqlTagging;
 class MongoCacheTest extends CacheTest
 {
   function setUp_() {
-    $this->cache = new MongoCache($this->hasher, parent::TTL, new MysqlTagging());
+    $this->cache = new MongoCache($this->hasher,new Filter, parent::TTL, new MysqlTagging());
   }
 }

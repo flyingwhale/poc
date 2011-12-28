@@ -15,7 +15,7 @@
    */
 
 namespace unittest;
-use POC\cache\filtering\Evaluateable;
+use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\RediskaCache;
 use POC\cache\tagging\MysqlTagging;
 
@@ -24,7 +24,7 @@ use POC\cache\tagging\MysqlTagging;
 class RediskaCacheTe extends CacheTest
 {
   function setUp_() {
-    $this->cache = new RediskaCache($this->hasher, parent::TTL, new MysqlTagging(),
+    $this->cache = new RediskaCache($this->hasher,new Filter, parent::TTL, new MysqlTagging(),
     array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
   }
 }

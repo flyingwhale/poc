@@ -24,9 +24,9 @@ class MongoCache extends AbstractPocCacheSpecific
 
   protected $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
 
-  function __construct($hasher, $ttl,$tagger, $options = array())
+  function __construct($hasher, $filter, $ttl, $tagDb, $options = array())
   {
-    parent::__construct($hasher,$ttl,$tagger);
+    parent::__construct($hasher, $filter, $ttl, $tagDb);
 
     $this->isNotConnected = 0;
 

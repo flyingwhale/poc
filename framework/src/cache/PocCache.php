@@ -17,7 +17,7 @@ limitations under the License.
 namespace POC\cache;
 
 use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
-use POC\cache\filtering\Filter;
+
 class PocCache {
 
   var $specificCache;
@@ -28,18 +28,13 @@ class PocCache {
   var $outputBlacklist;
   var $eTag;
   private $isEtagGeneration = 1;
-  private $filter;
 
-  function __construct (AbstractPocCacheSpecific $specificCache, Filter $filter) {
+  function __construct (AbstractPocCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
-    $this->filter = $filter;
   }
 
-  public function getFilter(){
-    return $this->filter;
-  }
   public function storeCache($output) {
-    if ($this->filter->evaluate()) {
+    if ($this->getSpecificCache()->getFilter()->evaluate()) {
        $this->specificCache->cacheSpecificStore(
                    $this->specificCache->getHasher()->getKey(), $output);
        //TODO: still not working.
@@ -58,7 +53,7 @@ class PocCache {
   }
 
   public function fetchCache() {
-    if($this->filter->evaluate()){
+    if($this->getSpecificCache()->getFilter()->evaluate()){
       $this->headersToSend = unserialize($this->specificCache->cacheSpecificFetch(
                         $this->specificCache->getHasher()->getKey().'h'));
       $this->eTag = ($this->specificCache->cacheSpecificFetch(

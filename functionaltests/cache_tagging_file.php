@@ -25,7 +25,7 @@ limitations under the License.
   use POC\cache\tagging\MysqlTagging;
 
   use POC\cache\filtering\Hasher;
-  use POC\cache\filtering\filter;
+  use POC\cache\filtering\Filter;
 
   include ("../framework/autoload.php");
 
@@ -40,7 +40,7 @@ $hasher = new Hasher();
 $filter = new Filter();
 $hasher->addDistinguishVariable($_GET);
 
-$cache = new FileCache($hasher, 5, new MysqlTagging);
+$cache = new FileCache($hasher, $filter, 5, new MysqlTagging);
 
 
   if(isset($_GET)){

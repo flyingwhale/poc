@@ -15,6 +15,7 @@
    */
 
 namespace unittest;
+use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\MemcachedCache;
 use POC\cache\tagging\MysqlTagging;
 
@@ -24,7 +25,7 @@ class MemcachedCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new MemcachedCache($this->hasher, parent::TTL, new MysqlTagging());
+    $this->cache = new MemcachedCache($this->hasher,new Filter, parent::TTL, new MysqlTagging());
   }
 
 }

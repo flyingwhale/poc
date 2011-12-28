@@ -25,7 +25,7 @@ limitations under the License.
   $hasher = new Hasher();
   $filter = new Filter();
   $hasher->addDistinguishVariable($_GET);
-  $pob  = new Poc(new PocCache(new FileCache($hasher, 5, new MysqlTagging),$filter),new ServerOutput(),
+  $pob  = new Poc(new PocCache(new FileCache($hasher, $filter, 5, new MysqlTagging)),new ServerOutput(),
                                                                                                     true);
 
   include('lib/text_generator.php');

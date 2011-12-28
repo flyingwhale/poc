@@ -65,10 +65,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   private function cacheBurner($testString = "testString", $cacheHandler) {
-    $filter = new Filter();
     $this->setOutput('');
     $output = new TestOutput();
-    $pob = new Poc(new PocCache($cacheHandler, $filter), $output, false);
+    $pob = new Poc(new PocCache($cacheHandler), $output, false);
     if($output->getOutputFlow()){
       echo $testString;
       $pob->destruct();
@@ -85,19 +84,16 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   public function testBasicPocFunctionality(){
 
-    $hasher = new Hasher();
-    $filter = new Filter();
-
     $handlers = array();
     try{
 
       $hasher = new Hasher();
-      $tagger = new MysqlTagging();
+      $filter = new Filter();
 
-      $handlers[] = new FileCache($hasher, self::TTL,null);
-      $handlers[] = new MemcachedCache($hasher, self::TTL,null);
-      $handlers[] = new RediskaCache($hasher, self::TTL,null);
-      $handlers[] = new MongoCache($hasher, self::TTL,null);
+      $handlers[] = new FileCache($hasher,$filter, self::TTL,null);
+      $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

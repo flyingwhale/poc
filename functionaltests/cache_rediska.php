@@ -15,7 +15,7 @@ limitations under the License.
 */
 
   use POC\cache\filtering\Hasher;
-  use POC\cache\filtering\filter;
+  use POC\cache\filtering\Filter;
   use POC\Poc;
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
@@ -31,10 +31,10 @@ limitations under the License.
   $pob  = new Poc(
     new PocCache(
       new RediskaCache(
-        $hasher,
+        $hasher, $filter,
         5,
         new MysqlTagging()
-        ), $filter
+        )
       ),
     new ServerOutput(),
     true

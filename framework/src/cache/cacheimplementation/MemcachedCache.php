@@ -26,10 +26,10 @@ class MemcachedCache extends AbstractPocCacheSpecific {
                                     'port'=>'11211',
                                    );
 
-  function __construct( $ttl,$hasher,$tagDb, $options = array()) {
+  function __construct( $hasher,$filter,$ttl,$tagDb, $options = array()) {
     $this->options = $options;
     new Optioner($this);
-    parent::__construct($ttl,$hasher,$tagDb);
+    parent::__construct($hasher, $filter, $ttl, $tagDb);
     $this->memcache = new \Memcache();
     $this->isConnected = $this->memcache->connect($this->options['server'], $this->options['port']);;
     $this->throwDbException();

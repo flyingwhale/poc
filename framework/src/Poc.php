@@ -47,7 +47,7 @@ class Poc
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         //TODO:fixit
         //if(self::$caches[$i]->isOutputBlacklisted($buffer))
-        if(self::$caches[$i]->getFilter()->evaluate())
+        if(self::$caches[$i]->getSpecificCache()->getFilter()->evaluate())
         {
             $return = $buffer;
 
@@ -102,7 +102,7 @@ class Poc
    $started = 0;
     for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
       self::$caches[$i]->getSpecificCache()->cacheTagsInvalidation();
-      if (self::$caches[$i]->getFilter()->evaluate()) {
+      if (self::$caches[$i]->getSpecificCache()->getFilter()->evaluate()) {
         $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
@@ -129,7 +129,7 @@ class Poc
     if (!$this->fetchCache()) {
       $startCache = true;
       for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-        if (self::$caches[$i]->getFilter()->isBlacklisted()) {
+        if (self::$caches[$i]->getSpecificCache()->getFilter()->isBlacklisted()) {
           $startCache = false;
           break;
         }

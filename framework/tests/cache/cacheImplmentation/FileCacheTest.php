@@ -15,6 +15,7 @@
    */
 
 namespace unittest;
+use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\FileCache;
 use POC\cache\tagging\MysqlTagging;
 
@@ -24,7 +25,7 @@ class FileCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new FileCache($this->hasher, parent::TTL, new MysqlTagging());
+    $this->cache = new FileCache($this->hasher, new Filter, parent::TTL, new MysqlTagging());
   }
 
 }

@@ -15,6 +15,7 @@ limitations under the License.
 */
 namespace POC\cache\cacheimplementation;
 use POC\core\Optioner;
+use POC\cache\filtering\Filter;
 
 class FileCache extends AbstractPocCacheSpecific {
 
@@ -26,8 +27,8 @@ class FileCache extends AbstractPocCacheSpecific {
   private $tagDb;
   protected $defaultOptions = array('directory'=>'/tmp/');
 
-  function __construct($hasher, $ttl,$tagDb=null, $options = array()) {
-    parent::__construct($hasher, $ttl, $tagDb);
+  function __construct($hasher, $filter, $ttl,$tagDb=null, $options = array()) {
+    parent::__construct($hasher, $filter, $ttl, $tagDb);
     $this->tagDb = $tagDb;
     $this->options = $options;
 

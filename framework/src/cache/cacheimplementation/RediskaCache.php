@@ -26,8 +26,8 @@ class RediskaCache extends AbstractPocCacheSpecific {
                                      array(array('host'=>'localhost',
                                                               'port'=>'6379')));
 
-  function __construct($hasher, $ttl, $tagDb, $options = array()) {
-    parent::__construct($hasher,$ttl,$tagDb);
+  function __construct($hasher, $filter, $ttl, $tagDb, $options = array()) {
+    parent::__construct($hasher, $filter, $ttl, $tagDb);
 
     $this->options = $options;
     new Optioner($this);

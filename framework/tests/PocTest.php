@@ -15,6 +15,8 @@
    */
 
 namespace unittest;
+use POC\cache\header\HeaderManipulator;
+
 use POC\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
 use POC\Poc;
@@ -67,7 +69,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private function cacheBurner($testString = "testString", $cacheHandler) {
     $this->setOutput('');
     $output = new TestOutput();
-    $pob = new Poc(new PocCache($cacheHandler), $output, false);
+    $pob = new Poc(new PocCache($cacheHandler), $output, new HeaderManipulator(), false);
     if($output->getOutputFlow()){
       echo $testString;
       $pob->destruct();
@@ -78,7 +80,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
      $this->setOutput($output->getOutput());
      $pob->destruct();
     }
-
   }
 
 
@@ -91,9 +92,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $filter = new Filter();
 
       $handlers[] = new FileCache($hasher,$filter, self::TTL,null);
-      $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
-      $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
-      $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
+     // $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
+     // $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
+     // $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

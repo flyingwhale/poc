@@ -19,6 +19,7 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\hasvalue' => '/src/cache/filtering/HasValue.php',
                 'poc\\cache\\filtering\\tohash' => '/src/cache/filtering/ToHash.php',
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
+                'poc\\cache\\header\\headermanipulator' => '/src/cache/header/HeaderManipulator.php',
                 'poc\\cache\\poccache' => '/src/cache/PocCache.php',
                 'poc\\cache\\tagging\\abstractdb' => '/src/cache/tagging/AbstractDb.php',
                 'poc\\cache\\tagging\\driver\\mysql\\cachemodelmanager' => '/src/cache/tagging/driver/mySQL/CacheModelManager.php',

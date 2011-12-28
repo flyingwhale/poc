@@ -21,6 +21,8 @@ limitations under the License.
   use POC\cache\PocCache;
   use POC\cache\tagging\MysqlTagging;
   use POC\cache\cacheimplementation\MemcachedCache;
+  use POC\cache\header\HeaderManipulator;
+  
   include ('../framework/autoload.php');
 
   $hasher = new Hasher();
@@ -28,7 +30,7 @@ limitations under the License.
   $hasher->addDistinguishVariable($_GET);
 
   $pob  = new Poc(new \POC\cache\PocCache(new MemcachedCache($hasher, $filter, 5, new MysqlTagging)),
-                                        new ServerOutput(), true);
+                                        new ServerOutput(), new HeaderManipulator(), true);
 
   include('lib/text_generator.php');
 

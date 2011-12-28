@@ -25,7 +25,8 @@ class Poc
   static private $start;
   static private $caches;
   static private $level;
-
+  static private $headerManipulator;
+  
   private function setDebug($debug) {
     self::$debug = $debug;
   }
@@ -87,13 +88,16 @@ class Poc
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\POC\cache\PocCache $cache = null,
-                        \POC\handlers\OutputInterface $output, $debug = false) {
+  function __construct(\POC\cache\PocCache $cache,
+                       \POC\handlers\OutputInterface $output, 
+                       \POC\cache\header\HeaderManipulator $headerManipulator,   
+                                                  $debug = false) {
+    self::$headerManipulator = $headerManipulator;
+    self::$headerManipulator->setOutputHandler($output);
     self::$outputHandler = $output;
     $this->setDebug($debug);
     if ($cache != null) {
       $this->addCache($cache);
-      $this->start();
     }
     self::$outputHandler = $output;
   }
@@ -122,7 +126,7 @@ class Poc
     return $started;
   }
 
-  private function start() {
+  public function start() {
 
     self::$start = microtime();
 

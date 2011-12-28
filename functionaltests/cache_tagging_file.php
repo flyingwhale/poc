@@ -13,28 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  ini_set('display_errors', 1);
-  error_reporting(E_ALL);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-  use POC\Poc;
-  use POC\handlers\ServerOutput;
-  use POC\cache\PocCache;
-  use POC\cache\cacheimplementation\FileCache;
+use POC\Poc;
+use POC\handlers\ServerOutput;
+use POC\cache\PocCache;
+use POC\cache\cacheimplementation\FileCache;
 
-  use POC\cache\tagging\driver\mySQL\CacheTable;
-  use POC\cache\tagging\MysqlTagging;
-
-  use POC\cache\filtering\Hasher;
-  use POC\cache\filtering\Filter;
-
-  include ("../framework/autoload.php");
-
-/*
-  $mt = new MysqlTagging();
-  $mt->addCacheToTags('user,customer', '31291a18c630c9b65a7792d9f247903a');
-  exit;
-*/
-
+use POC\cache\filtering\Hasher;
+use POC\cache\filtering\Filter;
+  
+use POC\cache\header\HeaderManipulator;
+  
+use POC\cache\tagging\driver\mySQL\CacheTable;
+use POC\cache\tagging\MysqlTagging;
+  
+include ("../framework/autoload.php");
 
 $hasher = new Hasher();
 $filter = new Filter();
@@ -42,25 +37,19 @@ $hasher->addDistinguishVariable($_GET);
 
 $cache = new FileCache($hasher, $filter, 5, new MysqlTagging);
 
-
-  if(isset($_GET)){
-    if(isset($_GET['delcache'])){
-      if($_GET['delcache']){
-          $cache->addCacheInvalidationTags(true,'user');
-      }
+if(isset($_GET)){
+  if(isset($_GET['delcache'])){
+    if($_GET['delcache']){
+        $cache->addCacheInvalidationTags(true,'user');
     }
   }
+}
 
+$cache->addCacheAddTags(true,"user,customer");
 
-  $cache->addCacheAddTags(true,"user,customer");
-
-  $pocCache = new PocCache($cache,$filter);
-
-  //$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
-
-  $pob  = new Poc($pocCache, new ServerOutput(),  true);
-
-  //$pob->addCacheInvalidationTags($_GET,"Mezesmadzag,csicsa");
-  //print_r($sqlite3Tagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));
-
-  include('lib/text_generator.php');
+$pocCache = new PocCache($cache,$filter);
+//$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
+$pob  = new Poc($pocCache, new ServerOutput(), new HeaderManipulator(),  true);
+//$pob->addCacheInvalidationTags($_GET,"Mezesmadzag,csicsa");
+//print_r($sqlite3Tagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));
+include('lib/text_generator.php');

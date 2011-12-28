@@ -53,17 +53,21 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
     return $this->filter;
   }
 
-    public function addCacheInvalidationTags($condition,$tags){
-        if($condition){
-            $this->cacheInvalidationTags[] = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
-        }
+  public function addCacheInvalidationTags($condition,$tags){
+    if($condition){
+      $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+       $tagger->addCache($this);
+       $this->cacheInvalidationTags[] = $tagger;
     }
+  }
 
-    public function addCacheAddTags($condition,$tags){
-        if($condition){
-            $this->cacheAddTags[] = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
-        }
+  public function addCacheAddTags($condition,$tags){
+    if($condition){
+      $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+      $tagger->addCache($this);
+      $this->cacheAddTags[] = $tagger;
     }
+  }
 
   public function cacheAddTags(){
     foreach($this->cacheAddTags as $tagger){

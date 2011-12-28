@@ -29,6 +29,68 @@ class PocCache {
   var $eTag;
   private $isEtagGeneration = 1;
 
+    
+  public function storeHeadersForPreservation($responseHeaders){
+    if($this->headersToPreserve){
+      foreach ($responseHeaders as $header){
+        $headerTmp[] = explode(':', $header);
+      }
+    
+      foreach($this->headersToPreserve as $findThisHeader){
+        foreach ($headerTmp as $preserveThisHeader){
+              if($preserveThisHeader[0] == $findThisHeader){
+               $this->headersToStore[] = 
+                                   $findThisHeader.': '.$preserveThisHeader[1];
+            }
+          }
+        }
+      }
+    }
+    
+  //TODO: still not works
+  public function etagGeneration($output){
+    if($this->isEtagGeneration){
+      $etag = md5($output);
+      $this->headersToStore[] = 'Etag : '.$etag;
+      return $etag;
+    }
+  }
+    
+  public function removeHeaders($reponseHeaders){
+    if($this->headersToRemove){
+      foreach($this->headersToRemove as $removeThisHeader){
+        header_remove($removeThisHeader);
+      }
+    }
+  }
+  
+  public function storeHeaderVariable($headerVariable){
+    //TODO: check for all possible valid header variables.
+    $this->headersToPreserve[] = $headerVariable;
+  }
+  
+  public function setEtagGeneration($boolean = true){
+    $this->isEtagGeneration = $boolean;
+  }
+
+  public function storeOutputBlacklistCondition($condition){
+    $this->outputBlacklist[] = $condition;
+  }
+  
+  //TODO:implement this functionality
+  //still not properly implemented feature..
+  public function isOutputBlacklisted ($output){
+    if( $this->outputBlacklist ){
+      foreach( $this->outputBlacklist as $condititon ){
+        //$result = preg_match($condition, $output);
+        //if($result){
+        return false;
+        //}
+      }
+    }
+  }
+  
+  
   function __construct (AbstractPocCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
   }
@@ -65,70 +127,6 @@ class PocCache {
 
   public function getSpecificCache() {
     return $this->specificCache;
-  }
-
-
-  public function storeHeaderVariable($headerVariable){
-//TODO: check for all possible valid header variables.
-    $this->headersToPreserve[] = $headerVariable;
-  }
-
-  public function storeHeaderToRemove($headerVariable){
-    $this->headersToRemove[] = $headerVariable;
-  }
-
-  public function removeHeaders($reponseHeaders){
-    if($this->headersToRemove){
-      foreach($this->headersToRemove as $removeThisHeader){
-        header_remove($removeThisHeader);
-      }
-    }
-  }
-
-  public function storeHeadersForPreservation($responseHeaders){
-    if($this->headersToPreserve){
-      foreach ($responseHeaders as $header){
-        $headerTmp[] = explode(':', $header);
-      }
-
-      foreach($this->headersToPreserve as $findThisHeader){
-        foreach ($headerTmp as $preserveThisHeader){
-          if($preserveThisHeader[0] == $findThisHeader){
-            $this->headersToStore[] = $findThisHeader.': '.$preserveThisHeader[1];
-          }
-        }
-      }
-    }
-  }
-
-//TODO: still not works
-  public function etagGeneration($output){
-    if($this->isEtagGeneration){
-      $etag = md5($output);
-      $this->headersToStore[] = 'Etag : '.$etag;
-      return $etag;
-    }
-  }
-
-  public function storeOutputBlacklistCondition($condition){
-    $this->outputBlacklist[] = $condition;
-  }
-
-  //TODO:implement this functionality
-  //still not properly implemented feature..
-  public function isOutputBlacklisted ($output){
-    if( $this->outputBlacklist ){
-      foreach( $this->outputBlacklist as $condititon ){
-        //$result = preg_match($condition, $output);
-        //if($result){
-          return false;
-        //}
-      }
-    }
-  }
-
-  public function setEtagGeneration($boolean = true){
-   $this->isEtagGeneration = $boolean;
   }
 
 }

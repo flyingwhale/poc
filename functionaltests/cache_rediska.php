@@ -20,7 +20,8 @@ limitations under the License.
   use POC\handlers\ServerOutput;
   use POC\cache\PocCache;
   use POC\cache\cacheimplementation\RediskaCache;
-  use POC\cache\tagging\MysqlTagging;
+  use POC\cache\tagging\MysqlTagging;  
+  use POC\cache\header\HeaderManipulator;
 
   include ('../framework/autoload.php');
 
@@ -36,7 +37,7 @@ limitations under the License.
         new MysqlTagging()
         )
       ),
-    new ServerOutput(),
+    new ServerOutput(), new HeaderManipulator(),
     true
   );
 

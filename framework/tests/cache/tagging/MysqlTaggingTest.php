@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 namespace unittest;
-
-//include_once '../../../autoload.php';
 use POC\cache\tagging\MysqlTagging;
 use POC\cache\tagging\driver\mysql\CacheModelManager;
 use POC\cache\tagging\driver\mysql\TagModelManager;
@@ -24,9 +22,10 @@ use POC\cache\tagging\driver\mysql\TagsHasCachesModelManager;
 use POC\cache\tagging\driver\mysql\model\Cache;
 use POC\cache\tagging\driver\mysql\model\Tag;
 use POC\cache\tagging\driver\mysql\model\TagCache;
-
 use POC\cache\filtering\Hasher;
 use POC\cache\filtering\filter;
+
+require_once 'framework/autoload.php';
 
 class MysqlTaggingTest extends \PHPUnit_Framework_TestCase
 {

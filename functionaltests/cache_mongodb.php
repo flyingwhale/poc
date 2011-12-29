@@ -28,7 +28,7 @@ limitations under the License.
   $filter = new Filter();
   $hasher->addDistinguishVariable($_GET);
 
-  $poc  = new Poc(new PocCache(new MongoCache($hasher, $filter, 5, new MysqlTagging())),
+  $poc  = new Poc(new MongoCache($hasher, $filter, 5, new MysqlTagging()),
    new ServerOutput(), new HeaderManipulator(), new OutputFilter(), true);
 
   $poc->start();

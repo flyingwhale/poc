@@ -49,6 +49,10 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
      $this->filter = $filter;
   }
 
+  /**
+   * 
+   * @return Filter
+   */
   function getFilter(){
     return $this->filter;
   }
@@ -81,7 +85,10 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
     }
   }
 
-
+  /**
+   * 
+   * @return Hasher
+   */
   function getHasher(){
     return $this->hasher;
   }

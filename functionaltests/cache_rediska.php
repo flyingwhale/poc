@@ -31,13 +31,12 @@ limitations under the License.
   $hasher->addDistinguishVariable($_GET);
 
   $poc  = new Poc(
-    new PocCache(
       new RediskaCache(
         $hasher, $filter,
         5,
         new MysqlTagging()
         )
-      ),
+      ,
     new ServerOutput(), new HeaderManipulator(), new OutputFilter(),
     true
   );

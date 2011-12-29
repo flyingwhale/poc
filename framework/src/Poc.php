@@ -15,7 +15,7 @@ limitations under the License.
 */
 namespace POC;
 
-use POC\cache\PocCache;
+use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
 
 use POC\Handlers\OutputInterface;
 
@@ -30,10 +30,13 @@ class Poc
   private $buffering;
   static private $debug;
   static private $start;
-  static private $caches;
   static private $level;
   static private $headerManipulator;
   static private $outputFilter;
+  /**
+   * 
+   * @var AbstractPocCacheSpecific
+   */
   static private $cache;
   
   private function setDebug($debug) {
@@ -54,10 +57,10 @@ class Poc
 
   public static function pocCallbackGenerate($buffer) {
     if (self::$level == \ob_get_level() - 1) {
-      for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+        //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         //TODO:fixit
         //if(self::$caches[$i]->isOutputBlacklisted($buffer))
-        if(self::$caches[$i]->getSpecificCache()->getFilter()->evaluate())
+        if(self::$cache->getFilter()->evaluate())
         {
             $return = $buffer;
 
@@ -73,12 +76,13 @@ class Poc
             self::$headerManipulator->storeHeadersForPreservation($headers);
             //self::$caches[$i]->removeHeaders($arr);
             self::$headerManipulator->removeHeaders($headers);
-            self::$caches[$i]->storeCache($return);
+            //TODO: Hide the $key
+            self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
             self::$headerManipulator->storeHeades($buffer);
-            self::$caches[$i]->getSpecificCache()->cacheAddTags();
+            self::$cache->cacheAddTags();
           }
 
-      }
+//      }
       self::$outputHandler->cacheCallback($return);
       return ($return);
     }
@@ -101,31 +105,28 @@ class Poc
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct( PocCache $cache,
+  function __construct( $cache,
                         OutputInterface $output, 
                         HeaderManipulator $headerManipulator,
                         OutputFilter $outputFilter, $debug = false) {
-    self::$cache = $cache->getSpecificCache();
+    self::$cache = $cache;
     self::$headerManipulator = $headerManipulator;
     self::$headerManipulator->setOutputHandler($output);
-    self::$headerManipulator->setCache($cache->getSpecificCache());
+    self::$headerManipulator->setCache($cache);
     
     self::$outputHandler = $output;
     self::$outputFilter = $outputFilter;
-    
     $this->setDebug($debug);
-    if ($cache != null) {
-      $this->addCache($cache);
-    }
     self::$outputHandler = $output;
   }
 
   private function fetchCache() {
    $started = 0;
-    for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-      self::$caches[$i]->getSpecificCache()->cacheTagsInvalidation();
-      if (self::$caches[$i]->getSpecificCache()->getFilter()->evaluate()) {
-        $this->output = self::$caches[$i]->fetchCache();
+    //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+      self::$cache->cacheTagsInvalidation();
+      if (self::$cache->getFilter()->evaluate()) {
+        //TODO: hide the key
+        $this->output = self::$cache->cacheSpecificFetch(self::$cache->getHasher()->getKey());
         if ($this->output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
           self::$headerManipulator->fetchHeaders();
@@ -142,7 +143,7 @@ class Poc
           self::$outputHandler->stopBuffer();
         }
       }
-    }
+    //}
     return $started;
   }
 
@@ -152,12 +153,12 @@ class Poc
 
     if (!$this->fetchCache()) {
       $startCache = true;
-      for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-        if (self::$caches[$i]->getSpecificCache()->getFilter()->isBlacklisted()) {
+    //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
+        if (self::$cache->getFilter()->isBlacklisted()) {
           $startCache = false;
-          break;
+    //    break;
         }
-      }
+    //}
       if ($startCache) {
         $this->buffering = true;
         self::$level = \ob_get_level();
@@ -168,13 +169,10 @@ class Poc
     }
   }
 
-  private function addCache(\POC\cache\PocCache $cache) {
-    self::$caches[] = $cache;
-  }
-
   public function __destruct() {
     if (isset(self::$level)) {
        if (self::$level) {
+         //TODO:Replace it to it's appropriate place.(OutputHandler)
          \ob_end_flush();
        }
     }

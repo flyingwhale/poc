@@ -10,6 +10,7 @@ class HeaderManipulator
   var $eTag;
   var $outputHeader;
   var $cache;
+  var $isEtagGeneration;
 
   public function setCache($cache){
     $this->cache = $cache;

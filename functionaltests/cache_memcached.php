@@ -30,7 +30,7 @@ limitations under the License.
   $filter = new Filter();
   $hasher->addDistinguishVariable($_GET);
 
-  $poc  = new Poc(new PocCache(new MemcachedCache($hasher, $filter, 5, new MysqlTagging)),
+  $poc  = new Poc(new MemcachedCache($hasher, $filter, 5, new MysqlTagging),
                      new ServerOutput(), new HeaderManipulator(), new OutputFilter(), true);
   $poc->start();
   include('lib/text_generator.php');

@@ -67,10 +67,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->analizeThisHeader = $header;
   }
 
-  private function cacheBurner($testString = "testString", $cacheHandler) {
+  private function cacheBurner($testString = "testString", $cache) {
     $this->setOutput('');
     $output = new TestOutput();
-    $poc = new Poc(new PocCache($cacheHandler), $output, 
+    $poc = new Poc($cache, $output, 
                            new HeaderManipulator(), new OutputFilter(), false);
     $poc->start();
     if($output->getOutputFlow()){
@@ -95,9 +95,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $filter = new Filter();
 
       $handlers[] = new FileCache($hasher,$filter, self::TTL,null);
-      $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
-      $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
-      $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
+      //$handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
+      //$handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
+      //$handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

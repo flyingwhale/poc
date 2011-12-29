@@ -12,25 +12,46 @@ class ModelManager
   
   public function __construct($dbHandler)
   {
-    $this->setdbHandler($dbHandler);
+    $this->setDbHandler($dbHandler);
     $this->setIdName('id');
     
+    $this->setQuery('findAll', 'SELECT * FROM %s');
     $this->setQuery('findBy', 'SELECT * FROM %s WHERE %s = :%s');
     $this->setQuery('findOneBy', 'SELECT * FROM %s WHERE %s = :%s LIMIT 1');
     $this->setQuery('delete', 'DELETE FROM %s WHERE %s = :%s');
+    $this->setQuery('truncate', 'TRUNCATE TABLE %s');
+    
   }
 
   public function createTable()
   {
-    if ($this->hasQuery('create'))
+    $queryName = 'create';
+    
+    if ($this->hasQuery($queryName))
     {
       $dbh = $this->getDbHandler();
-      $query = $this->getQuery('create');
+      $query = $this->getQuery($queryName);
       $sth = $dbh->prepare($query);
       $sth->execute();
     }
   }
   
+  public function truncateTable()
+  {
+    $queryName = 'truncate';
+    if ($this->hasQuery($queryName))
+    {
+      $dbh = $this->getDbHandler();
+      $query = sprintf(
+        $this->getQuery($queryName),
+        $this->getTableName()  
+      );
+      $sth = $dbh->prepare($query);
+      $sth->execute();
+      
+    }
+    
+  }
   public function getQuery($name)
   {
     return $this->querys[$name];
@@ -121,9 +142,24 @@ class ModelManager
     return $models;
   }
   
+  public function findAll()
+  {
+    $dbh = $this->getDbHandler();
+    
+    $query = sprintf($this->getQuery('findAll') , $this->getTableName());
+    
+    $sth = $dbh->prepare($query);
+    
+    $sth->execute();
+    $models = $sth->fetchAll(\PDO::FETCH_CLASS, $this->getModelName());
+    
+    return $models;
+    
+  }
+  
   public function find($id)
   {
-    return $this->findBy($this->getIdName(), $id);
+    return $this->findOneBy($this->getIdName(), $id);
   }
   
   public function delete($id)
@@ -135,7 +171,6 @@ class ModelManager
     $params = array(':'.$fieldName => $id);
     
     $sth = $dbh->prepare($query);
-    
     $sth->execute($params);
     
   }

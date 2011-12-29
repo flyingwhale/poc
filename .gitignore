@@ -2,3 +2,7 @@
 #*#
 build
 .*.swp
+.buildpath
+.project
+.settings/
+

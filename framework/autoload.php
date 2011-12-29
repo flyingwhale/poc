@@ -17,6 +17,7 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\filter' => '/src/cache/filtering/Filter.php',
                 'poc\\cache\\filtering\\hasher' => '/src/cache/filtering/Hasher.php',
                 'poc\\cache\\filtering\\hasvalue' => '/src/cache/filtering/HasValue.php',
+                'poc\\cache\\filtering\\outputfilter' => '/src/cache/filtering/OutputFilter.php',
                 'poc\\cache\\filtering\\tohash' => '/src/cache/filtering/ToHash.php',
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
                 'poc\\cache\\header\\headermanipulator' => '/src/cache/header/HeaderManipulator.php',

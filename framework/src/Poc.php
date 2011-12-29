@@ -16,6 +16,14 @@ limitations under the License.
 namespace POC;
 
 
+use POC\cache\PocCache;
+
+use POC\Handlers\OutputInterface;
+
+use POC\cache\header\HeaderManipulator;
+
+use POC\cache\filtering\OutputFilter;
+
 class Poc
 {
   static private $outputHandler;
@@ -26,6 +34,7 @@ class Poc
   static private $caches;
   static private $level;
   static private $headerManipulator;
+  static private $outputFilter;
   
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -58,9 +67,12 @@ class Poc
               .'<b>'.((microtime() - self::$start) * 1000).
                                                            '</b> milliseconds.';
             }
-            $arr = \headers_list();
-            self::$caches[$i]->storeHeadersForPreservation($arr);
-            self::$caches[$i]->removeHeaders($arr);
+            //TODO: add it to the OutputHandler.
+            $headers = \headers_list();
+            //self::$caches[$i]->storeHeadersForPreservation($arr);
+            self::$headerManipulator->storeHeadersForPreservation($headers);
+            //self::$caches[$i]->removeHeaders($arr);
+            self::$headerManipulator->removeHeaders($headers);
             self::$caches[$i]->storeCache($return);
             self::$caches[$i]->getSpecificCache()->cacheAddTags();
           }
@@ -88,13 +100,15 @@ class Poc
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct(\POC\cache\PocCache $cache,
-                       \POC\handlers\OutputInterface $output, 
-                       \POC\cache\header\HeaderManipulator $headerManipulator,   
-                                                  $debug = false) {
+  function __construct( PocCache $cache,
+                        OutputInterface $output, 
+                        HeaderManipulator $headerManipulator,
+                        OutputFilter $outputFilter, $debug = false) {
     self::$headerManipulator = $headerManipulator;
     self::$headerManipulator->setOutputHandler($output);
     self::$outputHandler = $output;
+    self::$outputFilter = $outputFilter;
+    
     $this->setDebug($debug);
     if ($cache != null) {
       $this->addCache($cache);
@@ -115,7 +129,7 @@ class Poc
             foreach (self::$caches[$i]->headersToSend as $header) {
               self::$outputHandler->header($header);
             }
-            self::$caches[$i]->removeHeaders($arr);
+            self::$headerManipulator->removeHeaders($arr);
           }
           $started = 1;
           echo($this->output);

@@ -21,31 +21,11 @@ use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
 class PocCache {
 
   var $specificCache;
-  var $headersToPreserve;
   var $headersToStore;
   var $headersToSend;
-  var $headersToRemove;
-  var $outputBlacklist;
   var $eTag;
   private $isEtagGeneration = 1;
 
-    
-  public function storeHeadersForPreservation($responseHeaders){
-    if($this->headersToPreserve){
-      foreach ($responseHeaders as $header){
-        $headerTmp[] = explode(':', $header);
-      }
-    
-      foreach($this->headersToPreserve as $findThisHeader){
-        foreach ($headerTmp as $preserveThisHeader){
-              if($preserveThisHeader[0] == $findThisHeader){
-               $this->headersToStore[] = 
-                                   $findThisHeader.': '.$preserveThisHeader[1];
-            }
-          }
-        }
-      }
-    }
     
   //TODO: still not works
   public function etagGeneration($output){
@@ -53,40 +33,6 @@ class PocCache {
       $etag = md5($output);
       $this->headersToStore[] = 'Etag : '.$etag;
       return $etag;
-    }
-  }
-    
-  public function removeHeaders($reponseHeaders){
-    if($this->headersToRemove){
-      foreach($this->headersToRemove as $removeThisHeader){
-        header_remove($removeThisHeader);
-      }
-    }
-  }
-  
-  public function storeHeaderVariable($headerVariable){
-    //TODO: check for all possible valid header variables.
-    $this->headersToPreserve[] = $headerVariable;
-  }
-  
-  public function setEtagGeneration($boolean = true){
-    $this->isEtagGeneration = $boolean;
-  }
-
-  public function storeOutputBlacklistCondition($condition){
-    $this->outputBlacklist[] = $condition;
-  }
-  
-  //TODO:implement this functionality
-  //still not properly implemented feature..
-  public function isOutputBlacklisted ($output){
-    if( $this->outputBlacklist ){
-      foreach( $this->outputBlacklist as $condititon ){
-        //$result = preg_match($condition, $output);
-        //if($result){
-        return false;
-        //}
-      }
     }
   }
   
@@ -97,7 +43,7 @@ class PocCache {
 
   public function storeCache($output) {
     if ($this->getSpecificCache()->getFilter()->evaluate()) {
-       $this->specificCache->cacheSpecificStore(
+      $this->specificCache->cacheSpecificStore(
                    $this->specificCache->getHasher()->getKey(), $output);
        //TODO: still not working.
        if($this->isEtagGeneration){

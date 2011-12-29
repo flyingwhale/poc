@@ -15,6 +15,8 @@
    */
 
 namespace unittest;
+use POC\cache\filtering\OutputFilter;
+
 use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\Evaluateable;
@@ -40,7 +42,6 @@ include_once './framework/autoload.php';
 
 class PocTest extends \PHPUnit_Framework_TestCase
 {
-
   const TESTSTRING1 = 1;
   const TESTSTRING2 = 2;
   const TESTSTRING3 = 3;
@@ -69,16 +70,18 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private function cacheBurner($testString = "testString", $cacheHandler) {
     $this->setOutput('');
     $output = new TestOutput();
-    $pob = new Poc(new PocCache($cacheHandler), $output, new HeaderManipulator(), false);
+    $poc = new Poc(new PocCache($cacheHandler), $output, 
+                           new HeaderManipulator(), new OutputFilter(), false);
+    $poc->start();
     if($output->getOutputFlow()){
       echo $testString;
-      $pob->destruct();
+      $poc->destruct();
       $this->setHeader($output->getHeader());
       $this->setOutput($output->getOutput());
     } else {
      $this->setHeader($output->getHeader());
      $this->setOutput($output->getOutput());
-     $pob->destruct();
+     $poc->destruct();
     }
   }
 
@@ -92,9 +95,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $filter = new Filter();
 
       $handlers[] = new FileCache($hasher,$filter, self::TTL,null);
-     // $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
-     // $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
-     // $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

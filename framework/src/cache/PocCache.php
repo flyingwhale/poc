@@ -20,22 +20,6 @@ use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
 
 class PocCache {
 
-  var $specificCache;
-  var $headersToStore;
-  var $headersToSend;
-  var $eTag;
-  private $isEtagGeneration = 1;
-
-    
-  //TODO: still not works
-  public function etagGeneration($output){
-    if($this->isEtagGeneration){
-      $etag = md5($output);
-      $this->headersToStore[] = 'Etag : '.$etag;
-      return $etag;
-    }
-  }
-  
   
   function __construct (AbstractPocCacheSpecific $specificCache) {
     $this->specificCache = $specificCache;
@@ -45,27 +29,11 @@ class PocCache {
     if ($this->getSpecificCache()->getFilter()->evaluate()) {
       $this->specificCache->cacheSpecificStore(
                    $this->specificCache->getHasher()->getKey(), $output);
-       //TODO: still not working.
-       if($this->isEtagGeneration){
-         $this->specificCache->cacheSpecificStore(
-           $this->specificCache->getHasher()->getKey().'e',
-                                                $this->etagGeneration($output));
-       }
-
-       if($this->headersToStore){
-         $this->specificCache->cacheSpecificStore(
-           $this->specificCache->getHasher()->getKey().'h',
-                                              serialize($this->headersToStore));
-      }
     }
   }
 
   public function fetchCache() {
     if($this->getSpecificCache()->getFilter()->evaluate()){
-      $this->headersToSend = unserialize($this->specificCache->cacheSpecificFetch(
-                        $this->specificCache->getHasher()->getKey().'h'));
-      $this->eTag = ($this->specificCache->cacheSpecificFetch(
-                        $this->specificCache->getHasher()->getKey().'e'));
       return $this->specificCache->cacheSpecificFetch(
                              $this->specificCache->getHasher()->getKey());
     }

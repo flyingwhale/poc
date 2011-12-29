@@ -15,7 +15,6 @@ limitations under the License.
 */
 namespace POC;
 
-
 use POC\cache\PocCache;
 
 use POC\Handlers\OutputInterface;
@@ -35,6 +34,7 @@ class Poc
   static private $level;
   static private $headerManipulator;
   static private $outputFilter;
+  static private $cache;
   
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -74,6 +74,7 @@ class Poc
             //self::$caches[$i]->removeHeaders($arr);
             self::$headerManipulator->removeHeaders($headers);
             self::$caches[$i]->storeCache($return);
+            self::$headerManipulator->storeHeades($buffer);
             self::$caches[$i]->getSpecificCache()->cacheAddTags();
           }
 
@@ -104,8 +105,11 @@ class Poc
                         OutputInterface $output, 
                         HeaderManipulator $headerManipulator,
                         OutputFilter $outputFilter, $debug = false) {
+    self::$cache = $cache->getSpecificCache();
     self::$headerManipulator = $headerManipulator;
     self::$headerManipulator->setOutputHandler($output);
+    self::$headerManipulator->setCache($cache->getSpecificCache());
+    
     self::$outputHandler = $output;
     self::$outputFilter = $outputFilter;
     
@@ -124,9 +128,11 @@ class Poc
         $this->output = self::$caches[$i]->fetchCache();
         if ($this->output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
+          self::$headerManipulator->fetchHeaders();
+          //TODO:Replace it to it's appropriate place.(OutputHandler)
           $arr = headers_list();
-          if (self::$caches[$i]->headersToSend) {
-            foreach (self::$caches[$i]->headersToSend as $header) {
+          if (self::$headerManipulator->headersToSend) {
+            foreach (self::$headerManipulator->headersToSend as $header) {
               self::$outputHandler->header($header);
             }
             self::$headerManipulator->removeHeaders($arr);

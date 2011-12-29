@@ -9,7 +9,12 @@ class HeaderManipulator
   var $headersToRemove;
   var $eTag;
   var $outputHeader;
+  var $cache;
 
+  public function setCache($cache){
+    $this->cache = $cache;
+  }
+  
   public function storeHeaderToRemove($headerVariable){
     $this->headersToRemove[] = $headerVariable;
   }
@@ -60,6 +65,29 @@ class HeaderManipulator
   
   public function setOutputHandler($outputHeader){
     $this->outputHeader = $outputHeader;
+  }
+
+  public function storeHeades($output){
+
+    //TODO: still not working.
+    if($this->isEtagGeneration){
+      $this->cache->cacheSpecificStore(
+          $this->cache->getHasher()->getKey().'e',
+          $this->etagGeneration($output));
+    }
+    
+    if($this->headersToStore){
+      $this->cache->cacheSpecificStore(
+          $this->cache->getHasher()->getKey().'h',
+          serialize($this->headersToStore));
+    }
+  } 
+  
+  public function fetchHeaders(){
+    $this->headersToSend = unserialize($this->cache->cacheSpecificFetch(
+        $this->cache->getHasher()->getKey().'h'));
+    $this->eTag = ($this->cache->cacheSpecificFetch(
+        $this->cache->getHasher()->getKey().'e'));
   }
   
 }

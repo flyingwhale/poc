@@ -13,8 +13,8 @@ class MysqlTagging extends AbstractDb {
 
   const DEFDB   = 'pob_tagging';
   const DEFHOST = 'localhost';
-  const DEFUSER = 'root';
-  const DEFPASS = 'root';
+  const DEFUSER = 'pob_test';
+  const DEFPASS = 'pob_test';
 
   private $db;
   private $host;
@@ -23,7 +23,11 @@ class MysqlTagging extends AbstractDb {
   private $link;
   private $tagIDs = array();
   private $tryOfCon = 0;
+
   private $PDO;
+  private $cmm = null;
+  private $tmm = null;
+  private $tcmm = null;
 
   function __construct($db = self::DEFDB, $host = self::DEFHOST,
   $user = self::DEFUSER, $pass = self::DEFPASS) {
@@ -34,38 +38,42 @@ class MysqlTagging extends AbstractDb {
     $this->pass = $pass;
 
     $this->dsn = 'mysql:dbname='.$db.';host='.$host;
-    if ($this->tryOfCon < 1)
-    {
-      $this->connectDb();
-    }
-    else
-    {
-      throw new Exception('Mysql database connection failed.');
-    }
+    $this->connectDb();
+
+    parent::__construct();
+
   }
 
   protected function connectDb()
   {
-    try {
-      $this->PDO = new \PDO($this->dsn, $this->user, $this->pass);
-    }
-    catch(\PDOException $Exception) {
-      $this->tryOfCon++;
-      if ($Exception->getCode() == 1049)
-      {
-        $dsn = 'mysql:;host='.$this->host;
-        $this->PDO = new \PDO($dsn, $this->user, $this->pass);
-        $this->createDb();
+    if ($this->tryOfCon < 1)
+    {
+      try {
+        $this->PDO = new \PDO($this->dsn, $this->user, $this->pass);
         $this->cmm = new CacheModelManager($this->PDO);
         $this->tmm = new TagModelManager($this->PDO);
         $this->tcmm = new TagsHasCachesModelManager($this->PDO);
-        $this->createTables();
+        return true;
+      }
+      catch(\PDOException $Exception) {
+        $this->tryOfCon++;
+        if ($Exception->getCode() == 1049)
+        {
+          $dsn = 'mysql:;host='.$this->host;
+          $this->PDO = new \PDO($dsn, $this->user, $this->pass);
+          $this->createDb();
+          $this->cmm = new CacheModelManager($this->PDO);
+          $this->tmm = new TagModelManager($this->PDO);
+          $this->tcmm = new TagsHasCachesModelManager($this->PDO);
+          $this->createTables();
+        }
       }
     }
-    $this->cmm = new CacheModelManager($this->PDO);
-    $this->tmm = new TagModelManager($this->PDO);
-    $this->tcmm = new TagsHasCachesModelManager($this->PDO);
-
+    else
+    {
+      throw new \Exception('Mysql database connection failed.');
+    }
+    $this->connectDb();
   }
 
   protected function initDbStructure()
@@ -93,17 +101,52 @@ class MysqlTagging extends AbstractDb {
     $this->tcmm->createTable();
   }
 
+  public function truncateTables()
+  {
+    $this->tcmm->truncateTable();
+    $this->cmm->truncateTable();
+    $this->tmm->truncateTable();
+  }
+
   function splitTags($tags){
     return explode(',',$tags);
   }
 
-  function addCacheToTags($tagNamesString, $hash, $ttl = 5)
+  /*
+   * If cache exists and it is not expired it will be added to tags and be renewed expires value.
+  *  If cache exists and it is expired it will be deleted and it will be inserted again
+  *  If cache doesn't exist it will be inserted
+  */
+
+  function addCacheToTags($tagNamesString, $hash, $expires = null )
   {
-    $expires = time()+$ttl;
+    if (!$expires)
+    {
+      $expires = time();
+    }
+    //    $expires = time()+$ttl;
     $cache = $this->cmm->findOneBy('hash', $hash);
 
     $isNewCache = false;
     $isCacheRenew = false;
+
+    if ($cache)
+    {
+      // cache exists
+      if ($cache->expires > time())
+      {
+        // cache is not expired it will be renewed
+        $isCacheRenew = true;
+        $cache->expires = $expires;
+        $this->cmm->save($cache);
+      }
+      else
+      {
+        // cache is expired it will be deleted with relation table item
+        $this->cmm->deleteWithRelation($cache->hash);
+        $cache = null;
+      }
+    }
 
     if (!$cache)
     {
@@ -113,14 +156,6 @@ class MysqlTagging extends AbstractDb {
       $cache->expires = $expires;
       $this->cmm->save($cache);
     }
-    else {
-      if ($cache->expires < time())
-      {
-        $isCacheRenew = true;
-        $cache->expires = $expires;
-        $this->cmm->save($cache);
-      }
-    }
 
     $tagNames = $this->splitTags($tagNamesString);
 
@@ -128,80 +163,65 @@ class MysqlTagging extends AbstractDb {
     $tagsCaches = array();
     foreach($tagNames as $tagName)
     {
-      $tag = $this->tmm->findOneBy('tag', $tagName);
+      $cachesOfTag = $this->cmm->getByTagAndHash($tagName, $cache->hash);
 
-      if (!$tag)
+      if (!$cachesOfTag)
       {
-        $tag = new Tag();
-        $tag->tag = $tagName;
-        $this->tmm->save($tag);
+        $tag = $this->tmm->findOneBy('tag', $tagName);
 
+        if (!$tag)
+        {
+          $tag = new Tag();
+          $tag->tag = $tagName;
+          $this->tmm->save($tag);
+        }
         $tagCache = new TagCache();
         $tagCache->cache_id = $cache->id;
         $tagCache->tag_id = $tag->id;
         $tagsCaches[] = $tagCache;
+        $tags[] = $tag;
       }
 
-      $tags[] = $tag;
     }
 
     $this->tcmm->save($tagsCaches);
   }
 
-  private function fetchArray($query){
-    $result = mysql_query($query);
-    $return = array();
-    while($row = mysql_fetch_array($result)){
-      $return[] = $row;
-    }
-    return $return;
-  }
+  public function tagInvalidate($tagsString)
+  {
+    $tagNames = $this->splitTags($tagsString);
 
+    $invalidateCaches = $this->cmm->getByTags($tagNames);
 
-  function tagInvalidate($tags) {
-    $tagArray = $this->splitTags($tags);
-    if($tagArray){
-      $tagsWhere = '';
-      foreach($tagArray as $index => $tag){
-        if($index){
-          $tagsWhere .= 'or ';
-        }
-        $tagsWhere .= 'tag = "'.$tag.'" ';
-      }
-      $query = 'select ID from tags where '.$tagsWhere;
-      $rows = $this->fetchArray($query);
-
-      $tags_has_cachesWhere = '';
-      if($rows){
-        foreach($rows as $index => $row){
-          if($index){
-            $tags_has_cachesWhere .= 'or ';
-          }
-          $tags_has_cachesWhere .= 'tagID = "'.$row['id'].'" ';
-        }
-        $query = 'SELECT cacheID FROM tags_has_caches WHERE '.$tags_has_cachesWhere.'GROUP BY cacheID';
-        $rows = $this->fetchArray($query);
-        if($rows){
-          $cacheWhere = '';
-          foreach($rows as $index => $row){
-            if($index){
-              $cacheWhere .='or ';
-            }
-            $cacheWhere .='id = "'.$row['cache_id'].'" ';
-          }
-          $query = 'SELECT hash FROM caches WHERE '.$cacheWhere;
-          $rows = $this->fetchArray($query);
-
-          foreach($rows as $row){
-            $this->cache->cacheSpecificClearItem($row['hash']);
-          }
-        }
-      }
+    foreach ($invalidateCaches as $invalidateCache)
+    {
+      $this->cmm->deleteWithRelation($invalidateCache->hash);
+      $this->cache->cacheSpecificClearItem($invalidateCache->hash);
+      
     }
   }
 
 
-  function flushOutdated() {
+  public function flushOutdated()
+  {
+    $this->deleteOrphans();
+    $expiredTagsCaches = $this->tcmm->getExpired();
+
+    foreach($expiredTagsCaches as $expiredTagCache)
+    {
+      $this->tcmm->delete($expiredTagCache);
+      $this->cmm->delete($expiredTagCache->cache_id);
+      $this->tmm->delete($expiredTagCache->tag_id);
+    }
+
+  }
+
+  public function deleteOrphans()
+  {
+    $this->tcmm->deleteOrphans();
+    $this->cmm->deleteOrphans();
+    $this->tmm->deleteOrphans();
+
   }
 
 }

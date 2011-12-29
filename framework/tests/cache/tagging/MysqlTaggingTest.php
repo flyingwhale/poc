@@ -16,173 +16,153 @@ limitations under the License.
 
 namespace unittest;
 use POC\cache\tagging\MysqlTagging;
-use POC\cache\tagging\driver\mysql\CacheModelManager;
-use POC\cache\tagging\driver\mysql\TagModelManager;
-use POC\cache\tagging\driver\mysql\TagsHasCachesModelManager;
-use POC\cache\tagging\driver\mysql\model\Cache;
-use POC\cache\tagging\driver\mysql\model\Tag;
-use POC\cache\tagging\driver\mysql\model\TagCache;
-use POC\cache\filtering\Hasher;
-use POC\cache\filtering\filter;
 
 require_once 'framework/autoload.php';
 
-class MysqlTaggingTest extends \PHPUnit_Framework_TestCase
+class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
-  protected static $PDO;
-  protected static $dsn;
-
-  protected static $cmm;
-  protected static $tmm;
-  protected static $tcmm;
-
-  protected $tagging;
-  
-  public static function setUpBeforeClass()
+  /*
+   * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+  */
+  public function getConnection()
   {
-    self::$dsn = 'mysql:dbname='.MysqlTagging::DEFDB.';host='.MysqlTagging::DEFHOST;
-    self::$PDO = new \PDO(self::$dsn, MysqlTagging::DEFUSER, MysqlTagging::DEFPASS);
+    $dsn = 'mysql:dbname='.MysqlTagging::DEFDB.';host='.MysqlTagging::DEFHOST;
+    $pdo = new \PDO($dsn, MysqlTagging::DEFUSER, MysqlTagging::DEFPASS);
 
-    self::$cmm = new CacheModelManager(self::$PDO);
-    self::$tmm = new TagModelManager(self::$PDO);
-    self::$tcmm = new TagsHasCachesModelManager(self::$PDO);
+    return $this->createDefaultDBConnection($pdo);
   }
 
-  public static function tearDownAfterClass()
+  public function getDataSet()
   {
-    self::$PDO = null;
+    return $this->createXMLDataSet('framework/tests/cache/tagging/fixture/tagging/init.xml');
   }
-  function setUp()
+
+  /**
+  * @dataProvider addCacheToTagsProvider
+  */
+  public function testAddCacheToTags($tagsString, $hash, $expires, $expectedDatasetPath)
   {
-    $this->tagging = new MysqlTagging();
-    $this->tagging->truncateTables();
+    $tagging = new MysqlTagging();
+
+    $tagging->addCacheToTags($tagsString, $hash, $expires);
+
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+
+    $exepctedDataSet = $this->createXMLDataSet($expectedDatasetPath.'-01.xml');
+    $this->assertDataSetsEqual($exepctedDataSet, $dataSet);
+
+    $tagging->addCacheToTags($tagsString, $hash, $expires);
+
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+    $exepctedDataSet = $this->createXMLDataSet($expectedDatasetPath.'-02.xml');
+
+    $this->assertDataSetsEqual($exepctedDataSet, $dataSet, 'addCacheToTags() duplication test');
+
+  }
+
+  /**
+  * @dataProvider flushOutdatedProvider
+  */
+  public function testFlushOutdated($initDatasetPath, $expectedDatasetPath)
+  {
+    $initDataSet = $this->createXMLDataSet($initDatasetPath);
+    $this->getDatabaseTester()->setDataSet($initDataSet);
+    $this->getDatabaseTester()->onSetUp();
+
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+    $expectedDataset = $initDataSet;
+
+    $this->assertDataSetsEqual($expectedDataset, $dataSet);
+
+    $tagging = new MysqlTagging();
+    $tagging->flushOutdated();
+
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+    $expectedDataset = $this->createXMLDataSet($expectedDatasetPath);
+    $this->assertDataSetsEqual($expectedDataset, $dataSet);
      
   }
 
-  function testAddCacheToTags()
+  /**
+  * @dataProvider tagInvalidateProvider
+  */
+  public function testTagInvalidate($initDatasetPath, $invalidateTag, $expectedDatasetPath)
   {
-    $tagsString = 'tag1,tag2';
-    $hash = '12345678901234567890123456789012';
-    $expires = 1234;
+    /*
+     * This function use mock object to emulate cacheSpecificClearItem
+     * 
+     * A short example
+     * 
+     * A cache -> tag1, tag2
+     * B cache -> tag2, tag3
+     * C cache-> tag2
+     * tag2 invalidate -> clear all (A, B, C caches) 
+     */
     
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
+    $initDataSet = $this->createXMLDataSet($initDatasetPath);
+    $this->getDatabaseTester()->setDataSet($initDataSet);
+    $this->getDatabaseTester()->onSetUp();
 
-    $testCache = new Cache();
-    $testCache->id = 1;
-    $testCache->hash = $hash;
-    $testCache->expires = $expires;
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+    $expectedDataset = $initDataSet;
+    $this->assertDataSetsEqual($expectedDataset, $dataSet);
 
-    $cache = self::$cmm->findOneBy('hash', $hash);
-    $this->assertEquals($cache, $testCache);
-
-    $testTag = new Tag();
-    $testTag->id = 1;
-    $testTag->tag = 'tag1';
-
-    $tag = self::$tmm->find(1);
-
-    $this->assertEquals($tag, $testTag);
-
-    $testTag = new Tag();
-    $testTag->id = 2;
-    $testTag->tag = 'tag2';
-
-    $tag = self::$tmm->find(2);
-
-    $this->assertEquals($tag, $testTag);
-
-    $testTagCache = new TagCache();
-    $testTagCache->tag_id = 1;
-    $testTagCache->cache_id = 1;
-
-    $tagCache = self::$tcmm->find(1, 1);
-
-    $this->assertEquals($tagCache, $testTagCache);
-
-    $testTagCache = new TagCache();
-    $testTagCache->tag_id = 2;
-    $testTagCache->cache_id = 1;
-
-    $tagCache = self::$tcmm->find(2, 1);
-
-    $this->assertEquals($tagCache, $testTagCache);
-
-    // duplication test start 
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
-
-    
-    $cache = self::$cmm->findAll();
-    $this->assertCount(1, $cache);
-
-    $tagsCaches = self::$tcmm->findAll();
-    $this->assertCount(2, $tagsCaches);
-    
-    $tags = self::$tmm->findAll();
-    $this->assertCount(2, $tags);
-    
-  }
-
-
-  function testTagInvalidate()
-  {
-    // it use file cache
-    // A cache -> tag1, tag2
-    // B cache -> tag2, tag3
-    // C cache-> tag2
-    // tag2 invalidate -> clear all
-    
-    $cacheMock = $this->getMock('FileCache', array('cacheSpecificClearItem'));
+    $cacheMock = $this->getMock('Cache', array('cacheSpecificClearItem'));
     $cacheMock->expects($this->any())
     ->method('cacheSpecificClearItem')
     ->will($this->returnValue(true));
-        
-    $this->tagging->addCache($cacheMock);
-     
-    $hash = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
-    $tagsString = 'tag1,tag2';
-    $expires = 1234;
 
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
+    $tagging = new MysqlTagging();
     
-    $hash = 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB';
-    $tagsString = 'tag2,tag3';
-    $expires = 1234;
+    $tagging->tagInvalidate($invalidateTag);
 
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
-    
-    $hash = 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC';
-    $tagsString = 'tag2';
-    $expires = 1234;
-    
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
-    $invalidateTag = 'tag2';
-    $this->tagging->tagInvalidate($invalidateTag);
-    
-    $cache = self::$cmm->findAll();
-    $this->assertCount(0, $cache);
-    
-    $tagsCaches = self::$tcmm->findAll();
-    $this->assertCount(0, $tagsCaches);
+    $dataSet = $this->getConnection()->createDataSet(array('caches', 'tags_has_caches', 'tags'));
+    $expectedDataset = $this->createXMLDataSet($expectedDatasetPath);
+    $this->assertDataSetsEqual($expectedDataset, $dataSet);
   }
   
-  function testFlushOutdated()
+  
+  public static function addCacheToTagsProvider()
   {
-    $tagsString = 'tag1,tag2';
-    $hash = '12345678901234567890123456789012';
-    $expires = 1234;
-    
-    $this->tagging->addCacheToTags($tagsString, $hash, $expires);
-    $this->tagging->flushOutdated();
-
-    $cache = self::$cmm->findAll();
-    $this->assertCount(0, $cache);
-    
-    $tagsCaches = self::$tcmm->findAll();
-    $this->assertCount(0, $tagsCaches);
-    
-    $tags = self::$tmm->findAll();
-    $this->assertCount(0, $tags);
-    
+    $basePath = 'framework/tests/cache/tagging/fixture/tagging/addCacheToTags/';
+    $data = array(
+      array(
+        'tag1,tag2',
+        '12345678901234567890123456789012',
+        1234,    
+        $basePath.'expected_01'
+      )
+    );
+  
+    return $data;
   }
+  
+  
+  public static function flushOutdatedProvider()
+  {
+    $basePath = 'framework/tests/cache/tagging/fixture/tagging/flushOutdated/';
+    $data = array(
+      array($basePath.'init_01.xml',
+        $basePath.'expected_01.xml'
+      )
+    );
+  
+    return $data;
+  }
+
+  public static function tagInvalidateProvider()
+  {
+    $basePath = 'framework/tests/cache/tagging/fixture/tagging/tagInvalidate/';
+    $data = array(
+    array(
+      $basePath.'init_01.xml',
+      'tag2',
+      $basePath.'expected_01.xml'
+    )
+    );
+  
+    return $data;
+  }
+  
 }
 

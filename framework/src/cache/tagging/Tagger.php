@@ -7,6 +7,10 @@ class Tagger {
 
   private $tags;
   private $ttl;
+  /**
+   * 
+   * @var AbstractDb;
+   */
   private $tagDb;
 
   function __construct($tags, Hasher $hasher, $tagDb, $ttl) {
@@ -22,6 +26,10 @@ class Tagger {
 
   function cacheInvalidation(){
     $this->tagDb->tagInvalidate($this->tags);
+  }
+  
+  function addCache($cache){
+    $this->tagDb->addCache($cache);
   }
 
 }

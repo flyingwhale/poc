@@ -21,9 +21,12 @@ class MongoCache extends AbstractPocCacheSpecific
 {
   private $isNotConnected;
   private $mongo;
-
-  protected $defaultOptions = array('db_name'=>'poc','collection_name'=>'key_value');
-
+  
+  function fillDefaults(){
+    $this['db_name'] = 'poc';
+    $this['collection_name'] = 'key_value';
+  }
+  
   function __construct($hasher, $filter, $ttl, $tagDb, $options = array())
   {
     parent::__construct($hasher, $filter, $ttl, $tagDb);
@@ -113,14 +116,14 @@ class MongoCache extends AbstractPocCacheSpecific
 
   private function getDb()
   {
-    $db = $this->mongo->selectDB($this->options['db_name']);
+    $db = $this->mongo->selectDB($this->getOptions('db_name'));
 
     return $db;
   }
 
   private function getCollection()
   {
-    $collection = $this->getDb()->selectCollection($this->options['collection_name']);
+    $collection = $this->getDb()->selectCollection($this->getOptions('collection_name'));
 
     return $collection;
   }

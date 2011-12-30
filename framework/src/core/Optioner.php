@@ -18,18 +18,19 @@ namespace POC\core;
 
 class Optioner {
 
-  public function isInterfaceImoplemented(){
-
-  }
-
+  /**
+   * 
+   * @param OptionAble $oa
+   */
   public function __construct($oa){
+  	$oa->fillDefaults();
     $implementedinterfaces = (class_implements(get_class($oa)));
 
     if(isset($implementedinterfaces['POC\core\OptionAbleInterface'])){
 
       //if(is_array($oa)){
       if(1){
-        $options = $this->optionsMerge($oa->getOptions(), $oa->getDefaultOptions());
+        $options = $this->optionsMerge($oa->getOptions(), $oa);
       } else {
         throw new \Exception('Please add an array or nothing to the
                                                                $options parameter');
@@ -43,10 +44,17 @@ class Optioner {
 
    }
 
-  public function optionsMerge($srcArray, $defaultValues){
-    foreach($defaultValues as $key => $value){
-      if(!isset($srcArray[$key])) {
-        $srcArray[$key] = $value;
+  /**
+   * 
+   * @param array $srcArray
+   * @param OptionAble $oa
+   * @return array
+   */
+  public function optionsMerge($srcArray, $oa){
+    foreach($oa->getIndexes() as $key => $value){
+      //var_dump($oa->getIndexes());die();
+      if(!isset($srcArray[$value])) {
+        $srcArray[$value] = $oa[$value];
       }
     }
     return $srcArray;

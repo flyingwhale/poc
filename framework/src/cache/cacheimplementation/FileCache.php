@@ -25,8 +25,11 @@ class FileCache extends AbstractPocCacheSpecific {
   private $file;
   private $fileTtl;
   private $tagDb;
-  protected $defaultOptions = array('directory'=>'/tmp/');
-
+ 
+  function fillDefaults(){
+    $this['directory'] = '/tmp/';
+  }
+  
   function __construct($hasher, $filter, $ttl,$tagDb=null, $options = array()) {
     parent::__construct($hasher, $filter, $ttl, $tagDb);
     $this->tagDb = $tagDb;
@@ -35,8 +38,8 @@ class FileCache extends AbstractPocCacheSpecific {
     new Optioner($this);
 
     $this->throwDbException();
-    $this->file = $this->options['directory'].self::KEY_PREFIX;
-    $this->fileTtl = $this->options['directory'].self::TTL_PREFIX;
+    $this->file = $this->getOption('directory').self::KEY_PREFIX;
+    $this->fileTtl = $this->getOption('directory').self::TTL_PREFIX;
   }
 
   public function cacheSpecificFetch($key) {
@@ -48,8 +51,8 @@ class FileCache extends AbstractPocCacheSpecific {
 
   public function cacheSpecificClearAll() {
 
-     array_map( "unlink", glob($this->options['directory'].''.self::KEY_PREFIX.'*')  );
-     array_map( "unlink", glob($this->options['directory'].''.self::TTL_PREFIX.'*')  );
+     array_map( "unlink", glob($this->getOption('directory').''.self::KEY_PREFIX.'*')  );
+     array_map( "unlink", glob($this->getOption('directory').''.self::TTL_PREFIX.'*')  );
 
    }
 
@@ -88,6 +91,6 @@ class FileCache extends AbstractPocCacheSpecific {
   }
 
   function  isCacheAvailable(){
-    return is_writable($this->options['directory']);
+    return is_writable($this->getOption('directory'));
   }
 }

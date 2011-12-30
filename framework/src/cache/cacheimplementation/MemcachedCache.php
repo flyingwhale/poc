@@ -22,16 +22,18 @@ class MemcachedCache extends AbstractPocCacheSpecific {
   private $memcache;
   private $compression=false;
   private $isConnected;
-  protected $defaultOptions = array('server'=>'localhost',
-                                    'port'=>'11211',
-                                   );
-
+  
+  function fillDefaults(){
+    $this['server'] = 'localhost';
+    $this['port'] = '11211';     
+  }
+  
   function __construct( $hasher,$filter,$ttl,$tagDb, $options = array()) {
     $this->options = $options;
     new Optioner($this);
     parent::__construct($hasher, $filter, $ttl, $tagDb);
     $this->memcache = new \Memcache();
-    $this->isConnected = $this->memcache->connect($this->options['server'], $this->options['port']);;
+    $this->isConnected = $this->memcache->connect($this->getOption('server'), $this->getOption('port'));
     $this->throwDbException();
   }
 

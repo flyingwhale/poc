@@ -8,6 +8,9 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'logger' => '/src/utility/Logger.php',
+                'pimple' => '/vendors/pimple/lib/Pimple.php',
+                'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',
+                'pimple\\tests\\service' => '/vendors/pimple/tests/Pimple/Tests/Service.php',
                 'poc\\cache\\cacheimplementation\\abstractpoccachespecific' => '/src/cache/cacheimplementation/AbstractPocCacheSpecific.php',
                 'poc\\cache\\cacheimplementation\\filecache' => '/src/cache/cacheimplementation/FileCache.php',
                 'poc\\cache\\cacheimplementation\\memcachedcache' => '/src/cache/cacheimplementation/MemcachedCache.php',
@@ -41,7 +44,6 @@ spl_autoload_register(
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',
-                'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\mysqltaggingtest' => '/tests/cache/tagging/MysqlTaggingTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
                 'unittest\\rediskacachete' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'

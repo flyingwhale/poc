@@ -30,8 +30,6 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
   /** The databese that stores the caches*/
   private  $tagDb;
 
-  protected $options = array();
-
   protected $defaultOptions = array();
 
   protected $hasher;
@@ -111,7 +109,7 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   function throwDbException(){
     if(!$this->isCacheAvailable()){
-      throw new Exception("The cache database is not reachable!");
+      throw new \Exception("The cache database is not reachable!");
     }
   }
 }

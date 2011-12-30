@@ -22,10 +22,13 @@ class RediskaCache extends AbstractPocCacheSpecific {
 
   private $rediska;
   private $isNotConnected;
-  protected $defaultOptions = array('servers' =>
+
+  function fillDefaults(){
+    $this['servers'] = array('servers' =>
                                      array(array('host'=>'localhost',
                                                               'port'=>'6379')));
-
+  }
+  
   function __construct($hasher, $filter, $ttl, $tagDb, $options = array()) {
     parent::__construct($hasher, $filter, $ttl, $tagDb);
 
@@ -38,7 +41,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
       throw new Exception(sprintf("%s class not exists", $className));
     }
 
-    $this->rediska = new $className($options);
+    $this->rediska = new $className($this->getOption('servers'));
     $this->isNotConnected = 1;
   }
 

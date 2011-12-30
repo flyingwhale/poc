@@ -116,14 +116,14 @@ class MongoCache extends AbstractPocCacheSpecific
 
   private function getDb()
   {
-    $db = $this->mongo->selectDB($this->getOptions('db_name'));
+    $db = $this->mongo->selectDB($this->getOption('db_name'));
 
     return $db;
   }
 
   private function getCollection()
   {
-    $collection = $this->getDb()->selectCollection($this->getOptions('collection_name'));
+    $collection = $this->getDb()->selectCollection($this->getOption('collection_name'));
 
     return $collection;
   }

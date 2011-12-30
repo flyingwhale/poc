@@ -23,7 +23,8 @@ class MemcachedCache extends AbstractPocCacheSpecific {
   private $compression=false;
   private $isConnected;
   
-  function fillDefaults(){
+  function fillDefaults(){    
+    parent::fillDefaults();
     $this['server'] = 'localhost';
     $this['port'] = '11211';     
   }

@@ -29,6 +29,7 @@ class FileCache extends AbstractPocCacheSpecific {
   private $tagDb;
  
   function fillDefaults(){
+    parent::fillDefaults();
     $this[self::PARAM_DIRECTORY] = '/tmp/';
   }
   

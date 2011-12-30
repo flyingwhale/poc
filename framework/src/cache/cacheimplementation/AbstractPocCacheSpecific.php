@@ -46,8 +46,8 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
   const PARAM_FILTER = 'filter';
   const PARAM_TTL = 'ttl';
   const PARAM_TAGDB = 'tagDb';
-  
-  function __construct($options) {
+
+  function fillDefaults(){
     $this[self::PARAM_HASHER] = function(){
       return new Hasher();
     };
@@ -60,13 +60,16 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
     $this[self::PARAM_TAGDB] = function(){
       return new MysqlTagging();
     };
-    
+  } 
+   
+  function __construct($options) {  
     parent::__construct($options);
      $this->hasher = $this->getOption(self::PARAM_HASHER);
      $this->ttl = $this->getOption(self::PARAM_TTL);
      $this->tagDb = $this->getOption(self::PARAM_TAGDB);
      $this->filter = $this->getOption(self::PARAM_FILTER);
-    }
+
+  }
 
   /**
    * 

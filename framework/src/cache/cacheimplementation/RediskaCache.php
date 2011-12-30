@@ -24,6 +24,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
   private $isNotConnected;
 
   function fillDefaults(){
+    parent::fillDefaults();
     $this['servers'] = array('servers' =>
                                      array(array('host'=>'localhost',
                                                               'port'=>'6379')));
@@ -31,6 +32,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
   
   function __construct($options = array()) {
     parent::__construct($options);
+
     $className = 'Rediska';
     if(!class_exists($className)) {
       throw new Exception(sprintf("%s class not exists", $className));

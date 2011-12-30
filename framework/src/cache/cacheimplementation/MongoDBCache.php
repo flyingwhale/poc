@@ -23,6 +23,7 @@ class MongoCache extends AbstractPocCacheSpecific
   private $mongo;
   
   function fillDefaults(){
+    parent::fillDefaults();
     $this['db_name'] = 'poc';
     $this['collection_name'] = 'key_value';
   }

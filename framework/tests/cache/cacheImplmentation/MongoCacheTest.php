@@ -24,6 +24,6 @@ require_once 'framework/autoload.php';
 class MongoCacheTest extends CacheTest
 {
   function setUp_() {
-    $this->cache = new MongoCache();
+    $this->cache = new MongoCache(array(MongoCache::PARAM_TTL=>parent::TTL));
   }
 }

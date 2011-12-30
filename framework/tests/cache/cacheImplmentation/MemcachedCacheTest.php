@@ -25,8 +25,8 @@ class MemcachedCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new MemcachedCache($this->hasher,new Filter, parent::TTL, new MysqlTagging());
-  }
+    $this->cache = new MemcachedCache(array(MemcachedCache::PARAM_TTL=>parent::TTL));
+      }
 
 }
 

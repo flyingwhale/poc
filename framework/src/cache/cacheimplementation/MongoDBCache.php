@@ -27,15 +27,11 @@ class MongoCache extends AbstractPocCacheSpecific
     $this['collection_name'] = 'key_value';
   }
   
-  function __construct($hasher, $filter, $ttl, $tagDb, $options = array())
+  function __construct($options = array())
   {
-    parent::__construct($hasher, $filter, $ttl, $tagDb);
+    parent::__construct($options);
 
     $this->isNotConnected = 0;
-
-    $this->options = $options;
-
-    new Optioner($this);
 
     try
     {

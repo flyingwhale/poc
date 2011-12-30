@@ -15,6 +15,8 @@
    */
 
 namespace unittest;
+use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
+
 use POC\cache\filtering\OutputFilter;
 
 use POC\cache\header\HeaderManipulator;
@@ -36,6 +38,8 @@ const UNITTESTING = 1;
 /* ob_start at the beginning has to be done in order to avoid the headers to be sent, because the
    PHPUnit already has got some output when it starts. */
 \ob_start();
+
+ini_set('memory_limit', '128M');
 
 //include_once '../autoload.php';
 include_once './framework/autoload.php';
@@ -70,15 +74,15 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private function cacheBurner($testString = "testString", $cache) {
     $this->setOutput('');
     $output = new TestOutput();
-    $poc = new Poc($cache, $output, 
-                           new HeaderManipulator(), new OutputFilter(), false);
+    $poc = new Poc(array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $output));
     $poc->start();
+    
     if($output->getOutputFlow()){
       echo $testString;
       $poc->destruct();
       $this->setHeader($output->getHeader());
       $this->setOutput($output->getOutput());
-    } else {
+    } else {  
      $this->setHeader($output->getHeader());
      $this->setOutput($output->getOutput());
      $poc->destruct();
@@ -91,13 +95,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $handlers = array();
     try{
 
-      $hasher = new Hasher();
-      $filter = new Filter();
-
-      $handlers[] = new FileCache($hasher,$filter, self::TTL,null);
-      //$handlers[] = new MemcachedCache($hasher, $filter, self::TTL,null);
-      //$handlers[] = new RediskaCache($hasher, $filter, self::TTL,null);
-      //$handlers[] = new MongoCache($hasher, $filter, self::TTL,null);
+      $handlers[] = new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      $handlers[] = new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      $handlers[] = new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      $handlers[] = new MongoCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
 
       foreach($handlers as $cacheHandler) {
         $this->cacheBurner("1",$cacheHandler);

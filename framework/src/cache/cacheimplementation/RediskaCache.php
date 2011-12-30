@@ -29,14 +29,9 @@ class RediskaCache extends AbstractPocCacheSpecific {
                                                               'port'=>'6379')));
   }
   
-  function __construct($hasher, $filter, $ttl, $tagDb, $options = array()) {
-    parent::__construct($hasher, $filter, $ttl, $tagDb);
-
-    $this->options = $options;
-    new Optioner($this);
-
+  function __construct($options = array()) {
+    parent::__construct($options);
     $className = 'Rediska';
-
     if(!class_exists($className)) {
       throw new Exception(sprintf("%s class not exists", $className));
     }

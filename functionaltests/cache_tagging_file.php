@@ -35,7 +35,7 @@ $hasher = new Hasher();
 $filter = new Filter();
 $hasher->addDistinguishVariable($_GET);
 
-$cache = new FileCache($hasher, $filter, 5, new MysqlTagging);
+$cache = new FileCache(array(FileCache::PARAM_TAGDB => new MysqlTagging()));
 
 if(isset($_GET)){
   if(isset($_GET['delcache'])){
@@ -44,12 +44,7 @@ if(isset($_GET)){
     }
   }
 }
-
 $cache->addCacheAddTags(true,"user,customer");
-
-//$cache->addCacheAddTags(true,"Karacsonyfa,Mezesmadzag,csicsa");
-$poc  = new Poc($cache, new ServerOutput(), new HeaderManipulator(), new OutputFilter(), true);
+$poc  = new Poc(array(POC::PARAM_CACHE => new FileCache(), POC::PARAM_DEBUG => true));
 $poc->start();
-//$poc->addCacheInvalidationTags($_GET,"Mezesmadzag,csicsa");
-//print_r($sqlite3Tagging->addCacheToTags('zizi,yuyu,aa,bb,ggg,fufu,fufufu,dict,sztaki,hu,dsaj,adsf,sdaf,adsf,asdf,sadf,dafgfdsg,ghrt,qw,we,er,rt,ty,yu,uii,io,as,sd,df,fg,gh,hj,jk,kl,zx,xc,v,cb,vn,bm,fh,df,sd,ad,qe,wr,e,t,ry,ru,,ueu,i,dj,sd,ssdf,sdf,sd,fsd,f,sdf,sd,f,sdf,sd,f,dfg,rewt,yu,ghj,sdfg,bv,gfh,rew,tq,etr,hdsg,hjsj,wu,djdj,sh,wy,ry,hfh,fh,d,gd,g,dgssdfg,sdf,g,ty,t,yhf,ghb,cvhgf,hg,fh,gfj,gfh,sdfg,dfhb,gfn,v,bnb,n,sfh,y,hh,oyoy,pdpdp,zlzl,al,bbbb,wweewe,rtrtrt,tytyty,yuyu,zxzxzx,xcxcxc,cvcvcv,vbvbvb,bnbn,ghghgh,fgfgfg,dfdfsfd,1,2,3,4,5,6,7,8,9,01'));
 include('lib/text_generator.php');

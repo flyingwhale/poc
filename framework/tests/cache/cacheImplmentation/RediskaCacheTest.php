@@ -24,7 +24,6 @@ use POC\cache\tagging\MysqlTagging;
 class RediskaCacheTe extends CacheTest
 {
   function setUp_() {
-    $this->cache = new RediskaCache($this->hasher,new Filter, parent::TTL, new MysqlTagging(),
-    array('servers' => array(array('host' => 'localhost', 'port' => 6379))));
+    $this->cache = new RediskaCache(array(RediskaCache::PARAM_TTL=>parent::TTL));
   }
 }

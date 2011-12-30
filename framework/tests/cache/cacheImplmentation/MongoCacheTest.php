@@ -24,6 +24,6 @@ use POC\cache\tagging\MysqlTagging;
 class MongoCacheTest extends CacheTest
 {
   function setUp_() {
-    $this->cache = new MongoCache($this->hasher,new Filter, parent::TTL, new MysqlTagging());
+    $this->cache = new MongoCache();
   }
 }

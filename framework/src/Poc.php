@@ -15,6 +15,12 @@ limitations under the License.
 */
 namespace POC;
 
+use POC\handlers\ServerOutput;
+
+use POC\cache\cacheimplementation\FileCache;
+
+use POC\core\OptionAble;
+
 use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
 
 use POC\Handlers\OutputInterface;
@@ -23,8 +29,20 @@ use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\OutputFilter;
 
-class Poc
+class Poc extends OptionAble
 {
+  const PARAM_CACHE = 'cache';
+  const PARAM_OUTPUTHANDLER = 'outputHandler';
+  const PARAM_HEADERMANIPULATOR = 'headerManipulator';
+  const PARAM_OUTPUTFILTER = 'outputFilter';
+  const PARAM_DEBUG = 'debug';
+  
+    /*$this['cache'] = function (){return new FileCache();};
+    $this['outputHandler'] = function (){return new ServerOutput();};
+    $this['headerManipulator'] = function (){return new HeaderManipulator();};
+    $this['outputFilter'] = function (){return new OutputFilter();};
+    $this['debug'] = false;*/
+  
   static private $outputHandler;
   private $output;
   private $buffering;
@@ -42,7 +60,7 @@ class Poc
   private function setDebug($debug) {
     self::$debug = $debug;
   }
-
+  
   public static function pocCallbackShowOutput($buffer) {
     $return = $buffer;
     if (self::$debug) {
@@ -99,25 +117,30 @@ class Poc
     return $return;
   }
 
+  public function fillDefaults(){
+    $this[self::PARAM_CACHE] = function (){return new FileCache();};
+    $this[self::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
+    $this[self::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
+    $this[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
+    $this[self::PARAM_DEBUG] = false;
+  }
+  
+  
   /**
   @param PocCacheInterface $cache this placeholder class contains the various
   caches.
   @param bool $debug If true debug messages are provided in the output, only
   for develompment purposes.
   */
-  function __construct( $cache,
-                        OutputInterface $output, 
-                        HeaderManipulator $headerManipulator,
-                        OutputFilter $outputFilter, $debug = false) {
-    self::$cache = $cache;
-    self::$headerManipulator = $headerManipulator;
-    self::$headerManipulator->setOutputHandler($output);
-    self::$headerManipulator->setCache($cache);
-    
-    self::$outputHandler = $output;
-    self::$outputFilter = $outputFilter;
-    $this->setDebug($debug);
-    self::$outputHandler = $output;
+  function __construct( $options = array() ) {
+    parent::__construct($options);
+    self::$cache = $this->getOption(self::PARAM_CACHE);
+    self::$outputHandler = $this->getOption(self::PARAM_OUTPUTHANDLER);
+    self::$headerManipulator = $this->getOption(self::PARAM_HEADERMANIPULATOR);
+    self::$headerManipulator->setOutputHandler(self::$outputHandler);
+    self::$headerManipulator->setCache(self::$cache);
+    self::$outputFilter = $this->getOption(self::PARAM_OUTPUTFILTER);
+    $this->setDebug($this->getOption('debug'));
   }
 
   private function fetchCache() {

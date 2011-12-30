@@ -7,11 +7,18 @@ abstract class OptionAble extends \Pimple implements OptionAbleInterface
   private $options = array();
   private $indexes = array();
 
-    function offsetSet($id, $value)
-    {
-        parent::offsetSet($id, $value);
-        $this->indexes[] = $id;
-    }
+  function __construct($options){
+    $this->options = $options;  
+    new Optioner($this);
+    
+  }
+    
+  function offsetSet($id, $value)
+  {
+    parent::offsetSet($id, $value);
+    $this->indexes[] = $id;
+  }
+    
   /**
  * @return the $options
  */
@@ -19,7 +26,7 @@ abstract class OptionAble extends \Pimple implements OptionAbleInterface
     return $this->options;
   }
 
-/**
+   /**
    * @return the $indexes
    */
   public function getIndexes() {

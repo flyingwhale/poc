@@ -24,10 +24,6 @@ limitations under the License.
   use POC\cache\header\HeaderManipulator;
 
   include ("../framework/autoload.php");
-  $hasher = new Hasher();
-  $filter = new Filter();
-  $hasher->addDistinguishVariable($_GET);
-  $poc  = new Poc(new FileCache($hasher, $filter, 5, new MysqlTagging),new ServerOutput(), new HeaderManipulator(),  new OutputFilter(), true);
-
+  $poc  = new Poc(array(POC::PARAM_CACHE => new FileCache(), POC::PARAM_DEBUG => true));
   $poc->start();
   include('lib/text_generator.php');

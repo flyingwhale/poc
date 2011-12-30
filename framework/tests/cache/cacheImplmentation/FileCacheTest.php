@@ -25,7 +25,7 @@ class FileCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new FileCache($this->hasher, new Filter, parent::TTL, new MysqlTagging());
+    $this->cache = new FileCache(array(FileCache::PARAM_TTL=>parent::TTL));
   }
 
 }

@@ -39,13 +39,34 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
   protected $cacheInvalidationTags = array();
 
   protected $cacheAddTags = array();
-
-  function __construct(Hasher $hasher,Filter $filter,$ttl,$tagDb = null) {
-     $this->hasher = $hasher;
-     $this->ttl = $ttl;
-     $this->tagDb = $tagDb;
-     $this->filter = $filter;
-  }
+/*
+ $hasher, $filter, $ttl, $tagDb
+ * */
+  const PARAM_HASHER = 'hasher';
+  const PARAM_FILTER = 'filter';
+  const PARAM_TTL = 'ttl';
+  const PARAM_TAGDB = 'tagDb';
+  
+  function __construct($options) {
+    $this[self::PARAM_HASHER] = function(){
+      return new Hasher();
+    };
+    
+    $this[self::PARAM_FILTER] = function(){
+      return new Filter();
+    };
+    
+    $this['ttl'] = 5;
+    $this[self::PARAM_TAGDB] = function(){
+      return new MysqlTagging();
+    };
+    
+    parent::__construct($options);
+     $this->hasher = $this->getOption(self::PARAM_HASHER);
+     $this->ttl = $this->getOption(self::PARAM_TTL);
+     $this->tagDb = $this->getOption(self::PARAM_TAGDB);
+     $this->filter = $this->getOption(self::PARAM_FILTER);
+    }
 
   /**
    * 

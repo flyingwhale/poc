@@ -19,6 +19,8 @@ use POC\cache\filtering\Filter;
 
 class FileCache extends AbstractPocCacheSpecific {
 
+  const PARAM_DIRECTORY = 'directory';
+   
   const KEY_PREFIX = 'POB_CACHE#';
   const TTL_PREFIX = 'POB_CACHE_TTL#';
 
@@ -27,19 +29,15 @@ class FileCache extends AbstractPocCacheSpecific {
   private $tagDb;
  
   function fillDefaults(){
-    $this['directory'] = '/tmp/';
+    $this[self::PARAM_DIRECTORY] = '/tmp/';
   }
   
-  function __construct($hasher, $filter, $ttl,$tagDb=null, $options = array()) {
-    parent::__construct($hasher, $filter, $ttl, $tagDb);
-    $this->tagDb = $tagDb;
-    $this->options = $options;
-
-    new Optioner($this);
+  function __construct($options = array()) {
+    parent::__construct($options);
 
     $this->throwDbException();
-    $this->file = $this->getOption('directory').self::KEY_PREFIX;
-    $this->fileTtl = $this->getOption('directory').self::TTL_PREFIX;
+    $this->file = $this->getOption(self::PARAM_DIRECTORY).self::KEY_PREFIX;
+    $this->fileTtl = $this->getOption(self::PARAM_DIRECTORY).self::TTL_PREFIX;
   }
 
   public function cacheSpecificFetch($key) {

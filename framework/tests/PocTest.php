@@ -95,13 +95,39 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     $handlers = array();
     try{
-
-      $handlers[] = new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      $handlers[] = new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      $handlers[] = new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      
+      $objects = new \Pimple();
+      
+      $objects['file'] = function()
+      {
+        return new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+      };
+      
+      $objects['memcached'] = function(){
+        return new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+      };
+      
+      $objects['rediska'] = function(){
+        return new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+      };
+      
+      $objects['mongo'] = function(){
+        return new MongoCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+      };
+      
+/*$handlers[] = new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      //$handlers[] = new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
+      //$handlers[] = new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
       $handlers[] = new MongoCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-
-      foreach($handlers as $cacheHandler) {
+      */
+      
+      $handlers[] = 'file';
+      $handlers[] = 'memcached';
+      $handlers[] = 'rediska';
+      $handlers[] = 'mongo';
+      
+      foreach($handlers as $cacheHandlerName) {
+        $cacheHandler = $objects[$cacheHandlerName];
         $this->cacheBurner("1",$cacheHandler);
         sleep(self::TTL + 1);
 

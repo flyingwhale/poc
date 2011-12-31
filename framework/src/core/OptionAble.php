@@ -9,7 +9,15 @@ abstract class OptionAble extends \Pimple implements OptionAbleInterface
 
   function __construct($options){
     $this->options = $options;  
-    new Optioner($this);
+    $this->fillDefaults();
+    
+    if(is_array($options)){
+    //if(1){
+     $this->optionsMerge();
+    } else {
+      throw new \Exception('Please add an array or nothing to the
+          $options parameter');
+    }
     
   }
     
@@ -43,4 +51,20 @@ abstract class OptionAble extends \Pimple implements OptionAbleInterface
       return $this->options[$key];
     }
   }
+  
+  /**
+   *
+   * @param array $srcArray
+   * @param OptionAble $oa
+   * @return array
+   */
+  public function optionsMerge(){
+    foreach($this->indexes as $key => $value){
+      //var_dump($oa->getIndexes());die();
+      if(!isset($this->options[$value])) {
+        $this->options[$value] = $this[$value];
+      }
+    }
+  }  
+  
 }

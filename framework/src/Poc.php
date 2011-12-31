@@ -43,19 +43,19 @@ class Poc extends OptionAble
     $this['outputFilter'] = function (){return new OutputFilter();};
     $this['debug'] = false;*/
   
-  static private $outputHandler;
-  private $output;
-  private $buffering;
-  static private $debug;
-  static private $start;
-  static private $level;
-  static private $headerManipulator;
-  static private $outputFilter;
+  static private $outputHandler = null;
+  private $output = null;
+  private $buffering = null;
+  static private $debug = null;
+  static private $start = null;
+  static private $level = null;
+  static private $headerManipulator = null;
+  static private $outputFilter = null;
   /**
    * 
    * @var AbstractPocCacheSpecific
    */
-  static private $cache;
+  static private $cache = null;
   
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -130,10 +130,14 @@ class Poc extends OptionAble
   @param PocCacheInterface $cache this placeholder class contains the various
   caches.
   @param bool $debug If true debug messages are provided in the output, only
-  for develompment purposes.
+  for develompment purposevags.
   */
   function __construct( $options = array() ) {
+    $this->options = null;
+    $this->indexes = null;
+    
     parent::__construct($options);
+    $this->fillDefaults();
     self::$cache = $this->getOption(self::PARAM_CACHE);
     self::$outputHandler = $this->getOption(self::PARAM_OUTPUTHANDLER);
     self::$headerManipulator = $this->getOption(self::PARAM_HEADERMANIPULATOR);

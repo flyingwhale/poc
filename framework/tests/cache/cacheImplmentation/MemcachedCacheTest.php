@@ -15,9 +15,12 @@ limitations under the License.
 */
 
 namespace unittest;
+use framework\src\cache\cacheimplementation\CacheParams;
+
 use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\MemcachedCache;
 use POC\cache\tagging\MysqlTagging;
+
 
 require_once 'framework/autoload.php';
 
@@ -25,7 +28,7 @@ class MemcachedCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new MemcachedCache(array(MemcachedCache::PARAM_TTL=>parent::TTL));
+    $this->cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>parent::TTL));
       }
 
 }

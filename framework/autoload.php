@@ -7,11 +7,13 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'framework\\src\\cache\\cacheimplementation\\cacheparams' => '/src/cache/cacheimplementation/CacheParams.php',
                 'logger' => '/src/utility/Logger.php',
+                'optionabletest' => '/tests/core/OptionAbleTest.php',
                 'pimple' => '/vendors/pimple/lib/Pimple.php',
                 'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',
                 'pimple\\tests\\service' => '/vendors/pimple/tests/Pimple/Tests/Service.php',
-                'poc\\cache\\cacheimplementation\\abstractpoccachespecific' => '/src/cache/cacheimplementation/AbstractPocCacheSpecific.php',
+                'poc\\cache\\cacheimplementation\\cache' => '/src/cache/cacheimplementation/Cache.php',
                 'poc\\cache\\cacheimplementation\\filecache' => '/src/cache/cacheimplementation/FileCache.php',
                 'poc\\cache\\cacheimplementation\\memcachedcache' => '/src/cache/cacheimplementation/MemcachedCache.php',
                 'poc\\cache\\cacheimplementation\\mongocache' => '/src/cache/cacheimplementation/MongoDBCache.php',
@@ -36,14 +38,16 @@ spl_autoload_register(
                 'poc\\cache\\tagging\\tagger' => '/src/cache/tagging/Tagger.php',
                 'poc\\core\\optionable' => '/src/core/OptionAble.php',
                 'poc\\core\\optionableinterface' => '/src/core/OptionAbleInterface.php',
-                'poc\\core\\optioner' => '/src/core/Optioner.php',
                 'poc\\handlers\\outputinterface' => '/src/handlers/OutputInterface.php',
                 'poc\\handlers\\serveroutput' => '/src/handlers/ServerOutput.php',
                 'poc\\poc' => '/src/Poc.php',
+                'poc\\pocoptions' => '/src/Poc.php',
+                'poc\\pocparams' => '/src/PocParams.php',
                 'unittest\\cachetest' => '/tests/cache/cacheImplmentation/CacheTest.php',
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',
+                'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\mysqltaggingtest' => '/tests/cache/tagging/MysqlTaggingTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
                 'unittest\\rediskacachete' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'

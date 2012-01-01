@@ -17,7 +17,7 @@ namespace POC\cache\cacheimplementation;
 use POC\core\Optioner;
 
 
-class MongoCache extends AbstractPocCacheSpecific
+class MongoCache extends Cache
 {
   private $isNotConnected;
   private $mongo;
@@ -51,7 +51,7 @@ class MongoCache extends AbstractPocCacheSpecific
   }
   }
 
-  public function cacheSpecificFetch($key)
+  public function fetch($key)
   {
     $value = '';
 
@@ -65,7 +65,7 @@ class MongoCache extends AbstractPocCacheSpecific
     return $value;
   }
 
-  public function cacheSpecificClearAll()
+  public function clearAll()
   {
     $keyValueCollection = $this->getCollection();
     $keyValueCollection->drop();

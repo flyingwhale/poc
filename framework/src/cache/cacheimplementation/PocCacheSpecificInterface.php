@@ -17,9 +17,9 @@ namespace POC\cache\cacheimplementation;
 
 interface PocCacheSpecificInterface {
 
-  public function cacheSpecificFetch($key);
+  public function fetch($key);
 
-  public function cacheSpecificClearAll();
+  public function clearAll();
 
   public function cacheSpecificClearItem($key);
 

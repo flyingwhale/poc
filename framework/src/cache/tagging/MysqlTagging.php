@@ -11,10 +11,10 @@ use POC\cache\tagging\driver\mySQL\TagsHasCachesModelManager;
 
 class MysqlTagging extends AbstractDb {
 
-  const DEFDB   = 'pob_tagging';
+  const DEFDB   = 'poc_tagging';
   const DEFHOST = 'localhost';
-  const DEFUSER = 'pob_test';
-  const DEFPASS = 'pob_test';
+  const DEFUSER = 'poc_test';
+  const DEFPASS = 'poc_test';
 
   private $db;
   private $host;

@@ -17,7 +17,7 @@ namespace POC\cache\cacheimplementation;
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
 
-class MemcachedCache extends AbstractPocCacheSpecific {
+class MemcachedCache extends Cache {
 
   private $memcache;
   private $compression=false;
@@ -36,11 +36,11 @@ class MemcachedCache extends AbstractPocCacheSpecific {
     $this->throwDbException();
   }
 
-  public function cacheSpecificFetch($key) {
+  public function fetch($key) {
     return $this->memcache->get($key);
   }
 
-  public function cacheSpecificClearAll() {
+  public function clearAll() {
     $this->memcache->flush();
   }
 

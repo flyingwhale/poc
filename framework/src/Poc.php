@@ -29,31 +29,29 @@ use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\OutputFilter;
 
-class Poc extends OptionAble
+class Poc extends OptionAble implements PocOptions
 {
-  const PARAM_CACHE = 'cache';
-  const PARAM_OUTPUTHANDLER = 'outputHandler';
-  const PARAM_HEADERMANIPULATOR = 'headerManipulator';
-  const PARAM_OUTPUTFILTER = 'outputFilter';
-  const PARAM_DEBUG = 'debug';
   
-    /*$this['cache'] = function (){return new FileCache();};
-    $this['outputHandler'] = function (){return new ServerOutput();};
-    $this['headerManipulator'] = function (){return new HeaderManipulator();};
-    $this['outputFilter'] = function (){return new OutputFilter();};
-    $this['debug'] = false;*/
-  
+  /**
+   * 
+   * @var OutputInterface
+   */
   static private $outputHandler = null;
   private $output = null;
   private $buffering = null;
   static private $debug = null;
   static private $start = null;
   static private $level = null;
-  static private $headerManipulator = null;
-  static private $outputFilter = null;
   /**
    * 
-   * @var AbstractPocCacheSpecific
+   * @var HeaderManipulator
+   */
+  static private $headerManipulator = null;
+  static private $outputFilter = null;
+  
+  /**
+   * 
+   * @var Cache
    */
   static private $cache = null;
   
@@ -64,8 +62,7 @@ class Poc extends OptionAble
   public static function pocCallbackShowOutput($buffer) {
     $return = $buffer;
     if (self::$debug) {
-       $return .= '<br>This page has not been cached because one  Evaluatebale is
-                                                                   Blacklisted.'
+       $return .= '<br>This page has not been cached because the page as it is Blacklisted.'
        .' <b> Was Generated within </b>'
        .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
     }
@@ -118,11 +115,11 @@ class Poc extends OptionAble
   }
 
   public function fillDefaults(){
-    $this[self::PARAM_CACHE] = function (){return new FileCache();};
-    $this[self::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
-    $this[self::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
-    $this[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
-    $this[self::PARAM_DEBUG] = false;
+    $this[PocParams::PARAM_CACHE] = function (){return new FileCache();};
+    $this[PocParams::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
+    $this[PocParams::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
+    $this[PocParams::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
+    $this[PocParams::PARAM_DEBUG] = false;
   }
   
   
@@ -138,12 +135,12 @@ class Poc extends OptionAble
     
     parent::__construct($options);
     $this->fillDefaults();
-    self::$cache = $this->getOption(self::PARAM_CACHE);
-    self::$outputHandler = $this->getOption(self::PARAM_OUTPUTHANDLER);
-    self::$headerManipulator = $this->getOption(self::PARAM_HEADERMANIPULATOR);
+    self::$cache = $this->getOption(PocParams::PARAM_CACHE);
+    self::$outputHandler = $this->getOption(PocParams::PARAM_OUTPUTHANDLER);
+    self::$headerManipulator = $this->getOption(PocParams::PARAM_HEADERMANIPULATOR);
     self::$headerManipulator->setOutputHandler(self::$outputHandler);
     self::$headerManipulator->setCache(self::$cache);
-    self::$outputFilter = $this->getOption(self::PARAM_OUTPUTFILTER);
+    self::$outputFilter = $this->getOption(PocParams::PARAM_OUTPUTFILTER);
     $this->setDebug($this->getOption('debug'));
   }
 
@@ -153,7 +150,7 @@ class Poc extends OptionAble
       self::$cache->cacheTagsInvalidation();
       if (self::$cache->getFilter()->evaluate()) {
         //TODO: hide the key
-        $this->output = self::$cache->cacheSpecificFetch(self::$cache->getHasher()->getKey());
+        $this->output = self::$cache->fetch(self::$cache->getHasher()->getKey());
         if ($this->output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
           self::$headerManipulator->fetchHeaders();
@@ -208,4 +205,7 @@ class Poc extends OptionAble
   public function destruct() {
     $this->__destruct();
   }
+}
+
+interface PocOptions {
 }

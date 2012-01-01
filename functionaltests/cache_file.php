@@ -13,17 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  use POC\cache\filtering\Hasher;
-  use POC\cache\filtering\Filter;
-  use POC\cache\filtering\OutputFilter;
   use POC\Poc;
-  use POC\handlers\ServerOutput;
-  use POC\cache\PocCache;
+  use POC\PocParams;
   use POC\cache\cacheimplementation\FileCache;
-  use POC\cache\tagging\MysqlTagging;
-  use POC\cache\header\HeaderManipulator;
+ 
 
   include ("../framework/autoload.php");
-  $poc  = new Poc(array(POC::PARAM_CACHE => new FileCache(), POC::PARAM_DEBUG => true));
+  $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(), PocParams::PARAM_DEBUG => true));
   $poc->start();
   include('lib/text_generator.php');

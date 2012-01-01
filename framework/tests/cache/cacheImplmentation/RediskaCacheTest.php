@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 namespace unittest;
+use framework\src\cache\cacheimplementation\CacheParams;
+
 use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\RediskaCache;
 use POC\cache\tagging\MysqlTagging;
@@ -24,6 +26,6 @@ require_once 'framework/autoload.php';
 class RediskaCacheTe extends CacheTest
 {
   function setUp_() {
-    $this->cache = new RediskaCache(array(RediskaCache::PARAM_TTL=>parent::TTL));
+    $this->cache = new RediskaCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
 }

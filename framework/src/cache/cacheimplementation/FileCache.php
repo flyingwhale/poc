@@ -17,7 +17,7 @@ namespace POC\cache\cacheimplementation;
 use POC\core\Optioner;
 use POC\cache\filtering\Filter;
 
-class FileCache extends AbstractPocCacheSpecific {
+class FileCache extends Cache {
 
   const PARAM_DIRECTORY = 'directory';
    
@@ -41,14 +41,14 @@ class FileCache extends AbstractPocCacheSpecific {
     $this->fileTtl = $this->getOption(self::PARAM_DIRECTORY).self::TTL_PREFIX;
   }
 
-  public function cacheSpecificFetch($key) {
+  public function fetch($key) {
     if($this->checkTtl($key)) {
       $handle = fopen($this->file.$key, "r");
       return fread($handle, filesize($this->file.$key));
     }
   }
 
-  public function cacheSpecificClearAll() {
+  public function clearAll() {
 
      array_map( "unlink", glob($this->getOption('directory').''.self::KEY_PREFIX.'*')  );
      array_map( "unlink", glob($this->getOption('directory').''.self::TTL_PREFIX.'*')  );

@@ -1,6 +1,8 @@
 <?php
 namespace POC\cache\header;
 
+use POC\cache\cacheimplementation\Cache;
+
 class HeaderManipulator
 {
   var $headersToPreserve;
@@ -9,6 +11,10 @@ class HeaderManipulator
   var $headersToRemove;
   var $eTag;
   var $outputHeader;
+  /**
+   * 
+   * @var Cache
+   */
   var $cache;
   var $isEtagGeneration;
 
@@ -85,9 +91,9 @@ class HeaderManipulator
   } 
   
   public function fetchHeaders(){
-    $this->headersToSend = unserialize($this->cache->cacheSpecificFetch(
+    $this->headersToSend = unserialize($this->cache->fetch(
         $this->cache->getHasher()->getKey().'h'));
-    $this->eTag = ($this->cache->cacheSpecificFetch(
+    $this->eTag = ($this->cache->fetch(
         $this->cache->getHasher()->getKey().'e'));
   }
   

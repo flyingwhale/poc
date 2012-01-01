@@ -37,37 +37,37 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
     } catch (Exception $e) {
       $this->asertTrue(false);
     }
-    $this->cache->cacheSpecificClearAll();
+    $this->cache->clearAll();
   }
 
   public function testCacheSpecificFetch() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $fetchedFromCache = $this->cache->cacheSpecificFetch($this->TESTKEY);
+    $fetchedFromCache = $this->cache->fetch($this->TESTKEY);
     $this->assertTrue($fetchedFromCache == self::TESTDATA);
     sleep(self::TTL+1);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) == '');
   }
 
   public function testCacheSpecificClearAll() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $this->cache->cacheSpecificClearAll();
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) !=
+    $this->cache->clearAll();
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) !=
                                                                 self::TESTDATA);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) == '');
   }
 
   public function testCacheSpecificClearItem() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
     $this->cache->cacheSpecificClearItem($this->TESTKEY);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) !=
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) !=
                                                                 self::TESTDATA);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) == '');
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) == '');
 
   }
 
   public function testCacheSpecificStore() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $this->assertTrue($this->cache->cacheSpecificFetch($this->TESTKEY) ==
+    $this->assertTrue($this->cache->fetch($this->TESTKEY) ==
                                                                 self::TESTDATA);
   }
 }

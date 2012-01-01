@@ -18,7 +18,7 @@ use POC\core\Optioner;
 
 require_once 'Rediska.php';
 
-class RediskaCache extends AbstractPocCacheSpecific {
+class RediskaCache extends Cache {
 
   private $rediska;
   private $isNotConnected;
@@ -42,7 +42,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
     $this->isNotConnected = 1;
   }
 
-  public function cacheSpecificFetch($key) {
+  public function fetch($key) {
     $keyObj = new \Rediska_Key($key);
     $value = $keyObj->getValue();
     if (is_array($value)){
@@ -51,7 +51,7 @@ class RediskaCache extends AbstractPocCacheSpecific {
     return $value;
   }
 
-  public function cacheSpecificClearAll() {
+  public function clearAll() {
     $this->rediska->flushdb();
   }
 

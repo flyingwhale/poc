@@ -15,6 +15,12 @@ limitations under the License.
 */
 
 namespace unittest;
+use framework\src\cache\cacheimplementation\CacheParams;
+
+use POC\PocParams;
+
+use POC\Pocparameters;
+
 use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
 
 use POC\cache\filtering\OutputFilter;
@@ -75,7 +81,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private function cacheBurner($testString = "testString", $cache) {
     $this->setOutput('');
     $output = new TestOutput();
-    $poc = new Poc(array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $output));
+    $poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $output));
     $poc->start();
 
     if($output->getOutputFlow()){
@@ -100,19 +106,19 @@ class PocTest extends \PHPUnit_Framework_TestCase
       
       $objects['file'] = function()
       {
-        return new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+        return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
       };
       
       $objects['memcached'] = function(){
-        return new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+        return new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
       };
       
       $objects['rediska'] = function(){
-        return new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+        return new RediskaCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
       };
       
       $objects['mongo'] = function(){
-        return new MongoCache(array(AbstractPocCacheSpecific::PARAM_TTL=>PocTest::TTL));
+        return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
       };
       
 /*$handlers[] = new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
@@ -122,9 +128,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
       */
       
       $handlers[] = 'file';
-      $handlers[] = 'memcached';
-      $handlers[] = 'rediska';
-      $handlers[] = 'mongo';
+      //$handlers[] = 'memcached';
+      //$handlers[] = 'rediska';
+      //$handlers[] = 'mongo';
       
       foreach($handlers as $cacheHandlerName) {
         $cacheHandler = $objects[$cacheHandlerName];

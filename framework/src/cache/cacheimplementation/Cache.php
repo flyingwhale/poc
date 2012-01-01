@@ -16,13 +16,15 @@ limitations under the License.
 
 namespace POC\cache\cacheimplementation;
 
+use framework\src\cache\cacheimplementation\CacheParams;
+
 use POC\cache\filtering\Filter;
 use POC\cache\filtering\Hasher;
 use POC\core\OptionAble;
 use POC\cache\tagging\MysqlTagging;
 use POC\cache\tagging\Tagger;
 
-abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSpecificInterface
+abstract class Cache extends OptionAble implements PocCacheSpecificInterface
 {
   /** This variable must be declared at the constructors of this class.*/
   protected $ttl;
@@ -32,8 +34,16 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 
   protected $defaultOptions = array();
 
+  /**
+   * 
+   * @var Hasher
+   */
   protected $hasher;
 
+  /**
+   * 
+   * @var Filter
+   */
   protected $filter;
 
   protected $cacheInvalidationTags = array();
@@ -42,32 +52,28 @@ abstract class AbstractPocCacheSpecific extends OptionAble implements PocCacheSp
 /*
  $hasher, $filter, $ttl, $tagDb
  * */
-  const PARAM_HASHER = 'hasher';
-  const PARAM_FILTER = 'filter';
-  const PARAM_TTL = 'ttl';
-  const PARAM_TAGDB = 'tagDb';
 
   function fillDefaults(){
-    $this[self::PARAM_HASHER] = function(){
+    $this[CacheParams::PARAM_HASHER] = function(){
       return new Hasher();
     };
     
-    $this[self::PARAM_FILTER] = function(){
+    $this[CacheParams::PARAM_FILTER] = function(){
       return new Filter();
     };
     
     $this['ttl'] = 5;
-    $this[self::PARAM_TAGDB] = function(){
+    $this[CacheParams::PARAM_TAGDB] = function(){
       return new MysqlTagging();
     };
   } 
    
   function __construct($options) {  
     parent::__construct($options);
-     $this->hasher = $this->getOption(self::PARAM_HASHER);
-     $this->ttl = $this->getOption(self::PARAM_TTL);
-     $this->tagDb = $this->getOption(self::PARAM_TAGDB);
-     $this->filter = $this->getOption(self::PARAM_FILTER);
+     $this->hasher = $this->getOption(CacheParams::PARAM_HASHER);
+     $this->ttl = $this->getOption(CacheParams::PARAM_TTL);
+     $this->tagDb = $this->getOption(CacheParams::PARAM_TAGDB);
+     $this->filter = $this->getOption(CacheParams::PARAM_FILTER);
 
   }
 

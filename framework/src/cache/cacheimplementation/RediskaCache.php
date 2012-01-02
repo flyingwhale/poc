@@ -25,7 +25,7 @@ class RediskaCache extends Cache {
 
   function fillDefaults(){
     parent::fillDefaults();
-    $this['servers'] = array('servers' =>
+    $this->optionAble['servers'] = array('servers' =>
                                      array(array('host'=>'localhost',
                                                               'port'=>'6379')));
   }
@@ -38,7 +38,7 @@ class RediskaCache extends Cache {
       throw new Exception(sprintf("%s class not exists", $className));
     }
 
-    $this->rediska = new $className($this->getOption('servers'));
+    $this->rediska = new $className($this->optionAble->getOption('servers'));
     $this->isNotConnected = 1;
   }
 

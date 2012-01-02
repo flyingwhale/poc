@@ -2,23 +2,32 @@
 
 namespace POC\core;
 
-abstract class OptionAble extends \Pimple implements OptionAbleInterface
+class OptionAble extends \Pimple
 {
   private $options = array();
+  private $optionAble = null;
   private $indexes = array();
 
-  function __construct($options){
-    $this->options = $options;  
-    $this->fillDefaults();
-    
-    if(is_array($options)){
-    //if(1){
-     $this->optionsMerge();
+  /**
+   * 
+   * @param array $options
+   * @param OptionAbleInterface $optios
+   *
+   * @throws \Exception
+   */
+  function __construct($options,$optionAble){
+    $this->options = $options;
+    $this->optionAble = $optionAble;
+  }
+  
+  public function start(){
+    $this->optionAble->fillDefaults();
+      if(is_array($this->options)){
+      $this->optionsMerge();
     } else {
-      throw new \Exception('Please add an array or nothing to the
+      throw new \Exception('Please add an array or null to the
           $options parameter');
     }
-    
   }
     
   function offsetSet($id, $value)

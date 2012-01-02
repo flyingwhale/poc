@@ -15,6 +15,8 @@ limitations under the License.
 */
 namespace POC;
 
+use POC\core\OptionAbleInterface;
+
 use POC\handlers\ServerOutput;
 
 use POC\cache\cacheimplementation\FileCache;
@@ -29,7 +31,7 @@ use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\OutputFilter;
 
-class Poc extends OptionAble implements PocOptions
+class Poc implements PocOptions, OptionAbleInterface
 {
   
   /**
@@ -55,6 +57,13 @@ class Poc extends OptionAble implements PocOptions
    */
   static private $cache = null;
   
+  /**
+   * 
+   * @var OptionAble
+   *  
+   */
+  private $optionAble;
+    
   private function setDebug($debug) {
     self::$debug = $debug;
   }
@@ -115,11 +124,11 @@ class Poc extends OptionAble implements PocOptions
   }
 
   public function fillDefaults(){
-    $this[PocParams::PARAM_CACHE] = function (){return new FileCache();};
-    $this[PocParams::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
-    $this[PocParams::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
-    $this[PocParams::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
-    $this[PocParams::PARAM_DEBUG] = false;
+    $this->optionAble[PocParams::PARAM_CACHE] = function (){return new FileCache();};
+    $this->optionAble[PocParams::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
+    $this->optionAble[PocParams::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
+    $this->optionAble[PocParams::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
+    $this->optionAble[PocParams::PARAM_DEBUG] = false;
   }
   
   
@@ -130,18 +139,15 @@ class Poc extends OptionAble implements PocOptions
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
-    $this->options = null;
-    $this->indexes = null;
-    
-    parent::__construct($options);
-    $this->fillDefaults();
-    self::$cache = $this->getOption(PocParams::PARAM_CACHE);
-    self::$outputHandler = $this->getOption(PocParams::PARAM_OUTPUTHANDLER);
-    self::$headerManipulator = $this->getOption(PocParams::PARAM_HEADERMANIPULATOR);
+    $this->optionAble = new OptionAble($options, $this);
+    $this->optionAble->start();
+    self::$cache = $this->optionAble->getOption(PocParams::PARAM_CACHE);
+    self::$outputHandler = $this->optionAble->getOption(PocParams::PARAM_OUTPUTHANDLER);
+    self::$headerManipulator = $this->optionAble->getOption(PocParams::PARAM_HEADERMANIPULATOR);
     self::$headerManipulator->setOutputHandler(self::$outputHandler);
     self::$headerManipulator->setCache(self::$cache);
-    self::$outputFilter = $this->getOption(PocParams::PARAM_OUTPUTFILTER);
-    $this->setDebug($this->getOption('debug'));
+    self::$outputFilter = $this->optionAble->getOption(PocParams::PARAM_OUTPUTFILTER);
+    $this->setDebug($this->optionAble->getOption('debug'));
   }
 
   private function fetchCache() {

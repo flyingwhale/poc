@@ -21,17 +21,21 @@ class MongoCache extends Cache
 {
   private $isNotConnected;
   private $mongo;
+  private $dbName;
+  private $collectionName;
   
   function fillDefaults(){
     parent::fillDefaults();
-    $this['db_name'] = 'poc';
-    $this['collection_name'] = 'key_value';
+    $this->optionAble['db_name'] = 'poc';
+    $this->optionAble['collection_name'] = 'key_value';
   }
   
   function __construct($options = array())
   {
     parent::__construct($options);
 
+    $this->dbName = $this->optionAble->getOption('db_name');
+    $this->collectionName = $this->optionAble->getOption('collection_name');
     $this->isNotConnected = 0;
 
     try
@@ -113,14 +117,14 @@ class MongoCache extends Cache
 
   private function getDb()
   {
-    $db = $this->mongo->selectDB($this->getOption('db_name'));
+    $db = $this->mongo->selectDB($this->dbName);
 
     return $db;
   }
 
   private function getCollection()
   {
-    $collection = $this->getDb()->selectCollection($this->getOption('collection_name'));
+    $collection = $this->getDb()->selectCollection($this->collectionName);
 
     return $collection;
   }

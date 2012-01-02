@@ -23,8 +23,9 @@ use POC\cache\filtering\Hasher;
 use POC\core\OptionAble;
 use POC\cache\tagging\MysqlTagging;
 use POC\cache\tagging\Tagger;
+use POC\core\OptionAbleInterface;
 
-abstract class Cache extends OptionAble implements PocCacheSpecificInterface
+abstract class Cache  implements PocCacheSpecificInterface, OptionAbleInterface
 {
   /** This variable must be declared at the constructors of this class.*/
   protected $ttl;
@@ -49,32 +50,35 @@ abstract class Cache extends OptionAble implements PocCacheSpecificInterface
   protected $cacheInvalidationTags = array();
 
   protected $cacheAddTags = array();
-/*
- $hasher, $filter, $ttl, $tagDb
- * */
+  
+  /**
+   * 
+   * @var OptionAble
+   */
+  protected $optionAble = null;
 
   function fillDefaults(){
-    $this[CacheParams::PARAM_HASHER] = function(){
+    $this->optionAble[CacheParams::PARAM_HASHER] = function(){
       return new Hasher();
     };
     
-    $this[CacheParams::PARAM_FILTER] = function(){
+    $this->optionAble[CacheParams::PARAM_FILTER] = function(){
       return new Filter();
     };
     
-    $this['ttl'] = 5;
-    $this[CacheParams::PARAM_TAGDB] = function(){
+    $this->optionAble['ttl'] = 5;
+    $this->optionAble[CacheParams::PARAM_TAGDB] = function(){
       return new MysqlTagging();
     };
   } 
    
-  function __construct($options) {  
-    parent::__construct($options);
-     $this->hasher = $this->getOption(CacheParams::PARAM_HASHER);
-     $this->ttl = $this->getOption(CacheParams::PARAM_TTL);
-     $this->tagDb = $this->getOption(CacheParams::PARAM_TAGDB);
-     $this->filter = $this->getOption(CacheParams::PARAM_FILTER);
-
+  function __construct($options) {
+    $this->optionAble = new OptionAble($options, $this); 
+    $this->optionAble->start();
+    $this->hasher = $this->optionAble->getOption(CacheParams::PARAM_HASHER);
+    $this->ttl = $this->optionAble->getOption(CacheParams::PARAM_TTL);
+    $this->tagDb = $this->optionAble->getOption(CacheParams::PARAM_TAGDB);
+    $this->filter = $this->optionAble->getOption(CacheParams::PARAM_FILTER);
   }
 
   /**

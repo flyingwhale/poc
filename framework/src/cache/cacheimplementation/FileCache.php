@@ -27,18 +27,19 @@ class FileCache extends Cache {
   private $file;
   private $fileTtl;
   private $tagDb;
+  private $directory;
  
   function fillDefaults(){
     parent::fillDefaults();
-    $this[self::PARAM_DIRECTORY] = '/tmp/';
+    $this->optionAble[self::PARAM_DIRECTORY] = '/tmp/';
   }
   
   function __construct($options = array()) {
     parent::__construct($options);
-
+    $this->file = $this->optionAble->getOption(self::PARAM_DIRECTORY).self::KEY_PREFIX;
+    $this->fileTtl = $this->optionAble->getOption(self::PARAM_DIRECTORY).self::TTL_PREFIX;
+    $this->directory = $this->optionAble->getOption(self::PARAM_DIRECTORY);
     $this->throwDbException();
-    $this->file = $this->getOption(self::PARAM_DIRECTORY).self::KEY_PREFIX;
-    $this->fileTtl = $this->getOption(self::PARAM_DIRECTORY).self::TTL_PREFIX;
   }
 
   public function fetch($key) {
@@ -50,8 +51,8 @@ class FileCache extends Cache {
 
   public function clearAll() {
 
-     array_map( "unlink", glob($this->getOption('directory').''.self::KEY_PREFIX.'*')  );
-     array_map( "unlink", glob($this->getOption('directory').''.self::TTL_PREFIX.'*')  );
+     array_map( "unlink", glob($this->directory.''.self::KEY_PREFIX.'*')  );
+     array_map( "unlink", glob($this->directory.''.self::TTL_PREFIX.'*')  );
 
    }
 
@@ -90,6 +91,6 @@ class FileCache extends Cache {
   }
 
   function  isCacheAvailable(){
-    return is_writable($this->getOption('directory'));
+    return is_writable($this->directory);
   }
 }

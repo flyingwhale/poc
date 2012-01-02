@@ -25,14 +25,14 @@ class MemcachedCache extends Cache {
   
   function fillDefaults(){    
     parent::fillDefaults();
-    $this['server'] = 'localhost';
-    $this['port'] = '11211';     
+    $this->optionAble['server'] = 'localhost';
+    $this->optionAble['port'] = '11211';     
   }
   
   function __construct($options = array()) {
     parent::__construct($options);
     $this->memcache = new \Memcache();
-    $this->isConnected = $this->memcache->connect($this->getOption('server'), $this->getOption('port'));
+    $this->isConnected = $this->memcache->connect($this->optionAble->getOption('server'), $this->optionAble->getOption('port'));
     $this->throwDbException();
   }
 

@@ -15,13 +15,13 @@ limitations under the License.
 */
 namespace POC\cache\cacheimplementation;
 
-interface PocCacheSpecificInterface {
+interface CacheInterface {
 
   public function fetch($key);
 
   public function clearAll();
 
-  public function cacheSpecificClearItem($key);
+  public function clearItem($key);
 
   public function cacheSpecificStore($key, $output);
 

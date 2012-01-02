@@ -31,7 +31,7 @@ use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\OutputFilter;
 
-class Poc implements PocOptions, OptionAbleInterface
+class Poc implements PocParams, OptionAbleInterface
 {
   
   /**
@@ -124,11 +124,11 @@ class Poc implements PocOptions, OptionAbleInterface
   }
 
   public function fillDefaults(){
-    $this->optionAble[PocParams::PARAM_CACHE] = function (){return new FileCache();};
-    $this->optionAble[PocParams::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
-    $this->optionAble[PocParams::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
-    $this->optionAble[PocParams::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
-    $this->optionAble[PocParams::PARAM_DEBUG] = false;
+    $this->optionAble[self::PARAM_CACHE] = function (){return new FileCache();};
+    $this->optionAble[self::PARAM_OUTPUTHANDLER] = function (){return new ServerOutput();};
+    $this->optionAble[self::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
+    $this->optionAble[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
+    $this->optionAble[self::PARAM_DEBUG] = false;
   }
   
   
@@ -141,23 +141,22 @@ class Poc implements PocOptions, OptionAbleInterface
   function __construct( $options = array() ) {
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
-    self::$cache = $this->optionAble->getOption(PocParams::PARAM_CACHE);
-    self::$outputHandler = $this->optionAble->getOption(PocParams::PARAM_OUTPUTHANDLER);
-    self::$headerManipulator = $this->optionAble->getOption(PocParams::PARAM_HEADERMANIPULATOR);
+    self::$cache = $this->optionAble->getOption(self::PARAM_CACHE);
+    self::$outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
+    self::$headerManipulator = $this->optionAble->getOption(self::PARAM_HEADERMANIPULATOR);
     self::$headerManipulator->setOutputHandler(self::$outputHandler);
     self::$headerManipulator->setCache(self::$cache);
-    self::$outputFilter = $this->optionAble->getOption(PocParams::PARAM_OUTPUTFILTER);
+    self::$outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
     $this->setDebug($this->optionAble->getOption('debug'));
   }
 
   private function fetchCache() {
    $started = 0;
-    //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
       self::$cache->cacheTagsInvalidation();
       if (self::$cache->getFilter()->evaluate()) {
         //TODO: hide the key
-        $this->output = self::$cache->fetch(self::$cache->getHasher()->getKey());
-        if ($this->output) {
+        $output = self::$cache->fetch(self::$cache->getHasher()->getKey());
+        if ($output) {
           self::$outputHandler->startBuffer('pocCallbackCache');
           self::$headerManipulator->fetchHeaders();
           //TODO:Replace it to it's appropriate place.(OutputHandler)
@@ -169,7 +168,7 @@ class Poc implements PocOptions, OptionAbleInterface
             self::$headerManipulator->removeHeaders($arr);
           }
           $started = 1;
-          echo($this->output);
+          echo($output);
           self::$outputHandler->stopBuffer();
         }
       }
@@ -183,12 +182,9 @@ class Poc implements PocOptions, OptionAbleInterface
 
     if (!$this->fetchCache()) {
       $startCache = true;
-    //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
         if (self::$cache->getFilter()->isBlacklisted()) {
           $startCache = false;
-    //    break;
         }
-    //}
       if ($startCache) {
         $this->buffering = true;
         self::$level = \ob_get_level();
@@ -202,8 +198,7 @@ class Poc implements PocOptions, OptionAbleInterface
   public function __destruct() {
     if (isset(self::$level)) {
        if (self::$level) {
-         //TODO:Replace it to it's appropriate place.(OutputHandler)
-         \ob_end_flush();
+       	 self::$outputHandler->obEnd();
        }
     }
   }
@@ -211,7 +206,4 @@ class Poc implements PocOptions, OptionAbleInterface
   public function destruct() {
     $this->__destruct();
   }
-}
-
-interface PocOptions {
 }

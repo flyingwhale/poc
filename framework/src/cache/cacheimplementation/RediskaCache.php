@@ -55,7 +55,7 @@ class RediskaCache extends Cache {
     $this->rediska->flushdb();
   }
 
-  public function cacheSpecificClearItem($key) {
+  public function clearItem($key) {
     $keyObj = new \Rediska_Key($key);
     $keyObj->delete();
   }

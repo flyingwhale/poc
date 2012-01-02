@@ -58,7 +58,7 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
 
   public function testCacheSpecificClearItem() {
     $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-    $this->cache->cacheSpecificClearItem($this->TESTKEY);
+    $this->cache->clearItem($this->TESTKEY);
     $this->assertTrue($this->cache->fetch($this->TESTKEY) !=
                                                                 self::TESTDATA);
     $this->assertTrue($this->cache->fetch($this->TESTKEY) == '');

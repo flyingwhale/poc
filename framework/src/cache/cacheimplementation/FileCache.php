@@ -56,7 +56,7 @@ class FileCache extends Cache {
 
    }
 
-  public function cacheSpecificClearItem($key) {
+  public function clearItem($key) {
     if($this->checkTtl($key)) {
       unlink($this->file.$key);
       unlink($this->fileTtl.$key);

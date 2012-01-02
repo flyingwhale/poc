@@ -76,7 +76,7 @@ class MongoCache extends Cache
 
   }
 
-  public function cacheSpecificClearItem($key)
+  public function clearItem($key)
   {
     $criteria = array(
 			'key'=> $key

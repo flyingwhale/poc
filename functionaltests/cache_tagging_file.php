@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 use POC\Poc;
-use POC\PocParams;
 use POC\cache\cacheimplementation\FileCache;
 use POC\cache\cacheimplementation\CacheParams;
 use POC\cache\tagging\MysqlTagging;
@@ -23,7 +22,7 @@ use POC\cache\tagging\MysqlTagging;
   
 include ("../framework/autoload.php");
 
-$cache = new FileCache(array(PocParams::PARAM_TAGDB => new MysqlTagging()));
+$cache = new FileCache(array(FileCache::PARAM_TAGDB => new MysqlTagging()));
 
 if(isset($_GET)){
   if(isset($_GET['delcache'])){
@@ -33,6 +32,6 @@ if(isset($_GET)){
   }
 }
 $cache->addCacheAddTags(true,"user,customer");
-$poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(), PocParams::PARAM_DEBUG => true));
+$poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true));
 $poc->start();
 include('lib/text_generator.php');

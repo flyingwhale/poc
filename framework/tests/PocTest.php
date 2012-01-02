@@ -120,17 +120,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $objects['mongo'] = function(){
         return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
       };
-      
-/*$handlers[] = new FileCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      //$handlers[] = new MemcachedCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      //$handlers[] = new RediskaCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      $handlers[] = new MongoCache(array(AbstractPocCacheSpecific::PARAM_TTL=>self::TTL));
-      */
-      
+            
       $handlers[] = 'file';
-      //$handlers[] = 'memcached';
-      //$handlers[] = 'rediska';
-      //$handlers[] = 'mongo';
+      $handlers[] = 'memcached';
+      $handlers[] = 'rediska';
+      $handlers[] = 'mongo';
       
       foreach($handlers as $cacheHandlerName) {
         $cacheHandler = $objects[$cacheHandlerName];

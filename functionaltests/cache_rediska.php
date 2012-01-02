@@ -15,11 +15,10 @@ limitations under the License.
 */
 
   use POC\Poc;
-  use POC\PocParams;
   use POC\cache\cacheimplementation\RediskaCache;
 
   include ('../framework/autoload.php');
-  $poc  = new Poc(array(PocParams::PARAM_CACHE => new RediskaCache() ,PocParams::PARAM_DEBUG => true));
+  $poc  = new Poc(array(Poc::PARAM_CACHE => new RediskaCache() ,Poc::PARAM_DEBUG => true));
   $poc->start();
   include('lib/text_generator.php');
 

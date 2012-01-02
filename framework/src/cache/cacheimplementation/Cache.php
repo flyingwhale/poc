@@ -25,7 +25,7 @@ use POC\cache\tagging\MysqlTagging;
 use POC\cache\tagging\Tagger;
 use POC\core\OptionAbleInterface;
 
-abstract class Cache  implements PocCacheSpecificInterface, OptionAbleInterface
+abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
 {
   /** This variable must be declared at the constructors of this class.*/
   protected $ttl;
@@ -58,16 +58,16 @@ abstract class Cache  implements PocCacheSpecificInterface, OptionAbleInterface
   protected $optionAble = null;
 
   function fillDefaults(){
-    $this->optionAble[CacheParams::PARAM_HASHER] = function(){
+    $this->optionAble[self::PARAM_HASHER] = function(){
       return new Hasher();
     };
     
-    $this->optionAble[CacheParams::PARAM_FILTER] = function(){
+    $this->optionAble[self::PARAM_FILTER] = function(){
       return new Filter();
     };
     
-    $this->optionAble['ttl'] = 5;
-    $this->optionAble[CacheParams::PARAM_TAGDB] = function(){
+    $this->optionAble[self::PARAM_TTL] = 5;
+    $this->optionAble[self::PARAM_TAGDB] = function(){
       return new MysqlTagging();
     };
   } 

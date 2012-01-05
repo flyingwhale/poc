@@ -31,6 +31,16 @@ use POC\cache\header\HeaderManipulator;
 
 use POC\cache\filtering\OutputFilter;
 
+/**
+ * This class contains the "Entry point" of the caching process. Therefor is is 
+ * a really crucial part of the framework. This class implements the 
+ * OptionAbleInterface, and the PocParams
+ * 
+ * 
+ * @package Poc
+ * @author Imre Toth
+ *
+ */
 class Poc implements PocParams, OptionAbleInterface
 {
   
@@ -39,11 +49,34 @@ class Poc implements PocParams, OptionAbleInterface
    * @var OutputInterface
    */
   static private $outputHandler = null;
+  
+  /**
+   * 
+   * @var String
+   */
   private $output = null;
-  private $buffering = null;
+
+  /**
+   * If its value is true teh debug mod is turned on.
+   * 
+   * @var boolean
+   */
   static private $debug = null;
-  static private $start = null;
+  
+  /**
+   * When the start function of the class executed sets its value by
+   * calling the microtime function.
+   * 
+   * @var unknown_type
+   */
+  static private $startTime = null;
+  
+  /**
+   * 
+   * @var unknown_type
+   */
   static private $level = null;
+  
   /**
    * 
    * @var HeaderManipulator
@@ -73,17 +106,15 @@ class Poc implements PocParams, OptionAbleInterface
     if (self::$debug) {
        $return .= '<br>This page has not been cached because the page as it is Blacklisted.'
        .' <b> Was Generated within </b>'
-       .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
+       .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
     self::$outputHandler->cacheCallback($return);
     return $buffer.$dbgMsg;
   }
 
   public static function pocCallbackGenerate($buffer) {
+  	//TODO: call the ob_get_level from the outputHandler.
     if (self::$level == \ob_get_level() - 1) {
-        //for ( $i=0; $i<sizeof(self::$caches); $i++ ) {
-        //TODO:fixit
-        //if(self::$caches[$i]->isOutputBlacklisted($buffer))
         if(self::$cache->getFilter()->evaluate())
         {
             $return = $buffer;
@@ -91,14 +122,12 @@ class Poc implements PocParams, OptionAbleInterface
             if (self::$debug) {
               $return .= '<br>This page has been '
               .'<b> generated within </b> in '
-              .'<b>'.((microtime() - self::$start) * 1000).
+              .'<b>'.((microtime() - self::$startTime) * 1000).
                                                            '</b> milliseconds.';
             }
             //TODO: add it to the OutputHandler.
             $headers = \headers_list();
-            //self::$caches[$i]->storeHeadersForPreservation($arr);
             self::$headerManipulator->storeHeadersForPreservation($headers);
-            //self::$caches[$i]->removeHeaders($arr);
             self::$headerManipulator->removeHeaders($headers);
             //TODO: Hide the $key
             self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
@@ -117,7 +146,7 @@ class Poc implements PocParams, OptionAbleInterface
     if (self::$debug) {
      $return .=  '<br>This page has been '
      .' <b> Fetched from the cache within </b>'
-     .'<b>'.((microtime() - self::$start) * 1000).'</b> milliseconds.';
+     .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
     self::$outputHandler->cacheCallback($return);
     return $return;
@@ -178,7 +207,7 @@ class Poc implements PocParams, OptionAbleInterface
 
   public function start() {
 
-    self::$start = microtime();
+    self::$startTime = microtime();
 
     if (!$this->fetchCache()) {
       $startCache = true;
@@ -186,7 +215,6 @@ class Poc implements PocParams, OptionAbleInterface
           $startCache = false;
         }
       if ($startCache) {
-        $this->buffering = true;
         self::$level = \ob_get_level();
         self::$outputHandler->startBuffer('pocCallbackGenerate');
       } else {

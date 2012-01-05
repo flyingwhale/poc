@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace POC\cache\filtering;
 
-class Hasher extends HasValue {
+class Hasher {
 
   private $distinguishVariables = array();
   private $key;
@@ -35,5 +35,9 @@ class Hasher extends HasValue {
   function toString(){
     return serialize($this->distinguishVariables);
   }
+  
+  public function toHash() {
+  	return md5(serialize($this->distinguishVariables));
+  } 
 
 }

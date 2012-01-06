@@ -196,7 +196,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   	}
   }
 
-  /*
+  
   public function testPocWithDifferentHashers(){
   	$handlers = array();
   	try{
@@ -204,17 +204,15 @@ class PocTest extends \PHPUnit_Framework_TestCase
   		$objects = new \Pimple();
   
   		$objects['c1'] = function(){
-  			$hasher->addDistinguishVariable("dist1");
-  		  return new MemcachedCache(array(CacheParams::PARAM_TTL=>2*PocTest::TTL));
+  		  return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
   		};
   
   		$objects['c2'] = function(){
   			$hasher = new Hasher();
   			$hasher->addDistinguishVariable("dist2");
-  			return new MemcachedCache(array(CacheParams::PARAM_TTL=>2*PocTest::TTL,
-  					                        CacheParams::PARAM_HASHER=>$hasher));
+  			return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL,
+  					                   CacheParams::PARAM_HASHER=>$hasher));
   		};
-  
   
   		$cacheHandler1 = $objects['c1'];
   		
@@ -231,11 +229,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
   		echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
   
   		$this->assertTrue($output1 != $output2);
-  	} catch (Exception $e) {
+  	} catch (\Exception $e) {
   		$this->assertTrue(false);
   	}
   }
-*/
+
   /*
   public function testPocrs(){
   	$handlers = array();

@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 namespace unittest;
+use POC\cache\filtering\OutputFilter;
+
 use framework\src\cache\cacheimplementation\CacheParams;
 
 use POC\PocParams;
@@ -22,8 +24,6 @@ use POC\PocParams;
 use POC\Pocparameters;
 
 use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
-
-use POC\cache\filtering\OutputFilter;
 
 use POC\cache\header\HeaderManipulator;
 
@@ -59,6 +59,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   const TTL = 1;
 
+  const NEEDLE = '/amiga1200/';
+  
   private $analizeThisOutput;
   private $analizeThisHeader;
 
@@ -78,30 +80,42 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->analizeThisHeader = $header;
   }
 
-  private function cacheBurner($testString = "testString", $cache) {
-    $this->setOutput('');
-    $output = new TestOutput();
-    $poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $output));
-    $poc->start();
-
-    if($output->getOutputFlow()){
-      echo $testString;
-      $poc->destruct();
-      $this->setHeader($output->getHeader());
-      $this->setOutput($output->getOutput());
-    } else {
-     $this->setHeader($output->getHeader());
-     $this->setOutput($output->getOutput());
-     $poc->destruct();
-    }
+  /**
+   * 
+   * @param Cache $cache
+   * @param string outputHandlertring
+   */
+  private function cacheBurner($cache, $testString = "testString") {
+  	$outputHandler = new TestOutput();
+  	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
+    $this->pocBurner($poc, $outputHandler, $testString);
   }
+  
+  /**
+   * 
+   * @param Poc $poc
+   * @param string $testString
+   */
+  private function pocBurner(Poc $poc,$outoutHandler, $testString = "testString") {
+  	$this->setOutput('');
+  	$poc->start();
+  
+  	if($outoutHandler->getOutputFlow()){
+  		echo $testString;
+  		$poc->destruct();
+  		$this->setHeader($outoutHandler->getHeader());
+  		$this->setOutput($outoutHandler->getOutput());
+  	} else {
+  		$this->setHeader($outoutHandler->getHeader());
+  		$this->setOutput($outoutHandler->getOutput());
+  		$poc->destruct();
+  	}
+  }
+  
 
-
+  
   public function testBasicPocFunctionality(){
-
-    $handlers = array();
     try{
-      
       $objects = new \Pimple();
       
       $objects['file'] = function()
@@ -128,22 +142,22 @@ class PocTest extends \PHPUnit_Framework_TestCase
       
       foreach($handlers as $cacheHandlerName) {
         $cacheHandler = $objects[$cacheHandlerName];
-        $this->cacheBurner("1",$cacheHandler);
+        $this->cacheBurner($cacheHandler,"1");
         sleep(self::TTL + 1);
 
-        $this->cacheBurner(self::TESTSTRING1,$cacheHandler);
+        $this->cacheBurner($cacheHandler,self::TESTSTRING1);
         $output1 = $this->getOutput();
         $this->assertTrue(!is_array($this->getHeader()));
 
         for ($i = 0; $i < 2; $i++){
-          $this->cacheBurner(self::TESTSTRING1.'Whatever',$cacheHandler);
+          $this->cacheBurner($cacheHandler,self::TESTSTRING1.'Whatever');
         }
 
-        $this->cacheBurner(self::TESTSTRING2,$cacheHandler);
+        $this->cacheBurner($cacheHandler,self::TESTSTRING2);
         $output2 = $this->getOutput();
         sleep(self::TTL + 1);
 
-        $this->cacheBurner(self::TESTSTRING3,$cacheHandler);
+        $this->cacheBurner($cacheHandler,self::TESTSTRING3);
         $output3 = $this->getOutput();
 
         echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
@@ -151,8 +165,132 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($output1 == $output2);
         $this->assertTrue($output1 != $output3);
       }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       $this->assertTrue(false);
     }
   }
+
+  public function testPocBlacklist(){
+  	try{
+    		
+  		$blackList = new Filter();
+  		$blackList->addBlacklistCondition(true);
+
+        $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100, 
+       		                                 CacheParams::PARAM_FILTER => $blackList));
+        
+        $this->cacheBurner($cacheHandler,"1");
+        
+        $this->cacheBurner($cacheHandler,self::TESTSTRING1);
+        $output1 = $this->getOutput();  
+  
+        $this->cacheBurner($cacheHandler,self::TESTSTRING2);
+        $output2 = $this->getOutput();
+  
+        echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+  
+        $this->assertTrue($output1 != $output2);
+
+  	} catch (\Exception $e) {
+  		$this->assertTrue(false);
+  	}
+  }
+
+  /*
+  public function testPocWithDifferentHashers(){
+  	$handlers = array();
+  	try{
+  
+  		$objects = new \Pimple();
+  
+  		$objects['c1'] = function(){
+  			$hasher->addDistinguishVariable("dist1");
+  		  return new MemcachedCache(array(CacheParams::PARAM_TTL=>2*PocTest::TTL));
+  		};
+  
+  		$objects['c2'] = function(){
+  			$hasher = new Hasher();
+  			$hasher->addDistinguishVariable("dist2");
+  			return new MemcachedCache(array(CacheParams::PARAM_TTL=>2*PocTest::TTL,
+  					                        CacheParams::PARAM_HASHER=>$hasher));
+  		};
+  
+  
+  		$cacheHandler1 = $objects['c1'];
+  		
+  		$this->cacheBurner($cacheHandler1,"1");
+  		sleep(2*self::TTL + 1);
+  
+  		$this->cacheBurner($cacheHandler1, self::TESTSTRING1);
+  		$output1 = $this->getOutput();
+  		$this->assertTrue(!is_array($this->getHeader()));
+  
+  		$cacheHandler2 = $objects['c2'];
+  		$this->cacheBurner($cacheHandler2,self::TESTSTRING2);
+  		$output2 = $this->getOutput();
+  		echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+  
+  		$this->assertTrue($output1 != $output2);
+  	} catch (Exception $e) {
+  		$this->assertTrue(false);
+  	}
+  }
+*/
+  /*
+  public function testPocrs(){
+  	$handlers = array();
+  	try{
+  
+  		$objects = new \Pimple();
+  		$outputHandler = new TestOutput();
+  		
+  		$cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100,
+  				CacheParams::PARAM_FILTER => $blackList));
+  		
+  
+  		$objects['p1'] = function(){
+  		  return new Poc(array(PocParams::PARAM_CACHE => $cache, 
+  		                       PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
+  		};
+  		
+  		$objects['p2'] = function(){
+  		  $outputFilter = new OutputFilter();
+  		  $outputFilter->addBlacklistCondition(PocTest::NEEDLE);
+  		  return new Poc(array(PocParams::PARAM_CACHE => $cache,
+  					           PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
+  			                   PocParams::PARAM_OUTPUTFILTER => $outputFilter));
+  			//  		  $this->pocBurner($poc, $outputHandler, $testString);
+  		};
+  		
+  
+  		$poc2 = $objects['p2'];
+  		$this->pocBurner($poc, $outputHandler, rand().PocTest::NEEDLE.rand());
+  		$output1 = $this->getOutput();
+  		
+  		$poc1 = $objects['p2'];
+  		$this->pocBurner($poc, $outputHandler, rand().PocTest::NEEDLE.rand());
+  		$output2 = $this->getOutput();
+
+  		$l = new \Logger(); $l->lwrite($output1);
+  		echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+  		
+  		$this->assertTrue($output1 != $output2);
+  		
+  	} catch (\Exception $e) {
+  		$this->assertTrue(false);
+  	}
+  }
+  
+  
+  
+  
+  /*
+   * 
+   	$outputHandler = new TestOutput();
+  	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
+    $this->pocBurner($poc, $outputHandler, $testString);
+
+   * */
+  
 }
+

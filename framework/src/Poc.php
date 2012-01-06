@@ -82,6 +82,11 @@ class Poc implements PocParams, OptionAbleInterface
    * @var HeaderManipulator
    */
   static private $headerManipulator = null;
+  
+  /**
+   * 
+   * @var OutputFilter
+   */
   static private $outputFilter = null;
   
   /**
@@ -115,15 +120,15 @@ class Poc implements PocParams, OptionAbleInterface
   public static function pocCallbackGenerate($buffer) {
   	//TODO: call the ob_get_level from the outputHandler.
     if (self::$level == \ob_get_level() - 1) {
-        if(self::$cache->getFilter()->evaluate())
-        {
-            $return = $buffer;
-
-            if (self::$debug) {
+      if(self::$cache->getFilter()->evaluate())
+      {
+      	 $return = $buffer;
+         if(!self::$outputFilter->isOutputBlacklisted($buffer)){
+           if (self::$debug) {
               $return .= '<br>This page has been '
               .'<b> generated within </b> in '
               .'<b>'.((microtime() - self::$startTime) * 1000).
-                                                           '</b> milliseconds.';
+                                                        '</b> milliseconds.';
             }
             //TODO: add it to the OutputHandler.
             $headers = \headers_list();
@@ -133,9 +138,9 @@ class Poc implements PocParams, OptionAbleInterface
             self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
             self::$headerManipulator->storeHeades($buffer);
             self::$cache->cacheAddTags();
-          }
+         }
 
-//      }
+      }
       self::$outputHandler->cacheCallback($return);
       return ($return);
     }

@@ -17,21 +17,23 @@ limitations under the License.
 namespace POC\cache\filtering;
 
 class OutputFilter{
-  public function storeOutputBlacklistCondition($condition){
+  
+  private $outputBlacklist = null;
+  
+  public function addBlacklistCondition($condition){
     $this->outputBlacklist[] = $condition;
   }
-  
-  //TODO:implement this functionality
-  //still not properly implemented feature..
+
   public function isOutputBlacklisted ($output){
     if( $this->outputBlacklist ){
       foreach( $this->outputBlacklist as $condititon ){
-        //$result = preg_match($condition, $output);
-        //if($result){
-        return false;
-        //}
+        $result = preg_match($condititon, $output);
+        if($result){
+          return true;
+        }
       }
     }
+    return false;
   }
   
 }

@@ -31,10 +31,6 @@ class Hasher {
   public function addDistinguishVariable($var){
     $this->distinguishVariables[] = $var;
   }
-
-  function toString(){
-    return serialize($this->distinguishVariables);
-  }
   
   public function toHash() {
   	return md5(serialize($this->distinguishVariables));

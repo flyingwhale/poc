@@ -114,7 +114,7 @@ class Poc implements PocParams, OptionAbleInterface
        .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
     self::$outputHandler->cacheCallback($return);
-    return $buffer.$dbgMsg;
+    return $buffer;
   }
 
   public static function pocCallbackGenerate($buffer) {

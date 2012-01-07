@@ -9,7 +9,6 @@ spl_autoload_register(
             $classes = array(
                 'framework\\src\\cache\\cacheimplementation\\cacheparams' => '/src/cache/cacheimplementation/CacheParams.php',
                 'logger' => '/src/utility/Logger.php',
-                'optionabletest' => '/tests/core/OptionAbleTest.php',
                 'pimple' => '/vendors/pimple/lib/Pimple.php',
                 'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',
                 'pimple\\tests\\service' => '/vendors/pimple/tests/Pimple/Tests/Service.php',
@@ -21,7 +20,6 @@ spl_autoload_register(
                 'poc\\cache\\cacheimplementation\\rediskacache' => '/src/cache/cacheimplementation/RediskaCache.php',
                 'poc\\cache\\filtering\\filter' => '/src/cache/filtering/Filter.php',
                 'poc\\cache\\filtering\\hasher' => '/src/cache/filtering/Hasher.php',
-                'poc\\cache\\filtering\\hasvalue' => '/src/cache/filtering/HasValue.php',
                 'poc\\cache\\filtering\\outputfilter' => '/src/cache/filtering/OutputFilter.php',
                 'poc\\cache\\filtering\\tohash' => '/src/cache/filtering/ToHash.php',
                 'poc\\cache\\filtering\\tostring' => '/src/cache/filtering/ToString.php',
@@ -46,8 +44,10 @@ spl_autoload_register(
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',
+                'unittest\\mockoptionableinterfaceclass' => '/tests/core/OptionAbleTest.php',
                 'unittest\\mongocachetest' => '/tests/cache/cacheImplmentation/MongoCacheTest.php',
                 'unittest\\mysqltaggingtest' => '/tests/cache/tagging/MysqlTaggingTest.php',
+                'unittest\\optionabletest' => '/tests/core/OptionAbleTest.php',
                 'unittest\\poctest' => '/tests/PocTest.php',
                 'unittest\\rediskacachete' => '/tests/cache/cacheImplmentation/RediskaCacheTest.php'
             );

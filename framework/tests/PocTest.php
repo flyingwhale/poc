@@ -48,9 +48,6 @@ const UNITTESTING = 1;
 \ob_start();
 
 
-//include_once '../autoload.php';
-include_once './framework/autoload.php';
-
 class PocTest extends \PHPUnit_Framework_TestCase
 {
   const TESTSTRING1 = 1;
@@ -280,7 +277,87 @@ class PocTest extends \PHPUnit_Framework_TestCase
   	}
   }
   
-  
+  function testTagging(){
+    
+    $hasher = new Hasher();
+    $hasher->addDistinguishVariable("distn1");
+    $cache1 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
+    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache1->addCacheAddTags(true, "user,customer,inventory");
+    
+    $cache1->clearAll();
+    
+    $hasher = new Hasher();
+    $hasher->addDistinguishVariable("distn2");
+    $cache2 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
+    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache2->addCacheAddTags(true, "inventory");
+    
+    $hasher = new Hasher();
+    $hasher->addDistinguishVariable("distn3");
+    $cache3 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
+    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache3->addCacheAddTags(true, "inventory");
+    $cache3->addCacheAddTags(true, "customer");
+     
+    $this->cacheBurner($cache1);
+    $this->cacheBurner($cache2);
+    $this->cacheBurner($cache3);
+
+    $cache1->addCacheInvalidationTags(true,'stuff');
+
+    $this->cacheBurner($cache1,"1");
+    $o1 = $this->getOutput();
+    $this->cacheBurner($cache2,"2");
+    $o2 = $this->getOutput();
+    $this->cacheBurner($cache3,"3");
+    $o3 = $this->getOutput();
+    
+    
+    $this->assertTrue($o1 == $o2);
+    $this->assertTrue($o1 == $o3);
+
+    $cache1->addCacheInvalidationTags(true,'user');
+    
+    $this->cacheBurner($cache1,"1");
+    $o1 = $this->getOutput();
+    $this->cacheBurner($cache2,"2");
+    $o2 = $this->getOutput();
+    $this->cacheBurner($cache3,"3");
+    $o3 = $this->getOutput();
+    
+    $this->assertTrue($o1 != $o3);
+    $this->assertTrue($o2 == $o3);
+    
+    $cache1->addCacheInvalidationTags(true,'customer');
+    
+    
+    $this->cacheBurner($cache1,"4");
+    $o1 = $this->getOutput();
+    $this->cacheBurner($cache2,"4");
+    $o2 = $this->getOutput();
+    $this->cacheBurner($cache3,"4");
+    $o3 = $this->getOutput();
+    
+    $this->assertTrue($o1 == $o3);
+    $this->assertTrue($o2 != $o3);
+    
+/* 
+$cache = new FileCache(array(FileCache::PARAM_TAGDB => new MysqlTagging()));
+
+if(isset($_GET)){
+  if(isset($_GET['delcache'])){
+    if($_GET['delcache']){
+        $cache->addCacheInvalidationTags(true,'user');
+    }
+  }
+}
+$cache->addCacheAddTags(true,"user,customer");
+$poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true));
+$poc->start();
+*/
+    
+  }
   
   
   /*

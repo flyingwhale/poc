@@ -211,7 +211,7 @@ class MysqlTagging extends AbstractDb {
     foreach ($invalidateCaches as $invalidateCache)
     {
       $this->cmm->deleteWithRelation($invalidateCache->hash);
-      $this->cache->cacheSpecificClearItem($invalidateCache->hash);
+      $this->cache->clearItem($invalidateCache->hash);
       
     }
   }

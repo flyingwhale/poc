@@ -18,14 +18,14 @@ namespace POC\cache\tagging;
 
 abstract class AbstractDb {
 
-  var $cache;
+  protected $cache;
 
-  function __construct()
+  public function __construct()
   {
     $this->flushOutdated();    
   }
-
-  function addCache($cache) {
+  
+  public function addCache($cache){
     $this->cache = $cache;
   }
 

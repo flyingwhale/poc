@@ -16,6 +16,7 @@ limitations under the License.
 
 namespace POC\core;
 
+
 class OptionAble extends \Pimple
 {
   private $options = array();
@@ -29,9 +30,9 @@ class OptionAble extends \Pimple
    *
    * @throws \Exception
    */
-  function __construct($options,$optionAble){
+  function __construct($options,$optionAbleInterface){
     $this->options = $options;
-    $this->optionAble = $optionAble;
+    $this->optionAble = $optionAbleInterface;
   }
   
   public function start(){
@@ -52,8 +53,9 @@ class OptionAble extends \Pimple
     
   public function getOption($key){
     if(isset($this->options[$key])){
-      return $this->options[$key];
+     $return = $this->options[$key];
     }
+    return $return;
   }
   
   /**

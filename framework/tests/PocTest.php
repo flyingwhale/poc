@@ -143,9 +143,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
       
       foreach($handlers as $cacheHandlerName) {
         $cacheHandler = $objects[$cacheHandlerName];
-        $this->cacheBurner($cacheHandler,"1");
-        sleep(self::TTL + 1);
-
+        
         $this->cacheBurner($cacheHandler,self::TESTSTRING1);
         $output1 = $this->getOutput();
         $this->assertTrue(!is_array($this->getHeader()));
@@ -215,9 +213,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
   		};
   
   		$cacheHandler1 = $objects['c1'];
-  		
-  		$this->cacheBurner($cacheHandler1,"1");
-  		sleep(2*self::TTL + 1);
   
   		$this->cacheBurner($cacheHandler1, self::TESTSTRING1);
   		$output1 = $this->getOutput();

@@ -50,25 +50,6 @@ class OptionAble extends \Pimple
     $this->indexes[] = $id;
   }
     
-  /**
- * @return the $options
- */
-  public function getOptions() {
-    return $this->options;
-  }
-
-   /**
-   * @return the $indexes
-   */
-  public function getIndexes() {
-    return $this->indexes;
-  }
-  
-
-  public function setOptions($options){
-    $this->options = $options;
-  }
-
   public function getOption($key){
     if(isset($this->options[$key])){
       return $this->options[$key];

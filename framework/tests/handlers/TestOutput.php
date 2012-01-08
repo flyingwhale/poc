@@ -16,12 +16,31 @@ limitations under the License.
 
 namespace unittest\handler;
 
+use POC\cache\header\HeaderManipulator;
+
+use POC\Poc;
+
 class TestOutput implements \POC\handlers\OutputInterface
 {
+  /**
+   * 
+   * @var HeaderManipulator
+   */
   private $header = null;
   private $outputFlow = 1;
   private $output = '';
+  
+  /**
+   * 
+   * @var Poc
+   */
+  //private $poc;
 
+/*  function __construct(Poc $poc)
+  {
+    $this->poc = $poc;
+  }*/
+  
   function getLevel() {
     return ob_get_level();
   }

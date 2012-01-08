@@ -47,27 +47,27 @@ class MockOptionAbleInterfaceClass implements OptionAbleInterface
  */
 class OptionAbleTest extends \PHPUnit_Framework_TestCase 
 {
-  
+ 
   function testStart()
   {
     
     $test = new MockOptionAbleInterfaceClass();;
 
     $this->assertTrue($test->optionAble->getOption('a') == 'A');
-//    $l = new \Logger();
-//    $l->lwrite(get_class($test->optionAble->getOption('poc')));
     $this->assertTrue(get_class($test->optionAble->getOption('poc')) == 'POC\Poc' );
      
     $test = new MockOptionAbleInterfaceClass(array('a'=>'b'));
     $this->assertTrue($test->optionAble->getOption('a') == 'b');
+    $exception = false;
     try{
-     // $test = new MockOptionAbleInterfaceClass('a');
+      $test = new MockOptionAbleInterfaceClass('a');
     }
     catch (\Exception $e){
-     // return;
+      $exception = true;
     }
-    
-    //$this->fail('An expected exception has not been raised.');
+    if(!$exception){
+      $this->fail('An expected exception has not been raised.');
+    }
   }
   
 }

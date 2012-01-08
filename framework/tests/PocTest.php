@@ -104,177 +104,165 @@ class PocTest extends \PHPUnit_Framework_TestCase
   		$this->setHeader($outputHandler->getHeader());
   		$this->setOutput($outputHandler->getOutput());
   	} else {
-  		$this->setHeader($outputHandler->getHeader());
-  		$this->setOutput($outputHandler->getOutput());
-  		$poc->destruct();
+  	    $this->setHeader($outputHandler->getHeader());
+        $this->setOutput($outputHandler->getOutput());
+        $poc->destruct();
+        if($outputHandler->getOutput()){
+          $this->setHeader($outputHandler->getHeader());
+          $this->setOutput($outputHandler->getOutput());
+        }
   	}
   }
   
 
   
   public function testBasicPocFunctionality(){
-    try{
-      $objects = new \Pimple();
+    $objects = new \Pimple();
+    
+    $objects['file'] = function()
+    {
+      return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+    };
+    
+    $objects['memcached'] = function(){
+      return new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+    };
+    
+    $objects['rediska'] = function(){
+      return new RediskaCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+    };
+    
+    $objects['mongo'] = function(){
+      return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+    };
+          
+    $handlers[] = 'file';
+    $handlers[] = 'memcached';
+    $handlers[] = 'rediska';
+    $handlers[] = 'mongo';
+    
+    foreach($handlers as $cacheHandlerName) {
+      $cacheHandler = $objects[$cacheHandlerName];
       
-      $objects['file'] = function()
-      {
-        return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
-      };
-      
-      $objects['memcached'] = function(){
-        return new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
-      };
-      
-      $objects['rediska'] = function(){
-        return new RediskaCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
-      };
-      
-      $objects['mongo'] = function(){
-        return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
-      };
-            
-      $handlers[] = 'file';
-      $handlers[] = 'memcached';
-      $handlers[] = 'rediska';
-      $handlers[] = 'mongo';
-      
-      foreach($handlers as $cacheHandlerName) {
-        $cacheHandler = $objects[$cacheHandlerName];
-        
-        $this->cacheBurner($cacheHandler,self::TESTSTRING1);
-        $output1 = $this->getOutput();
-        $this->assertTrue(!is_array($this->getHeader()));
+      $this->cacheBurner($cacheHandler,self::TESTSTRING1);
+      $output1 = $this->getOutput();
+      // This is because of the Rediska cache iplementation,
+      // Because ittransofms any serialized array to array when stores,
+      // so the resut what you will fetch form the cache an array will be
+      // to elinimate this behaviour some exta line has to be added to that
+      // class
+      $this->assertTrue(!is_array($this->getHeader()));
 
-        for ($i = 0; $i < 2; $i++){
-          $this->cacheBurner($cacheHandler,self::TESTSTRING1.'Whatever');
-        }
-
-        $this->cacheBurner($cacheHandler,self::TESTSTRING2);
-        $output2 = $this->getOutput();
-        sleep(self::TTL + 1);
-
-        $this->cacheBurner($cacheHandler,self::TESTSTRING3);
-        $output3 = $this->getOutput();
-
-        echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-
-        $this->assertTrue($output1 == $output2);
-        $this->assertTrue($output1 != $output3);
+      for ($i = 0; $i < 2; $i++){
+        $this->cacheBurner($cacheHandler,self::TESTSTRING1.'Whatever');
       }
-    } catch (\Exception $e) {
-      $this->assertTrue(false);
+
+      $this->cacheBurner($cacheHandler,self::TESTSTRING2);
+      $output2 = $this->getOutput();
+      sleep(self::TTL + 1);
+
+      $this->cacheBurner($cacheHandler,self::TESTSTRING3);
+      $output3 = $this->getOutput();
+
+      echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+
+      $l = new \Logger(); $l->lwrite("\n\n".'|'.$output1.'|'.$output2.'|'."\n\n");
+      
+      $this->assertTrue($output1 == $output2);
+      $this->assertTrue($output1 != $output3);
     }
   }
 
   public function testPocBlacklist(){
-  	try{
-    		
-  		$blackList = new Filter();
-  		$blackList->addBlacklistCondition(true);
+    $blackList = new Filter();
+    $blackList->addBlacklistCondition(true);
 
-        $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100, 
-       		                                 CacheParams::PARAM_FILTER => $blackList));
-        
-        $this->cacheBurner($cacheHandler,"1");
-        
-        $this->cacheBurner($cacheHandler,self::TESTSTRING1);
-        $output1 = $this->getOutput();  
-  
-        $this->cacheBurner($cacheHandler,self::TESTSTRING2);
-        $output2 = $this->getOutput();
-  
-        echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-  
-        $this->assertTrue($output1 != $output2);
+    $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100, 
+   		                                 CacheParams::PARAM_FILTER => $blackList));
+    
+    $this->cacheBurner($cacheHandler,"1");
+    
+    $this->cacheBurner($cacheHandler,self::TESTSTRING1);
+    $output1 = $this->getOutput();  
 
-  	} catch (\Exception $e) {
-  		$this->assertTrue(false);
-  	}
+    $this->cacheBurner($cacheHandler,self::TESTSTRING2);
+    $output2 = $this->getOutput();
+
+    echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+
+    $this->assertTrue($output1 != $output2);
+
   }
 
   
   public function testPocWithDifferentHashers(){
-  	try{
-  
-  		$objects = new \Pimple();
-  
-  		$objects['c1'] = function(){
-  		  return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
-  		};
-  
-  		$objects['c2'] = function(){
-  			$hasher = new Hasher();
-  			$hasher->addDistinguishVariable("dist2");
-  			return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL,
-  					                   CacheParams::PARAM_HASHER=>$hasher));
-  		};
-  
-  		$cacheHandler1 = $objects['c1'];
-  
-  		$this->cacheBurner($cacheHandler1, self::TESTSTRING1);
-  		$output1 = $this->getOutput();
-  		$this->assertTrue(!is_array($this->getHeader()));
-  
-  		$cacheHandler2 = $objects['c2'];
-  		$this->cacheBurner($cacheHandler2,self::TESTSTRING2);
-  		$output2 = $this->getOutput();
-  		echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-  
-  		$this->assertTrue($output1 != $output2);
-  	} catch (\Exception $e) {
-  		$this->assertTrue(false);
-  	}
+    $objects = new \Pimple();
+    
+    $objects['c1'] = function(){
+      return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+    };
+    
+    $objects['c2'] = function(){
+    	$hasher = new Hasher();
+    	$hasher->addDistinguishVariable("dist2");
+    	return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL,
+    			                   CacheParams::PARAM_HASHER=>$hasher));
+    };
+    
+    $cacheHandler1 = $objects['c1'];
+    
+    $this->cacheBurner($cacheHandler1, self::TESTSTRING1);
+    $output1 = $this->getOutput();
+    $this->assertTrue(!is_array($this->getHeader()));
+    
+    $cacheHandler2 = $objects['c2'];
+    $this->cacheBurner($cacheHandler2,self::TESTSTRING2);
+    $output2 = $this->getOutput();
+    echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+    
+    $this->assertTrue($output1 != $output2);
   }
 
   
   public function testOutputFilter(){
-  	try{
-  		$objects = new \Pimple();
-  		
-  		$objects['p1'] = function(){
-  		  $outputHandler = new TestOutput();
-  		  $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
-  		  $poc 
-  		  = 
-  		  new Poc(
-  		      array(PocParams::PARAM_CACHE => $cache, 
-  		                   PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
-  		  $return = array();
-  		  $return[] = $outputHandler;
-  		  $return[] = $poc;
-  		  return $return;
-  		};
-  		
-  		$objects['p2'] = function(){
-  	      $outputHandler = new TestOutput();
-  		  $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
-  		  $outputFilter = new OutputFilter();
-  		  $outputFilter->addBlacklistCondition(PocTest::NEEDLE);
-  		  $poc = new Poc(array(PocParams::PARAM_CACHE => $cache,
-  					           PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
-  			                   PocParams::PARAM_OUTPUTFILTER => $outputFilter));
-  		  $return = array();
-  		  $return[] = $outputHandler;
-  		  $return[] = $poc;
-  		  return $return;
-  		};
-  		
-  		$poc2 = $objects['p2'];
-        $this->pocBurner($poc2[1], $poc2[0], rand().PocTest::NEEDLE.rand());
-        $output1 = $this->getOutput();
-  		
-  		$poc1 = $objects['p1'];
-  		$this->pocBurner($poc1[1], $poc1[0], rand());
-  		$output2 = $this->getOutput();
-
-  		$l = new \Logger(); $l->lwrite($output1." ".$output2);
-  		echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-  		
-  		$this->assertTrue($output1 != $output2);
-  		
-  	} catch (\Exception $e) {
-  		$this->assertTrue(false);
-  	}
+    $objects = new \Pimple();
+    
+    $objects['p1'] = function(){
+      $outputHandler = new TestOutput();
+      $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
+      $poc = new Poc(array(PocParams::PARAM_CACHE => $cache, 
+                           PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
+      $return = array();
+      $return[] = $outputHandler;
+      $return[] = $poc;
+      return $return;
+    };
+    
+    $objects['p2'] = function(){
+        $outputHandler = new TestOutput();
+      $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
+      $outputFilter = new OutputFilter();
+      $outputFilter->addBlacklistCondition(PocTest::NEEDLE);
+      $poc = new Poc(array(PocParams::PARAM_CACHE => $cache,
+    			           PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
+    	                   PocParams::PARAM_OUTPUTFILTER => $outputFilter));
+      $return = array();
+      $return[] = $outputHandler;
+      $return[] = $poc;
+      return $return;
+    };
+    
+    $poc2 = $objects['p2'];
+      $this->pocBurner($poc2[1], $poc2[0], rand().PocTest::NEEDLE.rand());
+      $output1 = $this->getOutput();
+    
+    $poc1 = $objects['p1'];
+    $this->pocBurner($poc1[1], $poc1[0], rand());
+    $output2 = $this->getOutput();
+    
+    echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
+    
+    $this->assertTrue($output1 != $output2);
   }
   
   function testTagging(){
@@ -342,24 +330,44 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($o1 == $o3);
     $this->assertTrue($o2 != $o3);
     
-/* 
-$cache = new FileCache(array(FileCache::PARAM_TAGDB => new MysqlTagging()));
-
-if(isset($_GET)){
-  if(isset($_GET['delcache'])){
-    if($_GET['delcache']){
-        $cache->addCacheInvalidationTags(true,'user');
-    }
   }
-}
-$cache->addCacheAddTags(true,"user,customer");
-$poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true));
-$poc->start();
-*/
+
+  function testDegug(){
+    $outputHandler = new TestOutput();
+    $blackList = new Filter();
+    $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
+                                      CacheParams::PARAM_FILTER=>$blackList));
+
+    $cache->clearAll();
+    $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+                         Poc::PARAM_OUTPUTHANDLER => $outputHandler,
+                         Poc::PARAM_DEBUG => true));
+    
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+    $output1 = $this->getOutput();
+    
+    $this->assertContains('milliseconds', $output1);
+    $this->assertNotContains('cache', $output1);
+    
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+    $output2 = $this->getOutput();
+    $this->assertContains('cache', $output2);
+    
+    $blackList->addBlacklistCondition(true);
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+    $output3 = $this->getOutput();
+
+//    $l = new \Logger(); $l->lwrite('1:'.$output1." \n\n\n2:".$output2." \n\n\n3:$output3");
+    
+    $this->assertContains("Blacklisted", $output3);
+    
+    $this->assertTrue($output1 != $output2);
+    $this->assertTrue($output1 != $output3);
+    $this->assertTrue($output2 != $output3);
+
     
   }
-  
-  
+
   /*
    * 
    	$outputHandler = new TestOutput();

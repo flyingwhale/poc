@@ -107,14 +107,14 @@ class Poc implements PocParams, OptionAbleInterface
   }
   
   public static function pocCallbackShowOutput($buffer) {
-    $return = $buffer;
+    $ret = $buffer;
     if (self::$debug) {
-       $return .= '<br>This page has not been cached because the page as it is Blacklisted.'
-       .' <b> Was Generated within </b>'
-       .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
+       $ret = $ret.'<br>This page has not been cached because the page as it is Blacklisted.'.
+       ' <b> Was Generated within </b>'.
+       '<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->cacheCallback($return);
-    return $buffer;
+    self::$outputHandler->cacheCallback($ret);
+    return $ret;
   }
 
   public static function pocCallbackGenerate($buffer) {
@@ -142,8 +142,8 @@ class Poc implements PocParams, OptionAbleInterface
 
       }
       self::$outputHandler->cacheCallback($return);
-      return ($return);
     }
+    return ($return);
   }
 
   public static function pocCallbackCache($buffer) {

@@ -8,6 +8,7 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'framework\\src\\cache\\cacheimplementation\\cacheparams' => '/src/cache/cacheimplementation/CacheParams.php',
+                'framework\\src\\cache\\cacheinvaludationprotection\\ciaprotector' => '/src/cache/cacheInvalidationProtection/CIAProtector.php',
                 'logger' => '/src/utility/Logger.php',
                 'pimple' => '/vendors/pimple/lib/Pimple.php',
                 'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',

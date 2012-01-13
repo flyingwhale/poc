@@ -30,6 +30,7 @@ interface PocParams extends CacheParams{
   const PARAM_HEADERMANIPULATOR = 'headerManipulator';
   const PARAM_OUTPUTFILTER = 'outputFilter';
   const PARAM_DEBUG = 'debug';
+  const PARAM_CIA_PROTECTION = 'cia_protection';
 }
 
 ?>

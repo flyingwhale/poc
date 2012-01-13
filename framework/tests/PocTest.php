@@ -364,17 +364,30 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($output1 != $output2);
     $this->assertTrue($output1 != $output3);
     $this->assertTrue($output2 != $output3);
-
-    
   }
-
-  /*
-   * 
-   	$outputHandler = new TestOutput();
-  	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
-    $this->pocBurner($poc, $outputHandler, $testString);
-
-   * */
+  
+  function testHeaderMainpulation(){
+    
+    $outputHandler = new TestOutput();
+    $headerMainpultion = new HeaderManipulator();
+    $blackList = new Filter();
+    $cache = new MemcachedCache(array(MemcachedCache::PARAM_TTL=>PocTest::BIGTTL,
+    		                          MemcachedCache::PARAM_FILTER=>$blackList
+        ));
+    
+    $cache->clearAll();
+    $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+    		Poc::PARAM_OUTPUTHANDLER => $outputHandler,
+    		Poc::PARAM_DEBUG => true,
+            Poc::PARAM_HEADERMANIPULATOR=>$headerMainpultion  
+        ));
+    
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+    $output1 = $this->getOutput();
+    
+    $hl = \headers_list();
+    $l = new \Logger(); $l->lwrite(\serialize($hl));
+  }
   
 }
 

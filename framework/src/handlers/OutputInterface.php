@@ -24,4 +24,5 @@ interface OutputInterface
   function header($header);
   function obEnd();
   function cacheCallback($output);
+  function headersList();
 }

@@ -16,30 +16,49 @@ limitations under the License.
 
 namespace unittest\handler;
 
+use POC\core\OptionAble;
+
+use POC\core\OptionAbleInterface;
+
+use POC\Handlers\OutputInterface;
+
 use POC\cache\header\HeaderManipulator;
 
 use POC\Poc;
 
-class TestOutput implements \POC\handlers\OutputInterface
+class TestOutput implements OutputInterface, OptionAbleInterface
 {
+  const HEADER_BASIC = 'a:1:{i:0;s:35:"X-Powered-By: PHP/5.3.6-13ubuntu3.3";}';
+  
+  const PARAM_HEADER = 'header';
+  
+  /**
+   * Stores the serialized arrays of "fake" headers for testing reasons.
+   * 
+   * @var string
+   */
+  private $actHeader;
+
   /**
    * 
    * @var HeaderManipulator
    */
   private $header = null;
+  
   private $outputFlow = 1;
   private $output = '';
+  private $optionable;
   
-  /**
-   * 
-   * @var Poc
-   */
-  //private $poc;
-
-/*  function __construct(Poc $poc)
+  function fillDefaults(){
+    $this->optionable[self::PARAM_HEADER] = self::HEADER_BASIC;  
+  }
+  
+  function __construct($options = array())
   {
-    $this->poc = $poc;
-  }*/
+    $this->optionable = new OptionAble($options, $this);
+    $this->optionable->start();
+    $this->actHeader = $this->optionable->getOption(self::PARAM_HEADER);
+  }
   
   function getLevel() {
     return ob_get_level();
@@ -77,5 +96,14 @@ class TestOutput implements \POC\handlers\OutputInterface
   function getOutput(){
     return  $this->output;
   }
+  
+  /**
+   * 
+   * @return array The actual fake header list;
+   */
+  function headersList(){
+  	return \unserialize($this->actHeader);
+  }
+  
 }
 

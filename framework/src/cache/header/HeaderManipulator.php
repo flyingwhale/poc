@@ -16,23 +16,42 @@ limitations under the License.
 
 namespace POC\cache\header;
 
+use POC\Poc;
+
 use POC\cache\cacheimplementation\Cache;
 
 class HeaderManipulator
 {
   var $headersToPreserve;
+  
   var $headersToStore;
+  
   var $headersToSend;
+  
   var $headersToRemove;
+  
   var $eTag;
+  
   var $outputHeader;
+
   /**
    * 
    * @var Cache
    */
-  var $cache;
+  private  $cache;
+  
+  /**
+   * Poc
+   */
+  private $poc;
+  
   var $isEtagGeneration;
 
+/*  public function __construct(Poc $poc)
+  {
+    $this->poc = $poc;
+  }*/
+  
   public function setCache($cache){
     $this->cache = $cache;
   }

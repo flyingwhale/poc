@@ -41,4 +41,7 @@ class ServerOutput implements OutputInterface {
 
   }
 
+  function headersList(){
+    return \headers_list();
+  }
 }

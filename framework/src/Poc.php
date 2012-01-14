@@ -127,55 +127,85 @@ class Poc implements PocParams, OptionAbleInterface
   }
 
   public static function pocCallbackGenerate($buffer) {
-  	//TODO: call the ob_get_level from the outputHandler.
+    
+    
+    //TODO: call the ob_get_level from the outputHandler.
     if (self::$level == \ob_get_level() - 1) {
       if(self::$cache->getFilter()->evaluate())
       {
       	 $return = $buffer;
          if(!self::$outputFilter->isOutputBlacklisted($buffer)){
-           if (self::$debug) {
-              $return .= '<br>This page has been '
-              .'<b> generated within </b> in '
-              .'<b>'.((microtime() - self::$startTime) * 1000).
-                                                        '</b> milliseconds.';
-            }
-            //TODO: add it to the OutputHandler.
-            $headers = self::$outputHandler->headersList();
-            $headers = \headers_list();
-            self::$headerManipulator->storeHeadersForPreservation($headers);
-            self::$headerManipulator->removeHeaders($headers);
-            //TODO: Hide the $key
-            self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
-            self::$headerManipulator->storeHeades($buffer);
-            self::$cache->cacheAddTags();
-
-                $pageURL = 'http';
-                if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-                $pageURL .= "://";
-                if ($_SERVER["SERVER_PORT"] != "80") {
-                  $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-                } else {
-                  $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-                }
-
-                $l = new \Logger(); $l->lwrite('location:'.$pageUrl);
-
-            if(self::$ciaProtector){
-              //if($buffer){
-              if(1){
-                self::$ciaProtector->deleteSentinel();
-              } else {
-                //header('location:'.$pageUrl);
-                //exit;
+           if($buffer){             
+             if (self::$debug) {
+                $return .= '<br>This page has been '
+                .'<b> generated within </b> in '
+                .'<b>'.((microtime() - self::$startTime) * 1000).
+                                                          '</b> milliseconds.';
               }
+              $headers = self::$outputHandler->headersList();
+              self::$headerManipulator->storeHeadersForPreservation($headers);
+              self::$headerManipulator->removeHeaders($headers);
+              //TODO: Hide the $key
+              self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
+              self::$headerManipulator->storeHeades($headers);
+              self::$cache->cacheAddTags();
+              
+              if(self::$ciaProtector){
+                self::$ciaProtector->deleteSentinel();
+             }
            }
          }
 
+         
+         if($buffer) {
+         	$l = new \Logger(); $l->lwrite('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
+         	self::$outputHandler->cacheCallback($return);
+         	return ($return);
+         } else {
+         	$l = new \Logger(); $l->lwrite('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
+         	$l = new \Logger(); $l->lwrite('OUTSIDE');
+         	if(self::$ciaProtector){
+         		$l = new \Logger(); $l->lwrite('INSIDE');
+         		$pageURL = 'http';
+         		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+         			$pageURL .= "s";
+         		}
+         		$pageURL .= "://";
+         		if ($_SERVER["SERVER_PORT"] != "80") {
+         			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+         		} else {
+         			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+         		}
+         
+         		$l = new \Logger(); $l->lwrite('location:'.$pageURL);
+         		$l = new \Logger(); $l->lwrite('cache:'.self::fetchCache(false));
+         		$output='<HTML>
+         
+         		<HEAD>
+         		<META HTTP-EQUIV="refresh" content="5; url='.$pageURL.'">
+         		<TITLE>My new webpage</TITLE>
+         		</HEAD>
+         
+         		<BODY>
+         		PLEASE WAIT!
+         		</BODY>
+         
+         		</HTML>';
+         		//$l = new \Logger(); $l->lwrite('output:'.self::fetchCache());
+         
+         
+         		return $output;
+         		//header('location:'.$pageUrl);
+         		//exit;
+         		//return $this->fetchCache();
+         
+         	}
+         }
+          
+         
+         
       }
-      self::$outputHandler->cacheCallback($return);
-    }
-    if(isset($return)) {
-      return ($return);
+      
     }
   }
 
@@ -223,30 +253,32 @@ class Poc implements PocParams, OptionAbleInterface
     $this->setDebug($this->optionAble->getOption('debug'));
   }
 
-  private function fetchCache() {
-   $started = 0;
+  private function fetchCache($ob_start = true) {
+   $output = '';
       self::$cache->cacheTagsInvalidation();
       if (self::$cache->getFilter()->evaluate()) {
         //TODO: hide the key
         $output = self::$cache->fetch(self::$cache->getHasher()->getKey());
         if ($output) {
-          self::$outputHandler->startBuffer('pocCallbackCache');
-          self::$headerManipulator->fetchHeaders();
-          //TODO:Replace it to it's appropriate place.(OutputHandler)
-          $arr = headers_list();
-          if (self::$headerManipulator->headersToSend) {
-            foreach (self::$headerManipulator->headersToSend as $header) {
-              self::$outputHandler->header($header);
+          if($ob_start){
+            self::$outputHandler->startBuffer('pocCallbackCache');
+            self::$headerManipulator->fetchHeaders();
+            //TODO:Replace it to it's appropriate place.(OutputHandler)
+            $arr = headers_list();
+            if (self::$headerManipulator->headersToSend) {
+              foreach (self::$headerManipulator->headersToSend as $header) {
+                self::$outputHandler->header($header);
+              }
+              self::$headerManipulator->removeHeaders($arr);
             }
-            self::$headerManipulator->removeHeaders($arr);
+            $started = 1;
+            echo($output);
+            self::$outputHandler->stopBuffer();
           }
-          $started = 1;
-          echo($output);
-          self::$outputHandler->stopBuffer();
         }
       }
     //}
-    return $started;
+    return $output;
   }
 
   public function start() {

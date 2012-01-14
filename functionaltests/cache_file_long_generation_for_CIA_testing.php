@@ -20,4 +20,4 @@ limitations under the License.
   include ("../framework/autoload.php");
   $poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true, Poc::PARAM_TTL => 5));
   $poc->start();
-  include('lib/text_generator.php');
+  include('lib/text_generator_ten_seconds.php');

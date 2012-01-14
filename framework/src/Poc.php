@@ -156,56 +156,15 @@ class Poc implements PocParams, OptionAbleInterface
            }
          }
 
-         
-         if($buffer) {
-         	$l = new \Logger(); $l->lwrite('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
+          if($buffer) {
          	self::$outputHandler->cacheCallback($return);
          	return ($return);
-         } else {
-         	$l = new \Logger(); $l->lwrite('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
-         	$l = new \Logger(); $l->lwrite('OUTSIDE');
+          } else {
          	if(self::$ciaProtector){
-         		$l = new \Logger(); $l->lwrite('INSIDE');
-         		$pageURL = 'http';
-         		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-         			$pageURL .= "s";
-         		}
-         		$pageURL .= "://";
-         		if ($_SERVER["SERVER_PORT"] != "80") {
-         			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-         		} else {
-         			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-         		}
-         
-         		$l = new \Logger(); $l->lwrite('location:'.$pageURL);
-         		$l = new \Logger(); $l->lwrite('cache:'.self::fetchCache(false));
-         		$output='<HTML>
-         
-         		<HEAD>
-         		<META HTTP-EQUIV="refresh" content="5; url='.$pageURL.'">
-         		<TITLE>My new webpage</TITLE>
-         		</HEAD>
-         
-         		<BODY>
-         		PLEASE WAIT!
-         		</BODY>
-         
-         		</HTML>';
-         		//$l = new \Logger(); $l->lwrite('output:'.self::fetchCache());
-         
-         
-         		return $output;
-         		//header('location:'.$pageUrl);
-         		//exit;
-         		//return $this->fetchCache();
-         
-         	}
-         }
-          
-         
-         
+         		return self::$ciaProtector->getRefreshPage();
+          }
+        }
       }
-      
     }
   }
 
@@ -247,7 +206,8 @@ class Poc implements PocParams, OptionAbleInterface
     self::$outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
 
     if($this->optionAble->getOption(self::PARAM_CIA_PROTECTION)){
-      self::$ciaProtector = new CIAProtector(self::$cache);
+      self::$ciaProtector = new CIAProtector();
+      self::$ciaProtector->setCache(self::$cache);
     }
 
     $this->setDebug($this->optionAble->getOption('debug'));
@@ -303,7 +263,14 @@ class Poc implements PocParams, OptionAbleInterface
   private function checkCia (){
     if(self::$ciaProtector){
       if(self::$ciaProtector->getSentinel()){
+        $waitCounter = 0;
         while(self::$ciaProtector->getSentinel()){
+          $waitCounter++;
+          if($waitCounter == 2);
+          {
+            echo self::$ciaProtector->getRefreshPage();
+            self::$outputHandler->stopBuffer();
+          }
           sleep(1);
         }
         self::$outputHandler->startBuffer('pocCallbackGenerate');

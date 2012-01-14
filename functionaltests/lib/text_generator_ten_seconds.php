@@ -13,11 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  use POC\Poc;
-  use POC\cache\cacheimplementation\FileCache;
- 
+  include('LoremIpsum.class.php');
+  $generator = new LoremIpsumGenerator;
 
-  include ("../framework/autoload.php");
-  $poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true, Poc::PARAM_TTL => 5));
-  $poc->start();
-  include('lib/text_generator.php');
+  echo $generator->getContent(130, 'plain');
+  
+  sleep(10);
+?>
+ Consectetur adipiscing elit.
+

@@ -14,27 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace POC\cache\tagging;
+namespace Repositories;
 
-abstract class AbstractDb {
+use Doctrine\ORM\EntityRepository;
 
-  protected $cache;
+class TagRepository extends EntityRepository
+{
 
-  public function __construct()
-  {
-    $this->flushOutdated();    
-  }
-  
-  public function addCache($cache){
-    $this->cache = $cache;
-  }
+    public function orphanRemoval ()
+    {
+        $queryString = 'DELETE t FROM tags  t LEFT JOIN tags_has_caches thc  ON (t.id = thc.tag_id) WHERE thc.tag_id IS NULL';
+        
+        $conn = $this->_em->getConnection();
+        $rowsAffected = $conn->executeUpdate($queryString);
+        
+        return $rowsAffected;
+    }
 
-  public abstract function addCacheToTags($tags,$key, $expires);
-  public abstract function flushOutdated();
-  public abstract function tagInvalidate($tags);
-  
-  protected abstract function createDb();
-  protected abstract function createTables();
-  protected abstract function initDbStructure();
-  
 }
+?>

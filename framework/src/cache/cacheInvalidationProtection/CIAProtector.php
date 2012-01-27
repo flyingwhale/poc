@@ -10,7 +10,7 @@ use POC\cache\tagging\driver\mysql\model\Cache;
 class CIAProtector implements OptionAbleInterface
 {
   const KEY_POSTFIX = "ci";
-  const PARAM_CLIENTUNIQUE = 'clinetUnique';
+  const PARAM_CLIENT_UNIQUE = 'clinetUnique';
   /**
    * 
    * @var OptionAble
@@ -26,9 +26,10 @@ class CIAProtector implements OptionAbleInterface
    private $clientUnique;
    
    function fillDefaults (){
-     $this->optionAble[self::PARAM_CLIENTUNIQUE] = function(){
-       return md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].$_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
-     };
+     /*$this->optionAble[self::PARAM_CLIENT_UNIQUE] = function(){
+       return md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].
+                  $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
+     };*/
    }
    
   /**
@@ -38,7 +39,7 @@ class CIAProtector implements OptionAbleInterface
   function __construct ($options = array())
   {
     $this->optionAble = new OptionAble($options, $this);
-    $this->clientUnique = $this->optionAble->getOption(self::PARAM_CLIENTUNIQUE);
+    //$this->clientUnique = $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
   }
   
   /**
@@ -55,7 +56,9 @@ class CIAProtector implements OptionAbleInterface
   
   public function getSentinel(){
     $sentiel = $this->cache->fetch($this->getKey());
-    
+	if(!$sentiel){
+	  $sentiel = 0;
+	}    
     if($this->cache->fetch($sentiel)){
       $this->setSentinel($sentiel + 1);
     }
@@ -72,15 +75,25 @@ class CIAProtector implements OptionAbleInterface
   }
   
   public function getRefreshPage(){
+  	$servername = '';
+  	if (isset($_SERVER["SERVER_NAME"]))
+  	{
+  		$servername = $_SERVER["SERVER_NAME"];
+  	}
     $pageURL = 'http';
     if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
     	$pageURL .= "s";
     }
     $pageURL .= "://";
-    if ($_SERVER["SERVER_PORT"] != "80") {
-    	$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+    $ru = "";
+    if(isset($_SERVER["REQUEST_URI"])){
+      $ru = $_SERVER["REQUEST_URI"];
+    }
+
+    if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+    	$pageURL .= $servername.":".$_SERVER["SERVER_PORT"].$ru;
     } else {
-    	$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+    	$pageURL .= $servername.$ru;
     }
      
     return '<HTML> 

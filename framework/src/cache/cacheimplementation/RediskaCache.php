@@ -14,6 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This class utilizes the REDIS key-value database for caching.
+ * 
+ * @author Imre Toth
+ *
+ */
+
 namespace POC\cache\cacheimplementation;
 use POC\core\Optioner;
 

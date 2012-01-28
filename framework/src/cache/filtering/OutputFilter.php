@@ -13,6 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/**
+ * This class is a really hady feature in some cases, if you cannot define
+ * some states of your application that shall not be cached by the black list
+ * feature of the Filter class. You have a chance to define your "blacklist"
+ * conditions by analizing the output.
+ * 
+ * @author Imre Toth
+ *
+ */
 
 namespace POC\cache\filtering;
 

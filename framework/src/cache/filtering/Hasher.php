@@ -13,7 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+/**
+ * This calss gives your calsses a unique identifier, here you can define what
+ * factor will define the different states of your application, in other words
+ * The cache key will be generated out of this variables.
+ * 
+ * @author Imre Toth
+ *
+ */
 namespace POC\cache\filtering;
 
 class Hasher {

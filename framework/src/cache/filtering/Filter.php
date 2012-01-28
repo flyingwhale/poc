@@ -14,10 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This calss helps you define the conditions for deciding wehter a page shall
+ * be cached or not.
+ * This class contains the whitelis / blacklist conditons. and evaluate those.
+ * 
+ * @author Imre Toth
+ *
+ */
+
 namespace POC\cache\filtering;
 
 class Filter{
-
 
   private $blacklistConditions = array();
   private $whitelistConditions = array();

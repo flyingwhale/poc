@@ -13,7 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+/**
+ * This class contains some header related functionality. By utilizing its 
+ * capabilities you will be able to manipulate and store the the header.
+ *  
+ * @author Imre Toth
+ *
+ */
 namespace POC\cache\header;
 
 use POC\Poc;

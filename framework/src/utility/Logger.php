@@ -1,7 +1,13 @@
 <?php
 /**
+ * This class is used in the development of the framework only. Sometimes it
+ * is nice if you cand print something to the output, when you work with this
+ * framework it is not allways possible because the output is held back by the 
+ * ob_* functions od the PHP also when you are in that phase you cannot use var_dump
+ * as well. 
+ * 
  * Downloaded from http://www.redips.net/php/write-to-log-file/
- *
+ * 
  * Logger class:
  * - contains lfile, lopen and lwrite methods
  * - lfile sets path and name of log file

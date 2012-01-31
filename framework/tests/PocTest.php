@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 namespace unittest;
+use framework\src\cache\cacheInvaludationProtection\CIAProtector;
+
 use POC\cache\filtering\OutputFilter;
 
 use framework\src\cache\cacheimplementation\CacheParams;
@@ -115,7 +117,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
   
 
-  
   public function testBasicPocFunctionality(){
     $objects = new \Pimple();
     
@@ -386,7 +387,31 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $output1 = $this->getOutput();
     
     $hl = \headers_list();
-    $l = new \Logger(); $l->lwrite(\serialize($hl));
+    //$l = new \Logger(); $l->lwrite(\serialize($hl));
+  }
+  
+  function testCIAProtection(){
+  	$outputHandler = new TestOutput();
+  	$cache = new FileCache();
+  	$cia = new CIAProtector();
+    $cia->setCache($cache);
+    $cia->setSentinel(100);
+
+    $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+    		Poc::PARAM_OUTPUTHANDLER => $outputHandler,));
+    $poc->start();
+
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+    echo $this->getOutput();
+    var_dump($this->getOutput());
+    
+    $l = new \Logger(); $l->lwrite($cia->getRefreshPage());
+    $l = new \Logger(); $l->lwrite($this->getOutput());
+    $l = new \Logger(); $l->lwrite("AAA");
+    
+    
+    $this->assertTrue($this->getOutput() == $cia->getRefreshPage());
+
   }
   
 }

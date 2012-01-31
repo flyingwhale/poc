@@ -13,6 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/**
+ * This Interface Defines the set of functions that has to be defined by the
+ * classes that handles the output interface for the POC. This is necesarry to 
+ * have for proper unittests becausse the output has to be handled differently 
+ * in the CLI environment compared to a Server Environment.
+ * 
+ * @author Imre Toth
+ *
+ */
 
 namespace POC\Handlers;
 
@@ -23,6 +32,7 @@ interface OutputInterface
   function stopBuffer();
   function header($header);
   function obEnd();
-  function cacheCallback($output);
+  function ObPrintCallback($output);
   function headersList();
+  function printOutputCallback($output);
 }

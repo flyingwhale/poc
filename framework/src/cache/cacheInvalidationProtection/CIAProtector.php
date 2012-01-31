@@ -43,11 +43,24 @@ class CIAProtector implements OptionAbleInterface
    * 
    * @var \POC\cache\cacheimplementation\Cache
    */
-   private $cache = null;
+  private $cache = null;
 
-   private $clientUnique;
+  private $clientUnique;
    
-   function fillDefaults (){
+  /**
+   * 
+   * @var \POC\Handlers\OutputInterface
+   */
+  private $outputHandler;
+   
+  /**
+   * @param POC\Handlers\OutputInterface $outputHandler
+   */
+  public function setOutputHandler($outputHandler) {
+    $this->outputHandler = $outputHandler;
+  }
+
+  function fillDefaults (){
      /*$this->optionAble[self::PARAM_CLIENT_UNIQUE] = function(){
        return md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].
                   $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
@@ -117,7 +130,7 @@ class CIAProtector implements OptionAbleInterface
     } else {
     	$pageURL .= $servername.$ru;
     }
-     
+    
     return '<HTML> 
     <HEAD>
     <META HTTP-EQUIV="refresh" content="1; url='.$pageURL.'">
@@ -127,6 +140,24 @@ class CIAProtector implements OptionAbleInterface
     PLEASE WAIT!
     </BODY> 
     </HTML>';  
+  }
+  
+  public function consult(){
+    if($this->getSentinel()){
+      $waitCounter = 0;
+      while($this->getSentinel()){
+        $waitCounter++;
+        if($waitCounter == 2);
+        {
+          $this->outputHandler->ObPrintCallback($this->getRefreshPage());
+          echo($this->getRefreshPage());
+          $this->outputHandler->stopBuffer();
+        }
+        sleep(1);
+      }
+      $this->outputHandler->startBuffer('pocCallbackGenerate');
+    }
+    $this->setSentinel();    
   }
 }
 

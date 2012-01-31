@@ -13,7 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+/**
+ * This class is an implementation of the Outoput Interface. This is used in a 
+ * server Environment to handle the output.
+ * 
+ * @author Imre Toth
+ *
+ */
 namespace POC\handlers;
 class ServerOutput implements OutputInterface {
 
@@ -37,11 +43,14 @@ class ServerOutput implements OutputInterface {
     \ob_end_flush();
   }
 
-  function cacheCallback($output){
+  function ObPrintCallback($output){
 
   }
 
   function headersList(){
     return \headers_list();
+  }
+  function printOutputCallback($output){
+    echo $output;
   }
 }

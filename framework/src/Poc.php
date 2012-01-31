@@ -13,6 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/**
+ * This is tha main class this of the system this is the conductor of the 
+ * system every functionalitys root if we inspect the flow of the application.
+ * 
+ * @author Imre Toth 
+ * 
+ */
 namespace POC;
 
 use framework\src\cache\cacheInvaludationProtection\CIAProtector;
@@ -108,7 +115,7 @@ class Poc implements PocParams, OptionAbleInterface
    *
    * @var CIAProtector
    */
-  static private $ciaProtector = null;
+  static private $ciaProtector;
 
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -122,7 +129,7 @@ class Poc implements PocParams, OptionAbleInterface
        ' <b> Was Generated within </b>'.
        '<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->cacheCallback($ret);
+    self::$outputHandler->ObPrintCallback($ret);
     return $ret;
   }
 
@@ -157,7 +164,7 @@ class Poc implements PocParams, OptionAbleInterface
          }
 
           if($buffer) {
-         	self::$outputHandler->cacheCallback($return);
+         	self::$outputHandler->ObPrintCallback($return);
          	return ($return);
           } else {
          	if(self::$ciaProtector){
@@ -175,7 +182,7 @@ class Poc implements PocParams, OptionAbleInterface
      .' <b> Fetched from the cache within </b>'
      .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->cacheCallback($return);
+    self::$outputHandler->ObPrintCallback($return);
     return $return;
   }
 
@@ -185,7 +192,7 @@ class Poc implements PocParams, OptionAbleInterface
     $this->optionAble[self::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
     $this->optionAble[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
     $this->optionAble[self::PARAM_DEBUG] = false;
-    $this->optionAble[self::PARAM_CIA_PROTECTION] = true;
+    $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new CIAProtector();};
   }
 
 
@@ -204,11 +211,9 @@ class Poc implements PocParams, OptionAbleInterface
     self::$headerManipulator->setOutputHandler(self::$outputHandler);
     self::$headerManipulator->setCache(self::$cache);
     self::$outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
-
-    if($this->optionAble->getOption(self::PARAM_CIA_PROTECTION)){
-      self::$ciaProtector = new CIAProtector();
-      self::$ciaProtector->setCache(self::$cache);
-    }
+    self::$ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
+    self::$ciaProtector->setCache(self::$cache);
+    self::$ciaProtector->setOutputHandler(self::$outputHandler);
 
     $this->setDebug($this->optionAble->getOption('debug'));
   }
@@ -262,22 +267,10 @@ class Poc implements PocParams, OptionAbleInterface
 
   private function checkCia (){
     if(self::$ciaProtector){
-      if(self::$ciaProtector->getSentinel()){
-        $waitCounter = 0;
-        while(self::$ciaProtector->getSentinel()){
-          $waitCounter++;
-          if($waitCounter == 2);
-          {
-            echo self::$ciaProtector->getRefreshPage();
-            self::$outputHandler->stopBuffer();
-          }
-          sleep(1);
-        }
-        self::$outputHandler->startBuffer('pocCallbackGenerate');
-      }
-      self::$ciaProtector->setSentinel();
+      self::$ciaProtector->consult();  
     }
   }
+  
   public function __destruct() {
     if (isset(self::$level)) {
        if (self::$level) {

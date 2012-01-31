@@ -58,9 +58,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   const TTL = 1;
   const BIGTTL = 100;
-  
+
   const NEEDLE = '/amiga1200/';
-  
+
   private $analizeThisOutput;
   private $analizeThisHeader;
 
@@ -81,7 +81,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   /**
-   * 
+   *
    * @param Cache $cache
    * @param string outputHandlertring
    */
@@ -90,9 +90,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
   	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
     $this->pocBurner($poc, $outputHandler, $testString);
   }
-  
+
   /**
-   * 
+   *
    * @param Poc $poc
    * @param string $testString
    */
@@ -115,36 +115,36 @@ class PocTest extends \PHPUnit_Framework_TestCase
         }
   	}
   }
-  
+
 
   public function testBasicPocFunctionality(){
     $objects = new \Pimple();
-    
+
     $objects['file'] = function()
     {
       return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
-    
+
     $objects['memcached'] = function(){
       return new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
-    
+
     $objects['rediska'] = function(){
       return new RediskaCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
-    
+
     $objects['mongo'] = function(){
       return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
-          
+
     $handlers[] = 'file';
     $handlers[] = 'memcached';
     $handlers[] = 'rediska';
     $handlers[] = 'mongo';
-    
+
     foreach($handlers as $cacheHandlerName) {
       $cacheHandler = $objects[$cacheHandlerName];
-      
+
       $this->cacheBurner($cacheHandler,self::TESTSTRING1);
       $output1 = $this->getOutput();
       // This is because of the Rediska cache iplementation,
@@ -168,7 +168,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
       echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
 
       $l = new \Logger(); $l->lwrite("\n\n".'|'.$output1.'|'.$output2.'|'."\n\n");
-      
+
       $this->assertTrue($output1 == $output2);
       $this->assertTrue($output1 != $output3);
     }
@@ -178,13 +178,13 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $blackList = new Filter();
     $blackList->addBlacklistCondition(true);
 
-    $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100, 
+    $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100,
    		                                 CacheParams::PARAM_FILTER => $blackList));
-    
+
     $this->cacheBurner($cacheHandler,"1");
-    
+
     $this->cacheBurner($cacheHandler,self::TESTSTRING1);
-    $output1 = $this->getOutput();  
+    $output1 = $this->getOutput();
 
     $this->cacheBurner($cacheHandler,self::TESTSTRING2);
     $output2 = $this->getOutput();
@@ -195,50 +195,50 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
   }
 
-  
+
   public function testPocWithDifferentHashers(){
     $objects = new \Pimple();
-    
+
     $objects['c1'] = function(){
       return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
-    
+
     $objects['c2'] = function(){
     	$hasher = new Hasher();
     	$hasher->addDistinguishVariable("dist2");
     	return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL,
     			                   CacheParams::PARAM_HASHER=>$hasher));
     };
-    
+
     $cacheHandler1 = $objects['c1'];
-    
+
     $this->cacheBurner($cacheHandler1, self::TESTSTRING1);
     $output1 = $this->getOutput();
     $this->assertTrue(!is_array($this->getHeader()));
-    
+
     $cacheHandler2 = $objects['c2'];
     $this->cacheBurner($cacheHandler2,self::TESTSTRING2);
     $output2 = $this->getOutput();
     echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-    
+
     $this->assertTrue($output1 != $output2);
   }
 
-  
+
   public function testOutputFilter(){
     $objects = new \Pimple();
-    
+
     $objects['p1'] = function(){
       $outputHandler = new TestOutput();
       $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
-      $poc = new Poc(array(PocParams::PARAM_CACHE => $cache, 
+      $poc = new Poc(array(PocParams::PARAM_CACHE => $cache,
                            PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
       $return = array();
       $return[] = $outputHandler;
       $return[] = $poc;
       return $return;
     };
-    
+
     $objects['p2'] = function(){
         $outputHandler = new TestOutput();
       $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL));
@@ -252,30 +252,30 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $return[] = $poc;
       return $return;
     };
-    
+
     $poc2 = $objects['p2'];
       $this->pocBurner($poc2[1], $poc2[0], rand().PocTest::NEEDLE.rand());
       $output1 = $this->getOutput();
-    
+
     $poc1 = $objects['p1'];
     $this->pocBurner($poc1[1], $poc1[0], rand());
     $output2 = $this->getOutput();
-    
+
     echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-    
+
     $this->assertTrue($output1 != $output2);
   }
-  
+
   function testTagging(){
-    
+
     $hasher = new Hasher();
     $hasher->addDistinguishVariable("distn1");
     $cache1 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
     		CacheParams::PARAM_HASHER=>$hasher));
     $cache1->addCacheAddTags(true, "user,customer,inventory");
-    
+
     $cache1->clearAll();
-    
+
     $hasher = new Hasher();
     $hasher->addDistinguishVariable("distn2");
     $cache2 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
@@ -301,8 +301,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $o2 = $this->getOutput();
     $this->cacheBurner($cache3,"3");
     $o3 = $this->getOutput();
-    
-    
+
+
     $this->assertTrue($o1 == $o2);
     $this->assertTrue($o1 == $o3);
 
@@ -314,13 +314,13 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $o2 = $this->getOutput();
     $this->cacheBurner($cache3,"3");
     $o3 = $this->getOutput();
-    
+
     $this->assertTrue($o1 != $o3);
     $this->assertTrue($o2 == $o3);
-    
+
     $cache1->addCacheInvalidationTags(true,'customer');
-    
-    
+
+
     $this->cacheBurner($cache1,"4");
     $o1 = $this->getOutput();
     $this->cacheBurner($cache2,"4");
@@ -343,17 +343,17 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
                          Poc::PARAM_OUTPUTHANDLER => $outputHandler,
                          Poc::PARAM_DEBUG => true));
-    
+
     $this->pocBurner($poc, $outputHandler, rand().rand());
     $output1 = $this->getOutput();
-    
+
     $this->assertContains('milliseconds', $output1);
     $this->assertNotContains('cache', $output1);
-    
+
     $this->pocBurner($poc, $outputHandler, rand().rand());
     $output2 = $this->getOutput();
     $this->assertContains('cache', $output2);
-    
+
     $blackList->addBlacklistCondition(true);
     $this->pocBurner($poc, $outputHandler, rand().rand());
     $output3 = $this->getOutput();
@@ -361,14 +361,14 @@ class PocTest extends \PHPUnit_Framework_TestCase
 //    $l = new \Logger(); $l->lwrite('1:'.$output1." \n\n\n2:".$output2." \n\n\n3:$output3");
     
     $this->assertContains("Blacklisted", $output3);
-    
+
     $this->assertTrue($output1 != $output2);
     $this->assertTrue($output1 != $output3);
     $this->assertTrue($output2 != $output3);
   }
-  
+
   function testHeaderMainpulation(){
-    
+
     $outputHandler = new TestOutput();
     $headerMainpultion = new HeaderManipulator();
     $blackList = new Filter();
@@ -380,39 +380,44 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
     		Poc::PARAM_OUTPUTHANDLER => $outputHandler,
     		Poc::PARAM_DEBUG => true,
-            Poc::PARAM_HEADERMANIPULATOR=>$headerMainpultion  
+            Poc::PARAM_HEADERMANIPULATOR=>$headerMainpultion
         ));
     
     $this->pocBurner($poc, $outputHandler, rand().rand());
     $output1 = $this->getOutput();
-    
+
     $hl = \headers_list();
     //$l = new \Logger(); $l->lwrite(\serialize($hl));
   }
-  
+
   function testCIAProtection(){
   	$outputHandler = new TestOutput();
   	$cache = new FileCache();
   	$cia = new CIAProtector();
     $cia->setCache($cache);
-    $cia->setSentinel(100);
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $cia->getSentinel();
+    $snt = $cia->getSentinel();
+
+    $l = new \Logger(); $l->lwrite("---".$snt);
+    $this->assertTrue($snt == 10);
 
     $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
     		Poc::PARAM_OUTPUTHANDLER => $outputHandler,));
     $poc->start();
 
     $this->pocBurner($poc, $outputHandler, rand().rand());
-    echo $this->getOutput();
-    var_dump($this->getOutput());
-    
-    $l = new \Logger(); $l->lwrite($cia->getRefreshPage());
-    $l = new \Logger(); $l->lwrite($this->getOutput());
-    $l = new \Logger(); $l->lwrite("AAA");
-    
-    
+
     $this->assertTrue($this->getOutput() == $cia->getRefreshPage());
 
   }
-  
+
 }
 

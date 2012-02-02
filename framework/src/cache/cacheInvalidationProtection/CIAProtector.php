@@ -85,22 +85,17 @@ class CIAProtector implements OptionAbleInterface
     $this->cache = $cache;
   }
 
-   private function setSentinel($cnt = 1){
+  private function setSentinel($cnt){
     $this->cache->cacheSpecificStore($this->getKey(), $cnt);
   }
 
-  public function getSentinel(){
-    $sentiel = $this->cache->fetch($this->getKey());
-	  if(!$sentiel){
-	    $sentiel = 0;
-	  }
-
-    $sentiel += 1;
-
-    $this->setSentinel($sentiel);
-
-
-     return ($sentiel);
+  public function getSentinel($notIncrease = 0){
+    $sentinel = $this->cache->fetch($this->getKey());
+    if(!$sentinel){
+      $sentinel = 0;
+    }
+    
+    return ($sentinel);
   }
 
   private function getKey(){
@@ -142,25 +137,39 @@ class CIAProtector implements OptionAbleInterface
     PLEASE WAIT!
     </BODY>
     </HTML>';
+
   }
 
   public function consult(){
-    if($this->getSentinel()){
-      $waitCounter = 0;
-      while($this->getSentinel()){
-        $waitCounter++;
-        if($waitCounter == 2);
-        {
-          $this->outputHandler->ObPrintCallback($this->getRefreshPage());
-          echo($this->getRefreshPage());
-          $this->outputHandler->stopBuffer();
-        }
-        sleep(1);
-      }
-      $this->outputHandler->startBuffer('pocCallbackGenerate');
+    $sentinelCnt = $this->getSentinel();
+    $this->setSentinel($sentinelCnt+1);
+    
+    if($sentinelCnt == 0){
+      $l = new \Logger(); $l->lwrite("GENERATION: ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
     }
-    $this->setSentinel();
+    elseif ($sentinelCnt >=1){
+      if($sentinelCnt <= 2){
+        while($this->getSentinel()){
+          $l = new \Logger(); $l->lwrite("Sleep(1): ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
+          sleep(1);
+        }
+      }
+      elseif ($sentinelCnt >= 3)
+      {
+        $l = new \Logger(); $l->lwrite("EEEEEEEEEE: ".$_SERVER['HTTP_USER_AGENT']." ".$sentinelCnt);
+        $this->outputHandler->ObPrintCallback($this->getRefreshPage());
+        $this->outputHandler->stopBuffer();
+      }
+    }
+    
+  }
+  
+  public function consultFinish(){
+    
+    $this->deleteSentinel();
+    $l = new \Logger(); $l->lwrite("SENTINEL DELETED: ".$this->getKey());
   }
 }
 
 ?>
+    

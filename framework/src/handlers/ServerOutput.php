@@ -44,7 +44,7 @@ class ServerOutput implements OutputInterface {
   }
 
   function ObPrintCallback($output){
-
+    echo $output;
   }
 
   function headersList(){

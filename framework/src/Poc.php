@@ -52,6 +52,9 @@ use POC\cache\filtering\OutputFilter;
  */
 class Poc implements PocParams, OptionAbleInterface
 {
+  const CALLBACK_GENERATE = 'pocCallbackGenerate';
+  const CALLBACK_SHOWOUTPUT = 'pocCallbackShowOutput';
+  const CALLBACK_CACHE = 'pocCallbackCache';
 
   /**
    *
@@ -129,13 +132,11 @@ class Poc implements PocParams, OptionAbleInterface
        ' <b> Was Generated within </b>'.
        '<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->ObPrintCallback($ret);
-    return $ret;
+    self::$outputHandler->ObPrintCallback($buffer);
+    return $buffer;
   }
 
   public static function pocCallbackGenerate($buffer) {
-    
-    
     //TODO: call the ob_get_level from the outputHandler.
     if (self::$level == \ob_get_level() - 1) {
       if(self::$cache->getFilter()->evaluate())
@@ -158,19 +159,15 @@ class Poc implements PocParams, OptionAbleInterface
               self::$cache->cacheAddTags();
               
               if(self::$ciaProtector){
-                self::$ciaProtector->deleteSentinel();
+                self::$ciaProtector->consultFinish();
              }
            }
          }
 
           if($buffer) {
-         	self::$outputHandler->ObPrintCallback($return);
+         	self::$outputHandler->ObPrintCallback($buffer);
          	return ($return);
-          } else {
-         	if(self::$ciaProtector){
-         		return self::$ciaProtector->getRefreshPage();
           }
-        }
       }
     }
   }
@@ -226,7 +223,7 @@ class Poc implements PocParams, OptionAbleInterface
         $output = self::$cache->fetch(self::$cache->getHasher()->getKey());
         if ($output) {
           if($ob_start){
-            self::$outputHandler->startBuffer('pocCallbackCache');
+            self::$outputHandler->startBuffer(self::CALLBACK_CACHE);
             self::$headerManipulator->fetchHeaders();
             //TODO:Replace it to it's appropriate place.(OutputHandler)
             $arr = headers_list();
@@ -258,9 +255,13 @@ class Poc implements PocParams, OptionAbleInterface
       if ($startCache) {
         self::$level = \ob_get_level();
         $this->checkCia();
-        self::$outputHandler->startBuffer('pocCallbackGenerate');
+        
+        self::$outputHandler->startBuffer(self::CALLBACK_GENERATE);
+        
       } else {
-        self::$outputHandler->startBuffer('pocCallbackShowOutput');
+        
+        self::$outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+        
       }
     }
   }

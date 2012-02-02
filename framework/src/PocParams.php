@@ -14,15 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-use framework\src\cache\cacheimplementation\CacheParams;
 
 /**
  * This Interface contains all the possible indexes for the parameters in the
  * Poc object. extends the CachePArams interface.
- * 
+ *
  * @author Imer Toth
  *
  */
+use framework\src\cache\cacheimplementation\CacheParams;
 
 interface PocParams extends CacheParams{
   const PARAM_CACHE = 'cache';
@@ -30,7 +30,7 @@ interface PocParams extends CacheParams{
   const PARAM_HEADERMANIPULATOR = 'headerManipulator';
   const PARAM_OUTPUTFILTER = 'outputFilter';
   const PARAM_DEBUG = 'debug';
-  const PARAM_CIA_PROTECTION = 'cia_protection';
+  const PARAM_CIA_PROTECTOR = 'cia_protection';
 }
 
 ?>

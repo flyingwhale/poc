@@ -13,6 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/**
+ * This interface contains all the functions that has to be implemented by a 
+ * cacheengine that can be used by the framework. 
+ * 
+ * @author Imre Toth
+ *
+ */
 namespace POC\cache\cacheimplementation;
 
 interface CacheInterface {

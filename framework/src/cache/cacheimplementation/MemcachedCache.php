@@ -14,9 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This cacheengine stores the caches in the Memcached engine.
+ * In most cases it is the preferred solution, because this engine
+ * is the most popular for caching from the list the framework supports.
+ *
+ * @author Imre Toth
+ *
+ */
+
 namespace POC\cache\cacheimplementation;
+
 use POC\cache\filtering\Evaluateable;
 use POC\core\Optioner;
+
 
 class MemcachedCache extends Cache {
 

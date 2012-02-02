@@ -89,7 +89,7 @@ class TestOutput implements OutputInterface, OptionAbleInterface
     return $this->outputFlow;
   }
 
-  function cacheCallback($output){
+  function ObPrintCallback($output){
     $this->output = $output;
   }
 
@@ -105,5 +105,8 @@ class TestOutput implements OutputInterface, OptionAbleInterface
   	return \unserialize($this->actHeader);
   }
   
+  function printOutputCallback($output){
+    $this->output = $output;
+  }
 }
 

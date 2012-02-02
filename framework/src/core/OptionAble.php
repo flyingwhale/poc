@@ -13,9 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+/**
+ * Utilizing this class the developer has got the possibility to pass an array of 
+ * variables to a class (that implements the OptionAbleInterface Interface) and the 
+ * class will extract the parameters from it. If the user did not provide all 
+ * parameters required by the class this class will add the perdefined set of 
+ * parameters to the otions. This class extends the Pimple dependency 
+ * injector, so the predefined classes will be inicilaised when it is needed. 
+ * 
+ * @author Imre Toth
+ *
+ */
 namespace POC\core;
-
 
 class OptionAble extends \Pimple
 {
@@ -58,12 +67,6 @@ class OptionAble extends \Pimple
     return $return;
   }
   
-  /**
-   *
-   * @param array $srcArray
-   * @param OptionAble $oa
-   * @return array
-   */
   public function optionsMerge(){
     foreach($this->indexes as $key => $value){
       //var_dump($oa->getIndexes());die();

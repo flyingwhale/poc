@@ -89,17 +89,21 @@ class CIAProtector implements OptionAbleInterface
     $this->cache->cacheSpecificStore($this->getKey(), $cnt);
   }
 
-  public function getSentinel(){
-    $sentiel = $this->cache->fetch($this->getKey());
-    if(!$sentiel){
-      $sentiel = 0;
+  public function getSentinel($notIncrease = 0){
+    $sentinel = $this->cache->fetch($this->getKey());
+    if(!$sentinel){
+      $sentinel = 0;
     }
     
-    if($this->cache->fetch($sentiel)){
-      $this->setSentinel($sentiel + 1);
+    if(!$notIncrease){
+      $sentinel += 1;
+    }
+    
+    if($sentinel){
+      $this->setSentinel($sentinel);      
     }
   
-    return ($sentiel);
+    return ($sentinel);
   }
   
   private function getKey(){
@@ -144,20 +148,32 @@ class CIAProtector implements OptionAbleInterface
   }
 
   public function consult(){
-    if($this->getSentinel()){
+    $sentinelCnt = $this->getSentinel();
+    $l = new \Logger(); $l->lwrite("cnt: ".$sentinelCnt);
+    if($sentinelCnt > 1){
       $waitCounter = 0;
-      while($this->getSentinel()){
-        $waitCounter++;
-        if($waitCounter == 2);
-        {
-          $this->outputHandler->ObPrintCallback($this->getRefreshPage());
-          $this->outputHandler->stopBuffer();
+
+      $waitCounter++;
+      if($this->getSentinel(1) >= 2){
+        while($sentinelCnt!=1){
+          sleep(1);
         }
-        sleep(1);
       }
-      $this->outputHandler->startBuffer('pocCallbackGenerate');
+      elseif ($sentinelCnt >1){
+      }
+      elseif ($sentinelCnt >= 3)
+      //if($waitCounter >= 2);
+      {
+        $l = new \Logger(); $l->lwrite("EEEEEEEEEE: ".$sentinelCnt);
+        $this->outputHandler->ObPrintCallback($this->getRefreshPage());
+        $this->outputHandler->stopBuffer();
+      }
     }
-    $this->setSentinel();
+  }
+  
+  public function consultFinish(){
+    
+    $this->deleteSentinel();
   }
 }
 

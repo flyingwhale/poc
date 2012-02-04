@@ -7,6 +7,9 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'entities\\cache' => '/src/cache/tagging/driver/doctrine2/Entities/Cache.php',
+                'entities\\cachetag' => '/src/cache/tagging/driver/doctrine2/Entities/CacheTag.php',
+                'entities\\tag' => '/src/cache/tagging/driver/doctrine2/Entities/Tag.php',
                 'logger' => '/src/utility/Logger.php',
                 'pimple' => '/vendors/pimple/lib/Pimple.php',
                 'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',
@@ -24,6 +27,7 @@ spl_autoload_register(
                 'poc\\cache\\filtering\\outputfilter' => '/src/cache/filtering/OutputFilter.php',
                 'poc\\cache\\header\\headermanipulator' => '/src/cache/header/HeaderManipulator.php',
                 'poc\\cache\\tagging\\abstractdb' => '/src/cache/tagging/AbstractDb.php',
+                'poc\\cache\\tagging\\doctrine2tagging' => '/src/cache/tagging/Doctrine2Tagging.php',
                 'poc\\cache\\tagging\\driver\\mysql\\cachemodelmanager' => '/src/cache/tagging/driver/mySQL/CacheModelManager.php',
                 'poc\\cache\\tagging\\driver\\mysql\\model\\cache' => '/src/cache/tagging/driver/mySQL/Cache.php',
                 'poc\\cache\\tagging\\driver\\mysql\\model\\tag' => '/src/cache/tagging/driver/mySQL/Tag.php',
@@ -39,7 +43,11 @@ spl_autoload_register(
                 'poc\\handlers\\serveroutput' => '/src/handlers/ServerOutput.php',
                 'poc\\poc' => '/src/Poc.php',
                 'poc\\pocparams' => '/src/PocParams.php',
+                'repositories\\cacherepository' => '/src/cache/tagging/driver/doctrine2/Repositories/CacheRepository.php',
+                'repositories\\cachetagrepository' => '/src/cache/tagging/driver/doctrine2/Repositories/CacheTagRepository.php',
+                'repositories\\tagrepository' => '/src/cache/tagging/driver/doctrine2/Repositories/TagRepository.php',
                 'unittest\\cachetest' => '/tests/cache/cacheImplmentation/CacheTest.php',
+                'unittest\\doctrine2taggingtest' => '/tests/cache/tagging/Doctrine2TaggingTest.php',
                 'unittest\\filecachetest' => '/tests/cache/cacheImplmentation/FileCacheTest.php',
                 'unittest\\handler\\testoutput' => '/tests/handlers/TestOutput.php',
                 'unittest\\memcachedcachetest' => '/tests/cache/cacheImplmentation/MemcachedCacheTest.php',

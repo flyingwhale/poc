@@ -18,14 +18,13 @@ namespace unittest;
 use Poc\cache\cacheimplementation\CacheParams;
 
 use POC\cache\filtering\Filter;
-use POC\cache\cacheimplementation\MongoCache;
+use POC\cache\cacheimplementation\RediskaCache;
 use POC\cache\tagging\MysqlTagging;
 
-require_once 'framework/autoload.php';
 
-class MongoCacheTest extends CacheTest
+class RediskaCacheTe extends CacheTest
 {
   function setUp_() {
-    $this->cache = new MongoCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+    $this->cache = new RediskaCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
 }

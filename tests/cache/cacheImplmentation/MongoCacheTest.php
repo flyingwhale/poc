@@ -18,17 +18,13 @@ namespace unittest;
 use Poc\cache\cacheimplementation\CacheParams;
 
 use POC\cache\filtering\Filter;
-use POC\cache\cacheimplementation\FileCache;
+use POC\cache\cacheimplementation\MongoCache;
 use POC\cache\tagging\MysqlTagging;
 
-require_once 'framework/autoload.php';
 
-class FileCacheTest extends CacheTest
+class MongoCacheTest extends CacheTest
 {
-
   function setUp_() {
-    $this->cache = new FileCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+    $this->cache = new MongoCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
-
 }
-

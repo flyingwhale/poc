@@ -13,11 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-  use POC\Poc;
-  use POC\cache\cacheimplementation\FileCache;
- 
 
-  include ("../framework/autoload.php");
-  $poc  = new Poc(array(Poc::PARAM_CACHE => new FileCache(), Poc::PARAM_DEBUG => true, Poc::PARAM_TTL => 5));
-  $poc->start();
-  include('lib/text_generator.php');
+namespace unittest;
+use Poc\cache\cacheimplementation\CacheParams;
+
+use POC\cache\filtering\Filter;
+use POC\cache\cacheimplementation\FileCache;
+use POC\cache\tagging\MysqlTagging;
+
+
+class FileCacheTest extends CacheTest
+{
+
+  function setUp_() {
+    $this->cache = new FileCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+  }
+
+}
+

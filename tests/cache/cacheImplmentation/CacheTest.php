@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 namespace unittest;
-use POC\cache\filtering\Hasher;
 
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {

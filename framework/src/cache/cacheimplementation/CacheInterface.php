@@ -20,7 +20,7 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace POC\cache\cacheimplementation;
+namespace Poc\Cache\Cacheimplementation;
 
 interface CacheInterface {
 

@@ -1,5 +1,5 @@
 <?php
-namespace framework\src\cache\cacheInvaludationProtection;
+namespace Poc\Cache\CacheInvalidationProtection;
 
 use POC\core\OptionAbleInterface;
 
@@ -85,7 +85,7 @@ class CIAProtector implements OptionAbleInterface
     $this->cache = $cache;
   }
 
-  private function setSentinel($cnt){
+  public function setSentinel($cnt){
     $this->cache->cacheSpecificStore($this->getKey(), $cnt);
   }
 
@@ -145,18 +145,18 @@ class CIAProtector implements OptionAbleInterface
     $this->setSentinel($sentinelCnt+1);
     
     if($sentinelCnt == 0){
-      $l = new \Logger(); $l->lwrite("GENERATION: ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
+      //$l = new \Logger(); $l->lwrite("GENERATION: ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
     }
     elseif ($sentinelCnt >=1){
       if($sentinelCnt <= 2){
         while($this->getSentinel()){
-          $l = new \Logger(); $l->lwrite("Sleep(1): ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
+          //$l = new \Logger(); $l->lwrite("Sleep(1): ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
           sleep(1);
         }
       }
       elseif ($sentinelCnt >= 3)
       {
-        $l = new \Logger(); $l->lwrite("EEEEEEEEEE: ".$_SERVER['HTTP_USER_AGENT']." ".$sentinelCnt);
+       // $l = new \Logger(); $l->lwrite("EEEEEEEEEE: ".$_SERVER['HTTP_USER_AGENT']." ".$sentinelCnt);
         $this->outputHandler->ObPrintCallback($this->getRefreshPage());
         $this->outputHandler->stopBuffer();
       }
@@ -167,7 +167,7 @@ class CIAProtector implements OptionAbleInterface
   public function consultFinish(){
     
     $this->deleteSentinel();
-    $l = new \Logger(); $l->lwrite("SENTINEL DELETED: ".$this->getKey());
+   // $l = new \Logger(); $l->lwrite("SENTINEL DELETED: ".$this->getKey());
   }
 }
 

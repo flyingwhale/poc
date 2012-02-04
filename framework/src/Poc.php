@@ -20,9 +20,9 @@ limitations under the License.
  * @author Imre Toth 
  * 
  */
-namespace POC;
+namespace Poc;
 
-use framework\src\cache\cacheInvaludationProtection\CIAProtector;
+use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
 use POC\core\OptionAbleInterface;
 

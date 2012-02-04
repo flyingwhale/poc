@@ -22,7 +22,7 @@ limitations under the License.
  * @author Imer Toth
  *
  */
-use framework\src\cache\cacheimplementation\CacheParams;
+use Poc\cache\cacheimplementation\CacheParams;
 
 interface PocParams extends CacheParams{
   const PARAM_CACHE = 'cache';

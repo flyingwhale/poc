@@ -15,31 +15,31 @@ limitations under the License.
 */
 
 namespace unittest;
-use framework\src\cache\cacheInvaludationProtection\CIAProtector;
+use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
-use POC\cache\filtering\OutputFilter;
+use Poc\cache\filtering\OutputFilter;
 
-use framework\src\cache\cacheimplementation\CacheParams;
+use Poc\cache\cacheimplementation\CacheParams;
 
-use POC\PocParams;
+use Poc\PocParams;
 
-use POC\Pocparameters;
+use Poc\Pocparameters;
 
-use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
+use Poc\cache\cacheimplementation\AbstractPocCacheSpecific;
 
-use POC\cache\header\HeaderManipulator;
+use Poc\cache\header\HeaderManipulator;
 
-use POC\cache\filtering\Evaluateable;
+use Poc\cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
-use POC\Poc;
-use POc\cache\PocCache;
-use POC\cache\cacheimplementation\FileCache;
-use POC\cache\cacheimplementation\MemcachedCache;
-use POC\cache\cacheimplementation\RediskaCache;
-use POC\cache\cacheimplementation\MongoCache;
-use POC\cache\filtering\Hasher;
-use POC\cache\filtering\Filter;
-use POC\cache\tagging\MysqlTagging;
+use Poc\Poc;
+use Poc\cache\PocCache;
+use Poc\cache\cacheimplementation\FileCache;
+use Poc\cache\cacheimplementation\MemcachedCache;
+use Poc\cache\cacheimplementation\RediskaCache;
+use Poc\cache\cacheimplementation\MongoCache;
+use Poc\cache\filtering\Hasher;
+use Poc\cache\filtering\Filter;
+use Poc\cache\tagging\MysqlTagging;
 
 require_once 'framework/autoload.php';
 
@@ -333,7 +333,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
     
   }
 
-  function testDegug(){
+  //This thest is removed because there will be a better implementation of this feature.
+  
+/*  function testDebug(){
     $outputHandler = new TestOutput();
     $blackList = new Filter();
     $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
@@ -366,7 +368,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($output1 != $output3);
     $this->assertTrue($output2 != $output3);
   }
-
+*/
+  
   function testHeaderMainpulation(){
 
     $outputHandler = new TestOutput();
@@ -395,20 +398,13 @@ class PocTest extends \PHPUnit_Framework_TestCase
   	$cache = new FileCache();
   	$cia = new CIAProtector();
     $cia->setCache($cache);
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
-    $cia->getSentinel();
     $snt = $cia->getSentinel();
-
-    $l = new \Logger(); $l->lwrite("---".$snt);
-    $this->assertTrue($snt == 10);
-
+    $cia->setSentinel(10);
+    $snt1 = $cia->getSentinel();
+    
+    $this->assertTrue($snt == 0);
+    $this->assertTrue($snt1 == 10);
+    
     $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
     		Poc::PARAM_OUTPUTHANDLER => $outputHandler,));
     $poc->start();

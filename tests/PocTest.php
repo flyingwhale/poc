@@ -41,7 +41,6 @@ use Poc\cache\filtering\Hasher;
 use Poc\cache\filtering\Filter;
 use Poc\cache\tagging\MysqlTagging;
 
-require_once 'framework/autoload.php';
 
 const UNITTESTING = 1;
 

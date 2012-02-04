@@ -1,4 +1,5 @@
 <?php
+namespace Poc;
 /*Copyright 2012 Imre Toth <tothimre at gmail>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +14,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 /**
- * This Interface is Used by the OptionAble class. Any class that implements
- * this class can be passed to the that.
- * 
- * @author Imre Toth
+ * This Interface contains all the possible indexes for the parameters in the
+ * Poc object. extends the CachePArams interface.
+ *
+ * @author Imer Toth
  *
  */
-namespace POC\core;
+use Poc\cache\cacheimplementation\CacheParams;
 
-interface OptionAbleInterface
-{
-  /**
-   * This class will define the default values in an OptionAble object.
-   */
-  public function fillDefaults();
+interface PocParams extends CacheParams{
+  const PARAM_CACHE = 'cache';
+  const PARAM_OUTPUTHANDLER = 'outputHandler';
+  const PARAM_HEADERMANIPULATOR = 'headerManipulator';
+  const PARAM_OUTPUTFILTER = 'outputFilter';
+  const PARAM_DEBUG = 'debug';
+  const PARAM_CIA_PROTECTOR = 'cia_protection';
 }
+
+?>

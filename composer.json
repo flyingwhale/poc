@@ -1,0 +1,20 @@
+{
+    "name": "poc",
+    "type": "library",
+    "version": "0.3.0",
+    "authors": [
+    	{
+          "name": "Imre Toth",
+          "email": "tothimre@gmail.com"
+      	}
+    ],
+    "require": {
+	"php": ">=5.3.0",
+        "monolog/monolog": "1.0.0",
+	"pimple/pimple": "1.0.0-dev",
+        "symfony/class-loader": "2.1.0-dev"
+    },
+    "autoload": {
+        "psr-0": { "poc": "framework/src/" }
+    }
+}

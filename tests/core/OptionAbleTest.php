@@ -16,11 +16,11 @@ limitations under the License.
 
 namespace unittest;
 
-use POC\Poc;
+use Poc\Poc;
 
-use POC\core\OptionAble;
+use Poc\Core\OptionAble;
 
-use POC\core\OptionAbleInterface;
+use Poc\Core\OptionAbleInterface;
 
 class MockOptionAbleInterfaceClass implements OptionAbleInterface
 {

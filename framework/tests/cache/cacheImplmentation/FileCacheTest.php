@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 namespace unittest;
-use framework\src\cache\cacheimplementation\CacheParams;
+use Poc\cache\cacheimplementation\CacheParams;
 
 use POC\cache\filtering\Filter;
 use POC\cache\cacheimplementation\FileCache;

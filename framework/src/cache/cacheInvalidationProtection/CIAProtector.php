@@ -1,5 +1,5 @@
 <?php
-namespace framework\src\cache\cacheInvaludationProtection;
+namespace Poc\Cache\CacheInvalidationProtection;
 
 use POC\core\OptionAbleInterface;
 
@@ -85,7 +85,7 @@ class CIAProtector implements OptionAbleInterface
     $this->cache = $cache;
   }
 
-  private function setSentinel($cnt){
+  public function setSentinel($cnt){
     $this->cache->cacheSpecificStore($this->getKey(), $cnt);
   }
 
@@ -152,13 +152,15 @@ class CIAProtector implements OptionAbleInterface
 
   public function consult(){
     $sentinelCnt = $this->getSentinel();
-    $l = new \Logger(); $l->lwrite("cnt: ".$sentinelCnt);
-    if($sentinelCnt > 1){
-      $waitCounter = 0;
-
-      $waitCounter++;
-      if($this->getSentinel(1) >= 2){
-        while($sentinelCnt!=1){
+    $this->setSentinel($sentinelCnt+1);
+    
+    if($sentinelCnt == 0){
+      //$l = new \Logger(); $l->lwrite("GENERATION: ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
+    }
+    elseif ($sentinelCnt >=1){
+      if($sentinelCnt <= 2){
+        while($this->getSentinel()){
+          //$l = new \Logger(); $l->lwrite("Sleep(1): ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
           sleep(1);
         }
       }
@@ -167,7 +169,6 @@ class CIAProtector implements OptionAbleInterface
       elseif ($sentinelCnt >= 3)
       //if($waitCounter >= 2);
       {
-        $l = new \Logger(); $l->lwrite("EEEEEEEEEE: ".$sentinelCnt);
         $this->outputHandler->ObPrintCallback($this->getRefreshPage());
         $this->outputHandler->stopBuffer();
       }

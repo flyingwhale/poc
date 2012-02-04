@@ -7,18 +7,18 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'framework\\src\\cache\\cacheimplementation\\cacheparams' => '/src/cache/cacheimplementation/CacheParams.php',
-                'framework\\src\\cache\\cacheinvaludationprotection\\ciaprotector' => '/src/cache/cacheInvalidationProtection/CIAProtector.php',
                 'logger' => '/src/utility/Logger.php',
                 'pimple' => '/vendors/pimple/lib/Pimple.php',
                 'pimple\\tests\\pimpletest' => '/vendors/pimple/tests/Pimple/Tests/PimpleTest.php',
                 'pimple\\tests\\service' => '/vendors/pimple/tests/Pimple/Tests/Service.php',
                 'poc\\cache\\cacheimplementation\\cache' => '/src/cache/cacheimplementation/Cache.php',
                 'poc\\cache\\cacheimplementation\\cacheinterface' => '/src/cache/cacheimplementation/CacheInterface.php',
+                'poc\\cache\\cacheimplementation\\cacheparams' => '/src/cache/cacheimplementation/CacheParams.php',
                 'poc\\cache\\cacheimplementation\\filecache' => '/src/cache/cacheimplementation/FileCache.php',
                 'poc\\cache\\cacheimplementation\\memcachedcache' => '/src/cache/cacheimplementation/MemcachedCache.php',
                 'poc\\cache\\cacheimplementation\\mongocache' => '/src/cache/cacheimplementation/MongoDBCache.php',
                 'poc\\cache\\cacheimplementation\\rediskacache' => '/src/cache/cacheimplementation/RediskaCache.php',
+                'poc\\cache\\cacheinvalidationprotection\\ciaprotector' => '/src/cache/cacheInvalidationProtection/CIAProtector.php',
                 'poc\\cache\\filtering\\filter' => '/src/cache/filtering/Filter.php',
                 'poc\\cache\\filtering\\hasher' => '/src/cache/filtering/Hasher.php',
                 'poc\\cache\\filtering\\outputfilter' => '/src/cache/filtering/OutputFilter.php',

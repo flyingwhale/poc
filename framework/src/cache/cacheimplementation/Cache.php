@@ -19,16 +19,16 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace POC\cache\cacheimplementation;
+namespace Poc\Cache\Cacheimplementation;
 
-use framework\src\cache\cacheimplementation\CacheParams;
+use Poc\Cache\Cacheimplementation\CacheParams;
 
-use POC\cache\filtering\Filter;
-use POC\cache\filtering\Hasher;
-use POC\core\OptionAble;
-use POC\cache\tagging\MysqlTagging;
-use POC\cache\tagging\Tagger;
-use POC\core\OptionAbleInterface;
+use Poc\Cache\Filtering\Filter;
+use Poc\Cache\Filtering\Hasher;
+use Poc\Core\OptionAble;
+use Poc\Cache\Tagging\MysqlTagging;
+use Poc\Cache\Tagging\Tagger;
+use POc\Core\OptionAbleInterface;
 
 abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
 {

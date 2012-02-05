@@ -20,7 +20,7 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace Poc\Cache\cacheimplementation;
+namespace Poc\Cache\CacheImplementation;
 use Poc\Core\Optioner;
 use POC\Cache\filtering\Filter;
 

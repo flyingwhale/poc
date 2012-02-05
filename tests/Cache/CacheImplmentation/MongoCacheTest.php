@@ -15,16 +15,18 @@ limitations under the License.
 */
 
 namespace unittest;
+
+use Poc\Cache\CacheImplementation\MongoDBCache;
+
 use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;
-use Poc\Cache\CacheImplementation\MongoCache;
 use Poc\Cache\Tagging\MysqlTagging;
 
 
 class MongoCacheTest extends CacheTest
 {
   function setUp_() {
-    $this->cache = new MongoCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+    $this->cache = new MongoDBCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
 }

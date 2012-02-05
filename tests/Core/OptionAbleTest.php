@@ -54,7 +54,7 @@ class OptionAbleTest extends \PHPUnit_Framework_TestCase
     $test = new MockOptionAbleInterfaceClass();;
 
     $this->assertTrue($test->optionAble->getOption('a') == 'A');
-    $this->assertTrue(get_class($test->optionAble->getOption('poc')) == 'POC\Poc' );
+    $this->assertTrue(get_class($test->optionAble->getOption('poc')) == 'Poc\Poc' );
      
     $test = new MockOptionAbleInterfaceClass(array('a'=>'b'));
     $this->assertTrue($test->optionAble->getOption('a') == 'b');

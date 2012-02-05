@@ -18,13 +18,9 @@ $namespaces = array(
 $loader->registerNamespaces($namespaces);
 
 
-var_dump($namespaces);
+//var_dump($namespaces);
 
 $loader->useIncludePath(true);
 $loader->register();
-
-echo $loader->findFile('Poc')." EEE";
-echo $loader->findFile('POC\\Poc')." EEE";
-echo $loader->findFile('Monolog\\Logger')." EEE";
 
 

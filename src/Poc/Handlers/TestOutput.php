@@ -14,17 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace unittest\handler;
+namespace Poc\Handlers;
 
-use POC\core\OptionAble;
+use Poc\Core\OptionAble;
 
-use POC\core\OptionAbleInterface;
+use Poc\Core\OptionAbleInterface;
 
-use POC\Handlers\OutputInterface;
+use Poc\Cache\Header\HeaderManipulator;
 
-use POC\cache\header\HeaderManipulator;
-
-use POC\Poc;
+use Poc\Poc;
 
 class TestOutput implements OutputInterface, OptionAbleInterface
 {
@@ -65,7 +63,7 @@ class TestOutput implements OutputInterface, OptionAbleInterface
   }
 
   function startBuffer($callbackFunctname) {
-    ob_start(array('\POC\Poc',$callbackFunctname));
+    ob_start(array('\Poc\Poc',$callbackFunctname));
   }
 
   function stopBuffer() {

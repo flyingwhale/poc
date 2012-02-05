@@ -1,5 +1,5 @@
 <?php
-namespace POC\cache\tagging\driver\mysql;
+namespace Poc\Cache\Tagging\Driver\Mysql;
 
 class ModelManager
 {

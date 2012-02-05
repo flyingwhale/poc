@@ -24,21 +24,21 @@ namespace Poc;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
-use POC\core\OptionAbleInterface;
+use Poc\Core\OptionAbleInterface;
 
-use POC\handlers\ServerOutput;
+use Poc\Handlers\ServerOutput;
 
-use POC\cache\cacheimplementation\FileCache;
+use Poc\Cache\CacheImplementation\FileCache;
 
-use POC\core\OptionAble;
+use Poc\Core\OptionAble;
 
-use POC\cache\cacheimplementation\AbstractPocCacheSpecific;
+use Poc\Cache\CacheImplementation\AbstractPocCacheSpecific;
 
-use POC\Handlers\OutputInterface;
+use Poc\Handlers\OutputInterface;
 
-use POC\cache\header\HeaderManipulator;
+use Poc\Cache\Header\HeaderManipulator;
 
-use POC\cache\filtering\OutputFilter;
+use Poc\Cache\Filtering\OutputFilter;
 
 /**
  * This class contains the "Entry point" of the caching process. Therefor is is

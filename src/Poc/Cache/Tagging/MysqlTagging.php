@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace POC\Cache\Tagging;
+namespace Poc\Cache\Tagging;
 
-use POC\Cache\Tagging\Driver\MySQL\Model\Cache;
-use POC\Cache\Tagging\Driver\MySQL\Model\Tag;
-use POC\Cache\Tagging\Driver\MySQL\Model\TagCache;
-use POC\Cache\Tagging\Driver\MySQL\CacheModelManager;
-use POC\Cache\Tagging\Driver\MySQL\TagModelManager;
-use POC\Cache\Tagging\Driver\MySQL\TagsHasCachesModelManager;
-use POC\Cache\Tagging\AbstractDb;
+use Poc\Cache\Tagging\Driver\Mysql\Cache;
+use Poc\Cache\Tagging\Driver\Mysql\Tag;
+use Poc\Cache\Tagging\Driver\Mysql\TagCache;
+use Poc\Cache\Tagging\Driver\Mysql\CacheModelManager;
+use Poc\Cache\Tagging\Driver\Mysql\TagModelManager;
+use Poc\Cache\Tagging\Driver\Mysql\TagsHasCachesModelManager;
+use Poc\Cache\Tagging\AbstractDb;
 
 class MysqlTagging extends AbstractDb {
 
@@ -103,7 +103,7 @@ class MysqlTagging extends AbstractDb {
   {
     $query = 'CREATE DATABASE `'.$this->db.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
     $this->PDO->exec($query) or
-    die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR POC INSTANCES MysqlTagging class!");
+    die("PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR Poc INSTANCES MysqlTagging class!");
 
     $query = 'USE '.$this->db;
     $this->PDO->exec($query);

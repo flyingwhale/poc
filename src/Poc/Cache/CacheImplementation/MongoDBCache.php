@@ -21,8 +21,9 @@ limitations under the License.
  *
  */
 
-namespace POC\cache\cacheimplementation;
-use POC\core\Optioner;
+namespace Poc\Cache\CacheImplementation;
+
+use Poc\Core\Optioner;
 
 class MongoCache extends Cache
 {
@@ -55,7 +56,7 @@ class MongoCache extends Cache
       $this->mongo = new $className();
       $this->isNotConnected = 1;
     }
-    catch ( MongoConnectionException $e )
+    catch ( \MongoConnectionException $e )
     {
       $this->throwDbException();
 

@@ -6,3 +6,5 @@ build
 .project
 .settings/
 tmp/
+vendor/
+composer.phar

@@ -17,29 +17,29 @@ limitations under the License.
 namespace unittest;
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
-use Poc\cache\filtering\OutputFilter;
+use Poc\Cache\filtering\OutputFilter;
 
-use Poc\cache\cacheimplementation\CacheParams;
 
 use Poc\PocParams;
 
 use Poc\Pocparameters;
 
-use Poc\cache\cacheimplementation\AbstractPocCacheSpecific;
+use Poc\Cache\Cache\CacheImplementationtation\AbstractPocCacheSpecific;
 
-use Poc\cache\header\HeaderManipulator;
+use Poc\Cache\header\HeaderManipulator;
 
-use Poc\cache\filtering\Evaluateable;
+use Poc\Cache\filtering\Evaluateable;
 use unittest\handler\TestOutput;
 use Poc\Poc;
-use Poc\cache\PocCache;
-use Poc\cache\cacheimplementation\FileCache;
-use Poc\cache\cacheimplementation\MemcachedCache;
-use Poc\cache\cacheimplementation\RediskaCache;
-use Poc\cache\cacheimplementation\MongoCache;
-use Poc\cache\filtering\Hasher;
-use Poc\cache\filtering\Filter;
-use Poc\cache\tagging\MysqlTagging;
+use Poc\Cache\PocCache;
+use Poc\Cache\CacheImplementation\CacheParams;
+use Poc\Cache\CacheImplementation\FileCache;
+use Poc\Cache\CacheImplementation\MemcachedCache;
+use Poc\Cache\CacheImplementation\RediskaCache;
+use Poc\Cache\CacheImplementation\MongoCache;
+use Poc\Cache\Filtering\Hasher;
+use Poc\Cache\Filtering\Filter;
+use Poc\Cache\Tagging\MysqlTagging;
 
 
 const UNITTESTING = 1;

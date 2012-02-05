@@ -19,9 +19,9 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace Poc\Cache\Cacheimplementation;
+namespace Poc\Cache\CacheImplementation;
 
-use Poc\Cache\Cacheimplementation\CacheParams;
+use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Filtering\Hasher;

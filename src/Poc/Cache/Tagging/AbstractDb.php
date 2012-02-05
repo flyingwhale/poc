@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace POC\cache\tagging;
+namespace POC\Cache\Tagging;
+
 
 abstract class AbstractDb {
 

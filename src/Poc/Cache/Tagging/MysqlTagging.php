@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace POC\cache\tagging;
+namespace POC\Cache\Tagging;
 
-use POC\cache\tagging\driver\mySQL\model\Cache;
-use POC\cache\tagging\driver\mySQL\model\Tag;
-use POC\cache\tagging\driver\mysql\model\TagCache;
-use POC\cache\tagging\driver\mySQL\CacheModelManager;
-use POC\cache\tagging\driver\mySQL\TagModelManager;
-use POC\cache\tagging\driver\mySQL\TagsHasCachesModelManager;
-
+use POC\Cache\Tagging\Driver\MySQL\Model\Cache;
+use POC\Cache\Tagging\Driver\MySQL\Model\Tag;
+use POC\Cache\Tagging\Driver\MySQL\Model\TagCache;
+use POC\Cache\Tagging\Driver\MySQL\CacheModelManager;
+use POC\Cache\Tagging\Driver\MySQL\TagModelManager;
+use POC\Cache\Tagging\Driver\MySQL\TagsHasCachesModelManager;
+use POC\Cache\Tagging\AbstractDb;
 
 class MysqlTagging extends AbstractDb {
 

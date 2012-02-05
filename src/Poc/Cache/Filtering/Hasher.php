@@ -21,7 +21,7 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace POC\cache\filtering;
+namespace Poc\Cache\Filtering;
 
 class Hasher {
 

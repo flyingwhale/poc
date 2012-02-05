@@ -23,7 +23,7 @@ limitations under the License.
  *
  */
 
-namespace POC\cache\filtering;
+namespace Poc\Cache\Filtering;
 
 class Filter{
 

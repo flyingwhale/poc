@@ -15,19 +15,19 @@ limitations under the License.
 */
 
 namespace unittest;
-use Poc\cache\cacheimplementation\CacheParams;
+use Poc\Cache\cacheimplementation\CacheParams;
 
-use POC\cache\filtering\Filter;
-use POC\cache\cacheimplementation\MemcachedCache;
-use POC\cache\tagging\MysqlTagging;
+use Poc\Cache\Filtering\Filter;
+use Poc\Cache\CacheImplementation\FileCache;
+use Poc\Cache\Tagging\MysqlTagging;
 
 
-class MemcachedCacheTest extends CacheTest
+class FileCacheTest extends CacheTest
 {
 
   function setUp_() {
-    $this->cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>parent::TTL));
-      }
+    $this->cache = new FileCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+  }
 
 }
 

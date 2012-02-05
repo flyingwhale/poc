@@ -15,19 +15,16 @@ limitations under the License.
 */
 
 namespace unittest;
-use Poc\cache\cacheimplementation\CacheParams;
+use Poc\Cache\CacheImplementation\CacheParams;
 
-use POC\cache\filtering\Filter;
-use POC\cache\cacheimplementation\FileCache;
-use POC\cache\tagging\MysqlTagging;
+use POC\Cache\Filtering\Filter;
+use POC\Cache\CacheImplementation\RediskaCache;
+use POC\Cache\Tagging\MysqlTagging;
 
 
-class FileCacheTest extends CacheTest
+class RediskaCacheTe extends CacheTest
 {
-
   function setUp_() {
-    $this->cache = new FileCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+    $this->cache = new RediskaCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
-
 }
-

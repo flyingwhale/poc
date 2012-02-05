@@ -1,12 +1,12 @@
 <?php
-namespace POC\cache\tagging\driver\mysql;
+namespace Poc\Cache\Tagging\Driver\Mysql;
 
 class TagsHasCachesModelManager extends ModelManager
 {
   public function __construct($dbHandler)
   {
     parent::__construct($dbHandler);
-    $this->setModelName('\\POC\\cache\\tagging\\driver\\mysql\\model\\TagCache');
+    $this->setModelName('\\Poc\\Cache\\Tagging\\Driver\\Mysql\\TagCache');
     $this->setTableName('tags_has_caches');
     $this->setIdName(null);
     

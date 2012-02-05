@@ -23,7 +23,7 @@ limitations under the License.
  *
  */
 
-namespace POC\Cache\Cacheimplementation;
+namespace POC\Cache\CacheImplementation;
 
 use POC\Cache\Filtering\Evaluateable;
 use POC\Core\Optioner;

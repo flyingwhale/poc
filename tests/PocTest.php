@@ -26,10 +26,10 @@ use Poc\Pocparameters;
 
 use Poc\Cache\Cache\CacheImplementationtation\AbstractPocCacheSpecific;
 
-use Poc\Cache\header\HeaderManipulator;
+use Poc\Cache\Header\HeaderManipulator;
 
-use Poc\Cache\filtering\Evaluateable;
-use unittest\handler\TestOutput;
+use Poc\Cache\Filtering\Evaluateable;
+use Poc\Handlers\TestOutput;
 use Poc\Poc;
 use Poc\Cache\PocCache;
 use Poc\Cache\CacheImplementation\CacheParams;

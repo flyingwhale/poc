@@ -20,7 +20,8 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace POC\handlers;
+namespace Poc\Handlers;
+
 class ServerOutput implements OutputInterface {
 
   function getLevel(){

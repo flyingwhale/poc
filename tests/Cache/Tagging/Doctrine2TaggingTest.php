@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 namespace unittest;
-use POC\cache\tagging\Doctrine2Tagging;
+use Poc\Cache\Tagging\Doctrine2Tagging;
 
 
 class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase

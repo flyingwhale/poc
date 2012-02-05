@@ -1,5 +1,5 @@
 <?php
-namespace POC\cache\tagging\driver\mysql;
+namespace Poc\Cache\Tagging\Driver\Mysql;
 
 class CacheModelManager extends ModelManager
 {
@@ -7,7 +7,7 @@ class CacheModelManager extends ModelManager
   {
     parent::__construct($dbHandler);
 
-    $this->setModelName('\\POC\\cache\\tagging\\driver\\mysql\\model\\Cache');
+    $this->setModelName('\\Poc\\Cache\\Tagging\\Driver\\Mysql\\Cache');
     $this->setTableName('caches');
     $this->setQuery('create', 'CREATE TABLE IF NOT EXISTS `caches` (
         `id` int(11) NOT NULL AUTO_INCREMENT,

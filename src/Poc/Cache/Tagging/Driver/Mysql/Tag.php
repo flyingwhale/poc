@@ -1,5 +1,5 @@
 <?php
-namespace POC\cache\tagging\driver\mysql\model;
+namespace Poc\Cache\Tagging\Driver\Mysql;
 
 class Tag
 {

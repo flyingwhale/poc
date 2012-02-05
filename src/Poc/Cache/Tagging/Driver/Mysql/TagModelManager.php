@@ -1,12 +1,12 @@
 <?php
-namespace POC\cache\tagging\driver\mysql;
+namespace Poc\Cache\Tagging\Driver\Mysql;
 
 class TagModelManager extends ModelManager
 {
   public function __construct($dbHandler)
   {
     parent::__construct($dbHandler);
-    $this->setModelName('\\POC\\cache\\tagging\\driver\\mysql\\model\\Tag');
+    $this->setModelName('\\Poc\\Cache\\Tagging\\Driver\\Mysql\\Tag');
     $this->setTableName('tags');
     $this->setQuery('create', 'CREATE TABLE IF NOT EXISTS `tags` (
         `id` int(11) NOT NULL AUTO_INCREMENT,

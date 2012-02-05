@@ -66,7 +66,7 @@ class TagsHasCachesModelManager extends ModelManager
   
   }
   
-  public function delete(\POC\cache\tagging\driver\mysql\model\TagCache $model)
+  public function delete(\POC\Cache\Tagging\Driver\Mysql\TagCache $model)
   {
     $dbh = $this->getDbHandler();
     

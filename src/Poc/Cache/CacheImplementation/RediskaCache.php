@@ -21,8 +21,9 @@ limitations under the License.
  *
  */
 
-namespace POC\Cache\CacheImplementation;
-use POC\core\Optioner;
+namespace Poc\Cache\CacheImplementation;
+
+use Poc\Core\Optioner;
 
 require_once 'Rediska.php';
 

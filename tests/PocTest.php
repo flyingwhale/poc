@@ -15,19 +15,13 @@ limitations under the License.
 */
 
 namespace unittest;
+
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
-
 use Poc\Cache\filtering\OutputFilter;
-
-
 use Poc\PocParams;
-
 use Poc\Pocparameters;
-
 use Poc\Cache\Cache\CacheImplementationtation\AbstractPocCacheSpecific;
-
 use Poc\Cache\Header\HeaderManipulator;
-
 use Poc\Cache\Filtering\Evaluateable;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
@@ -36,7 +30,7 @@ use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\CacheImplementation\MemcachedCache;
 use Poc\Cache\CacheImplementation\RediskaCache;
-use Poc\Cache\CacheImplementation\MongoCache;
+use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Tagging\MysqlTagging;
@@ -133,7 +127,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     };
 
     $objects['mongo'] = function(){
-      return new MongoCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
+      return new MongoDBCache(array(CacheParams::PARAM_TTL=>PocTest::TTL));
     };
 
     $handlers[] = 'file';

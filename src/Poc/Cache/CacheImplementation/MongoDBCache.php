@@ -25,7 +25,7 @@ namespace Poc\Cache\CacheImplementation;
 
 use Poc\Core\Optioner;
 
-class MongoCache extends Cache
+class MongoDBCache extends Cache
 {
   private $isNotConnected;
   private $mongo;

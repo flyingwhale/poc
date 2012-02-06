@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace POC\Cache\Tagging;
+namespace Poc\Cache\Tagging;
 
-use Doctrine\ORM\EntityManager, Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager,
+    Doctrine\ORM\Configuration;
+
 
 require_once 'Doctrine/Common/ClassLoader.php';
 
@@ -32,6 +34,7 @@ class Doctrine2Tagging extends AbstractDb
     const DEFPASS = 'poc_test';
 
     protected $entityManager;
+    protected $entitiesNamespaceString = 'Poc\\Cache\\Tagging\\Driver\\Doctrine2\\Entities';
     
     public function __construct ($db = self::DEFDB, $host = self::DEFHOST, $user = self::DEFUSER, $pass = self::DEFPASS)
     {
@@ -44,15 +47,13 @@ class Doctrine2Tagging extends AbstractDb
         );
         
 
-        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine');
-        $classLoader->register();
-        
         $config = new Configuration;
-        //        $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+//        $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
         
         
         $proxyDirPath = __DIR__.'/../../../../tmp/doctrine2/Proxies';
 
+        
         if (!is_dir($proxyDirPath))
         {
             mkdir($proxyDirPath, 0700, true);
@@ -61,8 +62,8 @@ class Doctrine2Tagging extends AbstractDb
         $config->setProxyDir($proxyDirPath);
         $config->setProxyNamespace('Proxies');
         $config->setAutoGenerateProxyClasses(true);
-
-        $driverImpl = $config->newDefaultAnnotationDriver(__DIR__.'/driver/doctrine2/Entities');
+        
+        $driverImpl = $config->newDefaultAnnotationDriver(__DIR__.'/Driver/Doctrine2/Entities');
         $config->setMetadataDriverImpl($driverImpl);
         
         $cache = new \Doctrine\Common\Cache\ArrayCache();
@@ -72,6 +73,7 @@ class Doctrine2Tagging extends AbstractDb
         $this->entityManager = EntityManager::create($connectionOptions, $config);
         
         parent::__construct();
+        
     }
 
 
@@ -113,7 +115,7 @@ class Doctrine2Tagging extends AbstractDb
         if (!$cache)
         {
             $entityManager->clear();
-        	$cache = new \Entities\Cache();
+        	$cache = new \Poc\Cache\Tagging\Driver\Doctrine2\Entities\Cache();
         	$cache->setHash($hash);
         	$cache->setExpires($expires);
         	$entityManager->persist($cache);
@@ -135,7 +137,7 @@ class Doctrine2Tagging extends AbstractDb
         		
         		if (!$tag)
         		{
-        		    $tag = new \Entities\Tag();
+        		    $tag = new \Poc\Cache\Tagging\Driver\Doctrine2\Entities\Tag();
         		    $tag->setTag($tagName);
         		    $entityManager->persist($tag);
         		    $entityManager->flush();
@@ -220,11 +222,11 @@ class Doctrine2Tagging extends AbstractDb
     }
 
     protected function getCacheRepository() {
-    	return $this->getEntityManager()->getRepository('Entities\\Cache');
+    	return $this->getEntityManager()->getRepository($this->entitiesNamespaceString.'\\Cache');
     }
 
     protected function getCacheTagRepository() {
-    	return $this->getEntityManager()->getRepository('Entities\\CacheTag');
+    	return $this->getEntityManager()->getRepository($this->entitiesNamespaceString.'\\CacheTag');
     }
 
     protected function getEntityManager() {
@@ -233,7 +235,7 @@ class Doctrine2Tagging extends AbstractDb
     }
     
     protected function getTagRepository() {
-    	return $this->getEntityManager()->getRepository('Entities\\Tag');
+    	return $this->getEntityManager()->getRepository($this->entitiesNamespaceString.'\\Tag');
     }
     
     

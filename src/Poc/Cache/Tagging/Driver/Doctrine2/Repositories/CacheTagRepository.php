@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Repositories;
+namespace Poc\Cache\Tagging\Driver\Doctrine2\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -30,7 +30,7 @@ class CacheTagRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
         
         $qb->select('ct')
-        ->from('Entities\\CacheTag', 'ct')
+        ->from('\\Poc\\Cache\\Tagging\\Driver\\Doctrine2\\Entities\\CacheTag', 'ct')
         ->leftJoin('ct.cache', 'c')
         ->leftJoin('ct.tag', 't')
         ->where('c.expires < :expires')

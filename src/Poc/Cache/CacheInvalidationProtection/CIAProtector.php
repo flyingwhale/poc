@@ -95,18 +95,7 @@ class CIAProtector implements OptionAbleInterface
       $sentinel = 0;
     }
     
-    if(!$notIncrease){
-      $sentinel += 1;
-    }
-    
-    if($sentinel){
-      $this->setSentinel($sentinel);      
-    }
-  
     return ($sentinel);
-  }
-  
-    return ($sentiel);
   }
 
   private function getKey(){
@@ -148,6 +137,7 @@ class CIAProtector implements OptionAbleInterface
     PLEASE WAIT!
     </BODY>
     </HTML>';
+
   }
 
   public function consult(){
@@ -155,24 +145,20 @@ class CIAProtector implements OptionAbleInterface
     $this->setSentinel($sentinelCnt+1);
     
     if($sentinelCnt == 0){
-      //$l = new \Logger(); $l->lwrite("GENERATION: ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
     }
     elseif ($sentinelCnt >=1){
       if($sentinelCnt <= 2){
         while($this->getSentinel()){
-          //$l = new \Logger(); $l->lwrite("Sleep(1): ".$_SERVER['HTTP_USER_AGENT'].$sentinelCnt);
           sleep(1);
         }
       }
-      elseif ($sentinelCnt >1){
-      }
       elseif ($sentinelCnt >= 3)
-      //if($waitCounter >= 2);
       {
         $this->outputHandler->ObPrintCallback($this->getRefreshPage());
         $this->outputHandler->stopBuffer();
       }
     }
+    
   }
   
   public function consultFinish(){
@@ -181,5 +167,3 @@ class CIAProtector implements OptionAbleInterface
   }
 }
 
-?>
-    

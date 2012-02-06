@@ -2,7 +2,6 @@
 
 require  __DIR__.'/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 require  __DIR__.'/../vendor/pimple/pimple/lib/Pimple.php';
-require  __DIR__.'/../src/Poc/Utility/Logger.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 

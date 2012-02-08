@@ -17,10 +17,8 @@ limitations under the License.
 namespace Poc\Cache\Tagging;
 
 use Doctrine\ORM\EntityManager,
-    Doctrine\ORM\Configuration;
-
-
-require_once 'Doctrine/Common/ClassLoader.php';
+	Doctrine\ORM\Configuration;
+    
 
 class Doctrine2Tagging extends AbstractDb
 {
@@ -47,7 +45,7 @@ class Doctrine2Tagging extends AbstractDb
         );
         
 
-        $config = new Configuration;
+        $config = new Configuration();
 //        $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
         
         

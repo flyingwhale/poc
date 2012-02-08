@@ -4,18 +4,16 @@
     "version": "0.4.1-alpha",
     "authors": [
     	{
-          "name": "Imre Toth",
-          "email": "tothimre@gmail.com"
+          "name":   "Imre Toth",
+          "email":  "tothimre@gmail.com"
       	}
     ],
     "require": {
-        "php": ">=5.3.0",
-        "monolog/monolog": "1.0.0",
-        "pimple/pimple": "1.0.0-dev",
+        "php":                  ">=5.3.0",
+        "monolog/monolog":      "1.0.0",
+        "pimple/pimple":        "1.0.0-dev",
         "symfony/class-loader": "2.1.0-dev",
-        "EHER/PHPUnit": "1.2"       
-    },
-    "autoload": {
-        "psr-0": { "poc": "framework/src/" }
+        "EHER/PHPUnit":         "1.2",
+        "doctrine/orm":         "2.2.0"       
     }
 }

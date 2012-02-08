@@ -29,19 +29,8 @@ Even more features are coming, so stay tuned.
 
 ## INSTALLATION
 
-Just copy the framework library anywhere where it is reachable from your project and include the autoload.php file from it, just take a look to the functionaltests folder you can see how the basic usage of the framework goes.
+As the projet is psr-0 compilant it is really easy to map it to your project. To download the dependencies please run the "./bin/get_composer" file from the root of the project or dowload the composer.phar for yourself and run the "composer.phar install"
 
-## The directory structure you see:
-
-* ./bin: At the moment contains a small script that generates the autoload file for the prject.
-* ./framework: Here it is. Essentially you need the src in it folder if you are a user the tests folder is for unittests.
-
-* ./functionaltests: this directory dontains some php files that can persent the basic functionality of the framework with the cache engines implemented.
-
-
-## DEVELOPMENT
-
-If you want to develop the project you should make shoure that the current tests are running with your changeset, and you have added more tests if it is a new feature.
 
 PHP unit:
 sudo pear channel-discover pear.phpunit.de
@@ -55,19 +44,6 @@ pear config-set auto_discover 1
 
 More info:
 http://pear.phpunit.de/
-
-
-PHP AutoloadBuilder CLI
-sudo pear channel-discover pear.netpirates.net
-sudo pear channel-discover components.ez.no
-sudo pear install theseer/Autoload
-
-test:
-phpab -v
-
-More info:
-https://github.com/theseer/Autoload
-
 
 Install redis:
 
@@ -92,7 +68,7 @@ Also the functionaltests directory can help you by inspecting the behaviour of t
 
 ## COPYRIGHT ##
 
-### Copyright [2011] [Imre Toth <tothimre at gmail>] ###
+### Copyright [2012] [Imre Toth <tothimre at gmail>] ###
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

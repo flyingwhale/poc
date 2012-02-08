@@ -8,3 +8,5 @@ build
 tmp/
 vendor/
 composer.phar
+composer.lock
+

@@ -158,10 +158,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
       $this->cacheBurner($cacheHandler,self::TESTSTRING3);
       $output3 = $this->getOutput();
 
-      echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-
-      $l = new \Logger(); $l->lwrite("\n\n".'|'.$output1.'|'.$output2.'|'."\n\n");
-
       $this->assertTrue($output1 == $output2);
       $this->assertTrue($output1 != $output3);
     }
@@ -383,7 +379,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $output1 = $this->getOutput();
 
     $hl = \headers_list();
-    //$l = new \Logger(); $l->lwrite(\serialize($hl));
   }
 
   function testCIAProtection(){

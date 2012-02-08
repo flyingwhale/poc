@@ -255,13 +255,9 @@ class Poc implements PocParams, OptionAbleInterface
       if ($startCache) {
         self::$level = \ob_get_level();
         $this->checkCia();
-        
         self::$outputHandler->startBuffer(self::CALLBACK_GENERATE);
-        
       } else {
-        
         self::$outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
-        
       }
     }
   }

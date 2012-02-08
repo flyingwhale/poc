@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Entities;
+namespace Poc\Cache\Tagging\Driver\Doctrine2\Entities;
 
 /**
- * @Entity(repositoryClass="Repositories\CacheRepository")
+ * @Entity(repositoryClass="\Poc\Cache\Tagging\Driver\Doctrine2\Repositories\CacheRepository")
  * @Table(name="caches")
  */
 class Cache
@@ -52,16 +52,16 @@ class Cache
     /**
      * Add cacheTags
      *
-     * @param $cacheTags Entities\CacheTag           
+     * @param $cacheTags CacheTag           
      */
-    public function addCacheTag (\Entities\CacheTag $cacheTags)
+    public function addCacheTag (CacheTag $cacheTags)
     {
         $this->cacheTags[] = $cacheTags;
     }
 
     public function addTag ($tag)
     {
-        $cacheTag = new \Entities\CacheTag();
+        $cacheTag = new CacheTag();
         $cacheTag->setCache($this);
         $cacheTag->setTag($tag);
         

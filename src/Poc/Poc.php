@@ -132,13 +132,11 @@ class Poc implements PocParams, OptionAbleInterface
        ' <b> Was Generated within </b>'.
        '<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->ObPrintCallback($ret);
-    return $ret;
+    self::$outputHandler->ObPrintCallback($buffer);
+    return $buffer;
   }
 
   public static function pocCallbackGenerate($buffer) {
-    
-    
     //TODO: call the ob_get_level from the outputHandler.
     if (self::$level == \ob_get_level() - 1) {
       if(self::$cache->getFilter()->evaluate())
@@ -167,13 +165,9 @@ class Poc implements PocParams, OptionAbleInterface
          }
 
           if($buffer) {
-         	self::$outputHandler->ObPrintCallback($return);
+         	self::$outputHandler->ObPrintCallback($buffer);
          	return ($return);
-          } else {
-         	if(self::$ciaProtector){
-         		return self::$ciaProtector->getRefreshPage();
           }
-        }
       }
     }
   }

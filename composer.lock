@@ -1,0 +1,17 @@
+{
+    "hash": "2af4b5e35b6d4d3d95dc3376059049b2",
+    "packages": [
+        {
+            "package": "symfony\/class-loader",
+            "version": "2.1.0-dev"
+        },
+        {
+            "package": "pimple\/pimple",
+            "version": "1.0.0-dev"
+        },
+        {
+            "package": "monolog\/monolog",
+            "version": "1.0.0"
+        }
+    ]
+}

@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Entities;
+namespace Poc\Cache\Tagging\Driver\Doctrine2\Entities;
 
 /**
- * @Entity(repositoryClass="Repositories\CacheTagRepository")
+ * @Entity(repositoryClass="Poc\Cache\Tagging\Driver\Doctrine2\Repositories\CacheTagRepository")
  * @Table(name="tags_has_caches")
  */
 class CacheTag

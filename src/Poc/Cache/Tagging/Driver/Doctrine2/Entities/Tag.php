@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Entities;
+namespace Poc\Cache\Tagging\Driver\Doctrine2\Entities;
 
 /**
- * @Entity(repositoryClass="Repositories\TagRepository")
+ * @Entity(repositoryClass="Poc\Cache\Tagging\Driver\Doctrine2\Repositories\TagRepository")
  * @Table(name="tags")
  */
 class Tag
@@ -47,9 +47,9 @@ class Tag
     /**
      * Add tagCaches
      *
-     * @param $tagCaches Entities\CacheTag           
+     * @param $tagCaches CacheTag           
      */
-    public function addCacheTag (\Entities\CacheTag $tagCaches)
+    public function addCacheTag (CacheTag $tagCaches)
     {
         $this->tagCaches[] = $tagCaches;
     }

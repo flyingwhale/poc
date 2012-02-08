@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Repositories;
+namespace Poc\Cache\Tagging\Driver\Doctrine2\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 

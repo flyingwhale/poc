@@ -20,9 +20,10 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader ();
 
-$loader->useIncludePath ( false );
-
 $namespaces = array ('Poc\\Tests' =>  __DIR__  , 'Poc' => __DIR__ . '/../src' );
-
 $loader->registerNamespaces ( $namespaces );
+
+$prefixes = array('Rediska' => __DIR__.'/../vendor/rediska/library');
+$loader->registerPrefixes($prefixes);
+
 $loader->register ();

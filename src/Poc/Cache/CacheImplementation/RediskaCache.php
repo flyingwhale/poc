@@ -25,8 +25,6 @@ namespace Poc\Cache\CacheImplementation;
 
 use Poc\Core\Optioner;
 
-require_once 'Rediska.php';
-
 class RediskaCache extends Cache {
 
   private $rediska;
@@ -44,7 +42,7 @@ class RediskaCache extends Cache {
 
     $className = 'Rediska';
     if(!class_exists($className)) {
-      throw new Exception(sprintf("%s class not exists", $className));
+      throw new \Exception(sprintf("%s class not exists", $className));
     }
 
     $this->rediska = new $className($this->optionAble->getOption('servers'));

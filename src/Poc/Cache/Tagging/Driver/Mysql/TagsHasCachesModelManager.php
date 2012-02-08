@@ -12,7 +12,8 @@ class TagsHasCachesModelManager extends ModelManager
     
     $this->setQuery('create', 'CREATE TABLE IF NOT EXISTS `tags_has_caches` (
         `tag_id` int(11) NOT NULL,
-        `cache_id` int(11) NOT NULL
+        `cache_id` int(11) NOT NULL,
+		PRIMARY KEY (`tag_id`,`cache_id`)    		
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8');
   }
 

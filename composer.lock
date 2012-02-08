@@ -1,9 +1,13 @@
 {
-    "hash": "2af4b5e35b6d4d3d95dc3376059049b2",
+    "hash": "4990e2c439a90e0010f4321cff1dec9b",
     "packages": [
         {
-            "package": "symfony\/class-loader",
+            "package": "symfony\/finder",
             "version": "2.1.0-dev"
+        },
+        {
+            "package": "EHER\/PHPUnit",
+            "version": "1.2"
         },
         {
             "package": "pimple\/pimple",
@@ -12,6 +16,10 @@
         {
             "package": "monolog\/monolog",
             "version": "1.0.0"
+        },
+        {
+            "package": "symfony\/class-loader",
+            "version": "2.1.0-dev"
         }
     ]
 }

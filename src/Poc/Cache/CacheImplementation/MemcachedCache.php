@@ -23,10 +23,10 @@ limitations under the License.
  *
  */
 
-namespace POC\Cache\CacheImplementation;
+namespace Poc\Cache\CacheImplementation;
 
-use POC\Cache\Filtering\Evaluateable;
-use POC\Core\Optioner;
+use Poc\Cache\Filtering\Evaluateable;
+use Poc\Core\Optioner;
 
 
 class MemcachedCache extends Cache {

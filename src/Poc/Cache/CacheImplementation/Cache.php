@@ -28,7 +28,7 @@ use Poc\Cache\Filtering\Hasher;
 use Poc\Core\OptionAble;
 use Poc\Cache\Tagging\MysqlTagging;
 use Poc\Cache\Tagging\Tagger;
-use POc\Core\OptionAbleInterface;
+use Poc\Core\OptionAbleInterface;
 
 abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
 {

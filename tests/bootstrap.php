@@ -20,11 +20,9 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader ();
 
-$loader->useIncludePath ( true );
+$loader->useIncludePath ( false );
 
-$namespaces = array ('Poc' => __DIR__ . '/../src' );
+$namespaces = array ('Poc\\Tests' =>  __DIR__  , 'Poc' => __DIR__ . '/../src' );
 
 $loader->registerNamespaces ( $namespaces );
-
 $loader->register ();
-

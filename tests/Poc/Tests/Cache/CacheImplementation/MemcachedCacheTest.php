@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace unittest;
+namespace Poc\Tests\Cache\CacheImplementation;
 use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;

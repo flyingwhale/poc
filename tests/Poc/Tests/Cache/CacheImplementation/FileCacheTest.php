@@ -14,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace unittest;
+namespace Poc\Tests\Cache\CacheImplementation;
 use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;
-use Poc\Cache\CacheImplementation\RediskaCache;
+use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Tagging\MysqlTagging;
 
 
-class RediskaCacheTest extends CacheTest
+class FileCacheTest extends CacheTest
 {
+
   function setUp_() {
-    $this->cache = new RediskaCache(array(CacheParams::PARAM_TTL=>parent::TTL));
+    $this->cache = new FileCache(array(CacheParams::PARAM_TTL=>parent::TTL));
   }
+
 }
+

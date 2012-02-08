@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-namespace unittest;
-use Poc\Cache\Tagging\MysqlTagging;
+namespace Poc\Tests\Cache\Tagging;
 
-class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
+use Poc\Cache\Tagging\Doctrine2Tagging;
+
+class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
 
     protected $fixtureDirPath;
@@ -23,14 +24,15 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $this->fixtureDirPath = __DIR__ . '/fixture/tagging';
         parent::setUp();
     }
+    
     /*
      * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection ()
     {
-        
-        $dsn = 'mysql:dbname=' . MysqlTagging::DEFDB . ';host=' . MysqlTagging::DEFHOST;
-        $pdo = new \PDO($dsn, MysqlTagging::DEFUSER, MysqlTagging::DEFPASS);
+        $dsn = 'mysql:dbname=' . Doctrine2Tagging::DEFDB . ';host=' . Doctrine2Tagging::DEFHOST;
+        $pdo = new \PDO($dsn, Doctrine2Tagging::DEFUSER, 
+                Doctrine2Tagging::DEFPASS);
         
         return $this->createDefaultDBConnection($pdo);
     }
@@ -48,7 +50,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $expectedDatasetPath = $this->fixtureDirPath . '/addCacheToTags/' . $expectedDatasetFilename;
         
-        $tagging = new MysqlTagging();
+        $tagging = new Doctrine2Tagging();
         
         $tagging->addCacheToTags($tagsString, $hash, $expires);
         
@@ -68,7 +70,6 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         
         $this->assertDataSetsEqual($exepctedDataSet, $dataSet, 
                 'addCacheToTags() duplication test');
-    
     }
 
     /**
@@ -90,7 +91,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
         
-        $tagging = new MysqlTagging();
+        $tagging = new Doctrine2Tagging();
         $tagging->flushOutdated();
         
         $dataSet = $this->getConnection()->createDataSet(
@@ -105,7 +106,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public function testTagInvalidate ($initDatasetFilename, $invalidateTag, 
             $expectedDatasetFilename)
     {
-        /*
+            /*
          * This function use mock object to emulate cacheSpecificClearItem A
          * short example A cache -> tag1, tag2 B cache -> tag2, tag3 C cache->
          * tag2 tag2 invalidate -> clear all (A, B, C caches)
@@ -128,7 +129,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
             ->method('cacheSpecificClearItem')
             ->will($this->returnValue(true));
         
-        $tagging = new MysqlTagging();
+        $tagging = new Doctrine2Tagging();
         
         $tagging->tagInvalidate($invalidateTag);
         
@@ -138,26 +139,25 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
     }
 
-    public function addCacheToTagsProvider ()
+    public static function addCacheToTagsProvider ()
     {
         $data = array(array('tag1,tag2', '12345678901234567890123456789012', 1234, 'expected_01'));
-        
+                
         return $data;
     }
 
-    public function flushOutdatedProvider ()
+    public static function flushOutdatedProvider ()
     {
         $data = array(array('init_01.xml', 'expected_01.xml'));
-        
+                
         return $data;
     }
 
-    public function tagInvalidateProvider ()
+    public static function tagInvalidateProvider ()
     {
         $data = array(array('init_01.xml', 'tag2', 'expected_01.xml'));
         
         return $data;
     }
-
 }
 

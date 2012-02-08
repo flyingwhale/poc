@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace Poc\Cache\Cacheimplementation;
+namespace Poc\Cache\CacheImplementation;
 
 /**
  * This interface contains all possible parameter index values for the Cache 

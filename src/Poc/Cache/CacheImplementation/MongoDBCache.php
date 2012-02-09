@@ -51,7 +51,7 @@ class MongoDBCache extends Cache
       $className = 'Mongo';
 
       if(!class_exists($className)) {
-        throw new Exception(sprintf("%s class not exists", $className));
+        throw new \Exception(sprintf("%s class not exists", $className));
       }
       $this->mongo = new $className();
       $this->isNotConnected = 1;

@@ -1,5 +1,0 @@
-#!/bin/bash
-wget http://getcomposer.org/composer.phar
-chmod 777 composer.phar
-./composer.phar install
-

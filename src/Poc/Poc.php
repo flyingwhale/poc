@@ -128,9 +128,9 @@ class Poc implements PocParams, OptionAbleInterface
   public static function pocCallbackShowOutput($buffer) {
     $ret = $buffer;
     if (self::$debug) {
-       $ret = $ret.'<br>This page has not been cached because the page as it is Blacklisted.'.
-       ' <b> Was Generated within </b>'.
-       '<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
+       $ret = $ret.'<br>This page has not been cached because the page is Blacklisted.'.
+       ' <b> Was Generated in '.
+       ((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
     self::$outputHandler->ObPrintCallback($buffer);
     return $buffer;
@@ -145,10 +145,10 @@ class Poc implements PocParams, OptionAbleInterface
          if(!self::$outputFilter->isOutputBlacklisted($buffer)){
            if($buffer){             
              if (self::$debug) {
-                $return .= '<br>This page has been '
-                .'<b> generated within </b> in '
-                .'<b>'.((microtime() - self::$startTime) * 1000).
-                                                          '</b> milliseconds.';
+                $return .= '<br>This page has been '.
+                '<b> generated in '.
+                ((microtime() - self::$startTime) * 1000).
+                '</b> milliseconds.';
               }
               $headers = self::$outputHandler->headersList();
               self::$headerManipulator->storeHeadersForPreservation($headers);
@@ -175,9 +175,9 @@ class Poc implements PocParams, OptionAbleInterface
   public static function pocCallbackCache($buffer) {
     $return = $buffer;
     if (self::$debug) {
-     $return .=  '<br>This page has been '
-     .' <b> Fetched from the cache within </b>'
-     .'<b>'.((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
+     $return .=  '<br>This page has been '.
+     ' <b> fetched from the cache in '.
+     ((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
     }
     self::$outputHandler->ObPrintCallback($return);
     return $return;
@@ -248,11 +248,7 @@ class Poc implements PocParams, OptionAbleInterface
     self::$startTime = microtime();
 
     if (!$this->fetchCache()) {
-      $startCache = true;
-        if (self::$cache->getFilter()->isBlacklisted()) {
-          $startCache = false;
-        }
-      if ($startCache) {
+      if (!self::$cache->getFilter()->isBlacklisted()) {
         self::$level = \ob_get_level();
         $this->checkCia();
         self::$outputHandler->startBuffer(self::CALLBACK_GENERATE);

@@ -1,7 +1,6 @@
 {
     "name": "poc/poc",
     "type": "library",
-    "version": "master-dev",
     "authors": [
         {
           "name":   "Imre Toth",

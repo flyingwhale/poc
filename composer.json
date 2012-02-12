@@ -1,32 +1,19 @@
 {
     "name": "poc/poc",
     "type": "library",
-    "version": "0.4.2-alpha",
     "authors": [
         {
           "name":   "Imre Toth",
           "email":  "tothimre@gmail.com"
         }
     ],
-    "repositories": {
-        "Rediska Repository": {
-            "package": {
-                "name": "rediska",
-                "version": "0.5.6",
-                "dist": {
-                    "url": "https://github.com/Shumkov/Rediska/zipball/release-0-5-6",
-                    "type": "zip"
-                }
-            }
-        }
-    },    
-    "require": {
+
+   "require": {
         "php":                  ">=5.3.0",
         "monolog/monolog":      "1.0.0",
         "pimple/pimple":        "1.0.0-dev",
         "symfony/class-loader": "v2.0.10",
         "EHER/PHPUnit":         "1.2",
-        "doctrine/orm":         "2.2.0",
-        "rediska":              "0.5.6"
+        "doctrine/orm":         "2.2.0"
     }
 }

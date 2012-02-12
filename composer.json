@@ -8,13 +8,25 @@
           "email":  "tothimre@gmail.com"
         }
     ],
-
+    "repositories": {
+        "Rediska Repository": {
+            "package": {
+                "name": "rediska",
+                "version": "master",
+                "dist": {
+                    "url": "https://github.com/tothimre/poc/zipball/master",
+                    "type": "zip"
+                }
+            }
+        }
+    },     
    "require": {
         "php":                  ">=5.3.0",
         "monolog/monolog":      "1.0.0",
         "pimple/pimple":        "1.0.0-dev",
         "symfony/class-loader": "v2.0.10",
         "EHER/PHPUnit":         "1.2",
-        "doctrine/orm":         "2.2.0"
+        "doctrine/orm":         "2.2.0",
+	"rediska":		"master"
     }
 }

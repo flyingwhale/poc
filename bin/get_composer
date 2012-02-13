@@ -1,5 +1,20 @@
 #!/bin/bash
-wget http://getcomposer.org/composer.phar
-chmod 777 composer.phar
+if [ -f composer.phar ]
+then
+    echo composer.phar file exists
+else
+    wget http://getcomposer.org/composer.phar
+    chmod 777 composer.phar    
+fi
 ./composer.phar install
 
+cd vendor
+if [ -d rediska ]
+then
+    echo resiska directory exists
+else
+    wget http://rediska.geometria-lab.net/download/Rediska-0-5-5.zip
+    unzip Rediska-0-5-5.zip
+    mv  Rediska\ 0.5.5 rediska
+    rm Rediska-0-5-5.zip
+fi

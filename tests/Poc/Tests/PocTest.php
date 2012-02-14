@@ -256,25 +256,27 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   function testTagging(){
+    $getCache = function($hasher){return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
+    		CacheParams::PARAM_HASHER=>$hasher, CacheParams::PARAM_TAGDB=>new MysqlTagging()));};
+    
 
     $hasher = new Hasher();
     $hasher->addDistinguishVariable("distn1");
-    $cache1 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
-    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache1 = $getCache($hasher);
     $cache1->addCacheAddTags(true, "user,customer,inventory");
 
     $cache1->clearAll();
 
     $hasher = new Hasher();
     $hasher->addDistinguishVariable("distn2");
-    $cache2 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
-    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache2 = $getCache($hasher);
+    
     $cache2->addCacheAddTags(true, "inventory");
     
     $hasher = new Hasher();
     $hasher->addDistinguishVariable("distn3");
-    $cache3 = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
-    		CacheParams::PARAM_HASHER=>$hasher));
+    $cache3 = $getCache($hasher);
+    
     $cache3->addCacheAddTags(true, "inventory");
     $cache3->addCacheAddTags(true, "customer");
      

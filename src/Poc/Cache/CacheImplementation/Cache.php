@@ -21,6 +21,10 @@ limitations under the License.
  */
 namespace Poc\Cache\CacheImplementation;
 
+use Poc\Poc;
+
+use Poc\Cache\Tagging\AbstractDb;
+
 use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;
@@ -35,7 +39,10 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
   /** This variable must be declared at the constructors of this class.*/
   protected $ttl;
 
-  /** The databese that stores the caches*/
+  /** 
+   * The database that stores the caches
+   * @var AbstractDb
+   **/
   private  $tagDb;
 
   protected $defaultOptions = array();
@@ -73,7 +80,7 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
     
     $this->optionAble[self::PARAM_TTL] = 5;
     $this->optionAble[self::PARAM_TAGDB] = function(){
-      return new MysqlTagging();
+      return null;
     };
   } 
    
@@ -95,18 +102,26 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
   }
 
   public function addCacheInvalidationTags($condition,$tags){
-    if($condition){
-      $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
-       $tagger->addCache($this);
-       $this->cacheInvalidationTags[] = $tagger;
+    if(!$this->tagDb){
+      throw new \Exception("Please Define a TagDb");
+    } else {
+      if($condition){
+        $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+         $tagger->addCache($this);
+         $this->cacheInvalidationTags[] = $tagger;
+      }
     }
   }
 
   public function addCacheAddTags($condition,$tags){
-    if($condition){
-      $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
-      $tagger->addCache($this);
-      $this->cacheAddTags[] = $tagger;
+    if(!$this->tagDb){
+      throw new \Exception("Please Define a TagDb");
+    } else {
+      if($condition){
+        $tagger = new Tagger($tags,$this->hasher,$this->tagDb,$this->ttl);
+        $tagger->addCache($this);
+        $this->cacheAddTags[] = $tagger;
+      }
     }
   }
 
@@ -130,19 +145,7 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
     return $this->hasher;
   }
 
-  private function setTagDb(AbstractDb $tagDb = null){
-    if ($tagDb == null) {
-      $this->tagDb = new MysqlTagging();
-    } else {
-      $this->tagDb = $tagDb;
-    }
-    $this->tagDb->setCache($this);
-  }
-
   function getTagDb(){
-    if (!$this->tagDb) {
-      $this->setTagDb();
-    }
     return $this->tagDb;
   }
 

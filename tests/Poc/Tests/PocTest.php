@@ -76,7 +76,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   /**
    *
    * @param Cache $cache
-   * @param string outputHandlertring
+   * @param string $testString
    */
   private function cacheBurner($cache, $testString = "testString") {
   	$outputHandler = new TestOutput();
@@ -87,9 +87,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
   /**
    *
    * @param Poc $poc
+   * @param TestOutput $outputHandler
    * @param string $testString
    */
-  private function pocBurner(Poc $poc,$outputHandler, $testString = "testString") {
+  private function pocBurner(Poc $poc, $outputHandler, $testString = "testString") {
   	$this->setOutput('');
   	$poc->start();
   
@@ -140,10 +141,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
       $this->cacheBurner($cacheHandler,self::TESTSTRING1);
       $output1 = $this->getOutput();
-      // This is because of the Rediska cache iplementation,
-      // Because ittransofms any serialized array to array when stores,
-      // so the resut what you will fetch form the cache an array will be
-      // to elinimate this behaviour some exta line has to be added to that
+      // This is because of the Rediska cache implementation,
+      // Because it transforms any serialized array to array when it stores it,
+      // the result that you will fetch from the cache is an array instead of string.
+      // To eliminate this behaviour some exta line has to be added to that
       // class
       $this->assertTrue(!is_array($this->getHeader()));
 
@@ -167,7 +168,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $blackList = new Filter();
     $blackList->addBlacklistCondition(true);
 
-    $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::TTL*100,
+    $cacheHandler = new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
    		                                 CacheParams::PARAM_FILTER => $blackList));
 
     $this->cacheBurner($cacheHandler,"1");

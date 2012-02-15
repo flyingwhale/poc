@@ -17,7 +17,7 @@ limitations under the License.
 
 /**
  * This Interface contains all the possible indexes for the parameters in the
- * Poc object. extends the CachePArams interface.
+ * Poc object. Extends the CacheParams interface.
  *
  * @author Imer Toth
  *

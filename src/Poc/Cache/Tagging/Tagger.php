@@ -22,6 +22,7 @@ class Tagger {
 
   private $tags;
   private $ttl;
+  
   /**
    * 
    * @var AbstractDb;

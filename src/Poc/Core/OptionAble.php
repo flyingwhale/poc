@@ -62,9 +62,8 @@ class OptionAble extends \Pimple
     
   public function getOption($key){
     if(isset($this->options[$key])){
-     $return = $this->options[$key];
+     return $this->options[$key];
     }
-    return $return;
   }
   
   public function optionsMerge(){

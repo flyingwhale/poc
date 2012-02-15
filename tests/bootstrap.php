@@ -20,7 +20,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader ();
 
-$namespaces = array ('Poc\\Tests' =>  __DIR__  , 'Poc' => __DIR__ . '/../src' );
+$namespaces = array ('Poc\\Tests' =>  __DIR__);
 $loader->registerNamespaces ( $namespaces );
 
 $prefixes = array('Rediska' => __DIR__.'/../vendor/rediska/library');

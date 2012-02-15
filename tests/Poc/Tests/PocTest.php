@@ -204,7 +204,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     $this->cacheBurner($cacheHandler1, self::TESTSTRING1);
     $output1 = $this->getOutput();
-    $this->assertTrue(!is_array($this->getHeader()));
 
     $cacheHandler2 = $objects['c2'];
     $this->cacheBurner($cacheHandler2,self::TESTSTRING2);

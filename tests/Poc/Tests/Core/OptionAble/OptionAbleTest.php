@@ -18,9 +18,9 @@ namespace unittest;
 
 use Poc\Poc;
 
-use Poc\Core\OptionAble;
+use Poc\Core\Optionable\OptionAble;
 
-use Poc\Core\OptionAbleInterface;
+use Poc\Core\OptionAble\OptionAbleInterface;
 
 class MockOptionAbleInterfaceClass implements OptionAbleInterface
 {

@@ -20,7 +20,7 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace Poc\Core;
+namespace Poc\Core\OptionAble;
 
 interface OptionAbleInterface
 {

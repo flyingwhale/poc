@@ -24,7 +24,7 @@ limitations under the License.
  * @author Imre Toth
  *
  */
-namespace Poc\Core;
+namespace Poc\Core\Optionable;
 
 class OptionAble extends \Pimple
 {

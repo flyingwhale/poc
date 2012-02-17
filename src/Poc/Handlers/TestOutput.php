@@ -16,9 +16,9 @@ limitations under the License.
 
 namespace Poc\Handlers;
 
-use Poc\Core\OptionAble;
+use Poc\Core\OptionAble\OptionAble;
 
-use Poc\Core\OptionAbleInterface;
+use Poc\Core\OptionAble\OptionAbleInterface;
 
 use Poc\Cache\Header\HeaderManipulator;
 

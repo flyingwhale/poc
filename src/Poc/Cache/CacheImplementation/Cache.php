@@ -29,10 +29,10 @@ use Poc\Cache\CacheImplementation\CacheParams;
 
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Filtering\Hasher;
-use Poc\Core\OptionAble;
+use Poc\Core\OptionAble\OptionAble;
 use Poc\Cache\Tagging\MysqlTagging;
 use Poc\Cache\Tagging\Tagger;
-use Poc\Core\OptionAbleInterface;
+use Poc\Core\OptionAble\OptionAbleInterface;
 
 abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
 {

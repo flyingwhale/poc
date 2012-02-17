@@ -16,6 +16,8 @@ limitations under the License.
 
 namespace unittest;
 
+use Poc\Plugins\TestPlugin\TestPlugin;
+
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 use Poc\Cache\filtering\OutputFilter;
 use Poc\PocParams;
@@ -79,6 +81,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
    * @param string outputHandlertring
    */
   private function cacheBurner($cache, $testString = "testString") {
+    
+    $t = new TestPlugin();
+    $t->addEnityElements();
+    
   	$outputHandler = new TestOutput();
   	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
     $this->pocBurner($poc, $outputHandler, $testString);

@@ -1,11 +1,9 @@
 <?php
 namespace Poc\Cache\CacheInvalidationProtection;
 
-use POC\core\OptionAbleInterface;
+use Poc\Core\OptionAble\OptionAbleInterface;
 
-use POC\core\OptionAble;
-
-use POC\cache\tagging\driver\mysql\model\Cache;
+use Poc\Core\OptionAble\OptionAble;
 
 /**
  * This calss name comes form the "Cache Invalidation Attack Protection" name.

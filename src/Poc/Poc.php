@@ -22,15 +22,17 @@ limitations under the License.
  */
 namespace Poc;
 
+use Poc\Core\Plugin\PluginDictionary;
+
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
-use Poc\Core\OptionAbleInterface;
+use Poc\Core\OptionAble\OptionAbleInterface;
 
 use Poc\Handlers\ServerOutput;
 
 use Poc\Cache\CacheImplementation\FileCache;
 
-use Poc\Core\OptionAble;
+use Poc\Core\OptionAble\OptionAble;
 
 use Poc\Cache\CacheImplementation\AbstractPocCacheSpecific;
 
@@ -50,7 +52,7 @@ use Poc\Cache\Filtering\OutputFilter;
  * @author Imre Toth
  *
  */
-class Poc implements PocParams, OptionAbleInterface
+class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
 {
   const CALLBACK_GENERATE = 'pocCallbackGenerate';
   const CALLBACK_SHOWOUTPUT = 'pocCallbackShowOutput';
@@ -119,6 +121,12 @@ class Poc implements PocParams, OptionAbleInterface
    * @var CIAProtector
    */
   static private $ciaProtector;
+  
+  /**
+   * 
+   * @var PluginDictionary
+   */
+  private $pluginDictionary;
 
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -211,8 +219,13 @@ class Poc implements PocParams, OptionAbleInterface
     self::$ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
     self::$ciaProtector->setCache(self::$cache);
     self::$ciaProtector->setOutputHandler(self::$outputHandler);
+    $this->pluginDictionary = PluginDictionary::getIstance();
+    
+    $this->pluginDictionary->runEntity(self::POC_DICTIONARY_ENTRY_BEFORE_OUTPUT_SAVE);
 
     $this->setDebug($this->optionAble->getOption('debug'));
+    
+    $this->pluginDictionary->runEntity(self::POC_DICTIONARY_ENTRY_CONSTRUCTOR_END);
   }
 
   private function fetchCache($ob_start = true) {

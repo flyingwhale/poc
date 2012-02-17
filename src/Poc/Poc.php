@@ -22,7 +22,7 @@ limitations under the License.
  */
 namespace Poc;
 
-use Poc\Core\Plugin\EventDictionary;
+use Poc\Core\Event\EventDictionary;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 

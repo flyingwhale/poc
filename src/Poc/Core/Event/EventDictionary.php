@@ -1,5 +1,5 @@
 <?php
-namespace Poc\Core\Plugin;
+namespace Poc\Core\Event;
 
 class EventDictionary {
 
@@ -11,7 +11,12 @@ class EventDictionary {
     $this->entityCollection = array();
   }
   
-  function addEvent($key, EventEentity $entiy){
+  /**
+   * 
+   * @param String $key
+   * @param EventEentity $entiy
+   */
+  function addEvent($key, $entiy){
       $this->entityCollection[$key][] = $entiy;
   }
   

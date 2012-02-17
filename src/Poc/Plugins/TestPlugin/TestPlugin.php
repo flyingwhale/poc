@@ -3,7 +3,7 @@ namespace Poc\Plugins\TestPlugin;
 
 use Poc\PocDictionaryEntries;
 
-use Poc\Core\Plugin\Plugin;
+use Poc\Core\Event\Plugin;
 
 class TestPlugin extends Plugin{
   

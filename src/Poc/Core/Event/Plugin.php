@@ -1,7 +1,6 @@
 <?php
-namespace Poc\Core\Plugin;
+namespace Poc\Core\Event;
 
-use Poc\Plugins\TestPlugin\invoke1;
 
 use Poc\PocDictionaryEntries;
 

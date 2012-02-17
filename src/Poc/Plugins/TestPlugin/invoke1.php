@@ -7,9 +7,9 @@ use Poc\Core\Plugin\PluginEentityElement;
 
 class invoke1 implements PluginEentityElement {
 
-  
-  function invoke(){
-    echo("ZIZI");  
-}
 
-?>
+  function invoke(){
+    echo("ZIZI");
+  }
+
+}

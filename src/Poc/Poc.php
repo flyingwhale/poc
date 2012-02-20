@@ -22,6 +22,18 @@ limitations under the License.
  */
 namespace Poc;
 
+use Poc\Plugins\TestPlugin\Test2Plugin;
+
+use Poc\PocEvents\PocEventNames;
+
+use Poc\PocEvents\PocListener;
+
+use Poc\PocEvents\PocEvent;
+
+use Poc\Core\Event\PocDispatcher;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 use Poc\Core\Event\EventDictionary;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
@@ -128,6 +140,19 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    */
   private $eventDictionary;
 
+  /**
+   * $var Poc
+   */
+  private static $instance;
+  
+  /**
+   * 
+   * @var \Symfony\Component\EventDispatcher\EventDispatcher;
+   */
+  private static $pocDispatcher;
+
+  private $pocListener;
+  
   private function setDebug($debug) {
     self::$debug = $debug;
   }
@@ -171,7 +196,9 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
              }
            }
          }
-
+          
+          self::$pocDispatcher->dispatch(PocEventNames::BEFORE_CACHED_OUTPUT_SENT,new PocEvent(self::$instance));
+                  
           if($buffer) {
          	self::$outputHandler->ObPrintCallback($buffer);
          	return ($return);
@@ -208,6 +235,7 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
+    self::$instance = $this;
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     self::$cache = $this->optionAble->getOption(self::PARAM_CACHE);
@@ -218,13 +246,11 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
     self::$outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
     self::$ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
     self::$ciaProtector->setCache(self::$cache);
-    self::$ciaProtector->setOutputHandler(self::$outputHandler);
-    
-    $this->eventDictionary = EventDictionary::getIstance();
-    
-    $this->eventDictionary->runEvent(self::POC_DICTIONARY_ENTRY_BEFORE_OUTPUT_SAVE);
+    self::$ciaProtector->setOutputHandler(self::$outputHandler);    
     $this->setDebug($this->optionAble->getOption('debug'));
-    $this->eventDictionary->runEvent(self::POC_DICTIONARY_ENTRY_CONSTRUCTOR_END);
+    self::$pocDispatcher = PocDispatcher::getIstance();
+    new PocListener();
+    //self::$pocDispatcher->addSubscriber(new Test2Plugin());
   }
 
   private function fetchCache($ob_start = true) {

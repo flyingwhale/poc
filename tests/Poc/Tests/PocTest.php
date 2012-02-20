@@ -81,11 +81,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
    * @param string outputHandlertring
    */
   private function cacheBurner($cache, $testString = "testString") {
-    
-    $t = new TestPlugin();
-    $t->addEventEntities();
-    
-  	$outputHandler = new TestOutput();
+    $outputHandler = new TestOutput();
   	$poc = new Poc(array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
     $this->pocBurner($poc, $outputHandler, $testString);
   }

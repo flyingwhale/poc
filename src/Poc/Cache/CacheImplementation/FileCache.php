@@ -22,7 +22,6 @@ limitations under the License.
  */
 namespace Poc\Cache\CacheImplementation;
 use Poc\Core\Optioner;
-use POC\Cache\filtering\Filter;
 
 class FileCache extends Cache {
 

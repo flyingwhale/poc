@@ -22,14 +22,14 @@ limitations under the License.
  */
 namespace Poc\Handlers;
 
-class ServerOutput implements OutputInterface {
+class ServerOutput extends Output {
 
   function getLevel(){
     return ob_get_level();
   }
 
   function startBuffer($callbackFunctname){
-    ob_start(array('\POC\Poc', $callbackFunctname));
+    ob_start(array($this->poc, $callbackFunctname));
   }
 
   function StopBuffer(){
@@ -45,6 +45,7 @@ class ServerOutput implements OutputInterface {
   }
 
   function ObPrintCallback($output){
+       
     echo $output;
   }
 

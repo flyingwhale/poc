@@ -2,7 +2,8 @@
 namespace Poc\PocEvents;
 
 interface PocEventNames {
-  const BEFORE_CACHED_OUTPUT_SENT = "before_cached_output_sent";
+  const BEFORE_OUTPUT_SENT_TO_CLIENT = "bcostc";
+  //const BEFORE_OUTPUT_SENT_TO_CLIENT = "bcostc";
 }
 
 ?>

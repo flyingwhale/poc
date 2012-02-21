@@ -23,7 +23,7 @@ limitations under the License.
  *
  */
 
-namespace POC\Handlers;
+namespace Poc\Handlers;
 
 interface OutputInterface
 {
@@ -35,4 +35,9 @@ interface OutputInterface
   function ObPrintCallback($output);
   function headersList();
   function printOutputCallback($output);
+  /**
+   * 
+   * @param Poc $poc
+   */
+  function setPoc($poc);
 }

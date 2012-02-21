@@ -16,10 +16,12 @@ limitations under the License.
 
 namespace unittest;
 
+use Poc\Plugins\PocLogs;
+
 use Poc\Plugins\TestPlugin\TestPlugin;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
-use Poc\Cache\filtering\OutputFilter;
+use Poc\Cache\Filtering\OutputFilter;
 use Poc\PocParams;
 use Poc\Pocparameters;
 use Poc\Cache\Cache\CacheImplementationtation\AbstractPocCacheSpecific;
@@ -74,7 +76,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
   private function setHeader($header) {
     $this->analizeThisHeader = $header;
   }
-
+/*
+  public function __construct(){
+    new PocLogs();  
+  }*/
+  
   /**
    *
    * @param Cache $cache
@@ -99,11 +105,12 @@ class PocTest extends \PHPUnit_Framework_TestCase
   		echo $testString;
   		$poc->destruct();
   		$this->setHeader($outputHandler->getHeader());
-  		$this->setOutput($outputHandler->getOutput());
+  		$this->setOutput($outputHandler->getOutput());  		
   	} else {
   	    $this->setHeader($outputHandler->getHeader());
         $this->setOutput($outputHandler->getOutput());
         $poc->destruct();
+        
         if($outputHandler->getOutput()){
           $this->setHeader($outputHandler->getHeader());
           $this->setOutput($outputHandler->getOutput());
@@ -174,16 +181,13 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     $this->cacheBurner($cacheHandler,"1");
 
-    $this->cacheBurner($cacheHandler,self::TESTSTRING1);
+    $this->cacheBurner($cacheHandler,self::NEEDLE);
     $output1 = $this->getOutput();
-
+    
     $this->cacheBurner($cacheHandler,self::TESTSTRING2);
     $output2 = $this->getOutput();
-
-    echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
-
+    $this->assertTrue(!empty($output1));
     $this->assertTrue($output1 != $output2);
-
   }
 
 
@@ -210,11 +214,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $cacheHandler2 = $objects['c2'];
     $this->cacheBurner($cacheHandler2,self::TESTSTRING2);
     $output2 = $this->getOutput();
-    echo "\n\n".'|'.$output1.'|'.$output2.'|'."\n\n";
 
     $this->assertTrue($output1 != $output2);
   }
-
 
   public function testOutputFilter(){
     $objects = new \Pimple();
@@ -326,42 +328,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
     
   }
 
-  //This thest is removed because there will be a better implementation of this feature.
-  
-/*  function testDebug(){
-    $outputHandler = new TestOutput();
-    $blackList = new Filter();
-    $cache = new MemcachedCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,
-                                      CacheParams::PARAM_FILTER=>$blackList));
-
-    $cache->clearAll();
-    $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
-                         Poc::PARAM_OUTPUTHANDLER => $outputHandler,
-                         Poc::PARAM_DEBUG => true));
-
-    $this->pocBurner($poc, $outputHandler, rand().rand());
-    $output1 = $this->getOutput();
-
-    $this->assertContains('milliseconds', $output1);
-    $this->assertNotContains('cache', $output1);
-
-    $this->pocBurner($poc, $outputHandler, rand().rand());
-    $output2 = $this->getOutput();
-    $this->assertContains('cache', $output2);
-
-    $blackList->addBlacklistCondition(true);
-    $this->pocBurner($poc, $outputHandler, rand().rand());
-    $output3 = $this->getOutput();
-
-//    $l = new \Logger(); $l->lwrite('1:'.$output1." \n\n\n2:".$output2." \n\n\n3:$output3");
-    
-    $this->assertContains("Blacklisted", $output3);
-
-    $this->assertTrue($output1 != $output2);
-    $this->assertTrue($output1 != $output3);
-    $this->assertTrue($output2 != $output3);
-  }
-*/
   
   function testHeaderMainpulation(){
 
@@ -406,6 +372,5 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($this->getOutput() == $cia->getRefreshPage());
 
   }
-
 }
 

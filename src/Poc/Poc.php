@@ -22,6 +22,10 @@ limitations under the License.
  */
 namespace Poc;
 
+use Monolog\Handler\StreamHandler;
+
+use Monolog\Logger;
+
 use Poc\Plugins\TestPlugin\Test2Plugin;
 
 use Poc\PocEvents\PocEventNames;
@@ -64,7 +68,7 @@ use Poc\Cache\Filtering\OutputFilter;
  * @author Imre Toth
  *
  */
-class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
+class Poc implements PocParams, OptionAbleInterface
 {
   const CALLBACK_GENERATE = 'pocCallbackGenerate';
   const CALLBACK_SHOWOUTPUT = 'pocCallbackShowOutput';
@@ -74,7 +78,7 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    *
    * @var OutputInterface
    */
-  static private $outputHandler = null;
+  private $outputHandler = null;
 
   /**
    *
@@ -87,7 +91,7 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    *
    * @var boolean
    */
-  static private $debug = null;
+  private $debug = null;
 
   /**
    * When the start function of the class executed sets its value by
@@ -95,31 +99,31 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    *
    * @var unknown_type
    */
-  static private $startTime = null;
+  private $startTime = null;
 
   /**
    *
    * @var unknown_type
    */
-  static private $level = null;
+  private $level = null;
 
   /**
    *
    * @var HeaderManipulator
    */
-  static private $headerManipulator = null;
+  private $headerManipulator = null;
 
   /**
    *
    * @var OutputFilter
    */
-  static private $outputFilter = null;
+  private $outputFilter = null;
 
   /**
    *
    * @var Cache
    */
-  static private $cache = null;
+  private $cache = null;
 
   /**
    *
@@ -132,7 +136,7 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    *
    * @var CIAProtector
    */
-  static private $ciaProtector;
+  private $ciaProtector;
   
   /**
    * 
@@ -140,81 +144,79 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
    */
   private $eventDictionary;
 
-  /**
-   * $var Poc
-   */
-  private static $instance;
   
   /**
    * 
    * @var \Symfony\Component\EventDispatcher\EventDispatcher;
    */
-  private static $pocDispatcher;
+  private $pocDispatcher;
 
   private $pocListener;
   
   private function setDebug($debug) {
-    self::$debug = $debug;
+    $this->debug = $debug;
   }
 
 
-  public static function pocCallbackShowOutput($buffer) {
+  public function pocCallbackShowOutput($buffer) {
     $ret = $buffer;
-    if (self::$debug) {
+    if ($this->debug) {
        $ret = $ret.'<br>This page has not been cached because the page is Blacklisted.'.
        ' <b> Was Generated in '.
-       ((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
+       ((microtime() - $this->startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->ObPrintCallback($buffer);
-    return $buffer;
+    $this->outputHandler->ObPrintCallback($buffer);
+    
+    return $ret;
   }
 
-  public static function pocCallbackGenerate($buffer) {
+  public function pocCallbackGenerate($buffer) {
     //TODO: call the ob_get_level from the outputHandler.
-    if (self::$level == \ob_get_level() - 1) {
-      if(self::$cache->getFilter()->evaluate())
+    if ($this->level == \ob_get_level() - 1) {
+      if($this->cache->getFilter()->evaluate())
       {
       	 $return = $buffer;
-         if(!self::$outputFilter->isOutputBlacklisted($buffer)){
-           if($buffer){             
-             if (self::$debug) {
+         if(!$this->outputFilter->isOutputBlacklisted($buffer)){
+           if($buffer){       
+                
+             if ($this->debug) {
                 $return .= '<br>This page has been '.
                 '<b> generated in '.
-                ((microtime() - self::$startTime) * 1000).
+                ((microtime() - $this->startTime) * 1000).
                 '</b> milliseconds.';
               }
-              $headers = self::$outputHandler->headersList();
-              self::$headerManipulator->storeHeadersForPreservation($headers);
-              self::$headerManipulator->removeHeaders($headers);
+              $headers = $this->outputHandler->headersList();
+              $this->headerManipulator->storeHeadersForPreservation($headers);
+              $this->headerManipulator->removeHeaders($headers);
               //TODO: Hide the $key
-              self::$cache->cacheSpecificStore(self::$cache->getHasher()->getKey(), $return);
-              self::$headerManipulator->storeHeades($headers);
-              self::$cache->cacheAddTags();
+              $this->cache->cacheSpecificStore($this->cache->getHasher()->getKey(), $return);
+              $this->headerManipulator->storeHeades($headers);
+              $this->cache->cacheAddTags();
               
-              if(self::$ciaProtector){
-                self::$ciaProtector->consultFinish();
+              if($this->ciaProtector){
+                $this->ciaProtector->consultFinish();
              }
            }
          }
           
-          self::$pocDispatcher->dispatch(PocEventNames::BEFORE_CACHED_OUTPUT_SENT,new PocEvent(self::$instance));
+          $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT,new PocEvent($this));
                   
           if($buffer) {
-         	self::$outputHandler->ObPrintCallback($buffer);
+         	$this->outputHandler->ObPrintCallback($buffer);
          	return ($return);
           }
       }
     }
   }
 
-  public static function pocCallbackCache($buffer) {
+  public function pocCallbackCache($buffer) {
     $return = $buffer;
-    if (self::$debug) {
+    if ($this->debug) {
      $return .=  '<br>This page has been '.
      ' <b> fetched from the cache in '.
-     ((microtime() - self::$startTime) * 1000).'</b> milliseconds.';
+     ((microtime() - $this->startTime) * 1000).'</b> milliseconds.';
     }
-    self::$outputHandler->ObPrintCallback($return);
+    $this->outputHandler->ObPrintCallback($return);
     return $return;
   }
 
@@ -235,45 +237,43 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
-    self::$instance = $this;
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
-    self::$cache = $this->optionAble->getOption(self::PARAM_CACHE);
-    self::$outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
-    self::$headerManipulator = $this->optionAble->getOption(self::PARAM_HEADERMANIPULATOR);
-    self::$headerManipulator->setOutputHandler(self::$outputHandler);
-    self::$headerManipulator->setCache(self::$cache);
-    self::$outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
-    self::$ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
-    self::$ciaProtector->setCache(self::$cache);
-    self::$ciaProtector->setOutputHandler(self::$outputHandler);    
+    $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
+    $this->outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
+    $this->outputHandler->setPoc($this);
+    $this->headerManipulator = $this->optionAble->getOption(self::PARAM_HEADERMANIPULATOR);
+    $this->headerManipulator->setOutputHandler($this->outputHandler);
+    $this->headerManipulator->setCache($this->cache);
+    $this->outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
+    $this->ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
+    $this->ciaProtector->setCache($this->cache);
+    $this->ciaProtector->setOutputHandler($this->outputHandler);    
     $this->setDebug($this->optionAble->getOption('debug'));
-    self::$pocDispatcher = PocDispatcher::getIstance();
-    new PocListener();
-    //self::$pocDispatcher->addSubscriber(new Test2Plugin());
+    $this->pocDispatcher = PocDispatcher::getIstance();
   }
 
   private function fetchCache($ob_start = true) {
    $output = '';
-      self::$cache->cacheTagsInvalidation();
-      if (self::$cache->getFilter()->evaluate()) {
+      $this->cache->cacheTagsInvalidation();
+      if ($this->cache->getFilter()->evaluate()) {
         //TODO: hide the key
-        $output = self::$cache->fetch(self::$cache->getHasher()->getKey());
+        $output = $this->cache->fetch($this->cache->getHasher()->getKey());
         if ($output) {
           if($ob_start){
-            self::$outputHandler->startBuffer(self::CALLBACK_CACHE);
-            self::$headerManipulator->fetchHeaders();
+            $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
+            $this->headerManipulator->fetchHeaders();
             //TODO:Replace it to it's appropriate place.(OutputHandler)
             $arr = headers_list();
-            if (self::$headerManipulator->headersToSend) {
-              foreach (self::$headerManipulator->headersToSend as $header) {
-                self::$outputHandler->header($header);
+            if ($this->headerManipulator->headersToSend) {
+              foreach ($this->headerManipulator->headersToSend as $header) {
+                $this->outputHandler->header($header);
               }
-              self::$headerManipulator->removeHeaders($arr);
+              $this->headerManipulator->removeHeaders($arr);
             }
             $started = 1;
             echo($output);
-            self::$outputHandler->stopBuffer();
+            $this->outputHandler->stopBuffer();
           }
         }
       }
@@ -282,30 +282,28 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
   }
 
   public function start() {
-
-    self::$startTime = microtime();
-
+    $this->startTime = microtime();
+    $this->level = \ob_get_level();
     if (!$this->fetchCache()) {
-      if (!self::$cache->getFilter()->isBlacklisted()) {
-        self::$level = \ob_get_level();
+      if (!$this->cache->getFilter()->isBlacklisted()) {
         $this->checkCia();
-        self::$outputHandler->startBuffer(self::CALLBACK_GENERATE);
+        $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
       } else {
-        self::$outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+        $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
       }
     }
   }
 
   private function checkCia (){
-    if(self::$ciaProtector){
-      self::$ciaProtector->consult();  
+    if($this->ciaProtector){
+      $this->ciaProtector->consult();  
     }
   }
   
   public function __destruct() {
-    if (isset(self::$level)) {
-       if (self::$level) {
-       	 self::$outputHandler->obEnd();
+    if (isset($this->level)) {
+      if ($this->level) {
+       	 $this->outputHandler->obEnd();
        }
     }
   }

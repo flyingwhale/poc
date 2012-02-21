@@ -16,6 +16,12 @@ limitations under the License.
 
 namespace Poc\Handlers;
 
+use Monolog\Handler\HandlerInterface;
+
+use Monolog\Handler\StreamHandler;
+
+use Monolog\Logger;
+
 use Poc\Core\OptionAble\OptionAble;
 
 use Poc\Core\OptionAble\OptionAbleInterface;
@@ -24,7 +30,7 @@ use Poc\Cache\Header\HeaderManipulator;
 
 use Poc\Poc;
 
-class TestOutput implements OutputInterface, OptionAbleInterface
+class TestOutput extends Output implements OptionAbleInterface 
 {
   const HEADER_BASIC = 'a:1:{i:0;s:35:"X-Powered-By: PHP/5.3.6-13ubuntu3.3";}';
   
@@ -63,7 +69,7 @@ class TestOutput implements OutputInterface, OptionAbleInterface
   }
 
   function startBuffer($callbackFunctname) {
-    ob_start(array('\Poc\Poc',$callbackFunctname));
+    ob_start(array($this->poc, $callbackFunctname));
   }
 
   function stopBuffer() {
@@ -88,7 +94,7 @@ class TestOutput implements OutputInterface, OptionAbleInterface
   }
 
   function ObPrintCallback($output){
-    $this->output = $output;
+    $this->output = $output;    
   }
 
   function getOutput(){

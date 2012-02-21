@@ -25,11 +25,11 @@ limitations under the License.
 
 namespace Poc\Cache\Filtering;
 
-class Filter{
+class Filter
+{
 
   private $blacklistConditions = array();
   private $whitelistConditions = array();
-
 
   public function evaluate() {
     return !$this->isBlacklisted();
@@ -48,12 +48,6 @@ class Filter{
     return false;
   }
 
-  private function blacklistCacheInvalidation(){
-    if($this->isBlacklisted()) {
-      $this->myCache->cacheSpecificClearItem($this->getKey());
-      return true;
-    }
-    return false;
-  }
+
 
 }

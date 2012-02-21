@@ -25,7 +25,7 @@ namespace Poc\Cache\CacheImplementation;
  */
 interface CacheParams {
   const PARAM_HASHER = 'hasher';
-  const PARAM_FILTER = 'filter';
+  const PARAM_FILTER = 'cachefilter';
   const PARAM_TTL = 'ttl';
   const PARAM_TAGDB = 'tagDb';
 }

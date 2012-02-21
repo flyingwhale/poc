@@ -24,7 +24,7 @@ limitations under the License.
  */
 use Poc\Cache\CacheImplementation\CacheParams;
 
-interface PocParams extends CacheParams{
+interface PocParams {
   const PARAM_CACHE = 'cache';
   const PARAM_OUTPUTHANDLER = 'outputHandler';
   const PARAM_HEADERMANIPULATOR = 'headerManipulator';

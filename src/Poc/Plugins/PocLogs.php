@@ -51,19 +51,18 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     $this->logPrefix = $this->optionAble[self::PARAM_LOG_PREFIX];
     
     $this->dispatcher = PocDispatcher::getIstance();
-    $this->dispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT, array($this, 'beforeOutputSent'));
+    $this->dispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED, array($this, 'beforeOutputSent'));
 
   }
   
   function beforeOutputSent(PocEvent $event){
-      $log = $this->getLogger(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT);
+      $log = $this->getLogger(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED);
       $log->addInfo("Output Sent!");
   } 
   
   private function gelog($eventName){
     $log = $this->getLogger($eventName);
-    $log->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT, Logger::INFO));
-    
+    $log->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.$eventName.'.log', Logger::INFO));
   }
   
   /**
@@ -74,7 +73,7 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   private function getLogger($eventName){
     if (!isset($this->loggers[$eventName])){
       $this->loggers[$eventName] = new Logger($eventName);
-      $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT, Logger::INFO));
+      $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.$eventName.'.log', Logger::INFO));
     }
     return $this->loggers[$eventName];
   }

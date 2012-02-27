@@ -22,6 +22,10 @@ limitations under the License.
  */
 namespace Poc;
 
+use Poc\Plugins\MinifyHtmlOutput;
+
+use Poc\Plugins\PocLogs;
+
 use Monolog\Handler\StreamHandler;
 
 use Monolog\Logger;
@@ -151,45 +155,48 @@ class Poc implements PocParams, OptionAbleInterface
    */
   private $pocDispatcher;
 
-  private $pocListener;
   
+
   private function setDebug($debug) {
     $this->debug = $debug;
   }
 
 
   public function pocCallbackShowOutput($buffer) {
-    $ret = $buffer;
+    $this->setOutput($buffer);
     if ($this->debug) {
-       $ret = $ret.'<br>This page has not been cached because the page is Blacklisted.'.
+      $this->setOutput($this->getOutput().'<br>This page has not been cached because the page is Blacklisted.'.
        ' <b> Was Generated in '.
-       ((microtime() - $this->startTime) * 1000).'</b> milliseconds.';
+       ((microtime() - $this->startTime) * 1000).'</b> milliseconds.');
     }
-    $this->outputHandler->ObPrintCallback($buffer);
     
-    return $ret;
+    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,new PocEvent($this));
+    $this->outputHandler->ObPrintCallback($buffer);
+    return $this->getOutput();
   }
 
   public function pocCallbackGenerate($buffer) {
+    $this->setOutput($buffer);
     //TODO: call the ob_get_level from the outputHandler.
     if ($this->level == \ob_get_level() - 1) {
       if($this->cache->getFilter()->evaluate())
       {
-      	 $return = $buffer;
-         if(!$this->outputFilter->isOutputBlacklisted($buffer)){
-           if($buffer){       
+      	 $this->setOutput($buffer);
+         if(!$this->outputFilter->isOutputBlacklisted($this->getOutput())){
+           if($this->getOutput()){       
                 
              if ($this->debug) {
-                $return .= '<br>This page has been '.
+                $this->setOutput($this->getOutput().'<br>This page has been '.
                 '<b> generated in '.
                 ((microtime() - $this->startTime) * 1000).
-                '</b> milliseconds.';
+                '</b> milliseconds.');
               }
               $headers = $this->outputHandler->headersList();
               $this->headerManipulator->storeHeadersForPreservation($headers);
               $this->headerManipulator->removeHeaders($headers);
+              $this->pocDispatcher->dispatch(PocEventNames::BEFORE_STORE_OUTPUT,new PocEvent($this));
               //TODO: Hide the $key
-              $this->cache->cacheSpecificStore($this->cache->getHasher()->getKey(), $return);
+              $this->cache->cacheSpecificStore($this->cache->getHasher()->getKey(), $this->getOutput());
               $this->headerManipulator->storeHeades($headers);
               $this->cache->cacheAddTags();
               
@@ -199,11 +206,11 @@ class Poc implements PocParams, OptionAbleInterface
            }
          }
           
-          $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT,new PocEvent($this));
+          $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,new PocEvent($this));
                   
           if($buffer) {
          	$this->outputHandler->ObPrintCallback($buffer);
-         	return ($return);
+         	return ($this->getOutput());
           }
       }
     }
@@ -211,13 +218,15 @@ class Poc implements PocParams, OptionAbleInterface
 
   public function pocCallbackCache($buffer) {
     $return = $buffer;
+    $this->setOutput($buffer);
     if ($this->debug) {
-     $return .=  '<br>This page has been '.
+     $this->setOutput($this->getOutput() .  '<br>This page has been '.
      ' <b> fetched from the cache in '.
-     ((microtime() - $this->startTime) * 1000).'</b> milliseconds.';
+     ((microtime() - $this->startTime) * 1000).'</b> milliseconds.');
     }
-    $this->outputHandler->ObPrintCallback($return);
-    return $return;
+    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new PocEvent($this));
+    $this->outputHandler->ObPrintCallback($this->getOutput());
+    return $this->getOutput();
   }
 
   public function fillDefaults(){
@@ -237,6 +246,8 @@ class Poc implements PocParams, OptionAbleInterface
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
+    new PocLogs();
+    new MinifyHtmlOutput();
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
@@ -308,6 +319,20 @@ class Poc implements PocParams, OptionAbleInterface
     }
   }
 
+  /**
+   * @return the $output
+   */
+  public function getOutput() {
+    return $this->output;
+  }
+  
+  /**
+   * @param string $output
+   */
+  public function setOutput($output) {
+    $this->output = $output;
+  }
+  
   public function destruct() {
     $this->__destruct();
   }

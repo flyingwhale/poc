@@ -19,7 +19,7 @@ class PocEvent extends Event{
     return $this->poc;
   }
 
-function __construct($Poc){
+  function __construct($Poc){
     $this->poc = $Poc;
   }
 

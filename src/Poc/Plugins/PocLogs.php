@@ -23,8 +23,9 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   
   private $logFolder;
   private $logPrefix;
-  
+  private $pocDispatcher;
   private $loggers;
+  
 
   /**
    *
@@ -34,24 +35,20 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   private $optionAble;
   
   public function fillDefaults(){
-    $this->optionAble[self::PARAM_TMP_FOLDER] = function (){
-      return "/tmp/";
-    };
-    $this->optionAble[self::PARAM_LOG_PREFIX] = function (){
-      return "POC_LOG";
-    };
-    
+    $this->optionAble[self::PARAM_TMP_FOLDER] = "/tmp/";
+    $this->optionAble[self::PARAM_LOG_PREFIX] = "POC_LOG";
+    $this->optionAble[self::PARAM_EVENT_DISPTCHER] = null;
   }
 
   function __construct($options = array()){
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     
-    $this->logFolder = $this->optionAble[self::PARAM_TMP_FOLDER];
-    $this->logPrefix = $this->optionAble[self::PARAM_LOG_PREFIX];
+    $this->logFolder = $this->optionAble->getOption(self::PARAM_TMP_FOLDER);
+    $this->logPrefix = $this->optionAble->getOption(self::PARAM_LOG_PREFIX);
+    $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPTCHER);
     
-    $this->dispatcher = PocDispatcher::getIstance();
-    $this->dispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED, array($this, 'beforeOutputSent'));
+    $this->pocDispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED, array($this, 'beforeOutputSent'));
 
   }
   

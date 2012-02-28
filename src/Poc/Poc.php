@@ -22,6 +22,8 @@ limitations under the License.
  */
 namespace Poc;
 
+use Poc\Plugins\PocLogsParams;
+
 use Poc\Plugins\MinifyHtmlOutput;
 
 use Poc\Plugins\PocLogs;
@@ -236,6 +238,7 @@ class Poc implements PocParams, OptionAbleInterface
     $this->optionAble[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
     $this->optionAble[self::PARAM_DEBUG] = false;
     $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new CIAProtector();};
+    $this->optionAble[self::PARAM_EVENT_DISPATCHER] = function(){return new EventDispatcher();};
   }
 
 
@@ -246,10 +249,13 @@ class Poc implements PocParams, OptionAbleInterface
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
-    new PocLogs();
-    new MinifyHtmlOutput();
+    $this->pocDispatcher = new EventDispatcher();
+    new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $this->pocDispatcher));
+    new MinifyHtmlOutput($this->pocDispatcher);
+    
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
+    $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
     $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
     $this->outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
     $this->outputHandler->setPoc($this);
@@ -261,7 +267,6 @@ class Poc implements PocParams, OptionAbleInterface
     $this->ciaProtector->setCache($this->cache);
     $this->ciaProtector->setOutputHandler($this->outputHandler);    
     $this->setDebug($this->optionAble->getOption('debug'));
-    $this->pocDispatcher = PocDispatcher::getIstance();
   }
 
   private function fetchCache($ob_start = true) {

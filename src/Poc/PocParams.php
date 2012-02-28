@@ -31,6 +31,5 @@ interface PocParams {
   const PARAM_OUTPUTFILTER = 'outputFilter';
   const PARAM_DEBUG = 'debug';
   const PARAM_CIA_PROTECTOR = 'cia_protection';
+  const PARAM_EVENT_DISPATCHER = 'event_dispatcher';
 }
-
-?>

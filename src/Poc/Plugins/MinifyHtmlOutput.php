@@ -1,6 +1,8 @@
 <?php
 namespace Poc\Plugins;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 use Poc\PocEvents\PocEvent;
 
 use Poc\Core\Event\PocDispatcher;
@@ -15,9 +17,8 @@ class MinifyHtmlOutput {
    */
   private $dispatcher;
   
-  function __construct(){
-    $this->dispatcher = PocDispatcher::getIstance();
-    $this->dispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
+  function __construct(EventDispatcher $dispatcher){
+    $dispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
   }
 
   function minifyHtml(PocEvent $event){

@@ -15,9 +15,8 @@ limitations under the License.
 */
 
 /**
- * This calss helps you define the conditions for deciding wehter a page shall
- * be cached or not.
- * This class contains the whitelis / blacklist conditons. and evaluate those.
+ * This class helps you define when to cache a page and when not.
+ * This class contains the blacklist / whitelist conditons and evaluates those.
  * 
  * @author Imre Toth
  *

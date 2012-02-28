@@ -1,7 +1,7 @@
 <?php
 namespace Poc\Core\Plugin;
 
-class PluginDictionary {
+class EventDictionary {
 
   private $entityCollection;
   private static $instance;
@@ -11,11 +11,11 @@ class PluginDictionary {
     $this->entityCollection = array();
   }
   
-  function addEntity($key, PluginEentityElement $entiy){
+  function addEvent($key, EventEentity $entiy){
       $this->entityCollection[$key][] = $entiy;
   }
   
-  function runEntity($key){
+  function runEvent($key){
     if(isset($this->entityCollection[$key])){
       foreach($this->entityCollection[$key] as $entity){
           $entity->invoke();

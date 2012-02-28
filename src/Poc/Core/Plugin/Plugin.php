@@ -9,15 +9,15 @@ abstract class Plugin {
   
   /**
    * 
-   * @var PluginDictionary
+   * @var EventDictionary
    */
-  protected $pluginDictionary;
+  protected $eventDictionary;
   
   function __construct(){
-    $this->pluginDictionary = PluginDictionary::getIstance();
+    $this->eventDictionary = EventDictionary::getIstance();
   }
   
-  abstract function addEnityElements();
+  abstract function addEventEntities();
 
 }
 

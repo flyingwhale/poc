@@ -22,7 +22,7 @@ limitations under the License.
  */
 namespace Poc;
 
-use Poc\Core\Plugin\PluginDictionary;
+use Poc\Core\Plugin\EventDictionary;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 
@@ -124,9 +124,9 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
   
   /**
    * 
-   * @var PluginDictionary
+   * @var EventDictionary
    */
-  private $pluginDictionary;
+  private $eventDictionary;
 
   private function setDebug($debug) {
     self::$debug = $debug;
@@ -219,13 +219,12 @@ class Poc implements PocParams, PocDictionaryEntries, OptionAbleInterface
     self::$ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
     self::$ciaProtector->setCache(self::$cache);
     self::$ciaProtector->setOutputHandler(self::$outputHandler);
-    $this->pluginDictionary = PluginDictionary::getIstance();
     
-    $this->pluginDictionary->runEntity(self::POC_DICTIONARY_ENTRY_BEFORE_OUTPUT_SAVE);
-
+    $this->eventDictionary = EventDictionary::getIstance();
+    
+    $this->eventDictionary->runEvent(self::POC_DICTIONARY_ENTRY_BEFORE_OUTPUT_SAVE);
     $this->setDebug($this->optionAble->getOption('debug'));
-    
-    $this->pluginDictionary->runEntity(self::POC_DICTIONARY_ENTRY_CONSTRUCTOR_END);
+    $this->eventDictionary->runEvent(self::POC_DICTIONARY_ENTRY_CONSTRUCTOR_END);
   }
 
   private function fetchCache($ob_start = true) {

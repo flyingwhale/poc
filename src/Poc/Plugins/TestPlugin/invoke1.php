@@ -1,15 +1,14 @@
 <?php
 namespace Poc\Plugins\TestPlugin;
 
-require_once ('src/Poc/Core/Plugin/PluginEentityElement.php');
+require_once ('src/Poc/Core/Plugin/EventEntity.php');
 
-use Poc\Core\Plugin\PluginEentityElement;
+use Poc\Core\Plugin\EventEentity;
 
-class invoke1 implements PluginEentityElement {
-
-
+class invoke1 implements EventEentity {
+  
   function invoke(){
-    echo("ZIZI");
+    echo("ZIZI"); 
   }
-
+    
 }

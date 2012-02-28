@@ -1,7 +1,7 @@
 <?php
 namespace Poc\Core\Plugin;
 
-interface PluginEentityElement {
+interface EventEentity {
   
   function invoke();
 

@@ -2,10 +2,21 @@
     "name": "poc/poc",
     "type": "library",
     "version": "0.5.1",
+    "keywords": ["reverse proxy", "caching", "poc"],
     "authors": [
         {
           "name":   "Imre Toth",
           "email":  "tothimre@gmail.com"
+        }
+    ],
+    "contributors": [
+        {
+          "name":   "Zsolt Javorszky",
+          "email":  "zsolt.javorszky@gmail.com"
+        },
+        {
+          "name":	"Sandor Legoza",
+          "email":  "sandor.legoza@gmail.com"
         }
     ],
    "require": {

@@ -159,7 +159,21 @@ class Poc implements PocParams, OptionAbleInterface
 
   
 
-  private function setDebug($debug) {
+  /**
+ * @return the $pocDispatcher
+ */
+  public function getPocDispatcher() {
+    return $this->pocDispatcher;
+  }
+
+/**
+ * @return the $startTime
+ */
+  public function getStartTime() {
+    return $this->startTime;
+  }
+
+private function setDebug($debug) {
     $this->debug = $debug;
   }
 
@@ -207,7 +221,7 @@ class Poc implements PocParams, OptionAbleInterface
              }
            }
          }
-          
+         
           $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,new PocEvent($this));
                   
           if($buffer) {
@@ -249,13 +263,15 @@ class Poc implements PocParams, OptionAbleInterface
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
-    $this->pocDispatcher = new EventDispatcher();
-    new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $this->pocDispatcher));
-    new MinifyHtmlOutput($this->pocDispatcher);
     
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
+    
+    //new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $this->pocDispatcher));
+    //new MinifyHtmlOutput($this->pocDispatcher);
+    
+    
     $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
     $this->outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
     $this->outputHandler->setPoc($this);

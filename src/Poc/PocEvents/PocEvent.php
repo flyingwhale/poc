@@ -13,7 +13,7 @@ class PocEvent extends Event{
   private $poc;
 
   /**
-   * @return the $poc
+   * @return Poc
    */
   public function getPoc() {
     return $this->poc;

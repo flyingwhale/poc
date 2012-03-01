@@ -16,6 +16,10 @@ limitations under the License.
 
 namespace unittest;
 
+use Poc\Plugins\MinifyHtmlOutput;
+
+use Poc\Plugins\PocLogsParams;
+
 use Poc\Plugins\PocLogs;
 
 use Poc\Plugins\TestPlugin\TestPlugin;
@@ -99,18 +103,23 @@ class PocTest extends \PHPUnit_Framework_TestCase
    * @param string $testString
    */
   private function pocBurner(Poc $poc,$outputHandler, $testString = "testString") {
-  	$this->setOutput('');
+    $pl = new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $poc->getPocDispatcher()));
+    //new MinifyHtmlOutput($poc->getPocDispatcher());
+    
+    $this->setOutput('');
   	$poc->start();
   
   	if($outputHandler->getOutputFlow()){
   		echo $testString;
   		$poc->destruct();
+  		$pl->__destruct();
   		$this->setHeader($outputHandler->getHeader());
   		$this->setOutput($outputHandler->getOutput());  		
   	} else {
   	    $this->setHeader($outputHandler->getHeader());
         $this->setOutput($outputHandler->getOutput());
         $poc->destruct();
+        $pl->__destruct();
         
         if($outputHandler->getOutput()){
           $this->setHeader($outputHandler->getHeader());

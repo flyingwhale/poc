@@ -21,8 +21,10 @@ use Poc\Poc;
 
 class PocLogs implements OptionAbleInterface, PocLogsParams{
   
-  const LOG_TYPE_OUTPUT = "_OUTPUT";
-  const LOG_TYPE_TIME = "_TIME";
+  const LOG_TYPE_OUTPUT = "OUTPUT";
+  const LOG_TYPE_TIME = "TIME";
+  const SIZE_OF_OUTPUT_CHUNK = 25;
+  const OUTPUT_CHUNK_DELIMITER = '. ... .';
   
   private $logFolder;
   private $logPrefix;
@@ -125,9 +127,30 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   }
     
   private function logOutputMatix($eventName, $saveIt, $type){
-    $this->setLog($eventName)->addInfo($saveIt);
     $this->setLog($type)->addInfo($saveIt);
-    $this->setLog($type.'-'.$eventName)->addInfo($saveIt);
+    
+    if($type == self::LOG_TYPE_OUTPUT){
+      if($saveIt){
+        $size = strlen($saveIt);
+        
+        if ($size > (self::SIZE_OF_OUTPUT_CHUNK*2) + self::OUTPUT_CHUNK_DELIMITER) {
+          $output = substr($saveIt, 0, self::SIZE_OF_OUTPUT_CHUNK).self::OUTPUT_CHUNK_DELIMITER.substr($saveIt, size-self::SIZE_OF_OUTPUT_CHUNK, self::SIZE_OF_OUTPUT_CHUNK);
+        }
+        else{
+          $output = $saveIt;
+        }
+        $output .= '... |the output size is '.$size.' bytes';
+      }
+      else{
+        //this case is currently is not stored by the poc
+        $output .= 'There was no output';
+      }      
+    }
+    else{
+      $output = $saveIt;
+    }
+    $this->setLog($eventName)->addInfo($output);
+    $this->setLog($type.'-'.$eventName)->addInfo($output);
   }
   
   /**
@@ -148,7 +171,7 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   private function getLogger($eventName){
     if (!isset($this->loggers[$eventName])){
       $this->loggers[$eventName] = new Logger($this->token);
-      $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.$eventName.'.log', Logger::INFO));
+      $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.'POC_'.$eventName.'.log', Logger::INFO));
     }
     return $this->loggers[$eventName];
   }

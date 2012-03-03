@@ -25,16 +25,12 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   const LOG_TYPE_TIME = "TIME";
   const SIZE_OF_OUTPUT_CHUNK = 25;
   const OUTPUT_CHUNK_DELIMITER = '. ... .';
-  
-  private $logFolder;
-  private $logPrefix;
+
   /**
    * 
    * @var Event
    */
   private $pocDispatcher;
-  
-  private $loggers;
 
   /**
    *
@@ -45,21 +41,26 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
 
   private $token;
   
+  /**
+   * 
+   * @var LoggerInterface
+   */
+  private $logger;
+  
   public function fillDefaults(){
-    $this->optionAble[self::PARAM_TMP_FOLDER] = "/tmp/";
-    $this->optionAble[self::PARAM_LOG_PREFIX] = "POC_LOG_";
     $this->optionAble[self::PARAM_EVENT_DISPTCHER] = null;
+    $this->optionAble[self::PARAM_LOGGER] = new MonoLogger();
   }
 
   function __construct($options = array()){
-    $this->token = md5(time()+rand());
-    
+ 
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     
     $this->logFolder = $this->optionAble->getOption(self::PARAM_TMP_FOLDER);
     $this->logPrefix = $this->optionAble->getOption(self::PARAM_LOG_PREFIX);
     $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPTCHER);
+    $this->logger = $this->optionAble->getOption(self::PARAM_LOGGER);
     
     $this->pocDispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED, 
                                       array($this, 'beforeOutputSentToClinetAfterOutputStoredTime'));
@@ -127,14 +128,14 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   }
     
   private function logOutputMatix($eventName, $saveIt, $type){
-    $this->setLog($type)->addInfo($saveIt);
+    $this->logger->setLog($type, $saveIt);
     
     if($type == self::LOG_TYPE_OUTPUT){
       if($saveIt){
         $size = strlen($saveIt);
         
         if ($size > (self::SIZE_OF_OUTPUT_CHUNK*2) + self::OUTPUT_CHUNK_DELIMITER) {
-          $output = substr($saveIt, 0, self::SIZE_OF_OUTPUT_CHUNK).self::OUTPUT_CHUNK_DELIMITER.substr($saveIt, size-self::SIZE_OF_OUTPUT_CHUNK, self::SIZE_OF_OUTPUT_CHUNK);
+          $output = substr($saveIt, 0, self::SIZE_OF_OUTPUT_CHUNK).self::OUTPUT_CHUNK_DELIMITER.substr($saveIt, \strlen($saveIt)-self::SIZE_OF_OUTPUT_CHUNK, self::SIZE_OF_OUTPUT_CHUNK);
         }
         else{
           $output = $saveIt;
@@ -149,32 +150,8 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     else{
       $output = $saveIt;
     }
-    $this->setLog($eventName)->addInfo($output);
-    $this->setLog($type.'-'.$eventName)->addInfo($output);
+    $this->logger->setLog($eventName, $output);
+    $this->logger->setLog($type.'-'.$eventName, $output);
   }
-  
-  /**
-   * 
-   * @param unknown_type $eventName
-   * @return \Monolog\Logger
-   */
-  private function setLog($eventName){
-    $log = $this->getLogger($eventName);
-    return $log;
-  }
-  
-  /**
-   * 
-   * @param string $eventName
-   * @return Logger
-   */
-  private function getLogger($eventName){
-    if (!isset($this->loggers[$eventName])){
-      $this->loggers[$eventName] = new Logger($this->token);
-      $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.'POC_'.$eventName.'.log', Logger::INFO));
-    }
-    return $this->loggers[$eventName];
-  }
-    
 }
 

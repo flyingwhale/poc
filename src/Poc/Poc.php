@@ -38,7 +38,7 @@ use Poc\PocEvents\PocEventNames;
 
 use Poc\PocEvents\PocListener;
 
-use Poc\PocEvents\PocEvent;
+use Poc\Events\BaseEvent;
 
 use Poc\Core\Event\PocDispatcher;
 
@@ -173,7 +173,7 @@ class Poc implements PocParams, OptionAbleInterface
     return $this->startTime;
   }
 
-private function setDebug($debug) {
+  private function setDebug($debug) {
     $this->debug = $debug;
   }
 
@@ -186,7 +186,7 @@ private function setDebug($debug) {
        ((microtime() - $this->startTime) * 1000).'</b> milliseconds.');
     }
     
-    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,new PocEvent($this));
+    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,new BaseEvent($this));
     $this->outputHandler->ObPrintCallback($buffer);
     return $this->getOutput();
   }
@@ -210,7 +210,7 @@ private function setDebug($debug) {
               $headers = $this->outputHandler->headersList();
               $this->headerManipulator->storeHeadersForPreservation($headers);
               $this->headerManipulator->removeHeaders($headers);
-              $this->pocDispatcher->dispatch(PocEventNames::BEFORE_STORE_OUTPUT,new PocEvent($this));
+              $this->pocDispatcher->dispatch(PocEventNames::BEFORE_STORE_OUTPUT,new BaseEvent($this));
               //TODO: Hide the $key
               $this->cache->cacheSpecificStore($this->cache->getHasher()->getKey(), $this->getOutput());
               $this->headerManipulator->storeHeades($headers);
@@ -222,7 +222,7 @@ private function setDebug($debug) {
            }
          }
          
-          $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,new PocEvent($this));
+          $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,new BaseEvent($this));
                   
           if($buffer) {
          	$this->outputHandler->ObPrintCallback($buffer);
@@ -240,7 +240,7 @@ private function setDebug($debug) {
      ' <b> fetched from the cache in '.
      ((microtime() - $this->startTime) * 1000).'</b> milliseconds.');
     }
-    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new PocEvent($this));
+    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new BaseEvent($this));
     $this->outputHandler->ObPrintCallback($this->getOutput());
     return $this->getOutput();
   }
@@ -263,15 +263,13 @@ private function setDebug($debug) {
   for develompment purposevags.
   */
   function __construct( $options = array() ) {
-    
+    $this->startTime = microtime();
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
     $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
-    
+    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
     //new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $this->pocDispatcher));
     //new MinifyHtmlOutput($this->pocDispatcher);
-    
-    
     $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
     $this->outputHandler = $this->optionAble->getOption(self::PARAM_OUTPUTHANDLER);
     $this->outputHandler->setPoc($this);
@@ -283,6 +281,8 @@ private function setDebug($debug) {
     $this->ciaProtector->setCache($this->cache);
     $this->ciaProtector->setOutputHandler($this->outputHandler);    
     $this->setDebug($this->optionAble->getOption('debug'));
+    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new BaseEvent($this));
+    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
   }
 
   private function fetchCache($ob_start = true) {
@@ -314,14 +314,16 @@ private function setDebug($debug) {
   }
 
   public function start() {
-    $this->startTime = microtime();
     $this->level = \ob_get_level();
+    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
     if (!$this->fetchCache()) {
       if (!$this->cache->getFilter()->isBlacklisted()) {
         $this->checkCia();
         $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       } else {
         $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       }
     }
   }

@@ -3,7 +3,7 @@ namespace Poc\Plugins;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-use Poc\PocEvents\PocEvent;
+use Poc\Events\BaseEvent;
 
 use Poc\Core\Event\PocDispatcher;
 
@@ -21,7 +21,7 @@ class MinifyHtmlOutput {
     $dispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
   }
 
-  function minifyHtml(PocEvent $event){
+  function minifyHtml(BaseEvent $event){
     //got from php.net
     $search = array(
         '/\>[^\S ]+/s', //strip whitespaces after tags, except space
@@ -34,7 +34,7 @@ class MinifyHtmlOutput {
         '\\1'
     );
     //die(get_class($event));
-    $event->getPoc()->setOutput(preg_replace($search, $replace, $event->getPoc()->getOutput()));
+    $event->getEvent()->setOutput(preg_replace($search, $replace, $event->getEvent()->getOutput()));
   }
   
   

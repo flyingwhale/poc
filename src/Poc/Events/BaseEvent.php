@@ -1,11 +1,11 @@
 <?php
-namespace Poc\PocEvents;
+namespace Poc\Events;
 
 use Poc\Poc;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class PocEvent extends Event{
+class BaseEvent extends Event{
   
   /**
    * @var Poc
@@ -15,7 +15,7 @@ class PocEvent extends Event{
   /**
    * @return Poc
    */
-  public function getPoc() {
+  public function getEvent() {
     return $this->poc;
   }
 

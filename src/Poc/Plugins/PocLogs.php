@@ -1,7 +1,7 @@
 <?php
 namespace Poc\Plugins;
 
-use Poc\PocEvents\PocEvent;
+use Poc\Events\BaseEvent;
 
 use Poc\PocEvents\PocEventNames;
 
@@ -81,46 +81,46 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
 
   }
    
-  function beforeOutputSentToClinetAfterOutputStoredTime(PocEvent $event){
+  function beforeOutputSentToClinetAfterOutputStoredTime(BaseEvent $event){
     $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,self::LOG_TYPE_TIME);
   } 
-  function beforeOutputSentToClinetAfterOutputStoredOutput(PocEvent $event){
-    $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,self::LOG_TYPE_OUTPUT);    
+  function beforeOutputSentToClinetAfterOutputStoredOutput(BaseEvent $event){
+    $this->logOutput($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,self::LOG_TYPE_OUTPUT);    
   }
   
-  function beforeOutputSentToClientNoCachingProcessInvolvedTime(PocEvent $event){
+  function beforeOutputSentToClientNoCachingProcessInvolvedTime(BaseEvent $event){
     $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,self::LOG_TYPE_TIME);
   }
-  function beforeOutputSentToClientNoCachingProcessInvolvedOutput(PocEvent $event){
-    $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,self::LOG_TYPE_OUTPUT);
+  function beforeOutputSentToClientNoCachingProcessInvolvedOutput(BaseEvent $event){
+    $this->logOutput($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,self::LOG_TYPE_OUTPUT);
   }
   
-  function beforeOutputSentToClientFetchedFromCacheTime(PocEvent $event){
+  function beforeOutputSentToClientFetchedFromCacheTime(BaseEvent $event){
     $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,self::LOG_TYPE_TIME);
   }
-  function beforeOutputSentToClientFetchedFromCacheOutput(PocEvent $event){
-    $this->logTime($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,self::LOG_TYPE_OUTPUT);
+  function beforeOutputSentToClientFetchedFromCacheOutput(BaseEvent $event){
+    $this->logOutput($event, PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,self::LOG_TYPE_OUTPUT);
   }
   
-  function beforeStoreOutputTime(PocEvent $event){
+  function beforeStoreOutputTime(BaseEvent $event){
     $this->logTime($event, PocEventNames::BEFORE_STORE_OUTPUT,self::LOG_TYPE_TIME);
   }
-  function beforeStoreOutputOutput(PocEvent $event){
-    $this->logTime($event, PocEventNames::BEFORE_STORE_OUTPUT,self::LOG_TYPE_OUTPUT);
+  function beforeStoreOutputOutput(BaseEvent $event){
+    $this->logOutput($event, PocEventNames::BEFORE_STORE_OUTPUT,self::LOG_TYPE_OUTPUT);
   }
   
-  private function logOutput(PocEvent $event, $eventName, $type){
-    $this->log($eventName, $event->getPoc()->getOutput(),$type);
+  private function logOutput(BaseEvent $event, $eventName, $type){
+    $this->logMatix($eventName, $event->getEvent()->getOutput(),$type);
   }
   
-  private function logTime(PocEvent $event, $eventName, $type){
-    $this->log($eventName,\microtime()-$event->getPoc()->getStartTime(),$type);
+  private function logTime(BaseEvent $event, $eventName, $type){
+    $this->logMatix($eventName,\microtime()-$event->getEvent()->getStartTime(),$type);
   }
   
-  private function log($eventName, $saveIt, $type){
+  private function logMatix($eventName, $saveIt, $type){
     $this->setLog($eventName)->addInfo($saveIt);
     $this->setLog($type)->addInfo($saveIt);
-    $this->setLog($eventName.$type)->addInfo($saveIt);
+    $this->setLog($type.'-'.$eventName)->addInfo($saveIt);
   }
   
   /**
@@ -144,10 +144,6 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
       $this->loggers[$eventName]->pushHandler(new StreamHandler($this->logFolder.$this->logPrefix.$eventName.'.log', Logger::INFO));
     }
     return $this->loggers[$eventName];
-  }
-  
-  public function __destruct(){
-    unset($this->loggers);
   }
     
 }

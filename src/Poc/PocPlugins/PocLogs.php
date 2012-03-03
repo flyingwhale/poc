@@ -1,5 +1,5 @@
 <?php
-namespace Poc\Plugins;
+namespace Poc\PocPlugins;
 
 use Poc\Events\BaseEvent;
 
@@ -79,6 +79,9 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     $this->pocDispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT, 
                                       array($this, 'beforeStoreOutputOutput'));
 
+    $this->pocDispatcher->addListener(PocEventNames::DIES, 
+                                      array($this, 'diesTime'));
+
   }
    
   function beforeOutputSentToClinetAfterOutputStoredTime(BaseEvent $event){
@@ -109,15 +112,19 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     $this->logOutput($event, PocEventNames::BEFORE_STORE_OUTPUT,self::LOG_TYPE_OUTPUT);
   }
   
+  function diesTime($event){
+    $this->logTime($event, PocEventNames::DIES,self::LOG_TYPE_TIME);
+  } 
+  
   private function logOutput(BaseEvent $event, $eventName, $type){
-    $this->logMatix($eventName, $event->getEvent()->getOutput(),$type);
+    $this->logOutputMatix($eventName, $event->getEvent()->getOutput(),$type);
   }
   
   private function logTime(BaseEvent $event, $eventName, $type){
-    $this->logMatix($eventName,\microtime()-$event->getEvent()->getStartTime(),$type);
+    $this->logOutputMatix($eventName,\microtime()-$event->getEvent()->getStartTime().'|'.$eventName,$type);
   }
-  
-  private function logMatix($eventName, $saveIt, $type){
+    
+  private function logOutputMatix($eventName, $saveIt, $type){
     $this->setLog($eventName)->addInfo($saveIt);
     $this->setLog($type)->addInfo($saveIt);
     $this->setLog($type.'-'.$eventName)->addInfo($saveIt);

@@ -34,6 +34,7 @@ class ServerOutput extends Output {
 
   function StopBuffer(){
     die();
+    //exit();
   }
 
   function header($header){

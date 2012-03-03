@@ -292,7 +292,6 @@ class Poc implements PocParams, OptionAbleInterface
         //TODO: hide the key
         $output = $this->cache->fetch($this->cache->getHasher()->getKey());
         if ($output) {
-          if($ob_start){
             $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
             $this->headerManipulator->fetchHeaders();
             //TODO:Replace it to it's appropriate place.(OutputHandler)
@@ -306,23 +305,24 @@ class Poc implements PocParams, OptionAbleInterface
             $started = 1;
             echo($output);
             $this->outputHandler->stopBuffer();
-          }
         }
       }
-    //}
     return $output;
   }
 
   public function start() {
     $this->level = \ob_get_level();
+
     $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
     if (!$this->fetchCache()) {
       if (!$this->cache->getFilter()->isBlacklisted()) {
         $this->checkCia();
         $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
+        
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       } else {
         $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+        
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       }
     }
@@ -340,6 +340,7 @@ class Poc implements PocParams, OptionAbleInterface
        	 $this->outputHandler->obEnd();
        }
     }
+    $this->pocDispatcher->dispatch(PocEventNames::DIES,new BaseEvent($this));
   }
 
   /**

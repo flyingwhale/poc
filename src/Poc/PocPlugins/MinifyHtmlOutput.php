@@ -1,13 +1,10 @@
 <?php
-namespace Poc\Plugins;
-
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
-use Poc\Events\BaseEvent;
-
-use Poc\Core\Event\PocDispatcher;
+namespace Poc\PocPlugins;
 
 use Poc\PocEvents\PocEventNames;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Poc\Events\BaseEvent;
 
 class MinifyHtmlOutput {
 
@@ -39,5 +36,3 @@ class MinifyHtmlOutput {
   
   
 }
-
-?>

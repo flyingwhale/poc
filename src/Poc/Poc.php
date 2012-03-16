@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * This is tha main class this of the system this is the conductor of the 
+ * This is tha main class this of the system this is the conductor of the
  * system every functionalitys root if we inspect the flow of the application.
- * 
- * @author Imre Toth 
- * 
+ *
+ * @author Imre Toth
+ *
  */
 namespace Poc;
 
@@ -143,21 +143,21 @@ class Poc implements PocParams, OptionAbleInterface
    * @var CIAProtector
    */
   private $ciaProtector;
-  
+
   /**
-   * 
+   *
    * @var EventDictionary
    */
   private $eventDictionary;
 
-  
+
   /**
-   * 
+   *
    * @var \Symfony\Component\EventDispatcher\EventDispatcher;
    */
   private $pocDispatcher;
 
-  
+
 
   /**
  * @return the $pocDispatcher
@@ -185,7 +185,7 @@ class Poc implements PocParams, OptionAbleInterface
        ' <b> Was Generated in '.
        ((microtime() - $this->startTime) * 1000).'</b> milliseconds.');
     }
-    
+
     $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,new BaseEvent($this));
     $this->outputHandler->ObPrintCallback($buffer);
     return $this->getOutput();
@@ -199,8 +199,8 @@ class Poc implements PocParams, OptionAbleInterface
       {
       	 $this->setOutput($buffer);
          if(!$this->outputFilter->isOutputBlacklisted($this->getOutput())){
-           if($this->getOutput()){       
-                
+           if($this->getOutput()){
+
              if ($this->debug) {
                 $this->setOutput($this->getOutput().'<br>This page has been '.
                 '<b> generated in '.
@@ -215,17 +215,25 @@ class Poc implements PocParams, OptionAbleInterface
               $this->cache->cacheSpecificStore($this->cache->getHasher()->getKey(), $this->getOutput());
               $this->headerManipulator->storeHeades($headers);
               $this->cache->cacheAddTags();
-              
+
               if($this->ciaProtector){
                 $this->ciaProtector->consultFinish();
              }
            }
          }
-         
+         else{
+         	if ($this->debug) {
+         		$this->setOutput($this->getOutput().'<br>This page has been '.
+         				'<b> generated in '.
+         				((microtime() - $this->startTime) * 1000).
+         				'</b> milliseconds and is not cached because the outputfilter blacklisted it!');
+         	}
+         }
+
           $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,new BaseEvent($this));
-                  
+
           if($buffer) {
-         	$this->outputHandler->ObPrintCallback($buffer);
+         	$this->outputHandler->ObPrintCallback($this->getOutput());
          	return ($this->getOutput());
           }
       }
@@ -279,7 +287,7 @@ class Poc implements PocParams, OptionAbleInterface
     $this->outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
     $this->ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
     $this->ciaProtector->setCache($this->cache);
-    $this->ciaProtector->setOutputHandler($this->outputHandler);    
+    $this->ciaProtector->setOutputHandler($this->outputHandler);
     $this->setDebug($this->optionAble->getOption('debug'));
     $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new BaseEvent($this));
     $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
@@ -318,11 +326,11 @@ class Poc implements PocParams, OptionAbleInterface
       if (!$this->cache->getFilter()->isBlacklisted()) {
         $this->checkCia();
         $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
-        
+
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       } else {
         $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
-        
+
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       }
     }
@@ -330,10 +338,10 @@ class Poc implements PocParams, OptionAbleInterface
 
   private function checkCia (){
     if($this->ciaProtector){
-      $this->ciaProtector->consult();  
+      $this->ciaProtector->consult();
     }
   }
-  
+
   public function __destruct() {
     if (isset($this->level)) {
       if ($this->level) {
@@ -349,14 +357,14 @@ class Poc implements PocParams, OptionAbleInterface
   public function getOutput() {
     return $this->output;
   }
-  
+
   /**
    * @param string $output
    */
   public function setOutput($output) {
     $this->output = $output;
   }
-  
+
   public function destruct() {
     $this->__destruct();
   }

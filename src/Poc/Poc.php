@@ -22,15 +22,15 @@ limitations under the License.
  */
 namespace Poc;
 
+use Poc\Cache\CacheInvalidationProtection\CiaEvent;
+
+use Poc\PocPlugins\MonoLogger;
+
 use Poc\Plugins\PocLogsParams;
 
 use Poc\Plugins\MinifyHtmlOutput;
 
 use Poc\Plugins\PocLogs;
-
-use Monolog\Handler\StreamHandler;
-
-use Monolog\Logger;
 
 use Poc\Plugins\TestPlugin\Test2Plugin;
 
@@ -153,11 +153,16 @@ class Poc implements PocParams, OptionAbleInterface
 
   /**
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcher;
+   * @var EventDispatcher;
    */
   private $pocDispatcher;
 
 
+  /**
+   *
+   * @var MonoLogger;
+   */
+  private $logger;
 
   /**
  * @return the $pocDispatcher
@@ -234,6 +239,7 @@ class Poc implements PocParams, OptionAbleInterface
 
           if($buffer) {
          	$this->outputHandler->ObPrintCallback($this->getOutput());
+
          	return ($this->getOutput());
           }
       }
@@ -259,7 +265,8 @@ class Poc implements PocParams, OptionAbleInterface
     $this->optionAble[self::PARAM_HEADERMANIPULATOR] = function (){return new HeaderManipulator();};
     $this->optionAble[self::PARAM_OUTPUTFILTER] = function (){return new OutputFilter();};
     $this->optionAble[self::PARAM_DEBUG] = false;
-    $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new CIAProtector();};
+    //$this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new CIAProtector();};
+    $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return null;};
     $this->optionAble[self::PARAM_EVENT_DISPATCHER] = function(){return new EventDispatcher();};
   }
 
@@ -286,14 +293,19 @@ class Poc implements PocParams, OptionAbleInterface
     $this->headerManipulator->setCache($this->cache);
     $this->outputFilter = $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
     $this->ciaProtector = $this->optionAble->getOption(self::PARAM_CIA_PROTECTOR);
-    $this->ciaProtector->setCache($this->cache);
-    $this->ciaProtector->setOutputHandler($this->outputHandler);
+    if ($this->ciaProtector){
+      $this->ciaProtector->setCache($this->cache);
+      $this->ciaProtector->setOutputHandler($this->outputHandler);
+      $this->ciaProtector->setEventDispatcher($this->pocDispatcher);
+      $this->ciaProtector->setLogger($this->getLogger());
+      $this->ciaProtector->setPoc($this);
+    }
     $this->setDebug($this->optionAble->getOption('debug'));
-    $this->pocDispatcher->dispatch(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,new BaseEvent($this));
+
     $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
   }
-
-  private function fetchCache($ob_start = true) {
+/*
+public function fetchCache($die = true) {
    $output = '';
       $this->cache->cacheTagsInvalidation();
       if ($this->cache->getFilter()->evaluate()) {
@@ -311,24 +323,55 @@ class Poc implements PocParams, OptionAbleInterface
               $this->headerManipulator->removeHeaders($arr);
             }
             $started = 1;
-            echo($output);
-            $this->outputHandler->stopBuffer();
+
+            if($die){
+              echo($output);
+              $this->outputHandler->stopBuffer();
+            }
         }
       }
+    return $output;
+  }*/
+  public function fetchCache($die = true) {
+  	$this->cache->cacheTagsInvalidation();
+  	$output = $this->fetchCacheValue();
+	if ($output) {
+      $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
+      $this->headerManipulator->fetchHeaders();
+      //TODO:Replace it to it's appropriate place.(OutputHandler)
+      $arr = headers_list();
+      if ($this->headerManipulator->headersToSend) {
+        foreach ($this->headerManipulator->headersToSend as $header) {
+          $this->outputHandler->header($header);
+         }
+         $this->headerManipulator->removeHeaders($arr);
+       }
+       echo($output);
+       $this->outputHandler->stopBuffer();
+  	}
+  	return $output;
+  }
+
+  public function fetchCacheValue(){
+    $output = '';
+    if ($this->cache->getFilter()->evaluate()) {
+    	$output = $this->cache->fetch($this->cache->getHasher()->getKey());
+    }
     return $output;
   }
 
   public function start() {
     $this->level = \ob_get_level();
-
-    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
     if (!$this->fetchCache()) {
       if (!$this->cache->getFilter()->isBlacklisted()) {
-        $this->checkCia();
+        if($this->ciaProtector){
+          $this->ciaProtector->consult();
+        }
         $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
       } else {
+
         $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
@@ -336,10 +379,8 @@ class Poc implements PocParams, OptionAbleInterface
     }
   }
 
-  private function checkCia (){
-    if($this->ciaProtector){
-      $this->ciaProtector->consult();
-    }
+  private function ciaConsult (){
+
   }
 
   public function __destruct() {
@@ -367,5 +408,12 @@ class Poc implements PocParams, OptionAbleInterface
 
   public function destruct() {
     $this->__destruct();
+  }
+
+  public function getLogger(){
+    if(!$this->logger){
+      $this->logger = new MonoLogger();
+    }
+    return $this->logger;
   }
 }

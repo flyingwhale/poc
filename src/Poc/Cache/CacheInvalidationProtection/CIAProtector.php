@@ -1,6 +1,14 @@
 <?php
 namespace Poc\Cache\CacheInvalidationProtection;
 
+use Poc\Poc;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+use Monolog\Logger;
+
+use Poc\PocPlugins\MonoLogger;
+
 use Poc\Core\OptionAble\OptionAbleInterface;
 
 use Poc\Core\OptionAble\OptionAble;
@@ -29,6 +37,11 @@ use Poc\Core\OptionAble\OptionAble;
  */
 class CIAProtector implements OptionAbleInterface
 {
+  const LOG_TYPE_CIA = 'CIA';
+
+  var $monoLogger;
+
+
   const KEY_POSTFIX = "ci";
   const PARAM_CLIENT_UNIQUE = 'clinetUnique';
   /**
@@ -52,6 +65,40 @@ class CIAProtector implements OptionAbleInterface
   private $outputHandler;
 
   /**
+   *
+   * @var EventDispatcher
+   */
+  private $eventDispatcher;
+
+  /**
+   *
+   * @var Poc
+   */
+  private $poc;
+
+  /**
+	* @param \Poc\Poc $poc
+	*/
+
+	public function setPoc($poc) {
+		$this->poc = $poc;
+	}
+
+	/**
+	 * @param \Poc\Cache\CacheInvalidationProtection\Logger; $logger
+	 */
+	public function setLogger($logger) {
+		$this->monoLogger = $logger;
+	}
+
+	/**
+	 * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+	 */
+	public function setEventDispatcher($eventDispatcher) {
+		$this->eventDispatcher = $eventDispatcher;
+	}
+
+/**
    * @param POC\Handlers\OutputInterface $outputHandler
    */
   public function setOutputHandler($outputHandler) {
@@ -87,12 +134,11 @@ class CIAProtector implements OptionAbleInterface
     $this->cache->cacheSpecificStore($this->getKey(), $cnt);
   }
 
-  public function getSentinel($notIncrease = 0){
+  public function getSentinel(){
     $sentinel = $this->cache->fetch($this->getKey());
     if(!$sentinel){
       $sentinel = 0;
     }
-    
     return ($sentinel);
   }
 
@@ -102,6 +148,7 @@ class CIAProtector implements OptionAbleInterface
 
   public function deleteSentinel(){
     $this->cache->clearItem($this->getKey());
+    $this->monoLogger->setLog(self::LOG_TYPE_CIA, "deleted key:".$this->getKey());
   }
 
   public function getRefreshPage(){
@@ -135,32 +182,34 @@ class CIAProtector implements OptionAbleInterface
     PLEASE WAIT!
     </BODY>
     </HTML>';
-
   }
 
   public function consult(){
     $sentinelCnt = $this->getSentinel();
     $this->setSentinel($sentinelCnt+1);
-    
-    if($sentinelCnt == 0){
-    }
-    elseif ($sentinelCnt >=1){
-      if($sentinelCnt <= 2){
-        while($this->getSentinel()){
-          sleep(1);
-        }
-      }
-      elseif ($sentinelCnt >= 3)
+    {
+      if ($sentinelCnt)
       {
-        $this->outputHandler->ObPrintCallback($this->getRefreshPage());
-        $this->outputHandler->stopBuffer();
+        $this->eventDispatcher->dispatch(CIAProtectorEventNames::CONSULT_STARTED, new CiaEvent($this));
+
+         if ($sentinelCnt >=1 and $sentinelCnt <= 2){
+            while($this->getSentinel()){
+              $this->monoLogger->setLog(self::LOG_TYPE_CIA, "Sleep: $sentinelCnt");
+              usleep(500000);
+            }
+            echo $this->poc->fetchCache();
+         }
+         if ($sentinelCnt >= 3)
+         {
+           $this->outputHandler->ObPrintCallback($this->getRefreshPage());
+           $this->outputHandler->stopBuffer();
+         }
       }
     }
-    
+    $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
   }
-  
+
   public function consultFinish(){
-    
     $this->deleteSentinel();
   }
 }

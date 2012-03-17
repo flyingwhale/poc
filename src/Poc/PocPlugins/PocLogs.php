@@ -39,8 +39,11 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
    */
   private $optionAble;
 
-  private $token;
-
+  /**
+   *
+   * @var Poc;
+   */
+  private $poc;
   /**
    *
    * @var LoggerInterface
@@ -48,8 +51,7 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
   private $logger;
 
   public function fillDefaults(){
-    $this->optionAble[self::PARAM_EVENT_DISPTCHER] = null;
-    $this->optionAble[self::PARAM_LOGGER] = new MonoLogger();
+    $this->optionAble[self::PARAM_POC] = null;
   }
 
   function __construct($options = array()){
@@ -57,11 +59,10 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     $this->optionAble = new OptionAble($options, $this);
     $this->optionAble->start();
 
-    $this->logFolder = $this->optionAble->getOption(self::PARAM_TMP_FOLDER);
-    $this->logPrefix = $this->optionAble->getOption(self::PARAM_LOG_PREFIX);
-    $this->pocDispatcher = $this->optionAble->getOption(self::PARAM_EVENT_DISPTCHER);
-    $this->logger = $this->optionAble->getOption(self::PARAM_LOGGER);
+    $this->poc = $this->optionAble->getOption(self::PARAM_POC);
+    $this->logger = $this->poc->getLogger();
 
+    $this->pocDispatcher = $this->poc->getPocDispatcher();
 
     $this->pocDispatcher->addListener(PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
                                       array($this, 'beforeOutputSentToClinetAfterOutputStoredTime'));
@@ -86,9 +87,6 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
     //todo: If it is turned on, the php fly away with segmentation fault when phpunit runs.
     /*$this->pocDispatcher->addListener(PocEventNames::DIES,
                                       array($this, 'diesTime'));*/
-
-
-
   }
 
   function beforeOutputSentToClinetAfterOutputStoredTime(BaseEvent $event){

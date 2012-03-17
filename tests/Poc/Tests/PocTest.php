@@ -103,7 +103,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
    * @param string $testString
    */
   private function pocBurner(Poc $poc,$outputHandler, $testString = "testString") {
-    $pl = new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER => $poc->getPocDispatcher()));
+    $pl = new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
     //new MinifyHtmlOutput($poc->getPocDispatcher());
 
     $this->setOutput('');
@@ -369,21 +369,31 @@ class PocTest extends \PHPUnit_Framework_TestCase
   	$cache = new FileCache();
   	$cia = new CIAProtector();
     $cia->setCache($cache);
-    $snt = $cia->getSentinel();
+    $cnt = $cia->getSentinel();
     $cia->setSentinel(10);
-    $snt1 = $cia->getSentinel();
+    $cnt1 = $cia->getSentinel();
 
-    $this->assertTrue($snt == 0);
-    $this->assertTrue($snt1 == 10);
+    $this->assertTrue($cnt == 0);
+    $this->assertTrue($cnt1 == 10);
 
     $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
-    		Poc::PARAM_OUTPUTHANDLER => $outputHandler,));
+    		Poc::PARAM_OUTPUTHANDLER => $outputHandler,
+            Poc::PARAM_CIA_PROTECTOR => $cia));
     $poc->start();
 
     $this->pocBurner($poc, $outputHandler, rand().rand());
 
     $this->assertTrue($this->getOutput() == $cia->getRefreshPage());
 
+/*
+    $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+    		Poc::PARAM_OUTPUTHANDLER => $outputHandler,
+            Poc::PARAM_CIA_PROTECTOR => new CIAProtector()));
+
+    $this->pocBurner($poc, $outputHandler, rand().rand());
+
+    $this->assertTrue($this->getOutput() != $cia->getRefreshPage());
+*/
   }
 }
 

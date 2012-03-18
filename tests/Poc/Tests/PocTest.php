@@ -226,7 +226,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
   }
 
   //TODO: make this test work!
-  /*
+
   public function testOutputFilter(){
 
     $outputHandler = new TestOutput();
@@ -247,30 +247,12 @@ class PocTest extends \PHPUnit_Framework_TestCase
     $this->pocBurner($poc2[1], $poc2[0], rand().PocTest::NEEDLE.rand());
     $output = $this->getOutput();
 
-    var_dump(strpos($output, 'because'));
 
-    echo"
-
-
-    ";
-    echo"rrr";
-    echo strstr($output, 'because');
-    echo'bbb';
-    echo"
-
-
-    ";
-    echo($output);
-    echo"
-
-
-    ";
-
-//    $this->assertTrue(strpos($this->getOutput(), 'because') != false);
+    $this->assertTrue(strpos($this->getOutput(), 'because') != false);
 
     //$this->assertTrue(strstr( 'b','abcde'));
   }
-  */
+
 
   function testTagging(){
     $getCache = function($hasher){return new FileCache(array(CacheParams::PARAM_TTL=>PocTest::BIGTTL,

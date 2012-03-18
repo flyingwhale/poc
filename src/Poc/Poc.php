@@ -304,34 +304,7 @@ class Poc implements PocParams, OptionAbleInterface
 
     $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,new BaseEvent($this));
   }
-/*
-public function fetchCache($die = true) {
-   $output = '';
-      $this->cache->cacheTagsInvalidation();
-      if ($this->cache->getFilter()->evaluate()) {
-        //TODO: hide the key
-        $output = $this->cache->fetch($this->cache->getHasher()->getKey());
-        if ($output) {
-            $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
-            $this->headerManipulator->fetchHeaders();
-            //TODO:Replace it to it's appropriate place.(OutputHandler)
-            $arr = headers_list();
-            if ($this->headerManipulator->headersToSend) {
-              foreach ($this->headerManipulator->headersToSend as $header) {
-                $this->outputHandler->header($header);
-              }
-              $this->headerManipulator->removeHeaders($arr);
-            }
-            $started = 1;
 
-            if($die){
-              echo($output);
-              $this->outputHandler->stopBuffer();
-            }
-        }
-      }
-    return $output;
-  }*/
   public function fetchCache($die = true) {
   	$this->cache->cacheTagsInvalidation();
   	$output = $this->fetchCacheValue();

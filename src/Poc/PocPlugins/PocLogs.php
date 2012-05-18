@@ -147,7 +147,7 @@ class PocLogs implements OptionAbleInterface, PocLogsParams{
       }
       else{
         //this case is currently is not stored by the poc
-        $output .= 'There was no output';
+        $output = 'There was no output';
       }
     }
     else{

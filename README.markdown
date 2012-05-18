@@ -2,6 +2,7 @@
 This is the root directory of the
 POC that stands for PHP Output Caching.
 
+An article about the POC: http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/
 
 ## Description
 
@@ -30,20 +31,6 @@ Even more features are coming, so stay tuned.
 ## INSTALLATION
 
 As the projet is psr-0 compilant it is really easy to map it to your project. To download the dependencies please run the "./bin/get_composer" file from the root of the project or dowload the composer.phar for yourself and run the "composer.phar install"
-
-
-PHP unit:
-sudo pear channel-discover pear.phpunit.de
-sudo pear install pear.phpunit.de/PHPUnit
-
-/*
-sudo pear upgrade PEAR
-pear update-channels
-pear config-set auto_discover 1
-*/
-
-More info:
-http://pear.phpunit.de/
 
 Install redis:
 

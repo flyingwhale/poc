@@ -1,4 +1,0 @@
-#!/bin/bash
-
-php -dphar.readonly=0  bin/tools/empir/empir make  poc.phar /autoload.php  ./ \
---exclude=".git*|build|*.html|*tests*|*Tests*|*EHER*|.settings|bin|.*|composeri.*|tmp/"

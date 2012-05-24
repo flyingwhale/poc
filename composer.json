@@ -1,7 +1,6 @@
 {
     "name": "poc/poc",
     "type": "library",
-    "version": "0.5.1",
     "keywords": ["reverse proxy", "caching", "poc"],
     "authors": [
         {

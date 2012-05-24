@@ -24,16 +24,16 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $this->fixtureDirPath = __DIR__ . '/fixture/tagging';
         parent::setUp();
     }
-    
+
     /*
      * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection ()
     {
         $dsn = 'mysql:dbname=' . Doctrine2Tagging::DEFDB . ';host=' . Doctrine2Tagging::DEFHOST;
-        $pdo = new \PDO($dsn, Doctrine2Tagging::DEFUSER, 
+        $pdo = new \PDO($dsn, Doctrine2Tagging::DEFUSER,
                 Doctrine2Tagging::DEFPASS);
-        
+
         return $this->createDefaultDBConnection($pdo);
     }
 
@@ -45,55 +45,55 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * @dataProvider addCacheToTagsProvider
      */
-    public function testAddCacheToTags ($tagsString, $hash, $expires, 
+    public function testAddCacheToTags ($tagsString, $hash, $expires,
             $expectedDatasetFilename)
     {
         $expectedDatasetPath = $this->fixtureDirPath . '/addCacheToTags/' . $expectedDatasetFilename;
-        
+
         $tagging = new Doctrine2Tagging();
-        
+
         $tagging->addCacheToTags($tagsString, $hash, $expires);
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
-        
+
         $exepctedDataSet = $this->createXMLDataSet(
                 $expectedDatasetPath . '-01.xml');
         $this->assertDataSetsEqual($exepctedDataSet, $dataSet);
-        
+
         $tagging->addCacheToTags($tagsString, $hash, $expires);
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
         $exepctedDataSet = $this->createXMLDataSet(
                 $expectedDatasetPath . '-02.xml');
-        
-        $this->assertDataSetsEqual($exepctedDataSet, $dataSet, 
+
+        $this->assertDataSetsEqual($exepctedDataSet, $dataSet,
                 'addCacheToTags() duplication test');
     }
 
     /**
      * @dataProvider flushOutdatedProvider
      */
-    public function testFlushOutdated ($initDatasetFilename, 
+    public function testFlushOutdated ($initDatasetFilename,
             $expectedDatasetFilename)
     {
         $initDatasetPath = $this->fixtureDirPath . '/flushOutdated/' . $initDatasetFilename;
         $expectedDatasetPath = $this->fixtureDirPath . '/flushOutdated/' . $expectedDatasetFilename;
-        
+
         $initDataSet = $this->createXMLDataSet($initDatasetPath);
         $this->getDatabaseTester()->setDataSet($initDataSet);
         $this->getDatabaseTester()->onSetUp();
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $initDataSet;
-        
+
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
-        
+
         $tagging = new Doctrine2Tagging();
         $tagging->flushOutdated();
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $this->createXMLDataSet($expectedDatasetPath);
@@ -103,36 +103,36 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * @dataProvider tagInvalidateProvider
      */
-    public function testTagInvalidate ($initDatasetFilename, $invalidateTag, 
+    public function testTagInvalidate ($initDatasetFilename, $invalidateTag,
             $expectedDatasetFilename)
     {
-            /*
+        /*
          * This function use mock object to emulate cacheSpecificClearItem A
          * short example A cache -> tag1, tag2 B cache -> tag2, tag3 C cache->
          * tag2 tag2 invalidate -> clear all (A, B, C caches)
          */
-        
+
         $initDatasetPath = $this->fixtureDirPath . '/tagInvalidate/' . $initDatasetFilename;
         $expectedDatasetPath = $this->fixtureDirPath . '/tagInvalidate/' . $expectedDatasetFilename;
-        
+
         $initDataSet = $this->createXMLDataSet($initDatasetPath);
         $this->getDatabaseTester()->setDataSet($initDataSet);
         $this->getDatabaseTester()->onSetUp();
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $initDataSet;
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
-        
+
         $cacheMock = $this->getMock('Cache', array('cacheSpecificClearItem'));
         $cacheMock->expects($this->any())
             ->method('cacheSpecificClearItem')
             ->will($this->returnValue(true));
-        
+
         $tagging = new Doctrine2Tagging();
-        
+
         $tagging->tagInvalidate($invalidateTag);
-        
+
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $this->createXMLDataSet($expectedDatasetPath);
@@ -142,21 +142,21 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public static function addCacheToTagsProvider ()
     {
         $data = array(array('tag1,tag2', '12345678901234567890123456789012', 1234, 'expected_01'));
-                
+
         return $data;
     }
 
     public static function flushOutdatedProvider ()
     {
         $data = array(array('init_01.xml', 'expected_01.xml'));
-                
+
         return $data;
     }
 
     public static function tagInvalidateProvider ()
     {
         $data = array(array('init_01.xml', 'tag2', 'expected_01.xml'));
-        
+
         return $data;
     }
 }

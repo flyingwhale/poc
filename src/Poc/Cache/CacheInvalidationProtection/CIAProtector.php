@@ -19,7 +19,8 @@ use Poc\Core\OptionAble\OptionAble;
  *
  * The basic idea was to implement a subsytem to the framework that protects
  * the system that uses against the high load if the caches are invalidated, or
- * just cannot afford long TTL's for the cache, so the pages are generated offten.
+ * just cannot afford long TTL's for the cache, so the pages are generated
+ * offten.
  *
  * Alought it can be used in many scenatrios. For instance if you have a page
  * thats generation takes a long time you can use cache with even very sort ttl
@@ -37,180 +38,205 @@ use Poc\Core\OptionAble\OptionAble;
  */
 class CIAProtector implements OptionAbleInterface
 {
-  const LOG_TYPE_CIA = 'CIA';
 
-  var $monoLogger;
+    const LOG_TYPE_CIA = 'CIA';
 
+    public $monoLogger;
 
-  const KEY_POSTFIX = "ci";
-  const PARAM_CLIENT_UNIQUE = 'clinetUnique';
-  /**
-   *
-   * @var OptionAble
-   */
-  private $optionAble = null;
+    const KEY_POSTFIX = "ci";
 
-  /**
-   *
-   * @var \POC\cache\cacheimplementation\Cache
-   */
-  private $cache = null;
+    const PARAM_CLIENT_UNIQUE = 'clinetUnique';
 
-  private $clientUnique;
+    /**
+     *
+     * @var OptionAble
+     */
+    private $optionAble = null;
 
-  /**
-   *
-   * @var \POC\Handlers\OutputInterface
-   */
-  private $outputHandler;
+    /**
+     *
+     * @var \POC\cache\cacheimplementation\Cache
+     */
+    private $cache = null;
 
-  /**
-   *
-   * @var EventDispatcher
-   */
-  private $eventDispatcher;
+    private $clientUnique;
 
-  /**
-   *
-   * @var Poc
-   */
-  private $poc;
+    /**
+     *
+     * @var \POC\Handlers\OutputInterface
+     */
+    private $outputHandler;
 
-  /**
-	* @param \Poc\Poc $poc
-	*/
+    /**
+     *
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
-	public function setPoc($poc) {
-		$this->poc = $poc;
-	}
+    /**
+     *
+     * @var Poc
+     */
+    private $poc;
 
-	/**
-	 * @param \Poc\Cache\CacheInvalidationProtection\Logger; $logger
-	 */
-	public function setLogger($logger) {
-		$this->monoLogger = $logger;
-	}
+    /**
+     *
+     * @param $poc \Poc\Poc
+     */
 
-	/**
-	 * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
-	 */
-	public function setEventDispatcher($eventDispatcher) {
-		$this->eventDispatcher = $eventDispatcher;
-	}
-
-/**
-   * @param POC\Handlers\OutputInterface $outputHandler
-   */
-  public function setOutputHandler($outputHandler) {
-    $this->outputHandler = $outputHandler;
-  }
-
-  function fillDefaults (){
-     /*$this->optionAble[self::PARAM_CLIENT_UNIQUE] = function(){
-       return md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].
-                  $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
-     };*/
-   }
-
-  /**
-   *
-   * @param  \POC\cache\cacheimplementation\Cache $cache
-   */
-  function __construct ($options = array())
-  {
-    $this->optionAble = new OptionAble($options, $this);
-    //$this->clientUnique = $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
-  }
-
-  /**
-   *
-   * @param Cache $cache
-   */
-  function setCache($cache){
-    $this->cache = $cache;
-  }
-
-  public function setSentinel($cnt){
-    $this->cache->cacheSpecificStore($this->getKey(), $cnt);
-  }
-
-  public function getSentinel(){
-    $sentinel = $this->cache->fetch($this->getKey());
-    if(!$sentinel){
-      $sentinel = 0;
-    }
-    return ($sentinel);
-  }
-
-  private function getKey(){
-    return $this->cache->getHasher()->getKey().self::KEY_POSTFIX;
-  }
-
-  public function deleteSentinel(){
-    $this->cache->clearItem($this->getKey());
-    $this->monoLogger->setLog(self::LOG_TYPE_CIA, "deleted key:".$this->getKey());
-  }
-
-  public function getRefreshPage(){
-  	$servername = '';
-  	if (isset($_SERVER["SERVER_NAME"]))
-  	{
-  		$servername = $_SERVER["SERVER_NAME"];
-  	}
-    $pageURL = 'http';
-    if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-    	$pageURL .= "s";
-    }
-    $pageURL .= "://";
-    $ru = "";
-    if(isset($_SERVER["REQUEST_URI"])){
-      $ru = $_SERVER["REQUEST_URI"];
+    public function setPoc ($poc)
+    {
+        $this->poc = $poc;
     }
 
-    if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
-    	$pageURL .= $servername.":".$_SERVER["SERVER_PORT"].$ru;
-    } else {
-    	$pageURL .= $servername.$ru;
+    /**
+     *
+     * @param $logger \Poc\Cache\CacheInvalidationProtection\Logger;
+     */
+    public function setLogger ($logger)
+    {
+        $this->monoLogger = $logger;
     }
 
-    return '<HTML>
+    /**
+     *
+     * @param $eventDispatcher \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    public function setEventDispatcher ($eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     *
+     * @param $outputHandler POC\Handlers\OutputInterface
+     */
+    public function setOutputHandler ($outputHandler)
+    {
+        $this->outputHandler = $outputHandler;
+    }
+
+    public function fillDefaults ()
+    {
+        /*
+         * $this->optionAble[self::PARAM_CLIENT_UNIQUE] = function(){ return
+         * md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].
+         * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
+         * };
+         */
+    }
+
+    /**
+     *
+     * @param $cache \POC\cache\cacheimplementation\Cache
+     */
+    public function __construct ($options = array())
+    {
+        $this->optionAble = new OptionAble($options, $this);
+        // $this->clientUnique =
+        // $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
+    }
+
+    /**
+     *
+     * @param $cache Cache
+     */
+    public function setCache ($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    public function setSentinel ($cnt)
+    {
+        $this->cache->cacheSpecificStore($this->getKey(), $cnt);
+    }
+
+    public function getSentinel ()
+    {
+        $sentinel = $this->cache->fetch($this->getKey());
+        if (! $sentinel) {
+            $sentinel = 0;
+        }
+
+        return ($sentinel);
+    }
+
+    private function getKey ()
+    {
+        return $this->cache->getHasher()->getKey() . self::KEY_POSTFIX;
+    }
+
+    public function deleteSentinel ()
+    {
+        $this->cache->clearItem($this->getKey());
+        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
+                "deleted key:" . $this->getKey());
+    }
+
+    public function getRefreshPage ()
+    {
+        $servername = '';
+        if (isset($_SERVER["SERVER_NAME"])) {
+            $servername = $_SERVER["SERVER_NAME"];
+        }
+        $pageURL = 'http';
+        if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+            $pageURL .= "s";
+        }
+        $pageURL .= "://";
+        $ru = "";
+        if (isset($_SERVER["REQUEST_URI"])) {
+            $ru = $_SERVER["REQUEST_URI"];
+        }
+
+        if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+            $pageURL .= $servername . ":" . $_SERVER["SERVER_PORT"] . $ru;
+        } else {
+            $pageURL .= $servername . $ru;
+        }
+
+        return '<HTML>
     <HEAD>
-    <META HTTP-EQUIV="refresh" content="1; url='.$pageURL.'">
+    <META HTTP-EQUIV="refresh" content="1; url=' . $pageURL . '">
     <TITLE>My new webpage</TITLE>
     </HEAD>
     <BODY>
     PLEASE WAIT!
     </BODY>
     </HTML>';
-  }
-
-  public function consult(){
-    $sentinelCnt = $this->getSentinel();
-    $this->setSentinel($sentinelCnt+1);
-    {
-      if ($sentinelCnt)
-      {
-        $this->eventDispatcher->dispatch(CIAProtectorEventNames::CONSULT_STARTED, new CiaEvent($this));
-
-         if ($sentinelCnt >=1 and $sentinelCnt <= 2){
-            while($this->getSentinel()){
-              $this->monoLogger->setLog(self::LOG_TYPE_CIA, "Sleep: $sentinelCnt");
-              usleep(500000);
-            }
-            echo $this->poc->fetchCache();
-         }
-         if ($sentinelCnt >= 3)
-         {
-           $this->outputHandler->ObPrintCallback($this->getRefreshPage());
-           $this->outputHandler->stopBuffer();
-         }
-      }
     }
-    $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
-  }
 
-  public function consultFinish(){
-    $this->deleteSentinel();
-  }
+    public function consult ()
+    {
+        $sentinelCnt = $this->getSentinel();
+        $this->setSentinel($sentinelCnt + 1);
+        {
+            if ($sentinelCnt) {
+                $this->eventDispatcher->dispatch(
+                        CIAProtectorEventNames::CONSULT_STARTED,
+                        new CiaEvent($this));
+
+                if ($sentinelCnt >= 1 and $sentinelCnt <= 2) {
+                    while ($this->getSentinel()) {
+                        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
+                                "Sleep: $sentinelCnt");
+                        usleep(500000);
+                    }
+                    echo $this->poc->fetchCache();
+                }
+                if ($sentinelCnt >= 3) {
+                    $this->outputHandler->ObPrintCallback(
+                            $this->getRefreshPage());
+                    $this->outputHandler->stopBuffer();
+                }
+            }
+        }
+        $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
+    }
+
+    public function consultFinish ()
+    {
+        $this->deleteSentinel();
+    }
 }
 

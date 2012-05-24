@@ -5,23 +5,26 @@ use Symfony\Component\EventDispatcher\Event;
 
 class CiaEvent extends Event
 {
-  /**
-   *
-   * @var CIAProtector
-   */
-  protected $cia;
 
-  /**
-   * @return the $cia
-   */
-  public function getCia() {
-    return $this->cia;
-  }
+    /**
+     *
+     * @var CIAProtector
+     */
+    protected $cia;
 
-  function __construct($cia, $msg =''){
-    $this->cia = $cia;
-    $this->msg = $msg;
-  }
+    /**
+     *
+     * @return the $cia
+     */
+    public function getCia ()
+    {
+        return $this->cia;
+    }
 
+    public function __construct ($cia, $msg = '')
+    {
+        $this->cia = $cia;
+        $this->msg = $msg;
+    }
 
 }

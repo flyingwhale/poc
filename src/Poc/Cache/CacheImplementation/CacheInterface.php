@@ -1,38 +1,36 @@
 <?php
-/*Copyright 2011 Imre Toth <tothimre at gmail>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+/*
+ * Copyright 2011 Imre Toth <tothimre at gmail> Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 /**
- * This interface contains all the functions that has to be implemented by a 
- * cacheengine that can be used by the framework. 
- * 
+ * This interface contains all the functions that has to be implemented by a
+ * cacheengine that can be used by the framework.
+ *
+ *
  * @author Imre Toth
  *
  */
 namespace Poc\Cache\Cacheimplementation;
 
-interface CacheInterface {
+interface CacheInterface
+{
 
-  public function fetch($key);
+    public function fetch ($key);
 
-  public function clearAll();
+    public function clearAll ();
 
-  public function clearItem($key);
+    public function clearItem ($key);
 
-  public function cacheSpecificStore($key, $output);
+    public function cacheSpecificStore ($key, $output);
 
-  public function isCacheAvailable();
+    public function isCacheAvailable ();
 
 }
 

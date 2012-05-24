@@ -5,22 +5,27 @@ use Poc\Poc;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class BaseEvent extends Event{
-  
-  /**
-   * @var Poc
-   */
-  private $event;
+class BaseEvent extends Event
+{
 
-  /**
-   * @return Poc
-   */
-  public function getEvent() {
-    return $this->event;
-  }
+    /**
+     *
+     * @var Poc
+     */
+    private $event;
 
-  function __construct($Poc){
-    $this->event = $Poc;
-  }
+    /**
+     *
+     * @return Poc
+     */
+    public function getEvent ()
+    {
+        return $this->event;
+    }
+
+    public function __construct ($Poc)
+    {
+        $this->event = $Poc;
+    }
 
 }

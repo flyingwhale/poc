@@ -25,7 +25,7 @@
         "pimple/pimple":            "dev-master",
         "symfony/class-loader":     "v2.0.13",
         "EHER/PHPUnit":             "1.6",
-        "doctrine/orm":             "2.2.0",
+        "doctrine/orm":             "2.2.2",
         "symfony/event-dispatcher": "2.0.10",
         "fabpot/php-cs-fixer":      "dev-master"
     },

@@ -15,18 +15,19 @@
           "email":  "zsolt.javorszky@gmail.com"
         },
         {
-          "name":	"Sandor Legoza",
+          "name":   "Sandor Legoza",
           "email":  "sandor.legoza@gmail.com"
         }
     ],
    "require": {
-        "php":                  ">=5.3.0",
-        "monolog/monolog":      "1.0.2",
-        "pimple/pimple":        "dev-master",
-        "symfony/class-loader": "v2.0.10",
-        "EHER/PHPUnit":         "1.2",
-        "doctrine/orm":         "2.2.0",
-        "symfony/event-dispatcher": "2.0.10"
+        "php":                      ">=5.3.0",
+        "monolog/monolog":          "1.0.2",
+        "pimple/pimple":            "dev-master",
+        "symfony/class-loader":     "v2.0.10",
+        "EHER/PHPUnit":             "1.2",
+        "doctrine/orm":             "2.2.0",
+        "symfony/event-dispatcher": "2.0.10",
+        "fabpot/php-cs-fixer":      "dev-master"
     },
    "autoload": {
         "psr-0": { "Poc": "src/" }

@@ -40,7 +40,14 @@ class MemcachedCache extends Cache
     public function __construct ($options = array())
     {
         parent::__construct($options);
-        $this->memcache = new \Memcache();
+
+        $className = 'Memcache';
+
+        if (! class_exists($className)) {
+            throw new \Exception(sprintf("%s class not exists", $className));
+        }
+        $this->memcache = new $className();
+
         $this->isConnected = $this->memcache->connect(
                 $this->optionAble->getOption('server'),
                 $this->optionAble->getOption('port'));

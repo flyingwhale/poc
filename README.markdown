@@ -53,6 +53,17 @@ After this you can run the unittests,
 
 Also the functionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
 
+##Unittesting##
+
+### Shortcuts ###
+
+The project also contains a recent version of the PHPUnit framework. So you don't need to prepare your environment to be suitable for this. By executing the ./bin/phpunit file you can run the tests.
+
+### Configuration ###
+
+All PHPUnit configuration data can be found at the phpunit.xml.dist file. The Mysql Databse specific information also resides here for the tests If you want to specify your own database. just copy this file to the phpunit.xml and modify the database specific parts.
+
+
 ## COPYRIGHT ##
 
 ### Copyright [2012] [Imre Toth <tothimre at gmail>] ###

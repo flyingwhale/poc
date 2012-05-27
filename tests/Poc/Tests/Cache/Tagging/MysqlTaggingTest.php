@@ -29,10 +29,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection ()
     {
-
-        $dsn = 'mysql:dbname=' . MysqlTagging::DEFDB . ';host=' . MysqlTagging::DEFHOST;
-        $pdo = new \PDO($dsn, MysqlTagging::DEFUSER, MysqlTagging::DEFPASS);
-
+        $pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
         return $this->createDefaultDBConnection($pdo);
     }
 

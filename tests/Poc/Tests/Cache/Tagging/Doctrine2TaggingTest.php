@@ -30,10 +30,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection ()
     {
-        $dsn = 'mysql:dbname=' . Doctrine2Tagging::DEFDB . ';host=' . Doctrine2Tagging::DEFHOST;
-        $pdo = new \PDO($dsn, Doctrine2Tagging::DEFUSER,
-                Doctrine2Tagging::DEFPASS);
-
+        $pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
         return $this->createDefaultDBConnection($pdo);
     }
 

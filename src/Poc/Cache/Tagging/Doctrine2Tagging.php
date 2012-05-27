@@ -21,9 +21,9 @@ class Doctrine2Tagging extends AbstractDb
 
     const DEFHOST = 'localhost';
 
-    const DEFUSER = 'poc_test';
+    const DEFUSER = 'root';
 
-    const DEFPASS = 'poc_test';
+    const DEFPASS = 'root';
 
     protected $entityManager;
 

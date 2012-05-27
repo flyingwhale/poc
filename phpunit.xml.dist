@@ -12,6 +12,15 @@
          bootstrap="tests/bootstrap.php"
          >
 
+  <php>
+    <!--
+    Please change this settings!
+    -->
+    <var name="MYSQL_DSN" value="mysql:dbname=poc_tagging:host=localhost" />
+    <var name="MYSQL_USER" value="username" />
+    <var name="MYSQL_PASS" value="password" />
+    
+  </php>
   <testsuites>
     <testsuite name="phpUnit Test Suite">
       <directory>./tests/</directory>

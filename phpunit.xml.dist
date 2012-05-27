@@ -20,7 +20,8 @@
 
   <filter>
     <blacklist>
-      <directory suffix=".php">./vendors</directory>
+      <directory suffix=".php">./vendor</directory>
+      <directory suffix=".php">./tmp</directory>
       <directory suffix=".php">./tests</directory>
     </blacklist>
   </filter>

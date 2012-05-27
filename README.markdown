@@ -1,14 +1,18 @@
 # POC
+
 This is the root directory of the
 POC that stands for PHP Output Caching.
 
-An article about the POC: http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/
+An article about the 
+    POC: http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/
 
 ## Description
 
-The aim of this project is to create an easy to use generic output caching component for  PHP applications.
+The aim of this project is to create an easy to use generic output caching 
+component for  PHP applications.
 
 ## Features
+
  * Caching of the output on certain circumstances that you define
  * Cache invalidation by TTL (of course)
  * Blacklisting / cache invalidation by application state
@@ -18,7 +22,9 @@ The aim of this project is to create an easy to use generic output caching compo
    * Redis
    * MongoDb
    * It's own filesystem based engine.
- * APC (experimental, performs and works well on a webserver, but unfortunately the cli interface is not behaves like it should and cannot be unit tested properly so I don't include it in the master)
+ * APC (experimental, performs and works well on a webserver, but unfortunately 
+   the CLI interface is not behaves like it should and cannot be unit tested 
+   properly so I don't include it in the master)
  * Cache tagging
     * For this feature we utilize MySQL, but more are coming
     * Cache Invalidation by tags
@@ -28,40 +34,58 @@ The aim of this project is to create an easy to use generic output caching compo
 
 Even more features are coming, so stay tuned.
 
-## INSTALLATION
+## Examples ##
+You can download/see the https://github.com/tothimre/poc-sandbox project and
+install to your web directory (composer is your friend there as well:) ).
 
-As the projet is psr-0 compilant it is really easy to map it to your project. To download the dependencies please run the "./bin/get_composer" file from the root of the project or dowload the composer.phar for yourself and run the "composer.phar install"
+## Installation ##
 
-Install redis:
+The project uses the composer to download it's dependencies and we already added 
+a script what you can execute by typing ./bin/get_composer scrip. It downloads 
+the composer and gets the packages on what the project relies on.
 
-Simple on Ubuntu / Debian:
-aptitude install redis-server
+As the projet is psr-0 compliant it is really easy to map it to your project. 
+To download the dependencies please run the "./bin/get_composer" file from the 
+root of the project or download the composer.phar for yourself and run the 
+"composer.phar install"
 
-more info:
-http://kevin.vanzonneveld.net/techblog/article/redis_in_php/
+### Key-Value databases
 
+Of course you are not forced to use any external key-value databases,
+because it also supports the file system caching. But to make your application 
+more scalable you can user some more scalable solutions.
 
-Install rediska:
-sudo pear channel-discover pear.geometria-lab.net
-sudo pear install geometria-lab/Rediska-beta
+For instance You can install the redis-server, also  mongod (Mongodb) or 
+of course Memcached server to your environment and the PHP module as well.
+The redish does not have any PHP compiled module, so we utilize the library 
+called Rediska for this.
 
-Install Mongod server to the localchost and the PHP module as well
+### SQL ###
 
-Install Mysql (for the tagging)
-
-After this you can run the unittests,
-
-Also the functionaltests directory can help you by inspecting the behaviour of the framework in a server environment.
+At the moment we only support Mysql, for the tagging feature, but as we 
+implemented it in Doctrine2 this is really likely that we will add more sql DBs
+To this list in the close future.
+So Install Mysql for the tagging feature.
 
 ##Unittesting##
 
+The Project already have got 75% code coverage. Of course we work hard on to 
+improve it and make it better. Also the unittests can be nice source of examples.
+For instance this is highly recommended to check out the PocTest.php file to get
+more insight on the POC.
+
 ### Shortcuts ###
 
-The project also contains a recent version of the PHPUnit framework. So you don't need to prepare your environment to be suitable for this. By executing the ./bin/phpunit file you can run the tests.
+The project also contains a recent version of the PHPUnit framework. So you 
+don't need to prepare your environment to be suitable for this. By executing the
+./bin/phpunit file you can run the tests.
 
 ### Configuration ###
 
-All PHPUnit configuration data can be found at the phpunit.xml.dist file. The Mysql Databse specific information also resides here for the tests If you want to specify your own database. just copy this file to the phpunit.xml and modify the database specific parts.
+All PHPUnit configuration data can be found at the phpunit.xml.dist file. 
+The Mysql Database specific information also resides here for the tests If you 
+want to specify your own database. just copy this file to the phpunit.xml 
+and modify the database specific parts.
 
 
 ## COPYRIGHT ##

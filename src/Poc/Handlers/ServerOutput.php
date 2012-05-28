@@ -32,9 +32,9 @@ class ServerOutput extends Output
         ob_start(array($this->poc, $callbackFunctname));
     }
 
-    public function StopBuffer ()
+    public function StopBuffer ($output = '')
     {
-        die();
+        die($output);
     }
 
     public function header ($header)

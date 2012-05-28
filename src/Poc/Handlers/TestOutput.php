@@ -43,6 +43,8 @@ class TestOutput extends Output implements OptionAbleInterface
     private $outputFlow = 1;
 
     private $output = '';
+    
+    private $stopBufferOutut = null;
 
     private $optionable;
 
@@ -68,8 +70,10 @@ class TestOutput extends Output implements OptionAbleInterface
         ob_start(array($this->poc, $callbackFunctname));
     }
 
-    public function stopBuffer ()
+    public function stopBuffer ($output = '')
     {
+        echo ($output);
+        $this->stopBufferOutut = $output;
         $this->outputFlow = 0;
         ob_flush();
     }

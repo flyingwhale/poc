@@ -198,55 +198,52 @@ class Poc implements PocParams, OptionAbleInterface
         $this->setOutput($buffer);
         // TODO: call the ob_get_level from the outputHandler.
         if ($this->level == \ob_get_level() - 1) {
-          //  if ($this->cache->getFilter()->evaluate()) {
-                $this->setOutput($buffer);
-                if (! $this->outputFilter->isOutputBlacklisted(
-                        $this->getOutput())) {
-                    if ($this->getOutput()) {
+            $this->setOutput($buffer);
+            if (! $this->outputFilter->isOutputBlacklisted($this->getOutput())) {
+                if ($this->getOutput()) {
 
-                        if ($this->debug) {
-                            $this->setOutput(
-                                    $this->getOutput() .
-                                    '<br>This page has been ' .
-                                    '<b> generated in ' .
-                                    ((microtime() - $this->startTime) * 1000) .
-                                    '</b> milliseconds.');
-                        }
-                        $headers = $this->outputHandler->headersList();
-                        $this->headerManipulator->storeHeadersForPreservation(
-                                $headers);
-                        $this->headerManipulator->removeHeaders($headers);
-                        $this->pocDispatcher->dispatch(
-                                PocEventNames::BEFORE_STORE_OUTPUT,
-                                new BaseEvent($this));
-
-                        $this->cache->cacheSpecificStore(
-                                $this->cache->getHasher()
-                                    ->getKey(), $this->getOutput());
-                        $this->headerManipulator->storeHeades($headers);
-                        $this->cache->cacheAddTags();
-
-                        if ($this->ciaProtector) {
-                            $this->ciaProtector->consultFinish();
-                        }
-                    }
-                } else {
                     if ($this->debug) {
                         $this->setOutput(
-                                $this->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
+                                $this->getOutput() .
+                                '<br>This page has been ' .
+                                '<b> generated in ' .
+                                ((microtime() - $this->startTime) * 1000) .
+                                '</b> milliseconds.');
+                    }
+                    $headers = $this->outputHandler->headersList();
+                    $this->headerManipulator->storeHeadersForPreservation(
+                                                                      $headers);
+                    $this->headerManipulator->removeHeaders($headers);
+                    $this->pocDispatcher->dispatch(
+                            PocEventNames::BEFORE_STORE_OUTPUT,
+                            new BaseEvent($this));
+
+                    $this->cache->cacheSpecificStore(
+                            $this->cache->getHasher()
+                                ->getKey(), $this->getOutput());
+                    $this->headerManipulator->storeHeades($headers);
+                    $this->cache->cacheAddTags();
+
+                    if ($this->ciaProtector) {
+                        $this->ciaProtector->consultFinish();
                     }
                 }
-
-                $this->pocDispatcher->dispatch(
-                        PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
-                        new BaseEvent($this));
-
-                if ($buffer) {
-                    $this->outputHandler->ObPrintCallback($this->getOutput());
-
-                    return ($this->getOutput());
+            } else {
+                if ($this->debug) {
+                    $this->setOutput(
+                            $this->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
                 }
-            //}
+            }
+
+            $this->pocDispatcher->dispatch(
+                    PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
+                    new BaseEvent($this));
+
+            if ($buffer) {
+                $this->outputHandler->ObPrintCallback($this->getOutput());
+
+                return ($this->getOutput());
+            }
         }
     }
 
@@ -352,8 +349,7 @@ class Poc implements PocParams, OptionAbleInterface
                 }
                 $this->headerManipulator->removeHeaders($arr);
             }
-            echo ($output);
-            $this->outputHandler->stopBuffer();
+            $this->outputHandler->stopBuffer($output);
         }
 
         return $output;

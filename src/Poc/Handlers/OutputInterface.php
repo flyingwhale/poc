@@ -29,7 +29,7 @@ interface OutputInterface
 
     public function startBuffer ($callbackFunctname);
 
-    public function stopBuffer ();
+    public function stopBuffer ($output = '');
 
     public function header ($header);
 

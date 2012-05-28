@@ -199,7 +199,8 @@ class Poc implements PocParams, OptionAbleInterface
         // TODO: call the ob_get_level from the outputHandler.
         if ($this->level == \ob_get_level() - 1) {
             $this->setOutput($buffer);
-            if (! $this->outputFilter->isOutputBlacklisted($this->getOutput())) {
+            if (!$this->outputFilter ||
+                !$this->outputFilter->isOutputBlacklisted($this->getOutput())) {
                 if ($this->getOutput()) {
 
                     if ($this->debug) {
@@ -275,7 +276,7 @@ class Poc implements PocParams, OptionAbleInterface
             return new HeaderManipulator();
         };
         $this->optionAble[self::PARAM_OUTPUTFILTER] = function  () {
-            return new OutputFilter();
+            return null;
         };
         $this->optionAble[self::PARAM_DEBUG] = false;
         // $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new
@@ -302,10 +303,10 @@ class Poc implements PocParams, OptionAbleInterface
         $this->startTime = microtime();
         $this->optionAble = new OptionAble($options, $this);
         $this->optionAble->start();
-        $this->pocDispatcher = $this->optionAble->getOption(
-                self::PARAM_EVENT_DISPATCHER);
-        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_BEGINING,
-                new BaseEvent($this));
+        $this->pocDispatcher = 
+                     $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
+        $this->pocDispatcher->dispatch
+                     (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
         // new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER =>
         // $this->pocDispatcher));
         // new MinifyHtmlOutput($this->pocDispatcher);
@@ -317,8 +318,10 @@ class Poc implements PocParams, OptionAbleInterface
                 self::PARAM_HEADERMANIPULATOR);
         $this->headerManipulator->setOutputHandler($this->outputHandler);
         $this->headerManipulator->setCache($this->cache);
-        $this->outputFilter = $this->optionAble->getOption(
-                self::PARAM_OUTPUTFILTER);
+        
+        $this->outputFilter = 
+                         $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
+
         $this->ciaProtector = $this->optionAble->getOption(
                 self::PARAM_CIA_PROTECTOR);
         if ($this->ciaProtector) {

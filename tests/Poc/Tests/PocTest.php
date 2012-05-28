@@ -58,7 +58,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     {
         \ob_start(function($output){return"";});
     }
-    
+
     private function setOutput ($o)
     {
         $this->analizeThisOutput = $o;

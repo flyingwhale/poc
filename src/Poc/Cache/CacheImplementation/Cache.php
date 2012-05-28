@@ -18,11 +18,8 @@
 namespace Poc\Cache\CacheImplementation;
 
 use Poc\Poc;
-
 use Poc\Cache\Tagging\AbstractDb;
-
 use Poc\Cache\CacheImplementation\CacheParams;
-
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Core\OptionAble\OptionAble;

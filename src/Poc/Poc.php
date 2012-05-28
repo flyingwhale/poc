@@ -198,7 +198,7 @@ class Poc implements PocParams, OptionAbleInterface
         $this->setOutput($buffer);
         // TODO: call the ob_get_level from the outputHandler.
         if ($this->level == \ob_get_level() - 1) {
-            if ($this->cache->getFilter()->evaluate()) {
+          //  if ($this->cache->getFilter()->evaluate()) {
                 $this->setOutput($buffer);
                 if (! $this->outputFilter->isOutputBlacklisted(
                         $this->getOutput())) {
@@ -206,7 +206,11 @@ class Poc implements PocParams, OptionAbleInterface
 
                         if ($this->debug) {
                             $this->setOutput(
-                                    $this->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
+                                    $this->getOutput() .
+                                    '<br>This page has been ' .
+                                    '<b> generated in ' .
+                                    ((microtime() - $this->startTime) * 1000) .
+                                    '</b> milliseconds.');
                         }
                         $headers = $this->outputHandler->headersList();
                         $this->headerManipulator->storeHeadersForPreservation(
@@ -215,7 +219,7 @@ class Poc implements PocParams, OptionAbleInterface
                         $this->pocDispatcher->dispatch(
                                 PocEventNames::BEFORE_STORE_OUTPUT,
                                 new BaseEvent($this));
-                        // TODO: Hide the $key
+
                         $this->cache->cacheSpecificStore(
                                 $this->cache->getHasher()
                                     ->getKey(), $this->getOutput());
@@ -242,7 +246,7 @@ class Poc implements PocParams, OptionAbleInterface
 
                     return ($this->getOutput());
                 }
-            }
+            //}
         }
     }
 
@@ -357,12 +361,7 @@ class Poc implements PocParams, OptionAbleInterface
 
     public function fetchCacheValue ()
     {
-        $output = '';
-        if ($this->cache->getFilter()->evaluate()) {
-            $output = $this->cache->fetch(
-                    $this->cache->getHasher()
-                        ->getKey());
-        }
+        $output = $this->cache->fetch($this->cache->getHasher()->getKey());
 
         return $output;
     }
@@ -370,22 +369,22 @@ class Poc implements PocParams, OptionAbleInterface
     public function start ()
     {
         $this->level = \ob_get_level();
-        if (! $this->fetchCache()) {
-            if (! $this->cache->getFilter()->isBlacklisted()) {
-                if ($this->ciaProtector) {
-                    $this->ciaProtector->consult();
-                }
-                $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
+        if ($this->cache->getFilter()->evaluate()) {
+            if (! $this->fetchCache()) {
+                    if ($this->ciaProtector) {
+                        $this->ciaProtector->consult();
+                    }
+                    $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
 
-                $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
-                        new BaseEvent($this));
+                    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
+                            new BaseEvent($this));
+                }
             } else {
 
-                $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+            $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
 
-                $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
-                        new BaseEvent($this));
-            }
+            $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
+                    new BaseEvent($this));
         }
     }
 

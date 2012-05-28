@@ -29,7 +29,7 @@ class Filter
 
     public function evaluate ()
     {
-        return ! $this->isBlacklisted();
+        return !$this->isBlacklisted();
     }
 
     public function addBlacklistCondition ($var)

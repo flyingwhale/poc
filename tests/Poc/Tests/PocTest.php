@@ -12,6 +12,8 @@
 
 namespace unittest;
 
+require_once __DIR__.'/PocTestCore.php';
+
 use Poc\PocPlugins\MinifyHtmlOutput;
 
 use Poc\PocPlugins\PocLogsParams;
@@ -33,103 +35,8 @@ use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Tagging\MysqlTagging;
 
-const UNITTESTING = 1;
-
-class PocTest extends \PHPUnit_Framework_TestCase
+class PocTest extends PocTestCore
 {
-
-    const TESTSTRING1 = "1";
-
-    const TESTSTRING2 = "2";
-
-    const TESTSTRING3 = "3";
-
-    const TTL = 3;
-
-    const BIGTTL = 100;
-
-    const NEEDLE = '/amiga1200/';
-
-    private $analizeThisOutput;
-
-    private $analizeThisHeader;
-
-    public static function setUpBeforeClass()
-    {
-        \ob_start(function($output){return"";});
-    }
-
-    private function setOutput ($o)
-    {
-        $this->analizeThisOutput = $o;
-    }
-
-    private function getOutput ()
-    {
-        return $this->analizeThisOutput;
-    }
-
-    private function getHeader ()
-    {
-        return $this->analizeThisHeader;
-    }
-
-    private function setHeader ($header)
-    {
-        $this->analizeThisHeader = $header;
-    }
-    /*
-     * public function __construct(){ new PocLogs(); }
-     */
-
-    /**
-     *
-     * @param $cache Cache
-     * @param $testString string
-     */
-    private function cacheBurner ($cache, $testString = "testString")
-    {
-        $outputHandler = new TestOutput();
-        $poc = new Poc(
-                array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
-        $this->pocBurner($poc, $outputHandler, $testString);
-    }
-
-    /**
-     * This function has got a weird name, because it does not do anything else
-     * only inspect the getOutputFlow function of the output handler and decides
-     * what to do with the $testsring variable it receives. This tries to
-     * emulate the behahviour of the server to the $poc object.
-     *
-     * @param $poc Poc
-     * @param $outputHandler TestOutput
-     * @param $testString string
-     */
-    private function pocBurner (Poc $poc, $outputHandler,
-            $testString = "testString")
-    {
-        $pl = new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
-        // new MinifyHtmlOutput($poc->getPocDispatcher());
-
-        $this->setOutput('');
-        $poc->start();
-
-        if ($outputHandler->getOutputFlow()) {
-            echo $testString;
-            $poc->destruct();
-            $this->setHeader($outputHandler->getHeader());
-            $this->setOutput($outputHandler->getOutput());
-        } else {
-            $this->setHeader($outputHandler->getHeader());
-            $this->setOutput($outputHandler->getOutput());
-            $poc->destruct();
-
-            if ($outputHandler->getOutput()) {
-                $this->setHeader($outputHandler->getHeader());
-                $this->setOutput($outputHandler->getOutput());
-            }
-        }
-    }
 
     public function testBasicPocFunctionality ()
     {

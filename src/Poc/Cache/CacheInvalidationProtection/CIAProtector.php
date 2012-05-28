@@ -196,15 +196,15 @@ class CIAProtector implements OptionAbleInterface
         }
 
         return '<HTML>
-    <HEAD>
-    <META HTTP-EQUIV="refresh" content="1; url=' . $pageURL . '">
-    <TITLE>My new webpage</TITLE>
-    </HEAD>
-    <BODY>
-    PLEASE WAIT!
-    </BODY>
-    </HTML>';
-    }
+                <HEAD>
+                <META HTTP-EQUIV="refresh" content="1; url=' . $pageURL . '">
+                <TITLE>My new webpage</TITLE>
+                </HEAD>
+                <BODY>
+                PLEASE WAIT!
+                </BODY>
+                </HTML>';
+                }
 
     public function consult ()
     {

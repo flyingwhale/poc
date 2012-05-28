@@ -31,6 +31,9 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public function getConnection ()
     {
         $pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+        $query = 'USE ' . $GLOBALS['MYSQL_DBNAME'];
+        $pdo->exec($query);
+        
         return $this->createDefaultDBConnection($pdo);
     }
 

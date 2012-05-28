@@ -16,9 +16,11 @@
     <!--
     Please change this settings!
     -->
-    <var name="MYSQL_DSN" value="mysql:dbname=poc_tagging:host=localhost" />
+    <var name="MYSQL_DSN" value="mysql:host=localhost" />
     <var name="MYSQL_USER" value="username" />
     <var name="MYSQL_PASS" value="password" />
+    <var name="MYSQL_DBNAME" value="poc_tagging" />
+    
     
   </php>
   <testsuites>

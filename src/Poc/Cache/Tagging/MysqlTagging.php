@@ -70,61 +70,12 @@ class MysqlTagging extends AbstractDb
 
     protected function connectDb ()
     {
-        if ($this->tryOfCon < 1) {
-            try {
-                $this->PDO = new \PDO($this->dsn, $this->user, $this->pass);
-                $this->cmm = new CacheModelManager($this->PDO);
-                $this->tmm = new TagModelManager($this->PDO);
-                $this->tcmm = new TagsHasCachesModelManager($this->PDO);
-
-                return true;
-            } catch (\PDOException $Exception) {
-                $this->tryOfCon ++;
-                if ($Exception->getCode() == 1049) {
-                    $dsn = 'mysql:;host=' . $this->host;
-                    $this->PDO = new \PDO($dsn, $this->user, $this->pass);
-                    $this->createDb();
-                    $this->cmm = new CacheModelManager($this->PDO);
-                    $this->tmm = new TagModelManager($this->PDO);
-                    $this->tcmm = new TagsHasCachesModelManager($this->PDO);
-                    $this->createTables();
-                }
-            }
-        } else {
-            throw new \Exception('Mysql database connection failed.');
-        }
-        $this->connectDb();
-    }
-
-    protected function initDbStructure ()
-    {
-        if ($this->createDb()) {
-            $this->createTables();
-        }
-    }
-
-    protected function createDb ()
-    {
-        $query = 'CREATE DATABASE `' . $this->db . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
-        $this->PDO->exec($query) or die(
-                "PLEASE ADD PROPER DATABASE RIGHTS FOR YOUR Poc INSTANCES MysqlTagging class!");
-
-        $query = 'USE ' . $this->db;
-        $this->PDO->exec($query);
-    }
-
-    protected function createTables ()
-    {
-        $this->cmm->createTable();
-        $this->tmm->createTable();
-        $this->tcmm->createTable();
-    }
-
-    public function truncateTables ()
-    {
-        $this->tcmm->truncateTable();
-        $this->cmm->truncateTable();
-        $this->tmm->truncateTable();
+        $this->PDO = new \PDO($this->dsn, $this->user, $this->pass);
+        $this->cmm = new CacheModelManager($this->PDO);
+        $this->tmm = new TagModelManager($this->PDO);
+        $this->tcmm = new TagsHasCachesModelManager($this->PDO);
+        
+        return true;
     }
 
     public function splitTags ($tags)

@@ -23,3 +23,8 @@ $prefixes = array('Rediska' => __DIR__ . '/../vendor/rediska/library');
 $loader->registerPrefixes($prefixes);
 
 $loader->register();
+
+$pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+$dbInit = new \Poc\Cache\Tagging\DatabaseInicialization\MysqlDatabaseInicialization($pdo, $GLOBALS['MYSQL_DBNAME']);
+$dbInit->create();
+

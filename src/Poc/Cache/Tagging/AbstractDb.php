@@ -33,10 +33,4 @@ abstract class AbstractDb
 
     abstract public function tagInvalidate ($tags);
 
-    abstract protected function createDb ();
-
-    abstract protected function createTables ();
-
-    abstract protected function initDbStructure ();
-
 }

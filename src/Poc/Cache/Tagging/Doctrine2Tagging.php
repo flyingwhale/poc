@@ -166,12 +166,6 @@ class Doctrine2Tagging extends AbstractDb
         }
     }
 
-    protected function createDb ()
-    {}
-
-    protected function createTables ()
-    {}
-
     protected function deleteOrphans ()
     {
         $cacheRepository = $this->getCacheRepository();
@@ -213,9 +207,6 @@ class Doctrine2Tagging extends AbstractDb
     {
         return explode(',', $tags);
     }
-
-    protected function initDbStructure ()
-    {}
 
 }
 ?>

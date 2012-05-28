@@ -35,11 +35,6 @@ use Poc\Cache\Tagging\MysqlTagging;
 
 const UNITTESTING = 1;
 
-/*
- * ob_start at the beginning has to be done in order to avoid the headers to be
- * sent, because the PHPUnit already has got some output when it starts.
- */\ob_start();
-
 class PocTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -59,6 +54,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     private $analizeThisHeader;
 
+    public static function setUpBeforeClass()
+    {
+        \ob_start(function($output){return"";});
+    }
+    
     private function setOutput ($o)
     {
         $this->analizeThisOutput = $o;
@@ -98,9 +98,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
     /**
      * This function has got a weird name, because it does not do anything else
      * only inspect the getOutputFlow function of the output handler and decides
-     * what to do with the $testsring variable it receives. This tries to 
+     * what to do with the $testsring variable it receives. This tries to
      * emulate the behahviour of the server to the $poc object.
-     * 
+     *
      * @param $poc Poc
      * @param $outputHandler TestOutput
      * @param $testString string
@@ -138,6 +138,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $objects['file'] = function  () {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality file".  rand());
+
             return new FileCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
                                        CacheParams::PARAM_HASHER => $hasher));
         };
@@ -145,6 +146,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $objects['memcached'] = function  () {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality memcached".  rand());
+
             return new MemcachedCache(
                     array(CacheParams::PARAM_TTL => PocTest::TTL,
                           CacheParams::PARAM_HASHER => $hasher));
@@ -153,6 +155,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $objects['rediska'] = function  () {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality rediska".  rand());
+
             return new RediskaCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
                                           CacheParams::PARAM_HASHER => $hasher));
         };
@@ -160,6 +163,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $objects['mongo'] = function  () {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality mongo".  rand());
+
             return new MongoDBCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
                                           CacheParams::PARAM_HASHER => $hasher));
         };
@@ -174,7 +178,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $this->cacheBurner($cacheHandler, self::TESTSTRING1);
             $output1 = $this->getOutput();
-            
+
             // This is because of the Rediska cache implementation,
             // Because it transforms any serialized array to array when it
             // stores it,
@@ -188,23 +192,21 @@ class PocTest extends \PHPUnit_Framework_TestCase
             for ($i = 0; $i < 10; $i ++) {
                 $this->cacheBurner($cacheHandler, self::TESTSTRING1 . "Whatever $i");
             }
-            
+
             $this->cacheBurner($cacheHandler, self::TESTSTRING2);
             $output2 = $this->getOutput();
             sleep(self::TTL + 1);
 
-            
             $this->cacheBurner($cacheHandler, self::TESTSTRING3);
             $output3 = $this->getOutput();
 
-            
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
             $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
             $this->assertEquals(self::TESTSTRING3, $output3, $cacheHandlerName);
-                        
+
             $this->assertNotEquals($output1, $output3, $cacheHandlerName);
             $this->assertEquals($output1, $output2, $cacheHandlerName);
-            
+
         }
     }
 
@@ -212,13 +214,12 @@ class PocTest extends \PHPUnit_Framework_TestCase
     {
         $blackList = new Filter();
         $blackList->addBlacklistCondition(true);
-        
+
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("testPocBlacklist".  rand());
 
-
         $cacheHandler = new FileCache(
-                array(CacheParams::PARAM_TTL => PocTest::BIGTTL, 
+                array(CacheParams::PARAM_TTL => PocTest::BIGTTL,
                       CacheParams::PARAM_FILTER => $blackList,
                       CacheParams::PARAM_HASHER => $hasher
                       ));
@@ -238,10 +239,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
     {
         $objects = new \Pimple();
 
-        
         $objects['c1'] = function  () {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testPocWithDifferentHashers".  rand());
+
             return new FileCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
                                        CacheParams::PARAM_HASHER => $hasher
                                        ));
@@ -282,9 +283,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $outputFilter = new OutputFilter();
         $outputFilter->addBlacklistCondition(PocTest::NEEDLE);
         $poc = new Poc(
-                array(PocParams::PARAM_CACHE => $cache, 
-                      PocParams::PARAM_OUTPUTHANDLER => $outputHandler, 
-                      PocParams::PARAM_OUTPUTFILTER => $outputFilter, 
+                array(PocParams::PARAM_CACHE => $cache,
+                      PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
+                      PocParams::PARAM_OUTPUTFILTER => $outputFilter,
                       PocParams::PARAM_DEBUG => true
                       ));
         $poc2 = array();

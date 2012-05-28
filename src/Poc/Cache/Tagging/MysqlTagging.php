@@ -74,7 +74,7 @@ class MysqlTagging extends AbstractDb
         $this->cmm = new CacheModelManager($this->PDO);
         $this->tmm = new TagModelManager($this->PDO);
         $this->tcmm = new TagsHasCachesModelManager($this->PDO);
-        
+
         return true;
     }
 

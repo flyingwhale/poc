@@ -35,7 +35,6 @@ class ServerOutput extends Output
     public function StopBuffer ()
     {
         die();
-        // exit();
     }
 
     public function header ($header)
@@ -50,7 +49,6 @@ class ServerOutput extends Output
 
     public function ObPrintCallback ($output)
     {
-
         echo $output;
     }
 

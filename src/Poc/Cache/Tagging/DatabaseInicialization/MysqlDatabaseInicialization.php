@@ -13,26 +13,25 @@
 
 namespace Poc\Cache\Tagging\DatabaseInicialization;
 
-class MysqlDatabaseInicialization 
+class MysqlDatabaseInicialization
 {
-    
+
     private $pdo = null;
     private $db = null;
 
-
-    public function __construct($pdo, $db){
-        
+    public function __construct($pdo, $db)
+    {
         $this->pdo = $pdo;
         $this->db = $db;
-       
+
     }
-    
+
     public function create()
     {
         $this->createDb();
         $this->createTables();
     }
-    
+
     public function createDb ()
     {
         $query = 'CREATE DATABASE `' . $this->db . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
@@ -40,22 +39,23 @@ class MysqlDatabaseInicialization
         $query = 'USE ' . $this->db;
         $this->pdo->exec($query);
     }
-    
-    public function createTables(){
+
+    public function createTables()
+    {
         $query = 'CREATE TABLE IF NOT EXISTS `tags` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `tag` char(10) NOT NULL,
          PRIMARY KEY (`id`)
          ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
         $this->pdo->exec($query);
-        
+
         $query = 'CREATE TABLE IF NOT EXISTS `tags_has_caches` (
         `tag_id` int(11) NOT NULL,
         `cache_id` int(11) NOT NULL,
         PRIMARY KEY (`tag_id`,`cache_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8';
         $this->pdo->exec($query);
-        
+
         $query = 'CREATE TABLE IF NOT EXISTS `caches` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `hash` char(64) NOT NULL,
@@ -63,9 +63,6 @@ class MysqlDatabaseInicialization
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
         $this->pdo->exec($query);
-        
-        
-        
+
     }
 }
-         

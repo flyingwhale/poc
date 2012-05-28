@@ -216,8 +216,7 @@ class Poc implements PocParams, OptionAbleInterface
                                                                       $headers);
                     $this->headerManipulator->removeHeaders($headers);
                     $this->pocDispatcher->dispatch(
-                            PocEventNames::BEFORE_STORE_OUTPUT,
-                            new BaseEvent($this));
+                      PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this));
 
                     $this->cache->cacheSpecificStore(
                             $this->cache->getHasher()

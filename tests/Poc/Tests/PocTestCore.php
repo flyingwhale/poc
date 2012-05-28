@@ -105,8 +105,8 @@ class PocTestCore extends \PHPUnit_Framework_TestCase
      * @param $outputHandler TestOutput
      * @param $testString string
      */
-    protected function pocBurner (Poc $poc, $outputHandler,
-            $testString = "testString")
+    protected function pocBurner (Poc $poc, $outputHandler, 
+                                                     $testString = "testString")
     {
         $pl = new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
         // new MinifyHtmlOutput($poc->getPocDispatcher());

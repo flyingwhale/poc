@@ -175,8 +175,6 @@ class PocTest extends PocTestCore
         $this->assertTrue($output1 != $output2);
     }
 
-    // TODO: make this test work!
-
     public function testOutputFilter ()
     {
         $hasher = new Hasher();

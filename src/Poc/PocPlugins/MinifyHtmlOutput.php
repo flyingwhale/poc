@@ -23,19 +23,27 @@ class MinifyHtmlOutput
 
     public function minifyHtml (BaseEvent $event)
     {
-                                // got fromhttp://stackoverflow.com/questions/6225351/how-to-minify-php-page-html-output
-        $search = 
+        $search =
         array(
+
         '/ {2,}/',
-        '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s'
+        '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
+
+        '/\>[^\S ]+/s', //strip whitespaces after tags, except space
+        '/[^\S ]+\</s', //strip whitespaces before tags, except space
+        '/(\s)+/s',  // shorten multiple whitespace sequences
 
         );            // shorten multiple whitespace sequences
-        $replace = 
-        array(       
-        ' ',
-        ''
+        $replace =
+        array(
 
-        
+        ' ',
+        ' ',
+
+         '>',
+        '<',
+        '\\1',
+
         );
         $event->getEvent()->setOutput(
         preg_replace($search, $replace, $event->getEvent()->getOutput()));

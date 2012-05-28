@@ -14,12 +14,6 @@ namespace unittest;
 
 require_once __DIR__.'/PocTestCore.php';
 
-use Poc\PocPlugins\MinifyHtmlOutput;
-
-use Poc\PocPlugins\PocLogsParams;
-
-use Poc\PocPlugins\PocLogs;
-
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 use Poc\Cache\Filtering\OutputFilter;
 use Poc\PocParams;

@@ -43,7 +43,7 @@ class TestOutput extends Output implements OptionAbleInterface
     private $outputFlow = 1;
 
     private $output = '';
-    
+
     private $stopBufferOutut = null;
 
     private $optionable;

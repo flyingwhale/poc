@@ -302,7 +302,7 @@ class Poc implements PocParams, OptionAbleInterface
         $this->startTime = microtime();
         $this->optionAble = new OptionAble($options, $this);
         $this->optionAble->start();
-        $this->pocDispatcher = 
+        $this->pocDispatcher =
                      $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
         $this->pocDispatcher->dispatch
                      (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
@@ -317,8 +317,8 @@ class Poc implements PocParams, OptionAbleInterface
                 self::PARAM_HEADERMANIPULATOR);
         $this->headerManipulator->setOutputHandler($this->outputHandler);
         $this->headerManipulator->setCache($this->cache);
-        
-        $this->outputFilter = 
+
+        $this->outputFilter =
                          $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
 
         $this->ciaProtector = $this->optionAble->getOption(

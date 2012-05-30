@@ -2,11 +2,13 @@
 namespace Poc\PocPlugins\Output;
 
 use Poc\PocEvents\PocEventNames;
+use Poc\Poc;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Events\BaseEvent;
+use Poc\Core\PluginSystem\Plugin;
 
-class MinifyHtmlOutput
+class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
 {
 
     /**
@@ -15,9 +17,11 @@ class MinifyHtmlOutput
      */
     private $dispatcher;
 
-    public function __construct (EventDispatcher $dispatcher)
+//    public function init (Poc $poc);   
+    public function init (Poc $poc)
     {
-        $dispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT,
+        parent::init($poc);
+        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT,
                                                     array($this, 'minifyHtml'));
     }
 

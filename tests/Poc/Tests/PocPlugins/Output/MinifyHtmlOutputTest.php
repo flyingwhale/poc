@@ -59,7 +59,8 @@ class MinifyHtlmOutputTest extends PocTestCore
                         ));
 
         new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
-        new MinifyHtmlOutput($poc->getPocDispatcher());
+        
+        $poc->addPlugin(new MinifyHtmlOutput);
 
         $this->pocBurner($poc, $outputHandler, $input);
         $output = $this->getOutput();

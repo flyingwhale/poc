@@ -50,6 +50,8 @@ use Poc\Cache\Header\HeaderManipulator;
 
 use Poc\Cache\Filtering\OutputFilter;
 
+use Core\PluginSystem\Plugin;
+
 /**
  * This class contains the "Entry point" of the caching process.
  * Therefor is is
@@ -422,5 +424,14 @@ class Poc implements PocParams, OptionAbleInterface
         }
 
         return $this->logger;
+    }
+    
+    /**
+     *
+     * @param Core\PluginSystem\Plugin $plugin 
+     */
+    public function addPlugin ($plugin)
+    {
+        $plugin->init($this);
     }
 }

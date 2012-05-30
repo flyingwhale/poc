@@ -1,5 +1,5 @@
 <?php
-namespace Poc\PocPlugins;
+namespace Poc\PocPlugins\Logging;
 
 use Poc\Events\BaseEvent;
 
@@ -17,7 +17,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Poc\Poc;
 
-class PocLogs implements OptionAbleInterface, PocLogsParams
+use Poc\Core\PluginSystem\Plugin;
+
+class PocLogs extends Plugin
 {
 
     const LOG_TYPE_OUTPUT = "OUTPUT";
@@ -34,12 +36,6 @@ class PocLogs implements OptionAbleInterface, PocLogsParams
      */
     private $pocDispatcher;
 
-    /**
-     *
-     * @var OptionAble
-     *
-     */
-    private $optionAble;
 
     /**
      *
@@ -53,18 +49,11 @@ class PocLogs implements OptionAbleInterface, PocLogsParams
      */
     private $logger;
 
-    public function fillDefaults ()
-    {
-        $this->optionAble[self::PARAM_POC] = null;
-    }
-
-    public function __construct ($options = array())
+   
+    public function init (Poc $poc)
     {
 
-        $this->optionAble = new OptionAble($options, $this);
-        $this->optionAble->start();
-
-        $this->poc = $this->optionAble->getOption(self::PARAM_POC);
+        $this->poc = $poc;
         $this->logger = $this->poc->getLogger();
 
         $this->pocDispatcher = $this->poc->getPocDispatcher();

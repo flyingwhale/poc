@@ -1,5 +1,5 @@
 <?php
-namespace Poc\PocPlugins;
+namespace Poc\Core\Monolog;
 
 interface LoggerInterface
 {

@@ -12,9 +12,7 @@
 
 namespace unittest;
 
-use Poc\PocPlugins\PocLogsParams;
-
-use Poc\PocPlugins\PocLogs;
+use Poc\PocPlugins\Logging\PocLogs;
 
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
@@ -87,7 +85,7 @@ class PocTestCore extends \PHPUnit_Framework_TestCase
     protected function pocBurner (Poc $poc, $outputHandler,
                                                      $testString = "testString")
     {
-        $pl = new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
+        $poc->addPlugin(new PocLogs());
 
         $this->setOutput('');
         $poc->start();

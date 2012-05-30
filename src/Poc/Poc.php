@@ -18,11 +18,7 @@
  */
 namespace Poc;
 
-use Poc\PocPlugins\MonoLogger;
-
-use Poc\Plugins\PocLogsParams;
-
-use Poc\Plugins\PocLogs;
+use Poc\Core\Monolog\MonoLogger;
 
 use Poc\PocEvents\PocEventNames;
 

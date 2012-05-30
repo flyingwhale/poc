@@ -5,8 +5,8 @@ namespace unittest;
 require_once __DIR__.'/../../PocTestCore.php';
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
-use Poc\PocPlugins\PocLogsParams;
-use Poc\PocPlugins\PocLogs;
+use Poc\PocPlugins\Logging\PocLogsParams;
+use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
@@ -25,11 +25,9 @@ class MinifyHtlmOutputTest extends PocTestCore
                     array("A
                         a      A", "A a A"),
                     array("A
-
-        a
+a
                 A", "A a A"),
                     array("A
-
         a
                 A", "A a A"),
 
@@ -58,7 +56,7 @@ class MinifyHtlmOutputTest extends PocTestCore
                             PocParams::PARAM_CACHE=>$cache,
                         ));
 
-        new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
+        $poc->addPlugin(new PocLogs);
         
         $poc->addPlugin(new MinifyHtmlOutput);
 

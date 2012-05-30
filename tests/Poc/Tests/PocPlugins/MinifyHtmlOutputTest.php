@@ -18,47 +18,55 @@ class MinifyHtlmOutputTest extends PocTestCore
 {
     const TEST_STRING_MINIFY_EXTRA_SPACE = "A    a      A";
 
-    public function testminifyHtml ()
+    public function dataProviderForTests ()
     {
-        $tests = array(
-            array("A    a      A", "A a A"),
-            array("A
-                a      A", "A a A"),
-            array("A
+        return array(
+                    array("A    a      A", "A a A"),
+                    array("A
+                        a      A", "A a A"),
+                    array("A
 
- a
-        A", "A a A"),
-            array("A
+        a
+                A", "A a A"),
+                    array("A
 
-a
-        A", "A a A"),
+        a
+                A", "A a A"),
 
-        array("A    a  <!-- html comment -->    A", "A a A"),
+                array("A    a  <!-- html comment -->    A", "A a A"),
 
-        );
-        foreach ($tests as $cnt => $test) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("TestMinify".  rand());
+                );
 
-            $cache = new FileCache(
-                                    array(CacheParams::PARAM_TTL => self::BIGTTL,
-                                        CacheParams::PARAM_HASHER => $hasher));
+            }
 
-            $outputHandler = new TestOutput();
+    /**
+     * @dataProvider dataProviderForTests
+     */
+    public function testminifyHtmlWithPoc ($input, $expectedOutput)
+    {
 
-            $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(),
-                                PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
-                                PocParams::PARAM_CACHE=>$cache,
-                            ));
+        $hasher = new Hasher();
+        $hasher->addDistinguishVariable("TestMinify".  rand());
 
-            new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
-            new MinifyHtmlOutput($poc->getPocDispatcher());
+        $cache = new FileCache(
+                                array(CacheParams::PARAM_TTL => self::BIGTTL,
+                                    CacheParams::PARAM_HASHER => $hasher));
 
-            $this->pocBurner($poc, $outputHandler, $test[0]);
-            $output = $this->getOutput();
+        $outputHandler = new TestOutput();
 
-            $this->assertEquals($test[1], $output, "The $cnt".". test failed!");
-        }
+        $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(),
+                            PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
+                            PocParams::PARAM_CACHE=>$cache,
+                        ));
+
+        new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
+        new MinifyHtmlOutput($poc->getPocDispatcher());
+
+        $this->pocBurner($poc, $outputHandler, $input);
+        $output = $this->getOutput();
+
+        $this->assertEquals($expectedOutput, $output);
+
     }
 
 }

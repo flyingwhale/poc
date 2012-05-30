@@ -2,9 +2,9 @@
 
 namespace unittest;
 
-require_once __DIR__.'/../PocTestCore.php';
+require_once __DIR__.'/../../PocTestCore.php';
 
-use Poc\PocPlugins\MinifyHtmlOutput;
+use Poc\PocPlugins\Output\MinifyHtmlOutput;
 use Poc\PocPlugins\PocLogsParams;
 use Poc\PocPlugins\PocLogs;
 use Poc\PocParams;
@@ -44,7 +44,6 @@ class MinifyHtlmOutputTest extends PocTestCore
      */
     public function testminifyHtmlWithPoc ($input, $expectedOutput)
     {
-
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestMinify".  rand());
 
@@ -66,7 +65,5 @@ class MinifyHtlmOutputTest extends PocTestCore
         $output = $this->getOutput();
 
         $this->assertEquals($expectedOutput, $output);
-
     }
-
 }

@@ -22,8 +22,6 @@ use Poc\PocPlugins\MonoLogger;
 
 use Poc\Plugins\PocLogsParams;
 
-use Poc\Plugins\MinifyHtmlOutput;
-
 use Poc\Plugins\PocLogs;
 
 use Poc\PocEvents\PocEventNames;
@@ -306,9 +304,6 @@ class Poc implements PocParams, OptionAbleInterface
                      $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
         $this->pocDispatcher->dispatch
                      (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
-        // new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER =>
-        // $this->pocDispatcher));
-        // new MinifyHtmlOutput($this->pocDispatcher);
         $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
         $this->outputHandler = $this->optionAble->getOption(
                 self::PARAM_OUTPUTHANDLER);
@@ -384,11 +379,6 @@ class Poc implements PocParams, OptionAbleInterface
             $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                     new BaseEvent($this));
         }
-    }
-
-    private function ciaConsult ()
-    {
-
     }
 
     public function __destruct ()

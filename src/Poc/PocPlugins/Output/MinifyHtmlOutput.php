@@ -1,5 +1,5 @@
 <?php
-namespace Poc\PocPlugins;
+namespace Poc\PocPlugins\Output;
 
 use Poc\PocEvents\PocEventNames;
 

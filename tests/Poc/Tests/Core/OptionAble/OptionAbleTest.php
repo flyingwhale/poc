@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace unittest;
+namespace Poc\Tests\Core\OptionAble;
 
 use Poc\Poc;
 

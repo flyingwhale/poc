@@ -1,6 +1,6 @@
 <?php
 
-namespace unittest;
+namespace Poc\Tests\PocPlugins\Output;
 
 use Poc\Tests\PocTestCore;
 

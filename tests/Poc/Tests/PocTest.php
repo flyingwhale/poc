@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace unittest;
-
-//require_once __DIR__.'/PocTestCore.php';
+namespace Poc\Tests;
 
 use Poc\Tests\PocTestCore;
 

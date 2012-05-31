@@ -12,7 +12,9 @@
 
 namespace unittest;
 
-require_once __DIR__.'/PocTestCore.php';
+//require_once __DIR__.'/PocTestCore.php';
+
+use Poc\Tests\PocTestCore;
 
 use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 use Poc\Cache\Filtering\OutputFilter;

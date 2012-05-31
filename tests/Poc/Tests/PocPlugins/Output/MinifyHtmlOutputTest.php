@@ -2,7 +2,7 @@
 
 namespace unittest;
 
-require_once __DIR__.'/../../PocTestCore.php';
+use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
 use Poc\PocPlugins\Logging\PocLogsParams;
@@ -35,7 +35,7 @@ a
 
                 );
 
-            }
+    }
 
     /**
      * @dataProvider dataProviderForTests

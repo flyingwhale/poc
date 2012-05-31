@@ -14,7 +14,7 @@ namespace unittest;
 
 use Poc\Poc;
 
-use Poc\Core\Optionable\OptionAble;
+use Poc\Core\OptionAble\OptionAble;
 
 use Poc\Core\OptionAble\OptionAbleInterface;
 

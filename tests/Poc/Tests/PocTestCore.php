@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace unittest;
+namespace Poc\Tests;
 
 use Poc\PocPlugins\Logging\PocLogs;
 
@@ -20,12 +20,12 @@ use Poc\Poc;
 
 const UNITTESTING = 1;
 
-class PocTestCore extends \PHPUnit_Framework_TestCase
+abstract class PocTestCore extends \PHPUnit_Framework_TestCase
 {
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
     const TESTSTRING3 = "3";
-    const TTL = 3;
+    const TTL = 5;
     const BIGTTL = 100;
     const NEEDLE = '/amiga1200/';
     protected $analizeThisOutput;
@@ -106,5 +106,6 @@ class PocTestCore extends \PHPUnit_Framework_TestCase
             }
         }
     }
+    
 }
 

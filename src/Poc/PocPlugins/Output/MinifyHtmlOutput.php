@@ -17,7 +17,6 @@ class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
      */
     private $dispatcher;
 
-//    public function init (Poc $poc);   
     public function init (Poc $poc)
     {
         parent::init($poc);

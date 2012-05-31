@@ -19,8 +19,8 @@ namespace Poc\Core\PluginSystem;
 use Poc\Poc;
 
 class Plugin implements PluginInterface{
-    private $poc;
-    
+    protected $poc;
+
     public function init(Poc $poc){
         $this->poc = $poc;
     }

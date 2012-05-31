@@ -27,9 +27,9 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
     const TESTSTRING3 = "3";
     const BIGTTL = 100;
     const NEEDLE = '/amiga1200/';
-    
+
     public static $TTL = 5;
-    
+
     protected $analizeThisOutput;
     protected $analizeThisHeader;
 
@@ -109,6 +109,6 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
             }
         }
     }
-    
+
 }
 

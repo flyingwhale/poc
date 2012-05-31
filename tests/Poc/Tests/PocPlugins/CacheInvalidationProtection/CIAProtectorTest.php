@@ -15,19 +15,9 @@ namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\CIAProtector;
-use Poc\Cache\Filtering\OutputFilter;
-use Poc\PocParams;
-use Poc\Cache\Header\HeaderManipulator;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
-use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Cache\CacheImplementation\MemcachedCache;
-use Poc\Cache\CacheImplementation\RediskaCache;
-use Poc\Cache\CacheImplementation\MongoDBCache;
-use Poc\Cache\Filtering\Hasher;
-use Poc\Cache\Filtering\Filter;
-use Poc\Cache\Tagging\MysqlTagging;
 
 class CIAProtectorTest extends PocTestCore
 {
@@ -41,7 +31,6 @@ class CIAProtectorTest extends PocTestCore
         $cnt = $cia->getSentinel();
         $cia->setSentinel(10);
         $cnt1 = $cia->getSentinel();
-
 
         $this->assertTrue($cnt == 0);
         $this->assertTrue($cnt1 == 10);

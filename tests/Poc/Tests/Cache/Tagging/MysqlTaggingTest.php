@@ -41,13 +41,13 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         return $this->createXMLDataSet($this->fixtureDirPath . '/init.xml');
     }
 
-    
     public function getMySqlTagging()
     {
         $tagging = new MysqlTagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+
         return $tagging;
     }
-    
+
     /**
      * @dataProvider addCacheToTagsProvider
      */

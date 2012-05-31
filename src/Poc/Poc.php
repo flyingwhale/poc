@@ -111,7 +111,6 @@ class Poc implements PocParams, OptionAbleInterface
      */
     private $optionAble;
 
-
     /**
      *
      * @var EventDictionary
@@ -294,7 +293,6 @@ class Poc implements PocParams, OptionAbleInterface
         $this->outputFilter =
                          $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
 
-
         $this->setDebug($this->optionAble->getOption('debug'));
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
@@ -400,11 +398,13 @@ class Poc implements PocParams, OptionAbleInterface
         $plugin->init($this);
     }
 
-    public function getCache(){
+    public function getCache()
+    {
       return $this->cache;
     }
 
-    public function getOutputHandler(){
+    public function getOutputHandler()
+    {
       return $this->outputHandler;
     }
 }

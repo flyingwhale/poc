@@ -4,7 +4,6 @@ namespace Poc\PocPlugins\Output;
 use Poc\PocEvents\PocEventNames;
 use Poc\Poc;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
 

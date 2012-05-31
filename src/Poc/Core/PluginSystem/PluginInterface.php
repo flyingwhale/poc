@@ -17,7 +17,7 @@ namespace Poc\Core\PluginSystem;
 
 use Poc\Poc;
 
-Interface PluginInterface 
+Interface PluginInterface
 {
-  public function init(Poc $poc);    
+  public function init(Poc $poc);
 }

@@ -5,7 +5,6 @@ namespace Poc\Tests\PocPlugins\Output;
 use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
-use Poc\PocPlugins\Logging\PocLogsParams;
 use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
@@ -57,7 +56,7 @@ a
                         ));
 
         $poc->addPlugin(new PocLogs);
-        
+
         $poc->addPlugin(new MinifyHtmlOutput);
 
         $this->pocBurner($poc, $outputHandler, $input);

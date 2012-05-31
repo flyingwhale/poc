@@ -3,7 +3,6 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Monolog\Logger;
 use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\OptionAble\OptionAbleInterface;
 use Poc\Core\OptionAble\OptionAble;
@@ -71,7 +70,6 @@ class CIAProtector extends Plugin implements OptionAbleInterface
      */
     private $eventDispatcher;
 
-
     /**
      *
      * @param $poc \Poc\Poc
@@ -84,7 +82,8 @@ class CIAProtector extends Plugin implements OptionAbleInterface
      *
      * @param $poc \Poc\Poc
      */
-    public function init(Poc $poc){
+    public function init(Poc $poc)
+    {
         parent::init($poc);
 
         $this->cache = $poc->getCache();
@@ -98,7 +97,6 @@ class CIAProtector extends Plugin implements OptionAbleInterface
                                                        array($this, 'consult'));
 
     }
-
 
     public function fillDefaults ()
     {
@@ -120,7 +118,6 @@ class CIAProtector extends Plugin implements OptionAbleInterface
         // $this->clientUnique =
         // $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
     }
-
 
     public function setSentinel ($cnt)
     {
@@ -219,7 +216,8 @@ class CIAProtector extends Plugin implements OptionAbleInterface
     *
     * @param \Poc\Cache\CacheImplementation\Cache $cache
     */
-    public function setCache($cache){
+    public function setCache($cache)
+    {
         $this->cache = $cache;
     }
 }

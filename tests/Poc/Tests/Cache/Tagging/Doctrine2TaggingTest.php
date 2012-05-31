@@ -45,9 +45,10 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public function getDoctrine2Tagging()
     {
         $tagging = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+
         return $tagging;
     }
-    
+
     /**
      * @dataProvider addCacheToTagsProvider
      */

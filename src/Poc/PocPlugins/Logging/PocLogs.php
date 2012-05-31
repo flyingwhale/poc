@@ -7,7 +7,6 @@ use Poc\PocEvents\PocEventNames;
 
 use Poc\Core\OptionAble\OptionAble;
 
-use Poc\Core\OptionAble\OptionAbleInterface;
 
 use Monolog\Logger;
 
@@ -41,7 +40,6 @@ class PocLogs extends Plugin
      * @var LoggerInterface
      */
     private $logger;
-
 
     public function init (Poc $poc)
     {

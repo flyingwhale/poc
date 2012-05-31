@@ -41,10 +41,9 @@ class Doctrine2Tagging extends AbstractDb
         if (! is_dir($proxyDirPath)) {
             mkdir($proxyDirPath, 0700, true);
         }
-        
+
         $config = new Configuration();
         // $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
-
 
         $config->setProxyDir($proxyDirPath);
         $config->setProxyNamespace('Proxies');

@@ -14,10 +14,8 @@ namespace Poc\Tests;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\Cache\CacheInvalidationProtection\CIAProtector;
 use Poc\Cache\Filtering\OutputFilter;
 use Poc\PocParams;
-use Poc\Cache\Header\HeaderManipulator;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
@@ -36,7 +34,7 @@ class PocTest extends PocTestCore
     {
         $objects = new \Pimple();
         $ttl = self::$TTL;
-        
+
         $objects['file'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality file".  rand());
@@ -141,7 +139,6 @@ class PocTest extends PocTestCore
     {
         $objects = new \Pimple();
         $ttl = self::$TTL;
-        
 
         $objects['c1'] = function  () use ($ttl) {
             $hasher = new Hasher();

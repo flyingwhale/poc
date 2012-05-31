@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-namespace unittest;
+namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 
-require_once __DIR__.'/../../PocTestCore.php';
+use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\CIAProtector;
 use Poc\Cache\Filtering\OutputFilter;

@@ -19,33 +19,18 @@
 namespace Poc;
 
 use Poc\Core\Monolog\MonoLogger;
-
 use Poc\PocEvents\PocEventNames;
-
 use Poc\Events\BaseEvent;
-
 use Poc\Core\Event\PocDispatcher;
-
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Poc\Core\Event\EventDictionary;
-
-use Poc\Cache\CacheInvalidationProtection\CIAProtector;
-
 use Poc\Core\OptionAble\OptionAbleInterface;
-
 use Poc\Handlers\ServerOutput;
-
 use Poc\Cache\CacheImplementation\FileCache;
-
 use Poc\Core\OptionAble\OptionAble;
-
 use Poc\Handlers\OutputInterface;
-
 use Poc\Cache\Header\HeaderManipulator;
-
 use Poc\Cache\Filtering\OutputFilter;
-
 use Core\PluginSystem\Plugin;
 
 /**
@@ -126,11 +111,6 @@ class Poc implements PocParams, OptionAbleInterface
      */
     private $optionAble;
 
-    /**
-     *
-     * @var CIAProtector
-     */
-    private $ciaProtector;
 
     /**
      *
@@ -220,9 +200,9 @@ class Poc implements PocParams, OptionAbleInterface
                     $this->headerManipulator->storeHeades($headers);
                     $this->cache->cacheAddTags();
 
-                    if ($this->ciaProtector) {
-                        $this->ciaProtector->consultFinish();
-                    }
+                    $this->pocDispatcher->dispatch(
+                            PocEventNames::OUTPUT_STORED, new BaseEvent($this));
+
                 }
             } else {
                 if ($this->debug) {
@@ -314,15 +294,7 @@ class Poc implements PocParams, OptionAbleInterface
         $this->outputFilter =
                          $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
 
-        $this->ciaProtector = $this->optionAble->getOption(
-                self::PARAM_CIA_PROTECTOR);
-        if ($this->ciaProtector) {
-            $this->ciaProtector->setCache($this->cache);
-            $this->ciaProtector->setOutputHandler($this->outputHandler);
-            $this->ciaProtector->setEventDispatcher($this->pocDispatcher);
-            $this->ciaProtector->setLogger($this->getLogger());
-            $this->ciaProtector->setPoc($this);
-        }
+
         $this->setDebug($this->optionAble->getOption('debug'));
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
@@ -362,15 +334,12 @@ class Poc implements PocParams, OptionAbleInterface
         $this->level = \ob_get_level();
         if ($this->cache->getFilter()->evaluate()) {
             if (! $this->fetchCache()) {
-                    if ($this->ciaProtector) {
-                        $this->ciaProtector->consult();
-                    }
-                    $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
+                $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
 
-                    $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
-                            new BaseEvent($this));
-                }
-            } else {
+                $this->pocDispatcher->dispatch(PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+                        new BaseEvent($this));
+            }
+        } else {
 
             $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
 
@@ -421,13 +390,21 @@ class Poc implements PocParams, OptionAbleInterface
 
         return $this->logger;
     }
-    
+
     /**
      *
-     * @param Core\PluginSystem\Plugin $plugin 
+     * @param Core\PluginSystem\Plugin $plugin
      */
     public function addPlugin ($plugin)
     {
         $plugin->init($this);
+    }
+
+    public function getCache(){
+      return $this->cache;
+    }
+
+    public function getOutputHandler(){
+      return $this->outputHandler;
     }
 }

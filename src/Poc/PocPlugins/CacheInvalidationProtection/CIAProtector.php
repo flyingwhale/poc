@@ -1,17 +1,15 @@
 <?php
-namespace Poc\Cache\CacheInvalidationProtection;
+namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Poc;
-
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Monolog\Logger;
-
 use Poc\Core\Monolog\MonoLogger;
-
 use Poc\Core\OptionAble\OptionAbleInterface;
-
 use Poc\Core\OptionAble\OptionAble;
+use Poc\Core\PluginSystem\Plugin;
+use Poc\PocEvents\PocEventNames;
+use Poc\Events\BaseEvent;
 
 /**
  * This calss name comes form the "Cache Invalidation Attack Protection" name.
@@ -36,7 +34,7 @@ use Poc\Core\OptionAble\OptionAble;
  * @author Imre Toth
  *
  */
-class CIAProtector implements OptionAbleInterface
+class CIAProtector extends Plugin implements OptionAbleInterface
 {
 
     const LOG_TYPE_CIA = 'CIA';
@@ -73,48 +71,34 @@ class CIAProtector implements OptionAbleInterface
      */
     private $eventDispatcher;
 
-    /**
-     *
-     * @var Poc
-     */
-    private $poc;
 
     /**
      *
      * @param $poc \Poc\Poc
      */
-
     public function setPoc ($poc)
     {
-        $this->poc = $poc;
     }
 
     /**
      *
-     * @param $logger \Poc\Cache\CacheInvalidationProtection\Logger;
+     * @param $poc \Poc\Poc
      */
-    public function setLogger ($logger)
-    {
-        $this->monoLogger = $logger;
+    public function init(Poc $poc){
+        parent::init($poc);
+
+        $this->cache = $poc->getCache();
+        $this->outputHandler =$poc->getOutputHandler();
+        $this->eventDispatcher = $poc->getPocDispatcher();
+        $this->monoLogger = $poc->getLogger();
+
+        $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
+                                                 array($this, 'consultFinish'));
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+                                                       array($this, 'consult'));
+
     }
 
-    /**
-     *
-     * @param $eventDispatcher \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    public function setEventDispatcher ($eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     *
-     * @param $outputHandler POC\Handlers\OutputInterface
-     */
-    public function setOutputHandler ($outputHandler)
-    {
-        $this->outputHandler = $outputHandler;
-    }
 
     public function fillDefaults ()
     {
@@ -137,14 +121,6 @@ class CIAProtector implements OptionAbleInterface
         // $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
     }
 
-    /**
-     *
-     * @param $cache Cache
-     */
-    public function setCache ($cache)
-    {
-        $this->cache = $cache;
-    }
 
     public function setSentinel ($cnt)
     {
@@ -206,7 +182,7 @@ class CIAProtector implements OptionAbleInterface
                 </HTML>';
                 }
 
-    public function consult ()
+    public function consult (BaseEvent $event)
     {
         $sentinelCnt = $this->getSentinel();
         $this->setSentinel($sentinelCnt + 1);
@@ -234,9 +210,17 @@ class CIAProtector implements OptionAbleInterface
         $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
     }
 
-    public function consultFinish ()
+    public function consultFinish (BaseEvent $event)
     {
         $this->deleteSentinel();
+    }
+
+   /**
+    *
+    * @param \Poc\Cache\CacheImplementation\Cache $cache
+    */
+    public function setCache($cache){
+        $this->cache = $cache;
     }
 }
 

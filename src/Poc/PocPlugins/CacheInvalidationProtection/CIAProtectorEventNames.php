@@ -1,5 +1,5 @@
 <?php
-namespace Poc\Cache\CacheInvalidationProtection;
+namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 interface CIAProtectorEventNames
 {

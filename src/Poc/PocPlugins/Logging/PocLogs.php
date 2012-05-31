@@ -36,20 +36,13 @@ class PocLogs extends Plugin
      */
     private $pocDispatcher;
 
-
-    /**
-     *
-     * @var Poc;
-     */
-    private $poc;
-
     /**
      *
      * @var LoggerInterface
      */
     private $logger;
 
-   
+
     public function init (Poc $poc)
     {
 

@@ -1,8 +1,6 @@
 <?php
 namespace Poc\Cache\CacheInvalidationProtection;
 
-use Poc\PocPlugins\PocLogsParams;
-
 use Poc\Core\OptionAble\OptionAble;
 
 use Poc\Core\OptionAble\OptionAbleInterface;
@@ -43,7 +41,7 @@ class CIAProtectorLogger implements OptionAbleInterface, CIAProtectorEventNames
 
     public function fillDefaults ()
     {
-        $this->optionAble[PocLogsParams::PARAM_POC] = null;
+        $this->optionAble["poc"] = null;
     }
 
     public function __construct ($options = array())

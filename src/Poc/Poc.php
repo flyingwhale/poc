@@ -18,13 +18,7 @@
  */
 namespace Poc;
 
-use Poc\PocPlugins\MonoLogger;
-
-use Poc\Plugins\PocLogsParams;
-
-use Poc\Plugins\MinifyHtmlOutput;
-
-use Poc\Plugins\PocLogs;
+use Poc\Core\Monolog\MonoLogger;
 
 use Poc\PocEvents\PocEventNames;
 
@@ -51,6 +45,8 @@ use Poc\Handlers\OutputInterface;
 use Poc\Cache\Header\HeaderManipulator;
 
 use Poc\Cache\Filtering\OutputFilter;
+
+use Core\PluginSystem\Plugin;
 
 /**
  * This class contains the "Entry point" of the caching process.
@@ -306,9 +302,6 @@ class Poc implements PocParams, OptionAbleInterface
                      $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
         $this->pocDispatcher->dispatch
                      (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
-        // new PocLogs(array(PocLogsParams::PARAM_EVENT_DISPTCHER =>
-        // $this->pocDispatcher));
-        // new MinifyHtmlOutput($this->pocDispatcher);
         $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
         $this->outputHandler = $this->optionAble->getOption(
                 self::PARAM_OUTPUTHANDLER);
@@ -386,11 +379,6 @@ class Poc implements PocParams, OptionAbleInterface
         }
     }
 
-    private function ciaConsult ()
-    {
-
-    }
-
     public function __destruct ()
     {
         if (isset($this->level)) {
@@ -432,5 +420,14 @@ class Poc implements PocParams, OptionAbleInterface
         }
 
         return $this->logger;
+    }
+    
+    /**
+     *
+     * @param Core\PluginSystem\Plugin $plugin 
+     */
+    public function addPlugin ($plugin)
+    {
+        $plugin->init($this);
     }
 }

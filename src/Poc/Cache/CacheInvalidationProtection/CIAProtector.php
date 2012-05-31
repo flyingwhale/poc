@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Monolog\Logger;
 
-use Poc\PocPlugins\MonoLogger;
+use Poc\Core\Monolog\MonoLogger;
 
 use Poc\Core\OptionAble\OptionAbleInterface;
 

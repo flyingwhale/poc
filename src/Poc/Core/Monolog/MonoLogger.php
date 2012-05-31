@@ -1,5 +1,5 @@
 <?php
-namespace Poc\PocPlugins;
+namespace Poc\Core\Monolog;
 
 use Monolog\Handler\StreamHandler;
 

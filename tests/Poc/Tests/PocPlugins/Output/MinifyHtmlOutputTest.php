@@ -2,11 +2,11 @@
 
 namespace unittest;
 
-require_once __DIR__.'/../PocTestCore.php';
+require_once __DIR__.'/../../PocTestCore.php';
 
-use Poc\PocPlugins\MinifyHtmlOutput;
-use Poc\PocPlugins\PocLogsParams;
-use Poc\PocPlugins\PocLogs;
+use Poc\PocPlugins\Output\MinifyHtmlOutput;
+use Poc\PocPlugins\Logging\PocLogsParams;
+use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
@@ -25,11 +25,9 @@ class MinifyHtlmOutputTest extends PocTestCore
                     array("A
                         a      A", "A a A"),
                     array("A
-
-        a
+a
                 A", "A a A"),
                     array("A
-
         a
                 A", "A a A"),
 
@@ -44,7 +42,6 @@ class MinifyHtlmOutputTest extends PocTestCore
      */
     public function testminifyHtmlWithPoc ($input, $expectedOutput)
     {
-
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestMinify".  rand());
 
@@ -59,14 +56,13 @@ class MinifyHtlmOutputTest extends PocTestCore
                             PocParams::PARAM_CACHE=>$cache,
                         ));
 
-        new PocLogs(array(PocLogsParams::PARAM_POC => $poc));
-        new MinifyHtmlOutput($poc->getPocDispatcher());
+        $poc->addPlugin(new PocLogs);
+        
+        $poc->addPlugin(new MinifyHtmlOutput);
 
         $this->pocBurner($poc, $outputHandler, $input);
         $output = $this->getOutput();
 
         $this->assertEquals($expectedOutput, $output);
-
     }
-
 }

@@ -27,9 +27,9 @@ class MysqlTagging extends AbstractDb
 
     const DEFHOST = 'localhost';
 
-    const DEFUSER = 'root';
+    const DEFUSER = 'poc_test';
 
-    const DEFPASS = 'root';
+    const DEFPASS = 'poc_test';
 
     private $db;
 

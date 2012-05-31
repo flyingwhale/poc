@@ -41,6 +41,13 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
         return $this->createXMLDataSet($this->fixtureDirPath . '/init.xml');
     }
 
+    
+    public function getMySqlTagging()
+    {
+        $tagging = new MysqlTagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+        return $tagging;
+    }
+    
     /**
      * @dataProvider addCacheToTagsProvider
      */
@@ -49,7 +56,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $expectedDatasetPath = $this->fixtureDirPath . '/addCacheToTags/' . $expectedDatasetFilename;
 
-        $tagging = new MysqlTagging();
+        $tagging = $this->getMySqlTagging();
 
         $tagging->addCacheToTags($tagsString, $hash, $expires);
 
@@ -91,7 +98,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
 
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
 
-        $tagging = new MysqlTagging();
+        $tagging = $this->getMySqlTagging();
         $tagging->flushOutdated();
 
         $dataSet = $this->getConnection()->createDataSet(
@@ -129,7 +136,7 @@ class MysqlTaggingTest extends \PHPUnit_Extensions_Database_TestCase
             ->method('cacheSpecificClearItem')
             ->will($this->returnValue(true));
 
-        $tagging = new MysqlTagging();
+        $tagging = $this->getMySqlTagging();
 
         $tagging->tagInvalidate($invalidateTag);
 

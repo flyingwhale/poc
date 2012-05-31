@@ -42,6 +42,12 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         return $this->createXMLDataSet($this->fixtureDirPath . '/init.xml');
     }
 
+    public function getDoctrine2Tagging()
+    {
+        $tagging = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+        return $tagging;
+    }
+    
     /**
      * @dataProvider addCacheToTagsProvider
      */
@@ -50,7 +56,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $expectedDatasetPath = $this->fixtureDirPath . '/addCacheToTags/' . $expectedDatasetFilename;
 
-        $tagging = new Doctrine2Tagging();
+        $tagging = $this->getDoctrine2Tagging();
 
         $tagging->addCacheToTags($tagsString, $hash, $expires);
 
@@ -91,7 +97,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
 
-        $tagging = new Doctrine2Tagging();
+        $tagging = $this->getDoctrine2Tagging();
         $tagging->flushOutdated();
 
         $dataSet = $this->getConnection()->createDataSet(
@@ -129,7 +135,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
             ->method('cacheSpecificClearItem')
             ->will($this->returnValue(true));
 
-        $tagging = new Doctrine2Tagging();
+        $tagging = $this->getDoctrine2Tagging();
 
         $tagging->tagInvalidate($invalidateTag);
 

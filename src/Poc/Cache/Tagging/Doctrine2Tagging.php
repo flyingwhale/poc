@@ -12,7 +12,9 @@
 
 namespace Poc\Cache\Tagging;
 
-use Doctrine\ORM\EntityManager, Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Configuration;
+use Poc\DatabaseManagement\Doctrine\Common;
 
 class Doctrine2Tagging extends AbstractDb
 {
@@ -21,9 +23,9 @@ class Doctrine2Tagging extends AbstractDb
 
     const DEFHOST = 'localhost';
 
-    const DEFUSER = 'root';
+    const DEFUSER = 'poc_test';
 
-    const DEFPASS = 'root';
+    const DEFPASS = 'poc_test';
 
     protected $entityManager;
 
@@ -34,14 +36,15 @@ class Doctrine2Tagging extends AbstractDb
     {
         $connectionOptions = array('driver' => 'pdo_mysql', 'path' => $host, 'dbname' => $db, 'user' => $user, 'password' => $pass);
 
-        $config = new Configuration();
-        // $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
-
         $proxyDirPath = __DIR__ . '/../../../../tmp/doctrine2/Proxies';
 
         if (! is_dir($proxyDirPath)) {
             mkdir($proxyDirPath, 0700, true);
         }
+        
+        $config = new Configuration();
+        // $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+
 
         $config->setProxyDir($proxyDirPath);
         $config->setProxyNamespace('Proxies');

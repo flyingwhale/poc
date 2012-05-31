@@ -199,7 +199,7 @@ class PocTest extends PocTestCore
     {
         $getCache = function  ($hasher) {
             return new FileCache(
-                    array(CacheParams::PARAM_TTL => PocTest::BIGTTL, CacheParams::PARAM_HASHER => $hasher, CacheParams::PARAM_TAGDB => new MysqlTagging()));
+                    array(CacheParams::PARAM_TTL => PocTest::BIGTTL, CacheParams::PARAM_HASHER => $hasher, CacheParams::PARAM_TAGDB => new MysqlTagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS'])));
         };
 
         $hasher = new Hasher();

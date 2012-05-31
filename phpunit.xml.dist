@@ -21,6 +21,7 @@
     <var name="MYSQL_PASS" value="password" />
     <var name="MYSQL_DBNAME" value="poc_tagging" />
     
+    <var name="TTL" value="3" />
     
   </php>
   <testsuites>

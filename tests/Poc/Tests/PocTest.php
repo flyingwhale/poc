@@ -35,37 +35,38 @@ class PocTest extends PocTestCore
     public function testBasicPocFunctionality ()
     {
         $objects = new \Pimple();
-
-        $objects['file'] = function  () {
+        $ttl = self::$TTL;
+        
+        $objects['file'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality file".  rand());
 
-            return new FileCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
+            return new FileCache(array(CacheParams::PARAM_TTL => $ttl,
                                        CacheParams::PARAM_HASHER => $hasher));
         };
 
-        $objects['memcached'] = function  () {
+        $objects['memcached'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality memcached".  rand());
 
             return new MemcachedCache(
-                    array(CacheParams::PARAM_TTL => PocTest::TTL,
+                    array(CacheParams::PARAM_TTL => $ttl,
                           CacheParams::PARAM_HASHER => $hasher));
         };
 
-        $objects['rediska'] = function  () {
+        $objects['rediska'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality rediska".  rand());
 
-            return new RediskaCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
+            return new RediskaCache(array(CacheParams::PARAM_TTL => $ttl,
                                           CacheParams::PARAM_HASHER => $hasher));
         };
 
-        $objects['mongo'] = function  () {
+        $objects['mongo'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testBasicPocFunctionality mongo".  rand());
 
-            return new MongoDBCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
+            return new MongoDBCache(array(CacheParams::PARAM_TTL => $ttl,
                                           CacheParams::PARAM_HASHER => $hasher));
         };
 
@@ -96,7 +97,7 @@ class PocTest extends PocTestCore
 
             $this->cacheBurner($cacheHandler, self::TESTSTRING2);
             $output2 = $this->getOutput();
-            sleep(self::TTL + 1);
+            sleep(self::$TTL + 1);
 
             $this->cacheBurner($cacheHandler, self::TESTSTRING3);
             $output3 = $this->getOutput();
@@ -139,22 +140,24 @@ class PocTest extends PocTestCore
     public function testPocWithDifferentHashers ()
     {
         $objects = new \Pimple();
+        $ttl = self::$TTL;
+        
 
-        $objects['c1'] = function  () {
+        $objects['c1'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testPocWithDifferentHashers".  rand());
 
-            return new FileCache(array(CacheParams::PARAM_TTL => PocTest::TTL,
+            return new FileCache(array(CacheParams::PARAM_TTL => $ttl,
                                        CacheParams::PARAM_HASHER => $hasher
                                        ));
         };
 
-        $objects['c2'] = function  () {
+        $objects['c2'] = function  () use ($ttl) {
             $hasher = new Hasher();
             $hasher->addDistinguishVariable("testPocWithDifferentHashers dist2". rand());
 
             return new FileCache(
-                    array(CacheParams::PARAM_TTL => PocTest::TTL, CacheParams::PARAM_HASHER => $hasher));
+                    array(CacheParams::PARAM_TTL => $ttl, CacheParams::PARAM_HASHER => $hasher));
         };
 
         $cacheHandler1 = $objects['c1'];

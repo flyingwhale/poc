@@ -25,14 +25,17 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
     const TESTSTRING3 = "3";
-    const TTL = 5;
     const BIGTTL = 100;
     const NEEDLE = '/amiga1200/';
+    
+    public static $TTL = 5;
+    
     protected $analizeThisOutput;
     protected $analizeThisHeader;
 
     public static function setUpBeforeClass()
     {
+        PocTestCore::$TTL = $GLOBALS['TTL'];
         \ob_start(function($output){return"";});
     }
 

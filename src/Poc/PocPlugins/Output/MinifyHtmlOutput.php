@@ -10,12 +10,6 @@ use Poc\Core\PluginSystem\Plugin;
 class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
 {
 
-    /**
-     *
-     * @var PocDispatcher
-     */
-    private $dispatcher;
-
     public function init (Poc $poc)
     {
         parent::init($poc);
@@ -27,7 +21,7 @@ class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
     {
         $search =
         array(
-
+            
         '/ {2,}/',
         '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
 

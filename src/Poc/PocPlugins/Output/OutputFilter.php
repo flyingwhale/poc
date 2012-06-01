@@ -9,41 +9,43 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/**
- * This class is a really hady feature in some cases, if you cannot define
- * some states of your application that shall not be cached by the black list
- * feature of the Filter class.
- * You have a chance to define your "blacklist"
- * conditions by analizing the output.
- *
- * @author Imre Toth
- *
- */
 
-namespace Poc\Cache\Filtering;
 
-class OutputFilter
+namespace Poc\PocPlugins\Output;
+
+use Poc\PocEvents\PocEventNames;
+use Poc\Core\PluginSystem\Plugin;
+use Poc\Poc;
+use Poc\Events\BaseEvent;
+
+
+class OutputFilter extends Plugin
 {
 
     private $outputBlacklist = null;
+
+    public function init(Poc $poc)
+    {
+        parent::init($poc);
+        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
+                                           array($this, 'isOutputBlacklisted'));
+    }
 
     public function addBlacklistCondition ($condition)
     {
         $this->outputBlacklist[] = $condition;
     }
 
-    public function isOutputBlacklisted ($output)
+    public function isOutputBlacklisted (BaseEvent $event)
     {
         if ($this->outputBlacklist) {
             foreach ($this->outputBlacklist as $condititon) {
-                $result = preg_match($condititon, $output);
+                $result = preg_match($condititon, $this->poc->getOutput());
                 if ($result) {
-                    return true;
+                  $this->poc->setCanICacheThisGeneratedContent(false);
+                  return;
                 }
             }
         }
-
-        return false;
     }
-
 }

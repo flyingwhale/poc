@@ -30,7 +30,6 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Core\OptionAble\OptionAble;
 use Poc\Handlers\OutputInterface;
 use Poc\Cache\Header\HeaderManipulator;
-use Poc\Cache\Filtering\OutputFilter;
 use Core\PluginSystem\Plugin;
 
 /**
@@ -129,6 +128,8 @@ class Poc implements PocParams, OptionAbleInterface
      */
     private $logger;
 
+    private $canICacheThisGeneratedContent = true;
+
     /**
      *
      * @return the $pocDispatcher
@@ -174,8 +175,10 @@ class Poc implements PocParams, OptionAbleInterface
         // TODO: call the ob_get_level from the outputHandler.
         if ($this->level == \ob_get_level() - 1) {
             $this->setOutput($buffer);
-            if (!$this->outputFilter ||
-                !$this->outputFilter->isOutputBlacklisted($this->getOutput())) {
+            $this->pocDispatcher->dispatch(
+                PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
+                new BaseEvent($this));
+            if ($this->canICacheThisGeneratedContent) {
                 if ($this->getOutput()) {
 
                     if ($this->debug) {
@@ -400,11 +403,15 @@ class Poc implements PocParams, OptionAbleInterface
 
     public function getCache()
     {
-      return $this->cache;
+        return $this->cache;
     }
 
     public function getOutputHandler()
     {
-      return $this->outputHandler;
+        return $this->outputHandler;
+    }
+
+    public function setCanICacheThisGeneratedContent($bool){
+        $this->canICacheThisGeneratedContent = $bool;
     }
 }

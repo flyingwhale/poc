@@ -169,32 +169,6 @@ class PocTest extends PocTestCore
         $this->assertTrue($output1 != $output2);
     }
 
-    public function testOutputFilter ()
-    {
-        $hasher = new Hasher();
-        $hasher->addDistinguishVariable("testOutputFilter".  rand());
-
-        $outputHandler = new TestOutput();
-        $cache = new FileCache(
-                array(CacheParams::PARAM_TTL => PocTest::BIGTTL,
-                      CacheParams::PARAM_HASHER => $hasher
-                      ));
-        $outputFilter = new OutputFilter();
-        $outputFilter->addBlacklistCondition(PocTest::NEEDLE);
-        $poc = new Poc(
-                array(PocParams::PARAM_CACHE => $cache,
-                      PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
-                      PocParams::PARAM_OUTPUTFILTER => $outputFilter,
-                      PocParams::PARAM_DEBUG => true
-                      ));
-        $poc2 = array();
-        $poc2[] = $outputHandler;
-        $poc2[] = $poc;
-
-        $this->pocBurner($poc2[1], $poc2[0]," POC -> testOutputFilter - ". rand() . PocTest::NEEDLE . rand());
-        $this->assertTrue(strpos($this->getOutput(), 'because') != false);
-    }
-
     public function testTagging ()
     {
         $getCache = function  ($hasher) {

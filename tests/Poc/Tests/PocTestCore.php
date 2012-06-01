@@ -36,7 +36,7 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         PocTestCore::$TTL = $GLOBALS['TTL'];
-        \ob_start(function($output){return"";});
+//        \ob_start(function($output){return"";});
     }
 
     protected function setOutput ($o)

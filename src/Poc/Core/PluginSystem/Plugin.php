@@ -20,6 +20,10 @@ use Poc\Poc;
 
 class Plugin implements PluginInterface
 {
+    /**
+     *
+     * @var Poc
+     */
     protected $poc;
 
     public function init(Poc $poc)

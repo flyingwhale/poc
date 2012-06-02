@@ -158,7 +158,7 @@ class Poc implements PocParams, OptionAbleInterface
         $this->setOutput($buffer);
         if ($this->debug) {
             $this->setOutput(
-                    $this->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
+                $this->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
         }
 
         $this->pocDispatcher->dispatch(

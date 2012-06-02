@@ -14,7 +14,7 @@ namespace Poc\Tests\Cache\Tagging;
 
 use Poc\Cache\Tagging\Doctrine2Tagging;
 
-class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
+class Doctrine2TaggingTestold extends \PHPUnit_Extensions_Database_TestCase
 {
 
     protected $fixtureDirPath;

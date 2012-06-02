@@ -16,7 +16,4 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader ();
 
-$prefixes = array ('Rediska' => __DIR__ . '/vendor/rediska/library' );
-$loader->registerPrefixes ( $prefixes );
-
 $loader->register ();

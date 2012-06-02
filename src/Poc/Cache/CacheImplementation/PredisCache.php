@@ -51,10 +51,6 @@ class PredisCache extends Cache
     {
         $value = $this->redis->get($key);
         
-        if (is_array($value)) {
-            $value = serialize($value);
-        }
-
         return $value;
     }
 

@@ -14,23 +14,27 @@ namespace Poc\PocPlugins\Tagging;
 
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Poc;
+use Poc\PocEvents\PocEventNames;
 
 abstract class AbstractDb extends Plugin
 {
     
     protected $tags;
     
-    protected $cacheInvalidationTags;
+    protected $cacheInvalidationTags = array();
     
-    protected $cacheAddTags;
+    protected $cacheAddTags = array();
     
     protected $hash;
     
     protected $ttl;
 
+    /**
+     *
+     * @var \Poc\Cache\CacheImplementation\Cache 
+     */
     protected $cache;
     
-
     abstract public function addCacheToTags ($tags);
 
     abstract public function flushOutdated ();
@@ -42,6 +46,12 @@ abstract class AbstractDb extends Plugin
         $this->cache = $poc->getCache();
         $this->ttl = $poc->getCache()->getTtl();
         $this->hash = $poc->getCache()->getHasher()->getKey();
+        
+        $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
+                                                  array($this, 'cacheAddTags'));
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+                                                    array($this, 'cacheTagsInvalidation'));
+
     }
 
     public function __construct ()
@@ -56,33 +66,39 @@ abstract class AbstractDb extends Plugin
 
     public function addCacheInvalidationTags ($condition, $tags)
     {
+        echo'addCacheInvalidationTags';
         if ($condition) {
-            $this->cacheInvalidationTags[] = $tags;
+             echo'addCacheInvalidationTags';var_dump($tags);
+             $this->cacheInvalidationTags[] = $tags;
         }
     }
 
     public function addCacheAddTags ($condition, $tags)
     {
+        echo'addCacheInvalidationTags addCacheAddTags';
         if ($condition) {
+            echo'addCacheAddTags';var_dump($tags);
+
             $this->cacheAddTags[] = $tags;
         }
     }
     
-    /*addCacheToTags*/
-/*    public function cacheAddTags ()
+    public function cacheAddTags ()
     {
-        foreach ($this->cacheAddTags as $tagger) {
-            $tagger->tagCache();
+        echo "\n\n".'add:';
+        var_dump($this->cacheAddTags);
+        echo "\n\n";
+        
+        foreach ($this->cacheAddTags as $tags) {
+            $this->addCacheToTags($tags);
         }
-    }*/
+    }
 
-    /*tagInvalidate*/
-    /*
     public function cacheTagsInvalidation ()
     {
-        foreach ($this->cacheInvalidationTags as $tagger) {
-            $tagger->cacheInvalidation();
+        foreach ($this->cacheInvalidationTags as $tags) {
+            $this->tagInvalidate($tags);
         }
-    }*/
-
+        
+    }
 }

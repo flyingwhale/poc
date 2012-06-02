@@ -22,7 +22,7 @@ class CacheRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
 
         $qb->select('c')
-            ->from('\Poc\Cache\Tagging\Driver\Doctrine2\Entities\Cache', 'c')
+            ->from('\Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache', 'c')
             ->leftJoin('c.cacheTags', 'ct')
             ->leftJoin('ct.tag', 't')
             ->where($qb->expr()
@@ -36,7 +36,7 @@ class CacheRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
 
         $qb->select('c')
-            ->from('\Poc\Cache\Tagging\Driver\Doctrine2\Entities\Cache', 'c')
+            ->from('\Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache', 'c')
             ->leftJoin('c.cacheTags', 'ct')
             ->leftJoin('ct.tag', 't')
             ->where('t.tag = :tag')

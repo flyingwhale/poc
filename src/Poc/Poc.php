@@ -417,7 +417,8 @@ class Poc implements PocParams, OptionAbleInterface
         return $this->outputHandler;
     }
 
-    public function setCanICacheThisGeneratedContent($bool){
+    public function setCanICacheThisGeneratedContent($bool)
+    {
         $this->canICacheThisGeneratedContent = $bool;
     }
 }

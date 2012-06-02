@@ -14,9 +14,6 @@ namespace Poc\Tests;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\Cache\Filtering\OutputFilter;
-use Poc\PocParams;
-use Poc\Handlers\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;

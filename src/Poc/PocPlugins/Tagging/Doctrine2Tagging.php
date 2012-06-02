@@ -121,6 +121,7 @@ class Doctrine2Tagging extends AbstractDb
                 $entityManager->flush();
             }
         }
+
         return $cache;
     }
 
@@ -204,4 +205,3 @@ class Doctrine2Tagging extends AbstractDb
     }
 
 }
-?>

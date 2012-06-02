@@ -18,35 +18,36 @@ use Poc\PocEvents\PocEventNames;
 
 abstract class AbstractDb extends Plugin
 {
-    
+
     protected $tags;
-    
+
     protected $cacheInvalidationTags = array();
-    
+
     protected $cacheAddTags = array();
-    
+
     protected $hash;
-    
+
     protected $ttl;
 
     /**
      *
-     * @var \Poc\Cache\CacheImplementation\Cache 
+     * @var \Poc\Cache\CacheImplementation\Cache
      */
     protected $cache;
-    
+
     abstract public function addCacheToTags ($tags);
 
     abstract public function flushOutdated ();
 
     abstract public function tagInvalidate ($tags);
-    
-    public function init(Poc $poc){
+
+    public function init(Poc $poc)
+    {
         parent::init($poc);
         $this->cache = $poc->getCache();
         $this->ttl = $poc->getCache()->getTtl();
         $this->hash = $poc->getCache()->getHasher()->getKey();
-        
+
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                   array($this, 'cacheAddTags'));
         $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
@@ -82,13 +83,13 @@ abstract class AbstractDb extends Plugin
             $this->cacheAddTags[] = $tags;
         }
     }
-    
+
     public function cacheAddTags ()
     {
         echo "\n\n".'add:';
         var_dump($this->cacheAddTags);
         echo "\n\n";
-        
+
         foreach ($this->cacheAddTags as $tags) {
             $this->addCacheToTags($tags);
         }
@@ -99,6 +100,6 @@ abstract class AbstractDb extends Plugin
         foreach ($this->cacheInvalidationTags as $tags) {
             $this->tagInvalidate($tags);
         }
-        
+
     }
 }

@@ -31,4 +31,3 @@ interface CacheParams
     const PARAM_TAGDB = 'tagDb';
 }
 
-?>

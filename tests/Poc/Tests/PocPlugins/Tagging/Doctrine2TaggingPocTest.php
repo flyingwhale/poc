@@ -14,28 +14,22 @@ namespace Poc\Tests\PocPlugins\Tagging;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\Cache\Filtering\OutputFilter;
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Cache\CacheImplementation\MemcachedCache;
-use Poc\Cache\CacheImplementation\RediskaCache;
-use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
-use Poc\Cache\Filtering\Filter;
-use Poc\Cache\Tagging\MysqlTagging;
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 
 class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 {
-    
+
     public function testTagging ()
     {
         $getCache = function  ($hasher) {
             return new FileCache(
-                    array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL, 
+                    array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL,
                                          CacheParams::PARAM_HASHER => $hasher));
         };
 
@@ -43,16 +37,16 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         $hasher1->addDistinguishVariable("distn1");
         $cache1 = $getCache($hasher1);
         $cache1->clearAll();
-        
+
         $oh1 = new TestOutput();
         $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, PocParams::PARAM_OUTPUTHANDLER => $oh1));
-        $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 
-                                        'localhost', 
-                                        $GLOBALS['MYSQL_USER'], 
+        $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
+                                        'localhost',
+                                        $GLOBALS['MYSQL_USER'],
                                         $GLOBALS['MYSQL_PASS']);
         $poc1->addPlugin($tagger1);
         $tagger1->addCacheAddTags(true, "user,customer,inventory");
-        
+
         //----------------------------------------------------------------------
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("distn2");
@@ -60,9 +54,9 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         $oh2 = new TestOutput();
         $poc2 = new Poc(array(PocParams::PARAM_CACHE => $cache2, PocParams::PARAM_OUTPUTHANDLER => $oh2));
 
-        $tagger2 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 
-                                        'localhost', 
-                                        $GLOBALS['MYSQL_USER'], 
+        $tagger2 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
+                                        'localhost',
+                                        $GLOBALS['MYSQL_USER'],
                                         $GLOBALS['MYSQL_PASS']);
         $poc2->addPlugin($tagger2);
         $tagger2->addCacheAddTags(true, "inventory");
@@ -74,9 +68,9 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         $oh3 = new TestOutput();
         $poc3 = new Poc(array(PocParams::PARAM_CACHE => $cache3, PocParams::PARAM_OUTPUTHANDLER => $oh3,
                               ));
-        $tagger3 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 
-                                        'localhost', 
-                                        $GLOBALS['MYSQL_USER'], 
+        $tagger3 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
+                                        'localhost',
+                                        $GLOBALS['MYSQL_USER'],
                                         $GLOBALS['MYSQL_PASS']);
         $poc3->addPlugin($tagger3);
         $tagger3->addCacheAddTags(true, "inventory");
@@ -90,7 +84,6 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
         $this->pocBurner($poc1, $oh1, "11");
         $o12 = $this->getOutput();
-        
 
         $this->assertTrue($o1 == $o12);
 
@@ -98,11 +91,11 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
         $this->pocBurner($poc2, $oh2, "13");
         $o13 = $this->getOutput();
-        
+
 //        $this->assertEquals("13", $o13);
         $this->assertEquals("13", $o13);
         //more relevan tests shuld be implemented.
-/*        
+/*
         $tagger1->addCacheInvalidationTags(true, 'customer');
 
         $this->pocBurner($poc1, $oh1, "4");

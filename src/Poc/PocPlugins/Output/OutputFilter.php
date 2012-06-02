@@ -10,14 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-
 namespace Poc\PocPlugins\Output;
 
 use Poc\PocEvents\PocEventNames;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Poc;
 use Poc\Events\BaseEvent;
-
 
 class OutputFilter extends Plugin
 {
@@ -43,6 +41,7 @@ class OutputFilter extends Plugin
                 $result = preg_match($condititon, $this->poc->getOutput());
                 if ($result) {
                   $this->poc->setCanICacheThisGeneratedContent(false);
+
                   return;
                 }
             }

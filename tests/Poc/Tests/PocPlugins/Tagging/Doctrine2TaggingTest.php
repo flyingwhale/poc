@@ -18,7 +18,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
 
     protected $fixtureDirPath;
-    
+
     private $pdo;
 
     public function setUp ()
@@ -34,7 +34,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $this->pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
         $query = 'USE ' . $GLOBALS['MYSQL_DBNAME'];
-        
+
         $this->pdo->exec($query);
 
         return $this->createDefaultDBConnection($this->pdo);
@@ -50,7 +50,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $tagging = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
 
         $tagging->init(new \Poc\Poc());
-        
+
         return $tagging;
     }
 
@@ -68,9 +68,8 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
 
-        $query = 'UPDATE caches SET expires = 1234';        
+        $query = 'UPDATE caches SET expires = 1234';
         $this->pdo->exec($query);
-        
 
         $exepctedDataSet = $this->createXMLDataSet(
                 $expectedDatasetPath . '-01.xml');
@@ -78,7 +77,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 
                 sleep(6);
         $tagging->addCacheToTags($tagsString);
-        $query = 'UPDATE caches SET expires = 1234';        
+        $query = 'UPDATE caches SET expires = 1234';
         $this->pdo->exec($query);
 
         $dataSet = $this->getConnection()->createDataSet(
@@ -160,18 +159,21 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public static function addCacheToTagsProvider ()
     {
         $data = array(array('tag1,tag2', 'expected_01'));
+
         return $data;
     }
 
     public static function flushOutdatedProvider ()
     {
         $data = array(array('init_01.xml', 'expected_01.xml'));
+
         return $data;
     }
 
     public static function tagInvalidateProvider ()
     {
         $data = array(array('init_01.xml', 'tag2', 'expected_01.xml'));
+
         return $data;
     }
 }

@@ -162,9 +162,10 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
             throw new \Exception("The cache database is not reachable!");
         }
     }
-    
-    public function getTtl(){
+
+    public function getTtl()
+    {
         return $this->ttl;
     }
-    
+
 }

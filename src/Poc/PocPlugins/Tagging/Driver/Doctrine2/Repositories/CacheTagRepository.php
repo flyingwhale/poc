@@ -47,4 +47,3 @@ class CacheTagRepository extends EntityRepository
         return $rowsAffected;
     }
 }
-?>

@@ -46,8 +46,12 @@ the composer and gets the packages on what the project relies on.
 
 As the projet is psr-0 compliant it is really easy to map it to your project. 
 To download the dependencies please run the "./bin/get_composer" file from the 
-root of the project or download the composer.phar for yourself and run the 
-"composer.phar install"
+root of the project or download the composer.phar for yourself.
+After run "bin/composer.phar install" script.
+
+If you want to run unittests or want to improve or extend the framework then
+use the following command:
+"bin/composer.phar install --dev"
 
 ### Key-Value databases
 

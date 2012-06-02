@@ -19,9 +19,6 @@ $loader = new UniversalClassLoader();
 $namespaces = array('Poc\\Tests' => __DIR__);
 $loader->registerNamespaces($namespaces);
 
-$prefixes = array('Rediska' => __DIR__ . '/../vendor/rediska/library');
-$loader->registerPrefixes($prefixes);
-
 $loader->register();
 
 $pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);

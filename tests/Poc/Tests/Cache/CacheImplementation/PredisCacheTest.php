@@ -14,14 +14,14 @@ namespace Poc\Tests\Cache\CacheImplementation;
 
 use Poc\Cache\CacheImplementation\CacheParams;
 
-use Poc\Cache\CacheImplementation\RediskaCache;
+use Poc\Cache\CacheImplementation\PredisCache;
 
-class RediskaCacheTest extends CacheTest
+class PredisCacheTest extends CacheTest
 {
 
     public function setUp_ ()
     {
-        $this->cache = new RediskaCache(
+        $this->cache = new PredisCache(
                 array(CacheParams::PARAM_TTL => parent::TTL));
     }
 }

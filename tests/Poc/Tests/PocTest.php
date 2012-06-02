@@ -21,7 +21,7 @@ use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\CacheImplementation\MemcachedCache;
-use Poc\Cache\CacheImplementation\RediskaCache;
+use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
@@ -51,11 +51,11 @@ class PocTest extends PocTestCore
                           CacheParams::PARAM_HASHER => $hasher));
         };
 
-        $objects['rediska'] = function  () use ($ttl) {
+        $objects['predis'] = function  () use ($ttl) {
             $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testBasicPocFunctionality rediska".  rand());
+            $hasher->addDistinguishVariable("testBasicPocFunctionality predis".  rand());
 
-            return new RediskaCache(array(CacheParams::PARAM_TTL => $ttl,
+            return new PredisCache(array(CacheParams::PARAM_TTL => $ttl,
                                           CacheParams::PARAM_HASHER => $hasher));
         };
 
@@ -69,7 +69,7 @@ class PocTest extends PocTestCore
 
         $handlers[] = 'file';
         $handlers[] = 'memcached';
-        $handlers[] = 'rediska';
+        $handlers[] = 'predis';
         $handlers[] = 'mongo';
 
         foreach ($handlers as $cacheHandlerName) {
@@ -77,16 +77,6 @@ class PocTest extends PocTestCore
 
             $this->cacheBurner($cacheHandler, self::TESTSTRING1);
             $output1 = $this->getOutput();
-
-            // This is because of the Rediska cache implementation,
-            // Because it transforms any serialized array to array when it
-            // stores it,
-            // the result that you will fetch from the cache is an array instead
-            // of string.
-            // To eliminate this behaviour some exta line has to be added to
-            // that
-            // class
-            $this->assertTrue(! is_array($this->getHeader()));
 
             for ($i = 0; $i < 10; $i ++) {
                 $this->cacheBurner($cacheHandler, self::TESTSTRING1 . "Whatever $i");

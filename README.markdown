@@ -61,8 +61,6 @@ more scalable you can user some more scalable solutions.
 
 For instance You can install the redis-server, also  mongod (Mongodb) or 
 of course Memcached server to your environment and the PHP module as well.
-The redish does not have any PHP compiled module, so we utilize the library 
-called Rediska for this.
 
 ### SQL ###
 

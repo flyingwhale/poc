@@ -21,12 +21,12 @@ namespace Poc\Cache\CacheImplementation;
 
 use Poc\Core\Optionable\OptionAble;
 
-class RediskaCache extends Cache
+class PredisCache extends Cache
 {
 
-    private $rediska;
+    protected $redis;
 
-    private $isNotConnected;
+    protected $isNotConnected;
 
     public function fillDefaults ()
     {
@@ -38,43 +38,36 @@ class RediskaCache extends Cache
     {
         parent::__construct($options);
 
-        $className = 'Rediska';
+        $className = 'Predis\Client';
         if (! class_exists($className)) {
             throw new \Exception(sprintf("%s class not exists", $className));
         }
 
-        $this->rediska = new $className($this->optionAble->getOption('servers'));
+        $this->redis = new $className($this->optionAble->getOption('servers'));
         $this->isNotConnected = 1;
     }
 
     public function fetch ($key)
     {
-        $keyObj = new \Rediska_Key($key);
-        $value = $keyObj->getValue();
-        if (is_array($value)) {
-            $value = serialize($value);
-        }
-
+        $value = $this->redis->get($key);
+        
         return $value;
     }
 
     public function clearAll ()
     {
-        $this->rediska->flushdb();
+        $this->redis->flushdb();
     }
 
     public function clearItem ($key)
     {
-        $keyObj = new \Rediska_Key($key);
-        $keyObj->delete();
+        $this->redis->del($key);
     }
 
     public function cacheSpecificStore ($key, $output)
     {
-        $keyObj = new \Rediska_Key($key);
-        $keyObj->setValue($output);
-        $keyObj->expire($this->ttl);
-
+        $this->redis->set($key, $output);
+        $this->redis->expire($key, $this->ttl);
     }
 
     public function isCacheAvailable ()

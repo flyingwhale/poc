@@ -50,7 +50,7 @@ class PredisCache extends Cache
     public function fetch ($key)
     {
         $value = $this->redis->get($key);
-        
+
         return $value;
     }
 

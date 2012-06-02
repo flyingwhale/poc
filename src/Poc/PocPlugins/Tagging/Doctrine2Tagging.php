@@ -121,6 +121,7 @@ class Doctrine2Tagging extends AbstractDb
                 $entityManager->flush();
             }
         }
+
         return $cache;
     }
 
@@ -156,8 +157,8 @@ class Doctrine2Tagging extends AbstractDb
         $invalidateCaches = $cacheRepository->getByTags($tagNames);
 
         foreach ($invalidateCaches as $invalidateCache) {
+            $this->cache->clearItem($this->cache->getHasher()->getKey());
             $entityManager->remove($invalidateCache);
-
         }
     }
 
@@ -204,4 +205,3 @@ class Doctrine2Tagging extends AbstractDb
     }
 
 }
-?>

@@ -17,12 +17,21 @@
  */
 namespace Poc\Cache\CacheImplementation;
 
+/*
+use Poc\Poc;
+use Poc\PocPlugin\Tagging\AbstractDb;
+use Poc\Cache\CacheImplementation\CacheParams;
+use Poc\Cache\Filtering\Filter;
+use Poc\Cache\Filtering\Hasher;
+use Poc\Core\OptionAble\OptionAble;
+use Poc\Core\OptionAble\OptionAbleInterface;
+*/
+
 use Poc\Poc;
 use Poc\Cache\Tagging\AbstractDb;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Filtering\Hasher;
-use Poc\Cache\Tagging\Tagger;
 use OptionAble;
 
 abstract class Cache implements CacheInterface, CacheParams
@@ -163,9 +172,10 @@ abstract class Cache implements CacheInterface, CacheParams
             throw new \Exception("The cache database is not reachable!");
         }
     }
-    
-    public function getTtl(){
+
+    public function getTtl()
+    {
         return $this->ttl;
     }
-    
+
 }

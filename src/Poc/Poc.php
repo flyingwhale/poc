@@ -200,7 +200,6 @@ class Poc implements PocParams, OptionAbleInterface
                             $this->cache->getHasher()
                                 ->getKey(), $this->getOutput());
                     $this->headerManipulator->storeHeades($headers);
-                    $this->cache->cacheAddTags();
 
                     $this->pocDispatcher->dispatch(
                             PocEventNames::OUTPUT_STORED, new BaseEvent($this));
@@ -305,6 +304,9 @@ class Poc implements PocParams, OptionAbleInterface
     public function fetchCache ($die = true)
     {
         $this->cache->cacheTagsInvalidation();
+        $this->pocDispatcher->dispatch(
+        PocEventNames::FUNCTION_FETCHCACHE_BEGINING, new BaseEvent($this));
+
         $output = $this->fetchCacheValue();
         if ($output) {
             $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
@@ -332,6 +334,10 @@ class Poc implements PocParams, OptionAbleInterface
 
     public function start ()
     {
+        $this->pocDispatcher->dispatch(
+        PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        new BaseEvent($this));
+
         $this->level = \ob_get_level();
         if ($this->cache->getFilter()->evaluate()) {
             if (! $this->fetchCache()) {
@@ -411,7 +417,8 @@ class Poc implements PocParams, OptionAbleInterface
         return $this->outputHandler;
     }
 
-    public function setCanICacheThisGeneratedContent($bool){
+    public function setCanICacheThisGeneratedContent($bool)
+    {
         $this->canICacheThisGeneratedContent = $bool;
     }
 }

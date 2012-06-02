@@ -21,7 +21,7 @@ class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
     {
         $search =
         array(
-            
+
         '/ {2,}/',
         '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
 

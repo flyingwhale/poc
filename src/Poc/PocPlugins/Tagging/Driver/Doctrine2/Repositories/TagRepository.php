@@ -28,4 +28,3 @@ class TagRepository extends EntityRepository
     }
 
 }
-?>

@@ -14,9 +14,6 @@ namespace Poc\Tests;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\Cache\Filtering\OutputFilter;
-use Poc\PocParams;
-use Poc\Handlers\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
@@ -25,7 +22,6 @@ use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
-use Poc\Cache\Tagging\MysqlTagging;
 
 class PocTest extends PocTestCore
 {
@@ -159,72 +155,4 @@ class PocTest extends PocTestCore
         $this->assertTrue($output1 != $output2);
     }
 
-    public function testTagging ()
-    {
-        $getCache = function  ($hasher) {
-            return new FileCache(
-                    array(CacheParams::PARAM_TTL => PocTest::BIGTTL, CacheParams::PARAM_HASHER => $hasher, CacheParams::PARAM_TAGDB => new MysqlTagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS'])));
-        };
-
-        $hasher = new Hasher();
-        $hasher->addDistinguishVariable("distn1");
-        $cache1 = $getCache($hasher);
-        $cache1->addCacheAddTags(true, "user,customer,inventory");
-
-        $cache1->clearAll();
-
-        $hasher = new Hasher();
-        $hasher->addDistinguishVariable("distn2");
-        $cache2 = $getCache($hasher);
-
-        $cache2->addCacheAddTags(true, "inventory");
-
-        $hasher = new Hasher();
-        $hasher->addDistinguishVariable("distn3");
-        $cache3 = $getCache($hasher);
-
-        $cache3->addCacheAddTags(true, "inventory");
-        $cache3->addCacheAddTags(true, "customer");
-
-        $this->cacheBurner($cache1);
-        $this->cacheBurner($cache2);
-        $this->cacheBurner($cache3);
-
-        $cache1->addCacheInvalidationTags(true, 'stuff');
-
-        $this->cacheBurner($cache1, "1");
-        $o1 = $this->getOutput();
-        $this->cacheBurner($cache2, "2");
-        $o2 = $this->getOutput();
-        $this->cacheBurner($cache3, "3");
-        $o3 = $this->getOutput();
-
-        $this->assertTrue($o1 == $o2);
-        $this->assertTrue($o1 == $o3);
-
-        $cache1->addCacheInvalidationTags(true, 'user');
-
-        $this->cacheBurner($cache1, "1");
-        $o1 = $this->getOutput();
-        $this->cacheBurner($cache2, "2");
-        $o2 = $this->getOutput();
-        $this->cacheBurner($cache3, "3");
-        $o3 = $this->getOutput();
-
-        $this->assertTrue($o1 != $o3);
-        $this->assertTrue($o2 == $o3);
-
-        $cache1->addCacheInvalidationTags(true, 'customer');
-
-        $this->cacheBurner($cache1, "4");
-        $o1 = $this->getOutput();
-        $this->cacheBurner($cache2, "4");
-        $o2 = $this->getOutput();
-        $this->cacheBurner($cache3, "4");
-        $o3 = $this->getOutput();
-
-        $this->assertTrue($o1 == $o3);
-        $this->assertTrue($o2 != $o3);
-
-    }
 }

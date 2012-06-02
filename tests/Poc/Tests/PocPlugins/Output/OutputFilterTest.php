@@ -4,8 +4,6 @@ namespace Poc\Tests\PocPlugins\Output;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\PocPlugins\Output\MinifyHtmlOutput;
-use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Handlers\TestOutput;
 use Poc\Poc;

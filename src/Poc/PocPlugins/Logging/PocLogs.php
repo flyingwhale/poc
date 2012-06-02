@@ -5,9 +5,6 @@ use Poc\Events\BaseEvent;
 
 use Poc\PocEvents\PocEventNames;
 
-use Poc\Core\OptionAble\OptionAble;
-
-
 use Monolog\Logger;
 
 use Poc\Core\Event\PocDispatcher;

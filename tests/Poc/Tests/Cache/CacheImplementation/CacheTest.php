@@ -77,4 +77,3 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
                 $this->cache->fetch($this->TESTKEY) == self::TESTDATA);
     }
 }
-?>

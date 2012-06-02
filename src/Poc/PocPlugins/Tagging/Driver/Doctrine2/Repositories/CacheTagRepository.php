@@ -27,7 +27,7 @@ class CacheTagRepository extends EntityRepository
 
         $qb->select('ct')
             ->from(
-                '\\Poc\\Cache\\Tagging\\Driver\\Doctrine2\\Entities\\CacheTag',
+                '\\Poc\\PocPlugins\\Tagging\\Driver\\Doctrine2\\Entities\\CacheTag',
                 'ct')
             ->leftJoin('ct.cache', 'c')
             ->leftJoin('ct.tag', 't')
@@ -47,4 +47,3 @@ class CacheTagRepository extends EntityRepository
         return $rowsAffected;
     }
 }
-?>

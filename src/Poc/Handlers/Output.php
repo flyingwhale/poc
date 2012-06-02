@@ -15,4 +15,3 @@ abstract class Output implements OutputInterface
 
 }
 
-?>

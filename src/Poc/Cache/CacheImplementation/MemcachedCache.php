@@ -30,13 +30,13 @@ class MemcachedCache extends Cache
 
     private $isConnected;
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        parent::fillDefaults();
-        $this->optionAble['server'] = 'localhost';
-        $this->optionAble['port'] = '11211';
+        parent::setupDefaults();
+        $this->optionAble->setDefaultOption('server', 'localhost');
+        $this->optionAble->setDefaultOption('port', '11211');
     }
-
+    
     public function __construct ($options = array())
     {
         parent::__construct($options);

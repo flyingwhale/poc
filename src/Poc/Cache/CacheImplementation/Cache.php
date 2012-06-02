@@ -22,11 +22,10 @@ use Poc\Cache\Tagging\AbstractDb;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Filtering\Hasher;
-use Poc\Core\OptionAble\OptionAble;
 use Poc\Cache\Tagging\Tagger;
-use Poc\Core\OptionAble\OptionAbleInterface;
+use OptionAble;
 
-abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
+abstract class Cache implements CacheInterface, CacheParams
 {
 
     /**
@@ -66,26 +65,27 @@ abstract class Cache implements CacheInterface, OptionAbleInterface, CacheParams
      */
     protected $optionAble = null;
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        $this->optionAble[self::PARAM_HASHER] = function  () {
+        $this->optionAble->setDefaultOption(self::PARAM_HASHER, function  () {
             return new Hasher();
-        };
+        });
 
-        $this->optionAble[self::PARAM_FILTER] = function  () {
+        $this->optionAble->setDefaultOption(self::PARAM_FILTER, function  () {
             return new Filter();
-        };
+        });
 
-        $this->optionAble[self::PARAM_TTL] = 5;
-        $this->optionAble[self::PARAM_TAGDB] = function  () {
+        $this->optionAble->setDefaultOption(self::PARAM_TTL, 5);
+        $this->optionAble->setDefaultOption(self::PARAM_TAGDB, function  () {
             return null;
-        };
+        });
     }
-
+    
     public function __construct ($options)
     {
-        $this->optionAble = new OptionAble($options, $this);
-        $this->optionAble->start();
+        $this->optionAble =  new OptionAble($options);
+        $this->setupDefaults();
+        
         $this->hasher = $this->optionAble->getOption(CacheParams::PARAM_HASHER);
         $this->ttl = $this->optionAble->getOption(CacheParams::PARAM_TTL);
         $this->tagDb = $this->optionAble->getOption(CacheParams::PARAM_TAGDB);

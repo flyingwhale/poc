@@ -19,7 +19,7 @@
 
 namespace Poc\Cache\CacheImplementation;
 
-use Poc\Core\Optionable\OptionAble;
+use OptionAble;
 
 class PredisCache extends Cache
 {
@@ -28,12 +28,12 @@ class PredisCache extends Cache
 
     protected $isNotConnected;
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        parent::fillDefaults();
-        $this->optionAble['servers'] = array('servers' => array(array('host' => 'localhost', 'port' => '6379')));
+        parent::setupDefaults();
+        $this->optionAble->setDefaultOption('servers', array('servers' => array(array('host' => 'localhost', 'port' => '6379'))));
     }
-
+    
     public function __construct ($options = array())
     {
         parent::__construct($options);

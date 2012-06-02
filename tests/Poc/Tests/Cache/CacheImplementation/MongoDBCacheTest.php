@@ -16,7 +16,7 @@ use Poc\Cache\CacheImplementation\MongoDBCache;
 
 use Poc\Cache\CacheImplementation\CacheParams;
 
-class MongoCacheTest extends CacheTest
+class MongoDBCacheTest extends CacheTest
 {
 
     public function setUp_ ()

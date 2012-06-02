@@ -35,10 +35,10 @@ class FileCache extends Cache
 
     private $directory;
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        parent::fillDefaults();
-        $this->optionAble[self::PARAM_DIRECTORY] = '/tmp/';
+        parent::setupDefaults();
+        $this->optionAble->setDefaultOption(self::PARAM_DIRECTORY, '/tmp/');
     }
 
     public function __construct ($options = array())

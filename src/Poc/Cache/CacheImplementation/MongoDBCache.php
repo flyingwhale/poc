@@ -30,12 +30,13 @@ class MongoDBCache extends Cache
 
     private $collectionName;
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        parent::fillDefaults();
-        $this->optionAble['db_name'] = 'poc';
-        $this->optionAble['collection_name'] = 'key_value';
+        parent::setupDefaults();
+        $this->optionAble->setDefaultOption('db_name', 'poc');
+        $this->optionAble->setDefaultOption('collection_name', 'key_value');
     }
+    
 
     public function __construct ($options = array())
     {

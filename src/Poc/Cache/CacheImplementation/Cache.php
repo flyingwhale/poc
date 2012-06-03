@@ -42,13 +42,6 @@ abstract class Cache implements CacheInterface, CacheParams
      */
     protected $ttl;
 
-    /**
-     * The database that stores the caches
-     *
-     * @var AbstractDb
-     *
-     */
-    private $tagDb;
 
     protected $defaultOptions = array();
 
@@ -85,9 +78,6 @@ abstract class Cache implements CacheInterface, CacheParams
         });
 
         $this->optionAble->setDefaultOption(self::PARAM_TTL, 5);
-        $this->optionAble->setDefaultOption(self::PARAM_TAGDB, function  () {
-            return null;
-        });
     }
     
     public function __construct ($options)
@@ -97,7 +87,6 @@ abstract class Cache implements CacheInterface, CacheParams
         
         $this->hasher = $this->optionAble->getOption(CacheParams::PARAM_HASHER);
         $this->ttl = $this->optionAble->getOption(CacheParams::PARAM_TTL);
-        $this->tagDb = $this->optionAble->getOption(CacheParams::PARAM_TAGDB);
         $this->filter = $this->optionAble->getOption(CacheParams::PARAM_FILTER);
     }
 
@@ -110,48 +99,6 @@ abstract class Cache implements CacheInterface, CacheParams
         return $this->filter;
     }
 
-    public function addCacheInvalidationTags ($condition, $tags)
-    {
-        if (! $this->tagDb) {
-            throw new \Exception("Please Define a TagDb");
-        } else {
-            if ($condition) {
-                $tagger = new Tagger($tags, $this->hasher, $this->tagDb,
-                        $this->ttl);
-                $tagger->addCache($this);
-                $this->cacheInvalidationTags[] = $tagger;
-            }
-        }
-    }
-
-    public function addCacheAddTags ($condition, $tags)
-    {
-        if (! $this->tagDb) {
-            throw new \Exception("Please Define a TagDb");
-        } else {
-            if ($condition) {
-                $tagger = new Tagger($tags, $this->hasher, $this->tagDb,
-                        $this->ttl);
-                $tagger->addCache($this);
-                $this->cacheAddTags[] = $tagger;
-            }
-        }
-    }
-
-    public function cacheAddTags ()
-    {
-        foreach ($this->cacheAddTags as $tagger) {
-            $tagger->tagCache();
-        }
-    }
-
-    public function cacheTagsInvalidation ()
-    {
-        foreach ($this->cacheInvalidationTags as $tagger) {
-            $tagger->cacheInvalidation();
-        }
-    }
-
     /**
      *
      * @return Hasher
@@ -161,10 +108,6 @@ abstract class Cache implements CacheInterface, CacheParams
         return $this->hasher;
     }
 
-    public function getTagDb ()
-    {
-        return $this->tagDb;
-    }
 
     public function throwDbException ()
     {

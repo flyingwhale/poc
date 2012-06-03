@@ -303,7 +303,6 @@ class Poc implements PocParams, OptionAbleInterface
 
     public function fetchCache ($die = true)
     {
-        $this->cache->cacheTagsInvalidation();
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINING, new BaseEvent($this));
 

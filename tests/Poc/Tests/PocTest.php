@@ -22,6 +22,7 @@ use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
+use Poc\Handlers\TestOutput;
 
 class PocTest extends PocTestCore
 {
@@ -32,36 +33,22 @@ class PocTest extends PocTestCore
         $ttl = self::$TTL;
 
         $objects['file'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testBasicPocFunctionality file".  rand());
-
-            return new FileCache(array(CacheParams::PARAM_TTL => $ttl,
-                                       CacheParams::PARAM_HASHER => $hasher));
+            return new FileCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $objects['memcached'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testBasicPocFunctionality memcached".  rand());
-
             return new MemcachedCache(
-                    array(CacheParams::PARAM_TTL => $ttl,
-                          CacheParams::PARAM_HASHER => $hasher));
+                    array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $objects['predis'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testBasicPocFunctionality predis".  rand());
 
-            return new PredisCache(array(CacheParams::PARAM_TTL => $ttl,
-                                          CacheParams::PARAM_HASHER => $hasher));
+            return new PredisCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $objects['mongo'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testBasicPocFunctionality mongo".  rand());
 
-            return new MongoDBCache(array(CacheParams::PARAM_TTL => $ttl,
-                                          CacheParams::PARAM_HASHER => $hasher));
+            return new MongoDBCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $handlers[] = 'file';
@@ -72,18 +59,35 @@ class PocTest extends PocTestCore
         foreach ($handlers as $cacheHandlerName) {
             $cacheHandler = $objects[$cacheHandlerName];
 
-            $this->cacheBurner($cacheHandler, self::TESTSTRING1);
+            $hasher = new Hasher();
+            $hasher->addDistinguishVariable($cacheHandlerName.rand());
+                        
+            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                                  Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
+                                  Poc::PARAM_HASHER => $hasher));
+            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING1);
             $output1 = $this->getOutput();
 
             for ($i = 0; $i < 10; $i ++) {
-                $this->cacheBurner($cacheHandler, self::TESTSTRING1 . "Whatever $i");
+                $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                                    Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
+                                    Poc::PARAM_HASHER => $hasher ));
+                $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING1 . "Whatever $i");
+
             }
 
-            $this->cacheBurner($cacheHandler, self::TESTSTRING2);
+            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                                  Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
+                                  Poc::PARAM_HASHER => $hasher ));
+            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING2);
             $output2 = $this->getOutput();
+            
             sleep(self::$TTL + 1);
 
-            $this->cacheBurner($cacheHandler, self::TESTSTRING3);
+            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                                  Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
+                                  Poc::PARAM_HASHER => $hasher ));
+            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING3);
             $output3 = $this->getOutput();
 
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
@@ -106,17 +110,26 @@ class PocTest extends PocTestCore
 
         $cacheHandler = new FileCache(
                 array(CacheParams::PARAM_TTL => PocTest::BIGTTL,
-                      CacheParams::PARAM_FILTER => $blackList,
-                      CacheParams::PARAM_HASHER => $hasher
                       ));
+        
+        $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc1, $poc1->getOutputHandler(), rand());
 
-        $this->cacheBurner($cacheHandler, "1");
+        $poc2 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc2, $poc2->getOutputHandler(), '1');
 
-        $this->cacheBurner($cacheHandler, self::NEEDLE);
+        $poc3 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc3, $poc3->getOutputHandler(), self::NEEDLE);
         $output1 = $this->getOutput();
 
-        $this->cacheBurner($cacheHandler, self::TESTSTRING2);
+        $poc4 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc4, $poc4->getOutputHandler(), self::TESTSTRING2);
         $output2 = $this->getOutput();
+        
         $this->assertTrue(! empty($output1));
         $this->assertTrue($output1 != $output2);
     }
@@ -127,29 +140,30 @@ class PocTest extends PocTestCore
         $ttl = self::$TTL;
 
         $objects['c1'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testPocWithDifferentHashers".  rand());
-
-            return new FileCache(array(CacheParams::PARAM_TTL => $ttl,
-                                       CacheParams::PARAM_HASHER => $hasher
+            return new FileCache(array(CacheParams::PARAM_TTL => $ttl
                                        ));
         };
 
         $objects['c2'] = function  () use ($ttl) {
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable("testPocWithDifferentHashers dist2". rand());
-
-            return new FileCache(
-                    array(CacheParams::PARAM_TTL => $ttl, CacheParams::PARAM_HASHER => $hasher));
+            return new FileCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $cacheHandler1 = $objects['c1'];
 
-        $this->cacheBurner($cacheHandler1, self::TESTSTRING1);
+        $hasher1 = new Hasher();
+        $hasher1->addDistinguishVariable("a".rand());
+        $poc1 = new Poc(array(Poc::PARAM_HASHER => $hasher1,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc1, $poc1->getOutputHandler(), self::NEEDLE);
         $output1 = $this->getOutput();
 
-        $cacheHandler2 = $objects['c2'];
-        $this->cacheBurner($cacheHandler2, self::TESTSTRING2);
+        
+
+        $hasher2 = new Hasher();
+        $hasher2->addDistinguishVariable("b".rand());
+        $poc2 = new Poc(array(Poc::PARAM_HASHER => $hasher2,
+                              Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
+        $this->pocBurner($poc2, $poc2->getOutputHandler(), self::TESTSTRING2);
         $output2 = $this->getOutput();
 
         $this->assertTrue($output1 != $output2);

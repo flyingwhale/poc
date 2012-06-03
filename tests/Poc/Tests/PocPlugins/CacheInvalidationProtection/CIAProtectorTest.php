@@ -25,9 +25,15 @@ class CIAProtectorTest extends PocTestCore
     {
         $outputHandler = new TestOutput();
         $cache = new FileCache();
+        
+        $poc = new Poc(
+                array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $outputHandler));
+
 
         $cia = new CIAProtector();
-        $cia->setCache($cache);
+        $poc->addPlugin($cia);
+        
+        /*this 3 lines id for the tests only, in real life we don't do such things*/
         $cnt = $cia->getSentinel();
         $cia->setSentinel(10);
         $cnt1 = $cia->getSentinel();
@@ -35,10 +41,6 @@ class CIAProtectorTest extends PocTestCore
         $this->assertTrue($cnt == 0);
         $this->assertTrue($cnt1 == 10);
 
-        $poc = new Poc(
-                array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $outputHandler));
-
-        $poc->addPlugin($cia);
 
         $poc->start();
 

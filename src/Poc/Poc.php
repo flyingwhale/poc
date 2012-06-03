@@ -30,7 +30,9 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Core\OptionAble\OptionAble;
 use Poc\Handlers\OutputInterface;
 use Poc\Cache\Header\HeaderManipulator;
-use Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\Plugin;
+use Poc\Cache\Filtering\Hasher;
+use Poc\Cache\Filtering\Filter;
 
 /**
  * This class contains the "Entry point" of the caching process.
@@ -87,7 +89,7 @@ class Poc implements PocParams, OptionAbleInterface
 
     /**
      *
-     * @var HeaderManipulator
+     * @var \POC\cache\header\HeaderManipulator
      */
     private $headerManipulator = null;
 
@@ -130,6 +132,17 @@ class Poc implements PocParams, OptionAbleInterface
 
     private $canICacheThisGeneratedContent = true;
 
+    /**
+     *
+     * @var Cache\Filtering\Hasher 
+     */
+    private $hasher;
+    
+    /**
+     *
+     * @var Cache\Filtering\Filter 
+     */
+    private $filter;
     /**
      *
      * @return the $pocDispatcher
@@ -197,8 +210,7 @@ class Poc implements PocParams, OptionAbleInterface
                       PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this));
 
                     $this->cache->cacheSpecificStore(
-                            $this->cache->getHasher()
-                                ->getKey(), $this->getOutput());
+                            $this->hasher->getKey(), $this->getOutput());
                     $this->headerManipulator->storeHeades($headers);
 
                     $this->pocDispatcher->dispatch(
@@ -260,8 +272,17 @@ class Poc implements PocParams, OptionAbleInterface
         $this->optionAble[self::PARAM_CIA_PROTECTOR] = function  () {
             return null;
         };
+        
         $this->optionAble[self::PARAM_EVENT_DISPATCHER] = function  () {
             return new EventDispatcher();
+        };
+        
+        $this->optionAble[self::PARAM_HASHER] = function  () {
+            return new Hasher();
+        };
+
+        $this->optionAble[self::PARAM_FILTER] = function  () {
+            return new Filter();
         };
     }
 
@@ -290,12 +311,16 @@ class Poc implements PocParams, OptionAbleInterface
         $this->headerManipulator = $this->optionAble->getOption(
                 self::PARAM_HEADERMANIPULATOR);
         $this->headerManipulator->setOutputHandler($this->outputHandler);
-        $this->headerManipulator->setCache($this->cache);
+        $this->headerManipulator->setPoc($this);
 
         $this->outputFilter =
                          $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
 
         $this->setDebug($this->optionAble->getOption('debug'));
+        
+        $this->filter = $this->optionAble->getOption(self::PARAM_FILTER);
+        
+        $this->hasher = $this->optionAble->getOption(self::PARAM_HASHER);
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                 new BaseEvent($this));
@@ -326,7 +351,7 @@ class Poc implements PocParams, OptionAbleInterface
 
     public function fetchCacheValue ()
     {
-        $output = $this->cache->fetch($this->cache->getHasher()->getKey());
+        $output = $this->cache->fetch($this->hasher->getKey());
 
         return $output;
     }
@@ -338,7 +363,7 @@ class Poc implements PocParams, OptionAbleInterface
         new BaseEvent($this));
 
         $this->level = \ob_get_level();
-        if ($this->cache->getFilter()->evaluate()) {
+        if ($this->filter->evaluate()) {
             if (! $this->fetchCache()) {
                 $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
 
@@ -361,8 +386,8 @@ class Poc implements PocParams, OptionAbleInterface
                 $this->outputHandler->obEnd();
             }
         }
-        $this->pocDispatcher->dispatch(PocEventNames::DIES,
-                new BaseEvent($this));
+        /*$this->pocDispatcher->dispatch(PocEventNames::DIES,
+                new BaseEvent($this));*/
     }
 
     /**
@@ -419,5 +444,9 @@ class Poc implements PocParams, OptionAbleInterface
     public function setCanICacheThisGeneratedContent($bool)
     {
         $this->canICacheThisGeneratedContent = $bool;
+    }
+    
+    public function getHasher(){
+        return $this->hasher;
     }
 }

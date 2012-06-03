@@ -38,14 +38,10 @@ class HeaderManipulator
 
     public $outputHeader;
 
-    /**
-     *
-     * @var Cache
-     */
-    private $cache;
 
     /**
-     * Poc
+     *
+     * @var \Poc\Poc 
      */
     private $poc;
 
@@ -55,9 +51,9 @@ class HeaderManipulator
      * public function __construct(Poc $poc) { $this->poc = $poc; }
      */
 
-    public function setCache ($cache)
+    public function setPoc ($poc)
     {
-        $this->cache = $cache;
+        $this->poc = $poc;
     }
 
     public function storeHeaderToRemove ($headerVariable)
@@ -126,13 +122,13 @@ class HeaderManipulator
         // TODO: still not working.
         if ($this->isEtagGeneration) {
             $this->cache->cacheSpecificStore(
-                    $this->cache->getHasher()
+                    $this->poc->getHasher()
                         ->getKey() . 'e', $this->etagGeneration($output));
         }
 
         if ($this->headersToStore) {
             $this->cache->cacheSpecificStore(
-                    $this->cache->getHasher()
+                    $this->poc->getHasher()
                         ->getKey() . 'h', serialize($this->headersToStore));
         }
     }
@@ -140,11 +136,11 @@ class HeaderManipulator
     public function fetchHeaders ()
     {
         $this->headersToSend = unserialize(
-                $this->cache->fetch(
-                        $this->cache->getHasher()
+                $this->poc->getCache()->fetch(
+                        $this->poc->getHasher()
                             ->getKey() . 'h'));
-        $this->eTag = ($this->cache->fetch(
-                $this->cache->getHasher()
+        $this->eTag = ($this->poc->getCache()->fetch(
+                $this->poc->getHasher()
                     ->getKey() . 'e'));
     }
 

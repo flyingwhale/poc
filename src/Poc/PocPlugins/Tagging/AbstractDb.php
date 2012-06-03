@@ -46,7 +46,7 @@ abstract class AbstractDb extends Plugin
         parent::init($poc);
         $this->cache = $poc->getCache();
         $this->ttl = $poc->getCache()->getTtl();
-        $this->hash = $poc->getCache()->getHasher()->getKey();
+        $this->hash = $poc->getHasher()->getKey();
 
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                   array($this, 'cacheAddTags'));

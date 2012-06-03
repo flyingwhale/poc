@@ -12,7 +12,6 @@
 
 namespace Poc\Tests\Cache\CacheImplementation;
 
-use Poc\Cache\Filtering\Hasher;
 
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,13 +24,10 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
 
     public $TESTKEY = 'testkey';
 
-    public $hasher;
-
     abstract public function setUp_ ();
 
     protected function setUp ()
     {
-        $this->hasher = new Hasher();
 
         $this->TESTKEY .= rand() . rand();
         try {

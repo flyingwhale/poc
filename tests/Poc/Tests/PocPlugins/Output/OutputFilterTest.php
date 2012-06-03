@@ -23,7 +23,6 @@ class OutputFilterTest extends PocTestCore
         $outputHandler = new TestOutput();
         $cache = new FileCache(
                 array(CacheParams::PARAM_TTL => self::BIGTTL,
-                      CacheParams::PARAM_HASHER => $hasher
                       ));
         $outputFilter = new OutputFilter();
 
@@ -32,7 +31,8 @@ class OutputFilterTest extends PocTestCore
                 array(PocParams::PARAM_CACHE => $cache,
                       PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
                       PocParams::PARAM_OUTPUTFILTER => $outputFilter,
-                      PocParams::PARAM_DEBUG => true
+                      PocParams::PARAM_DEBUG => true,
+                      PocParams::PARAM_HASHER => $hasher,
                       ));
 
         $poc->addPlugin($outputFilter);

@@ -27,10 +27,10 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
     public function testTagging ()
     {
-        $getCache = function  ($hasher) {
+        $getCache = function  () {
             return new FileCache(
                     array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL,
-                                         CacheParams::PARAM_HASHER => $hasher));
+                                         ));
         };
 
         $hasher1 = new Hasher();
@@ -39,7 +39,8 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         $cache1->clearAll();
 
         $oh1 = new TestOutput();
-        $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, PocParams::PARAM_OUTPUTHANDLER => $oh1));
+        $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, PocParams::PARAM_OUTPUTHANDLER => $oh1,
+                              PocParams::PARAM_HASHER => $hasher1));
         $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
                                         'localhost',
                                         $GLOBALS['MYSQL_USER'],
@@ -50,9 +51,13 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         //----------------------------------------------------------------------
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("distn2");
-        $cache2 = $getCache($hasher1);
+        $cache2 = $getCache();
         $oh2 = new TestOutput();
-        $poc2 = new Poc(array(PocParams::PARAM_CACHE => $cache2, PocParams::PARAM_OUTPUTHANDLER => $oh2));
+        
+        $poc2 = new Poc(array(PocParams::PARAM_CACHE => $cache2, 
+                              PocParams::PARAM_OUTPUTHANDLER => $oh2,
+                              PocParams::PARAM_HASHER => $hasher2
+                              ));
 
         $tagger2 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
                                         'localhost',
@@ -64,9 +69,10 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         //----------------------------------------------------------------------
         $hasher3 = new Hasher();
         $hasher3->addDistinguishVariable("distn3");
-        $cache3 = $getCache($hasher3);
+        $cache3 = $getCache();
         $oh3 = new TestOutput();
         $poc3 = new Poc(array(PocParams::PARAM_CACHE => $cache3, PocParams::PARAM_OUTPUTHANDLER => $oh3,
+                              PocParams::PARAM_HASHER => $hasher3
                               ));
         $tagger3 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
                                         'localhost',

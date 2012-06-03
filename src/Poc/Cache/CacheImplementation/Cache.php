@@ -17,21 +17,10 @@
  */
 namespace Poc\Cache\CacheImplementation;
 
-/*
-use Poc\Poc;
-use Poc\PocPlugin\Tagging\AbstractDb;
-use Poc\Cache\CacheImplementation\CacheParams;
-use Poc\Cache\Filtering\Filter;
-use Poc\Cache\Filtering\Hasher;
-use Poc\Core\OptionAble\OptionAble;
-use Poc\Core\OptionAble\OptionAbleInterface;
-*/
 
 use Poc\Poc;
 use Poc\Cache\Tagging\AbstractDb;
 use Poc\Cache\CacheImplementation\CacheParams;
-use Poc\Cache\Filtering\Filter;
-use Poc\Cache\Filtering\Hasher;
 use OptionAble;
 
 abstract class Cache implements CacheInterface, CacheParams
@@ -42,24 +31,7 @@ abstract class Cache implements CacheInterface, CacheParams
      */
     protected $ttl;
 
-
     protected $defaultOptions = array();
-
-    /**
-     *
-     * @var Hasher
-     */
-    protected $hasher;
-
-    /**
-     *
-     * @var Filter
-     */
-    protected $filter;
-
-    protected $cacheInvalidationTags = array();
-
-    protected $cacheAddTags = array();
 
     /**
      *
@@ -69,13 +41,6 @@ abstract class Cache implements CacheInterface, CacheParams
 
     protected function setupDefaults ()
     {
-        $this->optionAble->setDefaultOption(self::PARAM_HASHER, function  () {
-            return new Hasher();
-        });
-
-        $this->optionAble->setDefaultOption(self::PARAM_FILTER, function  () {
-            return new Filter();
-        });
 
         $this->optionAble->setDefaultOption(self::PARAM_TTL, 5);
     }
@@ -84,30 +49,9 @@ abstract class Cache implements CacheInterface, CacheParams
     {
         $this->optionAble =  new OptionAble($options);
         $this->setupDefaults();
-        
-        $this->hasher = $this->optionAble->getOption(CacheParams::PARAM_HASHER);
         $this->ttl = $this->optionAble->getOption(CacheParams::PARAM_TTL);
-        $this->filter = $this->optionAble->getOption(CacheParams::PARAM_FILTER);
-    }
 
-    /**
-     *
-     * @return Filter
-     */
-    public function getFilter ()
-    {
-        return $this->filter;
     }
-
-    /**
-     *
-     * @return Hasher
-     */
-    public function getHasher ()
-    {
-        return $this->hasher;
-    }
-
 
     public function throwDbException ()
     {

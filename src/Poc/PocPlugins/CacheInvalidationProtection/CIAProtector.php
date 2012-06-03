@@ -74,14 +74,6 @@ class CIAProtector extends Plugin implements OptionAbleInterface
      *
      * @param $poc \Poc\Poc
      */
-    public function setPoc ($poc)
-    {
-    }
-
-    /**
-     *
-     * @param $poc \Poc\Poc
-     */
     public function init(Poc $poc)
     {
         parent::init($poc);
@@ -136,7 +128,7 @@ class CIAProtector extends Plugin implements OptionAbleInterface
 
     private function getKey ()
     {
-        return $this->cache->getHasher()->getKey() . self::KEY_POSTFIX;
+        return $this->poc->getHasher()->getKey() . self::KEY_POSTFIX;
     }
 
     public function deleteSentinel ()

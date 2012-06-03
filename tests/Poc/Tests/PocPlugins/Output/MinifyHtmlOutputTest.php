@@ -46,13 +46,14 @@ a
 
         $cache = new FileCache(
                                 array(CacheParams::PARAM_TTL => self::BIGTTL,
-                                    CacheParams::PARAM_HASHER => $hasher));
+                                    ));
 
         $outputHandler = new TestOutput();
 
         $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(),
                             PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
                             PocParams::PARAM_CACHE=>$cache,
+                            PocParams::PARAM_HASHER=>$hasher
                         ));
 
         $poc->addPlugin(new PocLogs);

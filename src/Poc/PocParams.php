@@ -37,4 +37,8 @@ interface PocParams
     const PARAM_CIA_PROTECTOR = 'cia_protection';
 
     const PARAM_EVENT_DISPATCHER = 'event_dispatcher';
+    
+    const PARAM_HASHER = 'PARAM_HASHER';
+
+    const PARAM_FILTER = 'PARAM_FILTER';
 }

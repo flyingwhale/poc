@@ -157,7 +157,7 @@ class Doctrine2Tagging extends AbstractDb
         $invalidateCaches = $cacheRepository->getByTags($tagNames);
 
         foreach ($invalidateCaches as $invalidateCache) {
-            $this->cache->clearItem($this->cache->getHasher()->getKey());
+            $this->cache->clearItem($this->poc->getHasher()->getKey());
             $entityManager->remove($invalidateCache);
         }
     }

@@ -21,7 +21,7 @@
    "repositories": [
         {
             "type": "vcs",
-            "url": "http://github.com/sky-one/optionable.git"
+            "url": "http://github.com/zsjavorszky/optionable.git"
         }
    ],
    "require": {

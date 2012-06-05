@@ -72,7 +72,7 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
         $outputHandler = new TestOutput();
         $poc = new Poc(
                 array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
-        $this->pocBurner($poc, $outputHandler, $testString);
+        $this->pocBurner($poc, $testString);
     }
 
     /**
@@ -85,14 +85,15 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
      * @param $outputHandler TestOutput
      * @param $testString string
      */
-    protected function pocBurner (Poc $poc, $outputHandler,
-                                                     $testString = "testString")
+    protected function pocBurner (Poc $poc, $testString = "testString")
     {
         $poc->addPlugin(new PocLogs());
 
         $this->setOutput('');
         $poc->start();
 
+        $outputHandler = $poc->getOutputHandler();
+        
         if ($outputHandler->getOutputFlow()) {
             echo $testString;
             $poc->destruct();

@@ -65,21 +65,21 @@ class PocTest extends PocTestCore
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher));
-            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING1);
+            $this->pocBurner($poc1, self::TESTSTRING1);
             $output1 = $this->getOutput();
 
             for ($i = 0; $i < 10; $i ++) {
                 $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                     Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                     Poc::PARAM_HASHER => $hasher ));
-                $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING1 . "Whatever $i");
+                $this->pocBurner($poc1, self::TESTSTRING1 . "Whatever $i");
 
             }
 
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher ));
-            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING2);
+            $this->pocBurner($poc1, self::TESTSTRING2);
             $output2 = $this->getOutput();
             
             sleep(self::$TTL + 1);
@@ -87,7 +87,7 @@ class PocTest extends PocTestCore
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher ));
-            $this->pocBurner($poc1, $poc1->getOutputHandler(), self::TESTSTRING3);
+            $this->pocBurner($poc1, self::TESTSTRING3);
             $output3 = $this->getOutput();
 
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
@@ -114,20 +114,20 @@ class PocTest extends PocTestCore
         
         $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc1, $poc1->getOutputHandler(), rand());
+        $this->pocBurner($poc1, rand());
 
         $poc2 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc2, $poc2->getOutputHandler(), '1');
+        $this->pocBurner($poc2, '1');
 
         $poc3 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc3, $poc3->getOutputHandler(), self::NEEDLE);
+        $this->pocBurner($poc3, self::NEEDLE);
         $output1 = $this->getOutput();
 
         $poc4 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc4, $poc4->getOutputHandler(), self::TESTSTRING2);
+        $this->pocBurner($poc4, self::TESTSTRING2);
         $output2 = $this->getOutput();
         
         $this->assertTrue(! empty($output1));
@@ -154,7 +154,7 @@ class PocTest extends PocTestCore
         $hasher1->addDistinguishVariable("a".rand());
         $poc1 = new Poc(array(Poc::PARAM_HASHER => $hasher1,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc1, $poc1->getOutputHandler(), self::NEEDLE);
+        $this->pocBurner($poc1, self::NEEDLE);
         $output1 = $this->getOutput();
 
         
@@ -163,7 +163,7 @@ class PocTest extends PocTestCore
         $hasher2->addDistinguishVariable("b".rand());
         $poc2 = new Poc(array(Poc::PARAM_HASHER => $hasher2,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
-        $this->pocBurner($poc2, $poc2->getOutputHandler(), self::TESTSTRING2);
+        $this->pocBurner($poc2, self::TESTSTRING2);
         $output2 = $this->getOutput();
 
         $this->assertTrue($output1 != $output2);

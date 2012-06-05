@@ -27,92 +27,68 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
     public function testTagging ()
     {
-        $getCache = function  () {
-            return new FileCache(
-                    array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL,
-                                         ));
+  
+        $getPoc = function ($key, $addCacheAddTags='', 
+                                                 $addCacheInvalidationTags='') {
+            $getCache = function  () {
+                return new FileCache(
+                        array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL ));
+            };
+            $hasher1 = new Hasher();
+            $hasher1->addDistinguishVariable($key);
+            $cache1 = $getCache($hasher1);
+            $cache1->clearAll();
+
+            $oh1 = new TestOutput();
+            $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, 
+                                  PocParams::PARAM_OUTPUTHANDLER => $oh1,
+                                  PocParams::PARAM_HASHER => $hasher1));
+            $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
+                                            'localhost',
+                                            $GLOBALS['MYSQL_USER'],
+                                            $GLOBALS['MYSQL_PASS']);
+            $poc1->addPlugin($tagger1);
+            if($addCacheAddTags) {
+                $tagger1->addCacheAddTags(true, $addCacheAddTags);
+            }
+            if($addCacheInvalidationTags) {
+                $tagger1->addCacheInvalidationTags(true, $addCacheInvalidationTags);
+            }
+            $ret['poc'] = $poc1; 
+            $ret['tagger'] = $tagger1; 
+            return $ret;
         };
-
-        $hasher1 = new Hasher();
-        $hasher1->addDistinguishVariable("distn1");
-        $cache1 = $getCache($hasher1);
-        $cache1->clearAll();
-
-        $oh1 = new TestOutput();
-        $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, PocParams::PARAM_OUTPUTHANDLER => $oh1,
-                              PocParams::PARAM_HASHER => $hasher1));
-        $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
-                                        'localhost',
-                                        $GLOBALS['MYSQL_USER'],
-                                        $GLOBALS['MYSQL_PASS']);
-        $poc1->addPlugin($tagger1);
-        $tagger1->addCacheAddTags(true, "user,customer,inventory");
-
-        //----------------------------------------------------------------------
-        $hasher2 = new Hasher();
-        $hasher2->addDistinguishVariable("distn2");
-        $cache2 = $getCache();
-        $oh2 = new TestOutput();
+        $poc1 = $getPoc('distn1','user,customer,inventory,a,b,c,d,e,f,b,h,i,j,k,l,m,n,o,p');
+        $poc11 = $getPoc('distn2','user,customer,inventory');
         
-        $poc2 = new Poc(array(PocParams::PARAM_CACHE => $cache2, 
-                              PocParams::PARAM_OUTPUTHANDLER => $oh2,
-                              PocParams::PARAM_HASHER => $hasher2
-                              ));
-
-        $tagger2 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
-                                        'localhost',
-                                        $GLOBALS['MYSQL_USER'],
-                                        $GLOBALS['MYSQL_PASS']);
-        $poc2->addPlugin($tagger2);
-        $tagger2->addCacheAddTags(true, "inventory");
-
-        //----------------------------------------------------------------------
-        $hasher3 = new Hasher();
-        $hasher3->addDistinguishVariable("distn3");
-        $cache3 = $getCache();
-        $oh3 = new TestOutput();
-        $poc3 = new Poc(array(PocParams::PARAM_CACHE => $cache3, PocParams::PARAM_OUTPUTHANDLER => $oh3,
-                              PocParams::PARAM_HASHER => $hasher3
-                              ));
-        $tagger3 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
-                                        'localhost',
-                                        $GLOBALS['MYSQL_USER'],
-                                        $GLOBALS['MYSQL_PASS']);
-        $poc3->addPlugin($tagger3);
-        $tagger3->addCacheAddTags(true, "inventory");
-        $tagger3->addCacheAddTags(true, "customer");
-
-        //----------------------------------------------------------------------
-        $this->pocBurner($poc1, $oh1, "11");;
+        $poc2 = $getPoc('distn1','inventory','p');
+        $poc3 = $getPoc('distn4','inventory,customer');
+        
+        $poc4 = $getPoc('distn4','inventory,customer','p');
+        
+        $this->pocBurner($poc1['poc'], "11");;
         $o1 = $this->getOutput();
-        $tagger1->addCacheInvalidationTags(true, 'stuff');
-//        die("stuff ----------------------");
+        $poc1['tagger']->addCacheInvalidationTags(true, 'stuff');
 
-        $this->pocBurner($poc1, $oh1, "11");
+        $this->pocBurner($poc11['poc'], "11");
         $o12 = $this->getOutput();
 
         $this->assertTrue($o1 == $o12);
 
-        $tagger2->addCacheInvalidationTags(true, 'user');
-
-        $this->pocBurner($poc2, $oh2, "13");
-        $o13 = $this->getOutput();
-
-//        $this->assertEquals("13", $o13);
-        $this->assertEquals("13", $o13);
-        //more relevan tests shuld be implemented.
-/*
-        $tagger1->addCacheInvalidationTags(true, 'customer');
-
-        $this->pocBurner($poc1, $oh1, "4");
-        $o1 = $this->getOutput();
-        $this->pocBurner($poc2, $oh2, "4");
+        $poc2['tagger']->addCacheInvalidationTags(true, 'user');
+        $this->pocBurner($poc2['poc'], "13");
         $o2 = $this->getOutput();
-        $this->pocBurner($poc3, $oh3, "4");
-        $o3 = $this->getOutput();
 
-        $this->assertTrue($o1 == $o3);
-        $this->assertTrue($o2 != $o3);
-*/
+        $this->assertEquals("13", $o2);
+        
+        $poc3['tagger']->addCacheInvalidationTags(true, 'p');
+        $this->pocBurner($poc3['poc'], "14");
+        $o3 = $this->getOutput();
+        
+        $this->pocBurner($poc3['poc'], "15");
+        $o4 = $this->getOutput();
+        
+        $this->assertEquals("14", $o4);
+        
     }
 }

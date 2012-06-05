@@ -37,7 +37,7 @@ class OutputFilterTest extends PocTestCore
 
         $poc->addPlugin($outputFilter);
 
-        $this->pocBurner($poc, $outputHandler, rand() . self::NEEDLE . rand());
+        $this->pocBurner($poc, rand() . self::NEEDLE . rand());
         $this->assertContains('because', $this->getOutput());
     }
 

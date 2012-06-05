@@ -60,7 +60,7 @@ a
 
         $poc->addPlugin(new MinifyHtmlOutput);
 
-        $this->pocBurner($poc, $outputHandler, $input);
+        $this->pocBurner($poc, $input);
         $output = $this->getOutput();
 
         $this->assertEquals($expectedOutput, $output);

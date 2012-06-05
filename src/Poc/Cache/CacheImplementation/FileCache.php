@@ -38,15 +38,15 @@ class FileCache extends Cache
     protected function setupDefaults ()
     {
         parent::setupDefaults();
-        $this->optionAble->setDefaultOption(self::PARAM_DIRECTORY, '/tmp/');
+        $this->optionable->setDefaultOption(self::PARAM_DIRECTORY, '/tmp/');
     }
 
     public function __construct ($options = array())
     {
         parent::__construct($options);
-        $this->file = $this->optionAble->getOption(self::PARAM_DIRECTORY) . self::KEY_PREFIX;
-        $this->fileTtl = $this->optionAble->getOption(self::PARAM_DIRECTORY) . self::TTL_PREFIX;
-        $this->directory = $this->optionAble->getOption(self::PARAM_DIRECTORY);
+        $this->file = $this->optionable->getOption(self::PARAM_DIRECTORY) . self::KEY_PREFIX;
+        $this->fileTtl = $this->optionable->getOption(self::PARAM_DIRECTORY) . self::TTL_PREFIX;
+        $this->directory = $this->optionable->getOption(self::PARAM_DIRECTORY);
         $this->throwDbException();
     }
 

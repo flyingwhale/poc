@@ -33,8 +33,8 @@ class MongoDBCache extends Cache
     protected function setupDefaults ()
     {
         parent::setupDefaults();
-        $this->optionAble->setDefaultOption('db_name', 'poc');
-        $this->optionAble->setDefaultOption('collection_name', 'key_value');
+        $this->optionable->setDefaultOption('db_name', 'poc');
+        $this->optionable->setDefaultOption('collection_name', 'key_value');
     }
     
 
@@ -42,8 +42,8 @@ class MongoDBCache extends Cache
     {
         parent::__construct($options);
 
-        $this->dbName = $this->optionAble->getOption('db_name');
-        $this->collectionName = $this->optionAble->getOption('collection_name');
+        $this->dbName = $this->optionable->getOption('db_name');
+        $this->collectionName = $this->optionable->getOption('collection_name');
         $this->isNotConnected = 0;
 
         try {

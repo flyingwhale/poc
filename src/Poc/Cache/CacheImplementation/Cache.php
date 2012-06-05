@@ -21,7 +21,7 @@ namespace Poc\Cache\CacheImplementation;
 use Poc\Poc;
 use Poc\Cache\Tagging\AbstractDb;
 use Poc\Cache\CacheImplementation\CacheParams;
-use OptionAble;
+use Optionable;
 
 abstract class Cache implements CacheInterface, CacheParams
 {
@@ -35,21 +35,21 @@ abstract class Cache implements CacheInterface, CacheParams
 
     /**
      *
-     * @var OptionAble
+     * @var Optionable
      */
-    protected $optionAble = null;
+    protected $optionable = null;
 
     protected function setupDefaults ()
     {
 
-        $this->optionAble->setDefaultOption(self::PARAM_TTL, 5);
+        $this->optionable->setDefaultOption(self::PARAM_TTL, 5);
     }
     
     public function __construct ($options)
     {
-        $this->optionAble =  new OptionAble($options);
+        $this->optionable =  new Optionable($options);
         $this->setupDefaults();
-        $this->ttl = $this->optionAble->getOption(CacheParams::PARAM_TTL);
+        $this->ttl = $this->optionable->getOption(CacheParams::PARAM_TTL);
 
     }
 

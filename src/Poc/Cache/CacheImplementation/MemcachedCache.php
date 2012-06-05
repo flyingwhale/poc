@@ -33,8 +33,8 @@ class MemcachedCache extends Cache
     protected function setupDefaults ()
     {
         parent::setupDefaults();
-        $this->optionAble->setDefaultOption('server', 'localhost');
-        $this->optionAble->setDefaultOption('port', '11211');
+        $this->optionable->setDefaultOption('server', 'localhost');
+        $this->optionable->setDefaultOption('port', '11211');
     }
     
     public function __construct ($options = array())
@@ -49,8 +49,8 @@ class MemcachedCache extends Cache
         $this->memcache = new $className();
 
         $this->isConnected = $this->memcache->connect(
-                $this->optionAble->getOption('server'),
-                $this->optionAble->getOption('port'));
+                $this->optionable->getOption('server'),
+                $this->optionable->getOption('port'));
         $this->throwDbException();
     }
 

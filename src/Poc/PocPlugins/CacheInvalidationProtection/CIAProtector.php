@@ -4,12 +4,10 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Core\Monolog\MonoLogger;
-use Poc\Core\OptionAble\OptionAbleInterface;
-use Poc\Core\OptionAble\OptionAble;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
-
+use Optionable;
 /**
  * This calss name comes form the "Cache Invalidation Attack Protection" name.
  * This integrates transpanently to the framework.
@@ -33,7 +31,7 @@ use Poc\Events\BaseEvent;
  * @author Imre Toth
  *
  */
-class CIAProtector extends Plugin implements OptionAbleInterface
+class CIAProtector extends Plugin
 {
 
     const LOG_TYPE_CIA = 'CIA';
@@ -46,9 +44,9 @@ class CIAProtector extends Plugin implements OptionAbleInterface
 
     /**
      *
-     * @var OptionAble
+     * @var Optionable
      */
-    private $optionAble = null;
+    private $optionable = null;
 
     /**
      *
@@ -90,14 +88,15 @@ class CIAProtector extends Plugin implements OptionAbleInterface
 
     }
 
-    public function fillDefaults ()
+    public function setupDefaults ()
     {
         /*
-         * $this->optionAble[self::PARAM_CLIENT_UNIQUE] = function(){ return
+         * $this->optionable->setDefaultOption('self::PARAM_CLIENT_UNIQUE', function(){ return
          * md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT'].
          * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
-         * };
+         * });
          */
+        
     }
 
     /**
@@ -106,9 +105,9 @@ class CIAProtector extends Plugin implements OptionAbleInterface
      */
     public function __construct ($options = array())
     {
-        $this->optionAble = new OptionAble($options, $this);
+        $this->optionable = new Optionable($options);
         // $this->clientUnique =
-        // $this->optionAble->getOption(self::PARAM_CLIENT_UNIQUE);
+        // $this->optionable->getOption(self::PARAM_CLIENT_UNIQUE);
     }
 
     public function setSentinel ($cnt)

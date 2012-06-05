@@ -12,15 +12,11 @@
 
 namespace Poc\Handlers;
 
-use Poc\Core\OptionAble\OptionAble;
-
-use Poc\Core\OptionAble\OptionAbleInterface;
-
 use Poc\Cache\Header\HeaderManipulator;
-
 use Poc\Poc;
+use Optionable;
 
-class TestOutput extends Output implements OptionAbleInterface
+class TestOutput extends Output
 {
 
     const HEADER_BASIC = 'a:1:{i:0;s:35:"X-Powered-By: PHP/5.3.6-13ubuntu3.3";}';
@@ -48,15 +44,15 @@ class TestOutput extends Output implements OptionAbleInterface
 
     private $optionable;
 
-    public function fillDefaults ()
+    public function setupDefaults ()
     {
-        $this->optionable[self::PARAM_HEADER] = self::HEADER_BASIC;
+        $this->optionable->setDefaultOption(self::PARAM_HEADER, self::HEADER_BASIC);
     }
 
     public function __construct ($options = array())
     {
-        $this->optionable = new OptionAble($options, $this);
-        $this->optionable->start();
+        $this->optionable = new Optionable($options, $this);
+        $this->setupDefaults();
         $this->actHeader = $this->optionable->getOption(self::PARAM_HEADER);
     }
 

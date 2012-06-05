@@ -24,28 +24,26 @@ use Poc\Events\BaseEvent;
 use Poc\Core\Event\PocDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Core\Event\EventDictionary;
-use Poc\Core\OptionAble\OptionAbleInterface;
 use Poc\Handlers\ServerOutput;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Core\OptionAble\OptionAble;
 use Poc\Handlers\OutputInterface;
 use Poc\Cache\Header\HeaderManipulator;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
-
+use Optionable;
 /**
  * This class contains the "Entry point" of the caching process.
  * Therefor is is
  * a really crucial part of the framework. This class implements the
- * OptionAbleInterface, and the PocParams
+ * PocParams interface.
  *
  *
  * @package Poc
  * @author Imre Toth
  *
  */
-class Poc implements PocParams, OptionAbleInterface
+class Poc implements PocParams
 {
 
     const CALLBACK_GENERATE = 'pocCallbackGenerate';
@@ -107,10 +105,10 @@ class Poc implements PocParams, OptionAbleInterface
 
     /**
      *
-     * @var OptionAble
+     * @var Optionable
      *
      */
-    private $optionAble;
+    private $optionable;
 
     /**
      *
@@ -252,38 +250,60 @@ class Poc implements PocParams, OptionAbleInterface
         return $this->getOutput();
     }
 
-    public function fillDefaults ()
+    protected function setupDefaults ()
     {
-        $this->optionAble[self::PARAM_CACHE] = function  () {
-            return new FileCache();
-        };
-        $this->optionAble[self::PARAM_OUTPUTHANDLER] = function  () {
-            return new ServerOutput();
-        };
-        $this->optionAble[self::PARAM_HEADERMANIPULATOR] = function  () {
-            return new HeaderManipulator();
-        };
-        $this->optionAble[self::PARAM_OUTPUTFILTER] = function  () {
-            return null;
-        };
-        $this->optionAble[self::PARAM_DEBUG] = false;
-        // $this->optionAble[self::PARAM_CIA_PROTECTOR] = function(){return new
-        // CIAProtector();};
-        $this->optionAble[self::PARAM_CIA_PROTECTOR] = function  () {
-            return null;
-        };
-        
-        $this->optionAble[self::PARAM_EVENT_DISPATCHER] = function  () {
-            return new EventDispatcher();
-        };
-        
-        $this->optionAble[self::PARAM_HASHER] = function  () {
-            return new Hasher();
-        };
+        $this->optionable->setDefaultOption(self::PARAM_CACHE, 
+            function  () {
+                return new FileCache();
+            }
+        );
 
-        $this->optionAble[self::PARAM_FILTER] = function  () {
-            return new Filter();
-        };
+        
+        $this->optionable->setDefaultOption(self::PARAM_OUTPUTHANDLER, 
+            function  () {
+                return new ServerOutput();
+            }
+        );
+
+        $this->optionable->setDefaultOption(self::PARAM_HEADERMANIPULATOR, 
+            function  () {
+                return new HeaderManipulator();
+            }
+        );
+
+        $this->optionable->setDefaultOption(self::PARAM_OUTPUTFILTER, 
+            function  () {
+                return null;
+            }
+        );
+        
+        $this->optionable->setDefaultOption(self::PARAM_DEBUG,
+            function  () {
+                return false;
+            }
+        );
+        
+        $this->optionable->setDefaultOption(self::PARAM_CIA_PROTECTOR, 
+            function  () {
+                return null;
+            }
+        );
+        $this->optionable->setDefaultOption(self::PARAM_EVENT_DISPATCHER, 
+            function  () {
+                return new EventDispatcher();
+            }
+        );
+        $this->optionable->setDefaultOption(self::PARAM_HASHER, 
+            function  () {
+                return new Hasher();
+            }
+        );
+        $this->optionable->setDefaultOption(self::PARAM_FILTER, 
+            function  () {
+                return new Filter();
+            }
+        );
+        
     }
 
     /**
@@ -298,29 +318,29 @@ class Poc implements PocParams, OptionAbleInterface
     public function __construct ($options = array())
     {
         $this->startTime = microtime();
-        $this->optionAble = new OptionAble($options, $this);
-        $this->optionAble->start();
+        $this->optionable = new Optionable($options);
+        $this->setupDefaults();
         $this->pocDispatcher =
-                     $this->optionAble->getOption(self::PARAM_EVENT_DISPATCHER);
+                     $this->optionable->getOption(self::PARAM_EVENT_DISPATCHER);
         $this->pocDispatcher->dispatch
                      (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
-        $this->cache = $this->optionAble->getOption(self::PARAM_CACHE);
-        $this->outputHandler = $this->optionAble->getOption(
+        $this->cache = $this->optionable->getOption(self::PARAM_CACHE);
+        $this->outputHandler = $this->optionable->getOption(
                 self::PARAM_OUTPUTHANDLER);
         $this->outputHandler->setPoc($this);
-        $this->headerManipulator = $this->optionAble->getOption(
+        $this->headerManipulator = $this->optionable->getOption(
                 self::PARAM_HEADERMANIPULATOR);
         $this->headerManipulator->setOutputHandler($this->outputHandler);
         $this->headerManipulator->setPoc($this);
 
         $this->outputFilter =
-                         $this->optionAble->getOption(self::PARAM_OUTPUTFILTER);
+                         $this->optionable->getOption(self::PARAM_OUTPUTFILTER);
 
-        $this->setDebug($this->optionAble->getOption('debug'));
+        $this->setDebug($this->optionable->getOption('debug'));
         
-        $this->filter = $this->optionAble->getOption(self::PARAM_FILTER);
+        $this->filter = $this->optionable->getOption(self::PARAM_FILTER);
         
-        $this->hasher = $this->optionAble->getOption(self::PARAM_HASHER);
+        $this->hasher = $this->optionable->getOption(self::PARAM_HASHER);
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                 new BaseEvent($this));

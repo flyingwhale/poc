@@ -1,17 +1,12 @@
 <?php
 namespace Poc\PocPlugins\CacheInvalidationProtection;
 
-use Poc\Core\OptionAble\OptionAble;
-
-use Poc\Core\OptionAble\OptionAbleInterface;
-
 use Poc\Core\Event\PocDispatcher;
-
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Poc\Poc;
+use Optionable;
 
-class CIAProtectorLogger implements OptionAbleInterface, CIAProtectorEventNames
+class CIAProtectorLogger implements CIAProtectorEventNames
 {
 
     /**
@@ -22,10 +17,10 @@ class CIAProtectorLogger implements OptionAbleInterface, CIAProtectorEventNames
 
     /**
      *
-     * @var OptionAble
+     * @var Optionable
      *
      */
-    private $optionAble;
+    private $optionable;
 
     /**
      *
@@ -39,18 +34,19 @@ class CIAProtectorLogger implements OptionAbleInterface, CIAProtectorEventNames
      */
     private $logger;
 
-    public function fillDefaults ()
+    public function setupDefaults ()
     {
-        $this->optionAble["poc"] = null;
+        $this->optionable->setDefaultOption('poc', null);
+        
     }
 
     public function __construct ($options = array())
     {
 
-        $this->optionAble = new OptionAble($options, $this);
-        $this->optionAble->start();
+        $this->optionable = new Optionable($options, $this);
+        $this->setupDefaults();
 
-        $this->poc = $this->optionAble->getOption(PocLogsParams::PARAM_POC);
+        $this->poc = $this->optionable->getOption(PocLogsParams::PARAM_POC);
         $this->logger = $this->poc->getLogger();
 
         $this->pocDispatcher = $this->poc->getPocDispatcher();

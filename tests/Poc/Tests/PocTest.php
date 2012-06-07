@@ -65,6 +65,7 @@ class PocTest extends PocTestCore
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher));
+            
             $this->pocBurner($poc1, self::TESTSTRING1);
             $output1 = $this->getOutput();
 

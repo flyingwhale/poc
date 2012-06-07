@@ -40,13 +40,20 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
             $cache1->clearAll();
 
             $oh1 = new TestOutput();
+            
+             $options = array(
+            'entity_managers.default.conn_params.dbname' => $GLOBALS['MYSQL_DBNAME'],
+            'entity_managers.default.conn_params.user' => $GLOBALS['MYSQL_USER'],
+            'entity_managers.default.conn_params.password' => $GLOBALS['MYSQL_PASS'],
+            'entity_managers.default.conn_params.host' => 'localhost',
+            'entity_managers.default.conn_params.driver' => 'pdo_mysql'
+            );
+            
             $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, 
                                   PocParams::PARAM_OUTPUTHANDLER => $oh1,
                                   PocParams::PARAM_HASHER => $hasher1));
-            $tagger1 = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'],
-                                            'localhost',
-                                            $GLOBALS['MYSQL_USER'],
-                                            $GLOBALS['MYSQL_PASS']);
+            $tagger1 = new Doctrine2Tagging($options);
+            
             $poc1->addPlugin($tagger1);
             if($addCacheAddTags) {
                 $tagger1->addCacheAddTags(true, $addCacheAddTags);

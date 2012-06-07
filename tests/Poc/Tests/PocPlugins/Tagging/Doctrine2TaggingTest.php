@@ -47,8 +47,16 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 
     public function getDoctrine2Tagging()
     {
-        $tagging = new Doctrine2Tagging($GLOBALS['MYSQL_DBNAME'], 'localhost', $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
+        $options = array(
+            'entity_managers.default.conn_params.dbname' => $GLOBALS['MYSQL_DBNAME'],
+            'entity_managers.default.conn_params.user' => $GLOBALS['MYSQL_USER'],
+            'entity_managers.default.conn_params.password' => $GLOBALS['MYSQL_PASS'],
+            'entity_managers.default.conn_params.host' => 'localhost',
+            'entity_managers.default.conn_params.driver' => 'pdo_mysql'
 
+            
+        );
+        $tagging = new Doctrine2Tagging($options);
         $tagging->init(new \Poc\Poc());
 
         return $tagging;

@@ -17,7 +17,7 @@ use Doctrine\ORM\Configuration;
 use Poc\DatabaseManagement\Doctrine\Common;
 use Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache;
 use Poc\PocPlugins\Tagging\AbstractDb;
-use Optionable;
+use Poc\Optionable\Doctrine\EntityManagerOptionable;
 
 class Doctrine2Tagging extends AbstractDb
 {
@@ -27,8 +27,7 @@ class Doctrine2Tagging extends AbstractDb
 
     public function __construct ($options = array())
     {
-        $this->optionable = new Optionable($options);
-        $this->setupDefaults($this->optionable);
+        $this->optionable = new EntityManagerOptionable($options);
         $this->entityManager = $this->optionable['entity_managers.default'];
         parent::__construct();
     }
@@ -166,89 +165,6 @@ class Doctrine2Tagging extends AbstractDb
                 $this->entitiesNamespaceString . '\\Tag');
     }
 
-    protected function setupDefaults (&$optionable)
-    {
-        $optionable->setDefaultOption('entity_managers.default.conn_params.dbname', 'poc_tagging');
-        $optionable->setDefaultOption('entity_managers.default.conn_params.user', 'poc_test');
-        $optionable->setDefaultOption('entity_managers.default.conn_params.password', 'poc_test');
-        $optionable->setDefaultOption('entity_managers.default.conn_params.host', 'localhost');
-        $optionable->setDefaultOption('entity_managers.default.conn_params.driver', 'pdo_mysql');
-        $optionable->setDefaultOption('entity_managers.default.conn_params',
-            function ($c)
-            {
-                $connParams = array(
-                    'dbname' => $c['entity_managers.default.conn_params.dbname'],
-                    'user' => $c['entity_managers.default.conn_params.user'],
-                    'password' => $c['entity_managers.default.conn_params.password'],
-                    'host' => $c['entity_managers.default.conn_params.host'],
-                    'driver' => $c['entity_managers.default.conn_params.driver']
-                );
-
-                return $connParams;
-            }
-        );
-        
-        
-        
-
-        $optionable->setDefaultOption('entity_managers.default.cache.class', '\Doctrine\Common\Cache\ArrayCache');
-        $optionable->setDefaultOption('entity_managers.default.cache',
-            function ($c)
-                    {
-                        $class = $c['entity_managers.default.cache.class'];
-                        $cache = new $class();
-
-                        return $cache;
-                    }
-         );
-
-        
-        $cache = $optionable['entity_managers.default.cache'];
-        
-        $optionable->setDefaultOption('entity_managers.default.config.class', '\Doctrine\ORM\Configuration');
-        $optionable->setDefaultOption('entity_managers.default.config.proxy_dir_path', '/tmp');
-        $optionable->setDefaultOption('entity_managers.default.config.proxy_namespace', 'Proxies');
-        $optionable->setDefaultOption('entity_managers.default.config.auto_generate_proxy_classes', true);
-        $optionable->setDefaultOption('entity_managers.default.config.default_annotation_driver', 'Configuration');
-        $optionable->setDefaultOption('entity_managers.default.config.cache', $cache);
-        $optionable->setDefaultOption('entity_managers.default.config', $optionable->share(
-            function ($c)
-            {
-                $class = $c['entity_managers.default.config.class'];
-                $config = new $class();
-
-                // $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
-
-                $proxyDirPath = $c['entity_managers.default.config.proxy_dir_path'];
-                $config->setProxyDir($proxyDirPath);
-                $config->setProxyNamespace($c['entity_managers.default.config.proxy_namespace']);
-                $config->setAutoGenerateProxyClasses(true);
-
-                $driverImpl = $config->newDefaultAnnotationDriver($c['entity_managers.default.config.default_annotation_driver']);
-                $config->setMetadataDriverImpl($driverImpl);
-
-                $cache = $c['entity_managers.default.config.cache'];
-                $config->setMetadataCacheImpl($cache);
-                $config->setQueryCacheImpl($cache);
-
-                return $config;
-            }
-        ));
-
-        $optionable->setDefaultOption('entity_managers.default',
-            function ($c)
-            {
-                $connParams = $c['entity_managers.default.conn_params'];
-                $config     = $c['entity_managers.default.config'];
-
-                $entityManager = \Doctrine\ORM\EntityManager::create($connParams, $config);
-
-                return $entityManager;
-            }
-        );
-    }    
-    
-    
     protected function splitTags ($tags)
     {
         return explode(',', $tags);

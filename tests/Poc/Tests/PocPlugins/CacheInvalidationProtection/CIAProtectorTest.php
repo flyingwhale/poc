@@ -44,7 +44,7 @@ class CIAProtectorTest extends PocTestCore
 
         $poc->start();
 
-        $this->pocBurner($poc, $outputHandler, rand());
+        $this->pocBurner($poc, rand());
 
         $this->assertequals($cia->getRefreshPage(),$this->getOutput());
 

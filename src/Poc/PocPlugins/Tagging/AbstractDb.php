@@ -67,29 +67,20 @@ abstract class AbstractDb extends Plugin
 
     public function addCacheInvalidationTags ($condition, $tags)
     {
-        echo'addCacheInvalidationTags';
         if ($condition) {
-             echo'addCacheInvalidationTags';var_dump($tags);
              $this->cacheInvalidationTags[] = $tags;
         }
     }
 
     public function addCacheAddTags ($condition, $tags)
     {
-        echo'addCacheInvalidationTags addCacheAddTags';
         if ($condition) {
-            echo'addCacheAddTags';var_dump($tags);
-
             $this->cacheAddTags[] = $tags;
         }
     }
 
     public function cacheAddTags ()
     {
-        echo "\n\n".'add:';
-        var_dump($this->cacheAddTags);
-        echo "\n\n";
-
         foreach ($this->cacheAddTags as $tags) {
             $this->addCacheToTags($tags);
         }

@@ -42,8 +42,8 @@ class MongoDBCache extends Cache
     {
         parent::__construct($options);
 
-        $this->dbName = $this->optionable->getOption('db_name');
-        $this->collectionName = $this->optionable->getOption('collection_name');
+        $this->dbName = $this->optionable['db_name'];
+        $this->collectionName = $this->optionable['collection_name'];
         $this->isNotConnected = 0;
 
         try {

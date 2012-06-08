@@ -44,9 +44,9 @@ class FileCache extends Cache
     public function __construct ($options = array())
     {
         parent::__construct($options);
-        $this->file = $this->optionable->getOption(self::PARAM_DIRECTORY) . self::KEY_PREFIX;
-        $this->fileTtl = $this->optionable->getOption(self::PARAM_DIRECTORY) . self::TTL_PREFIX;
-        $this->directory = $this->optionable->getOption(self::PARAM_DIRECTORY);
+        $this->file = $this->optionable[self::PARAM_DIRECTORY] . self::KEY_PREFIX;
+        $this->fileTtl = $this->optionable[self::PARAM_DIRECTORY] . self::TTL_PREFIX;
+        $this->directory = $this->optionable[self::PARAM_DIRECTORY];
         $this->throwDbException();
     }
 

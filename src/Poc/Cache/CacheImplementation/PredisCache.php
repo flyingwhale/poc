@@ -41,7 +41,7 @@ class PredisCache extends Cache
             throw new \Exception(sprintf("%s class not exists", $className));
         }
 
-        $this->redis = new $className($this->optionable->getOption('servers'));
+        $this->redis = new $className($this->optionable['servers']);
         $this->isNotConnected = 1;
     }
 

@@ -107,7 +107,7 @@ class CIAProtector extends Plugin
     {
         $this->optionable = new Optionable($options);
         // $this->clientUnique =
-        // $this->optionable->getOption(self::PARAM_CLIENT_UNIQUE);
+        // $this->optionable[self::PARAM_CLIENT_UNIQUE];
     }
 
     public function setSentinel ($cnt)

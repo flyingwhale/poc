@@ -321,26 +321,25 @@ class Poc implements PocParams
         $this->optionable = new Optionable($options);
         $this->setupDefaults();
         $this->pocDispatcher =
-                     $this->optionable->getOption(self::PARAM_EVENT_DISPATCHER);
+                     $this->optionable[self::PARAM_EVENT_DISPATCHER];
         $this->pocDispatcher->dispatch
                      (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
-        $this->cache = $this->optionable->getOption(self::PARAM_CACHE);
-        $this->outputHandler = $this->optionable->getOption(
-                self::PARAM_OUTPUTHANDLER);
+        $this->cache = $this->optionable[self::PARAM_CACHE];
+        $this->outputHandler = $this->optionable[
+                self::PARAM_OUTPUTHANDLER];
         $this->outputHandler->setPoc($this);
-        $this->headerManipulator = $this->optionable->getOption(
-                self::PARAM_HEADERMANIPULATOR);
+        $this->headerManipulator = $this->optionable[
+                self::PARAM_HEADERMANIPULATOR];
         $this->headerManipulator->setOutputHandler($this->outputHandler);
         $this->headerManipulator->setPoc($this);
 
-        $this->outputFilter =
-                         $this->optionable->getOption(self::PARAM_OUTPUTFILTER);
+        $this->outputFilter = $this->optionable[self::PARAM_OUTPUTFILTER];
 
-        $this->setDebug($this->optionable->getOption('debug'));
+        $this->setDebug($this->optionable['debug']);
         
-        $this->filter = $this->optionable->getOption(self::PARAM_FILTER);
+        $this->filter = $this->optionable[self::PARAM_FILTER];
         
-        $this->hasher = $this->optionable->getOption(self::PARAM_HASHER);
+        $this->hasher = $this->optionable[self::PARAM_HASHER];
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                 new BaseEvent($this));

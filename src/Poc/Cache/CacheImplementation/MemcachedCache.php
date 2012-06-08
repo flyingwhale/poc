@@ -49,8 +49,8 @@ class MemcachedCache extends Cache
         $this->memcache = new $className();
 
         $this->isConnected = $this->memcache->connect(
-                $this->optionable->getOption('server'),
-                $this->optionable->getOption('port'));
+                $this->optionable['server'],
+                $this->optionable['port']);
         $this->throwDbException();
     }
 

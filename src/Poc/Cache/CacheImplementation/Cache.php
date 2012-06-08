@@ -49,7 +49,7 @@ abstract class Cache implements CacheInterface, CacheParams
     {
         $this->optionable =  new Optionable($options);
         $this->setupDefaults();
-        $this->ttl = $this->optionable->getOption(CacheParams::PARAM_TTL);
+        $this->ttl = $this->optionable[CacheParams::PARAM_TTL];
 
     }
 

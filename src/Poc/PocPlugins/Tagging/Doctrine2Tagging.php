@@ -29,8 +29,7 @@ class Doctrine2Tagging extends AbstractDb
     {
         $this->optionable = new Optionable($options);
         $this->setupDefaults($this->optionable);
-
-        $this->entityManager = $this->optionable->getOption('entity_managers.default');
+        $this->entityManager = $this->optionable['entity_managers.default'];
         parent::__construct();
     }
 
@@ -178,11 +177,11 @@ class Doctrine2Tagging extends AbstractDb
             function ($c)
             {
                 $connParams = array(
-                    'dbname' => $c->getOption('entity_managers.default.conn_params.dbname'),
-                    'user' => $c->getOption('entity_managers.default.conn_params.user'),
-                    'password' => $c->getOption('entity_managers.default.conn_params.password'),
-                    'host' => $c->getOption('entity_managers.default.conn_params.host'),
-                    'driver' => $c->getOption('entity_managers.default.conn_params.driver')
+                    'dbname' => $c['entity_managers.default.conn_params.dbname'],
+                    'user' => $c['entity_managers.default.conn_params.user'],
+                    'password' => $c['entity_managers.default.conn_params.password'],
+                    'host' => $c['entity_managers.default.conn_params.host'],
+                    'driver' => $c['entity_managers.default.conn_params.driver']
                 );
 
                 return $connParams;
@@ -196,7 +195,7 @@ class Doctrine2Tagging extends AbstractDb
         $optionable->setDefaultOption('entity_managers.default.cache',
             function ($c)
                     {
-                        $class = $c->getOption('entity_managers.default.cache.class');
+                        $class = $c['entity_managers.default.cache.class'];
                         $cache = new $class();
 
                         return $cache;
@@ -204,7 +203,7 @@ class Doctrine2Tagging extends AbstractDb
          );
 
         
-        $cache = $optionable->getOption('entity_managers.default.cache');
+        $cache = $optionable['entity_managers.default.cache'];
         
         $optionable->setDefaultOption('entity_managers.default.config.class', '\Doctrine\ORM\Configuration');
         $optionable->setDefaultOption('entity_managers.default.config.proxy_dir_path', '/tmp');
@@ -215,20 +214,20 @@ class Doctrine2Tagging extends AbstractDb
         $optionable->setDefaultOption('entity_managers.default.config', $optionable->share(
             function ($c)
             {
-                $class = $c->getOption('entity_managers.default.config.class');
+                $class = $c['entity_managers.default.config.class'];
                 $config = new $class();
 
                 // $config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
 
-                $proxyDirPath = $c->getOption('entity_managers.default.config.proxy_dir_path');
+                $proxyDirPath = $c['entity_managers.default.config.proxy_dir_path'];
                 $config->setProxyDir($proxyDirPath);
-                $config->setProxyNamespace($c->getOption('entity_managers.default.config.proxy_namespace'));
+                $config->setProxyNamespace($c['entity_managers.default.config.proxy_namespace']);
                 $config->setAutoGenerateProxyClasses(true);
 
-                $driverImpl = $config->newDefaultAnnotationDriver($c->getOption('entity_managers.default.config.default_annotation_driver'));
+                $driverImpl = $config->newDefaultAnnotationDriver($c['entity_managers.default.config.default_annotation_driver']);
                 $config->setMetadataDriverImpl($driverImpl);
 
-                $cache = $c->getOption('entity_managers.default.config.cache');
+                $cache = $c['entity_managers.default.config.cache'];
                 $config->setMetadataCacheImpl($cache);
                 $config->setQueryCacheImpl($cache);
 
@@ -239,8 +238,8 @@ class Doctrine2Tagging extends AbstractDb
         $optionable->setDefaultOption('entity_managers.default',
             function ($c)
             {
-                $connParams = $c->getOption('entity_managers.default.conn_params');
-                $config     = $c->getOption('entity_managers.default.config');
+                $connParams = $c['entity_managers.default.conn_params'];
+                $config     = $c['entity_managers.default.config'];
 
                 $entityManager = \Doctrine\ORM\EntityManager::create($connParams, $config);
 

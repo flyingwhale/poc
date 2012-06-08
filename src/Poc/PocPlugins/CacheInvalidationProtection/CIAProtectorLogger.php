@@ -46,7 +46,7 @@ class CIAProtectorLogger implements CIAProtectorEventNames
         $this->optionable = new Optionable($options, $this);
         $this->setupDefaults();
 
-        $this->poc = $this->optionable->getOption(PocLogsParams::PARAM_POC);
+        $this->poc = $this->optionable[PocLogsParams::PARAM_POC];
         $this->logger = $this->poc->getLogger();
 
         $this->pocDispatcher = $this->poc->getPocDispatcher();

@@ -53,7 +53,7 @@ class TestOutput extends Output
     {
         $this->optionable = new Optionable($options, $this);
         $this->setupDefaults();
-        $this->actHeader = $this->optionable->getOption(self::PARAM_HEADER);
+        $this->actHeader = $this->optionable[self::PARAM_HEADER];
     }
 
     public function getLevel ()

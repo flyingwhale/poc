@@ -25,20 +25,20 @@ class Cache
     protected $id;
 
     /**
-     * @OneToMany(targetEntity="CacheTag", mappedBy="cache", orphanRemoval=true,
-     * cascade={"persist"})
+     * @Column(type="string")
      */
-    protected $cacheTags;
+    protected $hash;
 
     /**
      * @Column(type="integer")
      */
     protected $expires;
-
+    
     /**
-     * @Column(type="string")
+     * @OneToMany(targetEntity="CacheTag", mappedBy="cache", orphanRemoval=true,
+     * cascade={"persist"})
      */
-    protected $hash;
+    protected $cacheTags;
 
     public function __construct ()
     {

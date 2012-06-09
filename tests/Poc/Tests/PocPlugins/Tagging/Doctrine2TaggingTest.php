@@ -13,14 +13,60 @@
 namespace Poc\Tests\Cache\Tagging;
 
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
+use Poc\Optionable\DoctrineOptionable;
 
 class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
 
     protected $fixtureDirPath;
 
-    private $pdo;
+    protected static $pdo;
 
+    protected static $doctrineOptions;
+    
+    public static function setUpBeforeClass()
+    {
+        
+        $options = array(
+            'orm.entity_managers.default.connection'    => 'mysql',
+            'dbal.connections.mysql.dbname' => $GLOBALS['MYSQL_DBNAME'],
+            'dbal.connections.mysql.user' => $GLOBALS['MYSQL_USER'],
+            'dbal.connections.mysql.password' => $GLOBALS['MYSQL_PASS'],
+            'dbal.connections.mysql.host' => 'localhost',
+            'dbal.connections.mysql.driver' => 'pdo_mysql'
+        );
+        self::$doctrineOptions = $options;
+        
+        $opt = new DoctrineOptionable($options);
+        $em = $opt['orm.entity_managers.default'];
+        
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = array(
+        $em->getClassMetadata('Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache'),
+        $em->getClassMetadata('Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\CacheTag'),
+        $em->getClassMetadata('Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Tag')
+
+        );
+        $tool->dropDatabase();
+        $tool->createSchema($classes);
+        $conn = $em->getConnection();
+        $sm = $conn->getSchemaManager();
+        $fks = $sm->listTableForeignKeys('tags_has_caches');
+        foreach($fks as $fk)
+        {
+            $sql = "ALTER TABLE `tags_has_caches` DROP FOREIGN KEY `".$fk->getName()."`";
+            $stmt = $conn->query($sql);
+            
+        }
+        
+        self::$pdo = $conn->getWrappedConnection();
+    }    
+    
+    public static function tearDownAfterClass()
+    {
+        self::$pdo = null;
+    }
+    
     public function setUp ()
     {
         $this->fixtureDirPath = __DIR__ . '/fixture/tagging';
@@ -32,12 +78,8 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection ()
     {
-        $this->pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
-        $query = 'USE ' . $GLOBALS['MYSQL_DBNAME'];
-
-        $this->pdo->exec($query);
-
-        return $this->createDefaultDBConnection($this->pdo);
+        
+        return $this->createDefaultDBConnection(self::$pdo);
     }
 
     public function getDataSet ()
@@ -47,15 +89,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 
     public function getDoctrine2Tagging()
     {
-        $options = array(
-            'entity_managers.default.conn_params.dbname' => $GLOBALS['MYSQL_DBNAME'],
-            'entity_managers.default.conn_params.user' => $GLOBALS['MYSQL_USER'],
-            'entity_managers.default.conn_params.password' => $GLOBALS['MYSQL_PASS'],
-            'entity_managers.default.conn_params.host' => 'localhost',
-            'entity_managers.default.conn_params.driver' => 'pdo_mysql'
-
-            
-        );
+        $options = self::$doctrineOptions;
         $tagging = new Doctrine2Tagging($options);
         $tagging->init(new \Poc\Poc());
 
@@ -77,7 +111,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
                 array('caches', 'tags_has_caches', 'tags'));
 
         $query = 'UPDATE caches SET expires = 1234';
-        $this->pdo->exec($query);
+        self::$pdo->exec($query);
 
         $exepctedDataSet = $this->createXMLDataSet(
                 $expectedDatasetPath . '-01.xml');
@@ -86,7 +120,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
                 sleep(6);
         $tagging->addCacheToTags($tagsString);
         $query = 'UPDATE caches SET expires = 1234';
-        $this->pdo->exec($query);
+        self::$pdo->exec($query);
 
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));

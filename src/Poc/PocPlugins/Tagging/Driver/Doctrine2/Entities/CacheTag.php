@@ -21,15 +21,15 @@ class CacheTag
 
     /**
      * @Id
-     * @ManyToOne(targetEntity="Cache", inversedBy="cacheTags")
-     */
-    protected $cache;
-
-    /**
-     * @Id
      * @ManyToOne(targetEntity="Tag", inversedBy="tagCaches")
      */
     protected $tag;
+
+    /**
+     * @Id
+     * @ManyToOne(targetEntity="Cache", inversedBy="cacheTags")
+     */
+    protected $cache;
 
     /**
      * Get cache

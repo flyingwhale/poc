@@ -17,7 +17,7 @@ use Doctrine\ORM\Configuration;
 use Poc\DatabaseManagement\Doctrine\Common;
 use Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache;
 use Poc\PocPlugins\Tagging\AbstractDb;
-use Poc\Optionable\Doctrine\EntityManagerOptionable;
+use Poc\Optionable\DoctrineOptionable;
 
 class Doctrine2Tagging extends AbstractDb
 {
@@ -27,8 +27,8 @@ class Doctrine2Tagging extends AbstractDb
 
     public function __construct ($options = array())
     {
-        $this->optionable = new EntityManagerOptionable($options);
-        $this->entityManager = $this->optionable['entity_managers.default'];
+        $this->optionable = new DoctrineOptionable($options);
+        $this->entityManager = $this->optionable['orm.entity_managers.default'];
         parent::__construct();
     }
 

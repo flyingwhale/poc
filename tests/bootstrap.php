@@ -20,8 +20,3 @@ $namespaces = array('Poc\\Tests' => __DIR__);
 $loader->registerNamespaces($namespaces);
 
 $loader->register();
-
-$pdo = new \PDO($GLOBALS['MYSQL_DSN'], $GLOBALS['MYSQL_USER'], $GLOBALS['MYSQL_PASS']);
-$dbInit = new \Poc\PocPlugins\Tagging\DatabaseInicialization\MysqlDatabaseInicialization($pdo, $GLOBALS['MYSQL_DBNAME']);
-$dbInit->create();
-

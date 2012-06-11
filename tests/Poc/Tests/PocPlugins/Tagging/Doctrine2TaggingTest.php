@@ -43,15 +43,18 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         $tool->dropDatabase();
         $tool->createSchema($classes);
         $conn = $em->getConnection();
-        $sm = $conn->getSchemaManager();
-        $fks = $sm->listTableForeignKeys('tags_has_caches');
-        foreach($fks as $fk)
-        {
-            $sql = "ALTER TABLE `tags_has_caches` DROP FOREIGN KEY `".$fk->getName()."`";
-            $stmt = $conn->query($sql);
-            
-        }
         
+        if ($conn->getDriver()->getName() == 'pdo_mysql')
+        {
+            $sm = $conn->getSchemaManager();
+            $fks = $sm->listTableForeignKeys('tags_has_caches');
+            foreach($fks as $fk)
+            {
+                $sql = "ALTER TABLE `tags_has_caches` DROP FOREIGN KEY `".$fk->getName()."`";
+                $stmt = $conn->query($sql);
+
+            }
+        }
         self::$pdo = $conn->getWrappedConnection();
     }    
     

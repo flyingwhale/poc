@@ -16,10 +16,16 @@
     <!--
     Please change this settings!
     -->
-    <var name="MYSQL_DSN" value="mysql:host=localhost" />
-    <var name="MYSQL_USER" value="username" />
-    <var name="MYSQL_PASS" value="password" />
-    <var name="MYSQL_DBNAME" value="poc_tagging" />
+    
+    <var name="CONNECTION_DEFAULT" value="mysql" />
+    
+    <var name="CONNECTION_MYSQL_HOST" value="localhost" />
+    <var name="CONNECTION_MYSQL_USER" value="username" />
+    <var name="CONNECTION_MYSQL_PASS" value="password" />
+    <var name="CONNECTION_MYSQL_DBNAME" value="db_name" />
+    
+    <var name="CONNECTION_SQLITE_PATH" value="/tmp/poc.sq3" />
+    
     
     <var name="TTL" value="3" />
     

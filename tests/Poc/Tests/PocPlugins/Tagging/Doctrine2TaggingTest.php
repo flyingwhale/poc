@@ -27,14 +27,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     public static function setUpBeforeClass()
     {
         
-        $options = array(
-            'orm.entity_managers.default.connection'    => 'mysql',
-            'dbal.connections.mysql.dbname' => $GLOBALS['MYSQL_DBNAME'],
-            'dbal.connections.mysql.user' => $GLOBALS['MYSQL_USER'],
-            'dbal.connections.mysql.password' => $GLOBALS['MYSQL_PASS'],
-            'dbal.connections.mysql.host' => 'localhost',
-            'dbal.connections.mysql.driver' => 'pdo_mysql'
-        );
+        $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
         self::$doctrineOptions = $options;
         
         $opt = new DoctrineOptionable($options);

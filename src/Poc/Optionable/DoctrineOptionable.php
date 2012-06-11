@@ -26,19 +26,11 @@ class DoctrineOptionable extends Optionable
             }
         );
 
-        
-        $this->setDefaultOption('entity_managers.default.conn_params.dbname', 'poc_tagging');
-        $this->setDefaultOption('entity_managers.default.conn_params.user', 'poc_test');
-        $this->setDefaultOption('entity_managers.default.conn_params.password', 'password');
-        $this->setDefaultOption('entity_managers.default.conn_params.host', 'localhost');
-        $this->setDefaultOption('entity_managers.default.conn_params.driver', 'pdo_mysql');
-        
-        
         $this->setDefaultOption('dbal.connections.mysql.dbname', 'poc_tagging');
         $this->setDefaultOption('dbal.connections.mysql.user', 'poc_test');
         $this->setDefaultOption('dbal.connections.mysql.password', 'password');
         $this->setDefaultOption('dbal.connections.mysql.host', 'localhost');
-        $this->setDefaultOption('dbal.connections.mysql.driver', 'pdo_sqlite');
+        $this->setDefaultOption('dbal.connections.mysql.driver', 'pdo_mysql');
         $this->setDefaultOption('dbal.connections.mysql',
             function ($c)
             {
@@ -46,8 +38,8 @@ class DoctrineOptionable extends Optionable
                     'dbname' => $c['dbal.connections.mysql.dbname'],
                     'user' => $c['dbal.connections.mysql.user'],
                     'password' => $c['dbal.connections.mysql.password'],
-                    'host' => $c['entity_managers.default.conn_params.host'],
-                    'driver' => $c['entity_managers.default.conn_params.driver']
+                    'host' => $c['dbal.connections.mysql.host'],
+                    'driver' => $c['dbal.connections.mysql.driver']
                 );
 
                 return $connParams;

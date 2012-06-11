@@ -41,24 +41,8 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
             $oh1 = new TestOutput();
             
-             $options = array(
-            'entity_managers.default.conn_params.dbname' => $GLOBALS['MYSQL_DBNAME'],
-            'entity_managers.default.conn_params.user' => $GLOBALS['MYSQL_USER'],
-            'entity_managers.default.conn_params.password' => $GLOBALS['MYSQL_PASS'],
-            'entity_managers.default.conn_params.host' => 'localhost',
-            'entity_managers.default.conn_params.driver' => 'pdo_mysql'
-            );
-             
-        $options = array(
-            'orm.entity_managers.default.connection'    => 'mysql',
-            'dbal.connections.mysql.dbname' => $GLOBALS['MYSQL_DBNAME'],
-            'dbal.connections.mysql.user' => $GLOBALS['MYSQL_USER'],
-            'dbal.connections.mysql.password' => $GLOBALS['MYSQL_PASS'],
-            'dbal.connections.mysql.host' => 'localhost',
-            'dbal.connections.mysql.driver' => 'pdo_mysql'
-        );
-             
-            
+            $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
+
             $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, 
                                   PocParams::PARAM_OUTPUTHANDLER => $oh1,
                                   PocParams::PARAM_HASHER => $hasher1));

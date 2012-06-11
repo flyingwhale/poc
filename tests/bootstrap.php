@@ -20,3 +20,15 @@ $namespaces = array('Poc\\Tests' => __DIR__);
 $loader->registerNamespaces($namespaces);
 
 $loader->register();
+
+$GLOBALS['DOCTRINE_OPTIONABLE'] = array(
+    'orm.entity_managers.default.connection'    => $GLOBALS['CONNECTION_DEFAULT'],
+    'dbal.connections.mysql.driver' => 'pdo_mysql',
+    'dbal.connections.mysql.host' => $GLOBALS['CONNECTION_MYSQL_HOST'],
+    'dbal.connections.mysql.dbname' => $GLOBALS['CONNECTION_MYSQL_DBNAME'],
+    'dbal.connections.mysql.user' => $GLOBALS['CONNECTION_MYSQL_USER'],
+    'dbal.connections.mysql.password' => $GLOBALS['CONNECTION_MYSQL_PASS'],
+    
+    'dbal.connections.sqlite.path' => $GLOBALS['CONNECTION_SQLITE_PATH'],
+    'dbal.connections.sqlite.driver' => 'pdo_sqlite'
+);

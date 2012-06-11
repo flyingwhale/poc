@@ -10,29 +10,42 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Tests\Cache\Tagging;
+namespace Poc\Tests\PocPlugins\Tagging;
 
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 use Poc\Optionable\DoctrineOptionable;
 
-class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
+abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
 
     protected $fixtureDirPath;
 
     protected static $pdo;
-
+    
     protected static $doctrineOptions;
     
     public static function setUpBeforeClass()
     {
+        self::$doctrineOptions = static::getDoctrineOptionableOptions();
         
+        $doctrineOptionAble = new DoctrineOptionable(self::$doctrineOptions);
+        $em = $doctrineOptionAble['orm.entity_managers.default'];
+        
+        $conn = $em->getConnection();
+        
+        static::cleanDatabase($em);
+        self::$pdo = $conn->getWrappedConnection();
+    }   
+
+    public static function getDoctrineOptionableOptions()
+    {
         $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
-        self::$doctrineOptions = $options;
         
-        $opt = new DoctrineOptionable($options);
-        $em = $opt['orm.entity_managers.default'];
-        
+        return $options;
+    }
+    
+    public function cleanDatabase($em)
+    {
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $classes = array(
         $em->getClassMetadata('Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache'),
@@ -42,21 +55,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
         );
         $tool->dropDatabase();
         $tool->createSchema($classes);
-        $conn = $em->getConnection();
-        
-        if ($conn->getDriver()->getName() == 'pdo_mysql')
-        {
-            $sm = $conn->getSchemaManager();
-            $fks = $sm->listTableForeignKeys('tags_has_caches');
-            foreach($fks as $fk)
-            {
-                $sql = "ALTER TABLE `tags_has_caches` DROP FOREIGN KEY `".$fk->getName()."`";
-                $stmt = $conn->query($sql);
-
-            }
-        }
-        self::$pdo = $conn->getWrappedConnection();
-    }    
+    }
     
     public static function tearDownAfterClass()
     {
@@ -97,12 +96,11 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function testAddCacheToTags ($tagsString, $expectedDatasetFilename)
     {
-        $expectedDatasetPath = $this->fixtureDirPath . '/addCacheToTags/' . $expectedDatasetFilename;
+        $expectedDatasetPath = $this->fixtureDirPath. '/addCacheToTags/' . $expectedDatasetFilename;
 
         $tagging = $this->getDoctrine2Tagging();
 
         $tagging->addCacheToTags($tagsString);
-
         $dataSet = $this->getConnection()->createDataSet(
                 array('caches', 'tags_has_caches', 'tags'));
 
@@ -113,8 +111,9 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
                 $expectedDatasetPath . '-01.xml');
         $this->assertDataSetsEqual($exepctedDataSet, $dataSet);
 
-                sleep(6);
+        sleep($GLOBALS['TTL']+1);
         $tagging->addCacheToTags($tagsString);
+
         $query = 'UPDATE caches SET expires = 1234';
         self::$pdo->exec($query);
 
@@ -130,11 +129,10 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * @dataProvider flushOutdatedProvider
      */
-    public function testFlushOutdated ($initDatasetFilename,
-            $expectedDatasetFilename)
+    public function testFlushOutdated ($initDatasetFilename, $expectedDatasetFilename)
     {
-        $initDatasetPath = $this->fixtureDirPath . '/flushOutdated/' . $initDatasetFilename;
-        $expectedDatasetPath = $this->fixtureDirPath . '/flushOutdated/' . $expectedDatasetFilename;
+        $initDatasetPath = $this->fixtureDirPath.'/flushOutdated/' . $initDatasetFilename;
+        $expectedDatasetPath = $this->fixtureDirPath.'/flushOutdated/' . $expectedDatasetFilename;
 
         $initDataSet = $this->createXMLDataSet($initDatasetPath);
         $this->getDatabaseTester()->setDataSet($initDataSet);
@@ -158,8 +156,7 @@ class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * @dataProvider tagInvalidateProvider
      */
-    public function testTagInvalidate ($initDatasetFilename, $invalidateTag,
-            $expectedDatasetFilename)
+    public function testTagInvalidate ($initDatasetFilename, $invalidateTag, $expectedDatasetFilename)
     {
         /*
          * This function use mock object to emulate cacheSpecificClearItem A

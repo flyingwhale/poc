@@ -42,9 +42,12 @@ class Doctrine2Tagging extends AbstractDb
 
         $cache = $cacheRepository->findOneBy(array('hash' => $this->hash));
 
+        
         if ($cache) {
+            
             // cache exists
             if ($cache->getExpires() > time()) {
+                
                 // cache is not expired it will be renewed
                 $cache->setExpires($expires);
                 $entityManager->persist($cache);
@@ -54,6 +57,7 @@ class Doctrine2Tagging extends AbstractDb
                 // $cache->getTags()->clear();
                 $entityManager->remove($cache);
                 $entityManager->flush();
+
                 $cache = null;
             }
         }
@@ -130,6 +134,7 @@ class Doctrine2Tagging extends AbstractDb
 
     protected function deleteOrphans ()
     {
+        return;
         $cacheRepository = $this->getCacheRepository();
         $tagRepository = $this->getTagRepository();
         $cacheTagRepository = $this->getCacheTagRepository();

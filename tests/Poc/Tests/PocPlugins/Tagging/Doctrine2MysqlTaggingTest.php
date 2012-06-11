@@ -14,28 +14,28 @@ namespace Poc\Tests\PocPlugins\Tagging;
 
 class Doctrine2MysqlTaggingTest extends Doctrine2TaggingTest
 {
-    
+
     public static function getDoctrineOptionableOptions()
     {
         $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
         $options['orm.entity_managers.default.connection'] = 'mysql';
+
         return $options;
     }
-    
+
     public function cleanDatabase($em)
     {
         parent::cleanDatabase($em);
         $conn = $em->getConnection();
-        
+
         $sm = $conn->getSchemaManager();
         $fks = $sm->listTableForeignKeys('tags_has_caches');
-        foreach($fks as $fk)
-        {
+        foreach ($fks as $fk) {
             $sql = "ALTER TABLE `tags_has_caches` DROP FOREIGN KEY `".$fk->getName()."`";
             $stmt = $conn->query($sql);
 
         }
-        
-    }    
+
+    }
 }
 

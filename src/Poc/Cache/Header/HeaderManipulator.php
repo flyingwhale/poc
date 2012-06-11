@@ -38,10 +38,9 @@ class HeaderManipulator
 
     public $outputHeader;
 
-
     /**
      *
-     * @var \Poc\Poc 
+     * @var \Poc\Poc
      */
     private $poc;
 

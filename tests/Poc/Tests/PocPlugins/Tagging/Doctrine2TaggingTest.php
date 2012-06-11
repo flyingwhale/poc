@@ -21,29 +21,29 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
     protected $fixtureDirPath;
 
     protected static $pdo;
-    
+
     protected static $doctrineOptions;
-    
+
     public static function setUpBeforeClass()
     {
         self::$doctrineOptions = static::getDoctrineOptionableOptions();
-        
+
         $doctrineOptionAble = new DoctrineOptionable(self::$doctrineOptions);
         $em = $doctrineOptionAble['orm.entity_managers.default'];
-        
+
         $conn = $em->getConnection();
-        
+
         static::cleanDatabase($em);
         self::$pdo = $conn->getWrappedConnection();
-    }   
+    }
 
     public static function getDoctrineOptionableOptions()
     {
         $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
-        
+
         return $options;
     }
-    
+
     public function cleanDatabase($em)
     {
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
@@ -56,12 +56,12 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
         $tool->dropDatabase();
         $tool->createSchema($classes);
     }
-    
+
     public static function tearDownAfterClass()
     {
         self::$pdo = null;
     }
-    
+
     public function setUp ()
     {
         $this->fixtureDirPath = __DIR__ . '/fixture/tagging';
@@ -73,7 +73,7 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
      */
     public function getConnection ()
     {
-        
+
         return $this->createDefaultDBConnection(self::$pdo);
     }
 

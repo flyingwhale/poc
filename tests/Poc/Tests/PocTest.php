@@ -61,11 +61,11 @@ class PocTest extends PocTestCore
 
             $hasher = new Hasher();
             $hasher->addDistinguishVariable($cacheHandlerName.rand());
-                        
+
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher));
-            
+
             $this->pocBurner($poc1, self::TESTSTRING1);
             $output1 = $this->getOutput();
 
@@ -82,7 +82,7 @@ class PocTest extends PocTestCore
                                   Poc::PARAM_HASHER => $hasher ));
             $this->pocBurner($poc1, self::TESTSTRING2);
             $output2 = $this->getOutput();
-            
+
             sleep(self::$TTL + 1);
 
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
@@ -112,7 +112,7 @@ class PocTest extends PocTestCore
         $cacheHandler = new FileCache(
                 array(CacheParams::PARAM_TTL => PocTest::BIGTTL,
                       ));
-        
+
         $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->pocBurner($poc1, rand());
@@ -130,7 +130,7 @@ class PocTest extends PocTestCore
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->pocBurner($poc4, self::TESTSTRING2);
         $output2 = $this->getOutput();
-        
+
         $this->assertTrue(! empty($output1));
         $this->assertTrue($output1 != $output2);
     }
@@ -157,8 +157,6 @@ class PocTest extends PocTestCore
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->pocBurner($poc1, self::NEEDLE);
         $output1 = $this->getOutput();
-
-        
 
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("b".rand());

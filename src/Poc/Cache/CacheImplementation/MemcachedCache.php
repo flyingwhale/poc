@@ -36,7 +36,7 @@ class MemcachedCache extends Cache
         $this->optionable->setDefaultOption('server', 'localhost');
         $this->optionable->setDefaultOption('port', '11211');
     }
-    
+
     public function __construct ($options = array())
     {
         parent::__construct($options);

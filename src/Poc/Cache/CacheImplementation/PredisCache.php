@@ -31,7 +31,7 @@ class PredisCache extends Cache
         parent::setupDefaults();
         $this->optionable->setDefaultOption('servers', array('servers' => array(array('host' => 'localhost', 'port' => '6379'))));
     }
-    
+
     public function __construct ($options = array())
     {
         parent::__construct($options);

@@ -28,7 +28,7 @@ $GLOBALS['DOCTRINE_OPTIONABLE'] = array(
     'dbal.connections.mysql.dbname' => $GLOBALS['CONNECTION_MYSQL_DBNAME'],
     'dbal.connections.mysql.user' => $GLOBALS['CONNECTION_MYSQL_USER'],
     'dbal.connections.mysql.password' => $GLOBALS['CONNECTION_MYSQL_PASS'],
-    
+
     'dbal.connections.sqlite.path' => $GLOBALS['CONNECTION_SQLITE_PATH'],
     'dbal.connections.sqlite.driver' => 'pdo_sqlite'
 );

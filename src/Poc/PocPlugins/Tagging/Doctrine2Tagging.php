@@ -13,8 +13,6 @@
 namespace Poc\PocPlugins\Tagging;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Configuration;
-use Poc\DatabaseManagement\Doctrine\Common;
 use Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache;
 use Poc\PocPlugins\Tagging\AbstractDb;
 use Poc\Optionable\DoctrineOptionable;
@@ -42,12 +40,11 @@ class Doctrine2Tagging extends AbstractDb
 
         $cache = $cacheRepository->findOneBy(array('hash' => $this->hash));
 
-        
         if ($cache) {
-            
+
             // cache exists
             if ($cache->getExpires() > time()) {
-                
+
                 // cache is not expired it will be renewed
                 $cache->setExpires($expires);
                 $entityManager->persist($cache);

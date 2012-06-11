@@ -27,8 +27,8 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 
     public function testTagging ()
     {
-  
-        $getPoc = function ($key, $addCacheAddTags='', 
+
+        $getPoc = function ($key, $addCacheAddTags='',
                                                  $addCacheInvalidationTags='') {
             $getCache = function  () {
                 return new FileCache(
@@ -40,33 +40,34 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
             $cache1->clearAll();
 
             $oh1 = new TestOutput();
-            
+
             $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
 
-            $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1, 
+            $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1,
                                   PocParams::PARAM_OUTPUTHANDLER => $oh1,
                                   PocParams::PARAM_HASHER => $hasher1));
             $tagger1 = new Doctrine2Tagging($options);
-            
+
             $poc1->addPlugin($tagger1);
-            if($addCacheAddTags) {
+            if ($addCacheAddTags) {
                 $tagger1->addCacheAddTags(true, $addCacheAddTags);
             }
-            if($addCacheInvalidationTags) {
+            if ($addCacheInvalidationTags) {
                 $tagger1->addCacheInvalidationTags(true, $addCacheInvalidationTags);
             }
-            $ret['poc'] = $poc1; 
-            $ret['tagger'] = $tagger1; 
+            $ret['poc'] = $poc1;
+            $ret['tagger'] = $tagger1;
+
             return $ret;
         };
         $poc1 = $getPoc('distn1','user,customer,inventory,a,b,c,d,e,f,b,h,i,j,k,l,m,n,o,p');
         $poc11 = $getPoc('distn2','user,customer,inventory');
-        
+
         $poc2 = $getPoc('distn1','inventory','p');
         $poc3 = $getPoc('distn4','inventory,customer');
-        
+
         $poc4 = $getPoc('distn4','inventory,customer','p');
-        
+
         $this->pocBurner($poc1['poc'], "11");;
         $o1 = $this->getOutput();
         $poc1['tagger']->addCacheInvalidationTags(true, 'stuff');
@@ -81,15 +82,15 @@ class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
         $o2 = $this->getOutput();
 
         $this->assertEquals("13", $o2);
-        
+
         $poc3['tagger']->addCacheInvalidationTags(true, 'p');
         $this->pocBurner($poc3['poc'], "14");
         $o3 = $this->getOutput();
-        
+
         $this->pocBurner($poc3['poc'], "15");
         $o4 = $this->getOutput();
-        
+
         $this->assertEquals("14", $o4);
-        
+
     }
 }

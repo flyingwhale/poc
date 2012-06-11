@@ -12,7 +12,6 @@
 
 namespace Poc\Tests\Cache\CacheImplementation;
 
-
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {
 

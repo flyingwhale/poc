@@ -36,7 +36,6 @@ class MongoDBCache extends Cache
         $this->optionable->setDefaultOption('db_name', 'poc');
         $this->optionable->setDefaultOption('collection_name', 'key_value');
     }
-    
 
     public function __construct ($options = array())
     {

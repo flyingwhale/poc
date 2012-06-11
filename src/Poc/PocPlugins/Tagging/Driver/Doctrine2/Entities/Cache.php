@@ -33,7 +33,7 @@ class Cache
      * @Column(type="integer")
      */
     protected $expires;
-    
+
     /**
      * @OneToMany(targetEntity="CacheTag", mappedBy="cache", orphanRemoval=true,
      * cascade={"persist"})

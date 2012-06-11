@@ -96,7 +96,7 @@ class CIAProtector extends Plugin
          * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
          * });
          */
-        
+
     }
 
     /**

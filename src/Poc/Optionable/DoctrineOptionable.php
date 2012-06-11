@@ -15,8 +15,7 @@ class DoctrineOptionable extends Optionable
         $this->setDefaultOption('dbal.connections.sqlite.path', '/tmp/poc.sq3');
         $this->setDefaultOption('dbal.connections.sqlite.driver', 'pdo_sqlite');
         $this->setDefaultOption('dbal.connections.sqlite',
-            function ($c)
-            {
+            function ($c) {
                 $connParams = array(
                     'path' => $c['dbal.connections.sqlite.path'],
                     'driver' => $c['dbal.connections.sqlite.driver']
@@ -32,8 +31,7 @@ class DoctrineOptionable extends Optionable
         $this->setDefaultOption('dbal.connections.mysql.host', 'localhost');
         $this->setDefaultOption('dbal.connections.mysql.driver', 'pdo_mysql');
         $this->setDefaultOption('dbal.connections.mysql',
-            function ($c)
-            {
+            function ($c) {
                 $connParams = array(
                     'dbname' => $c['dbal.connections.mysql.dbname'],
                     'user' => $c['dbal.connections.mysql.user'],
@@ -45,18 +43,17 @@ class DoctrineOptionable extends Optionable
                 return $connParams;
             }
         );
-        
+
         $this->setDefaultOption('orm.default_entity_manager', 'default');
         $this->setDefaultOption('orm.entity_managers.default.connection', 'sqlite');
 
         $this->setDefaultOption('orm.entity_managers.default.config.auto_generate_proxy_classes', true);
         $this->setDefaultOption('orm.entity_managers.default.config.proxy_namespace', 'Proxies');
         $this->setDefaultOption('orm.entity_managers.default.config.proxy_dir', '/tmp');
-        
+
         $this->setDefaultOption('orm.entity_managers.default.cache.class', '\Doctrine\Common\Cache\ArrayCache');
         $this->setDefaultOption('orm.entity_managers.default.cache',
-            function ($c)
-                    {
+            function ($c) {
                         $class = $c['orm.entity_managers.default.cache.class'];
                         $cache = new $class();
 
@@ -65,11 +62,10 @@ class DoctrineOptionable extends Optionable
          );
 
         $this->setDefaultOption('orm.entity_managers.default.config.class', '\Doctrine\ORM\Configuration');
-        
+
         $this->setDefaultOption('orm.entity_managers.default.config.default_annotation_driver', 'Configuration');
         $this->setDefaultOption('orm.entity_managers.default.config', $this->share(
-            function ($c)
-            {
+            function ($c) {
                 $class = $c['orm.entity_managers.default.config.class'];
                 $config = new $class();
 
@@ -90,13 +86,12 @@ class DoctrineOptionable extends Optionable
                 return $config;
             }
         ));
-         
+
         $this->setDefaultOption('orm.entity_managers.default',
-            function ($c)
-            {
-            
+            function ($c) {
+
                 $connectionParamName = 'dbal.connections.'.$c['orm.entity_managers.default.connection'];
-                
+
                 $connParams = $c[$connectionParamName];
                 $config     = $c['orm.entity_managers.default.config'];
 
@@ -105,5 +100,5 @@ class DoctrineOptionable extends Optionable
                 return $entityManager;
             }
         );
-    }        
+    }
 }

@@ -37,7 +37,7 @@ class CIAProtectorLogger implements CIAProtectorEventNames
     public function setupDefaults ()
     {
         $this->optionable->setDefaultOption('poc', null);
-        
+
     }
 
     public function __construct ($options = array())

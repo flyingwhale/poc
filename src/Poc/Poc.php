@@ -132,13 +132,13 @@ class Poc implements PocParams
 
     /**
      *
-     * @var Cache\Filtering\Hasher 
+     * @var Cache\Filtering\Hasher
      */
     private $hasher;
-    
+
     /**
      *
-     * @var Cache\Filtering\Filter 
+     * @var Cache\Filtering\Filter
      */
     private $filter;
     /**
@@ -252,58 +252,57 @@ class Poc implements PocParams
 
     protected function setupDefaults ()
     {
-        $this->optionable->setDefaultOption(self::PARAM_CACHE, 
+        $this->optionable->setDefaultOption(self::PARAM_CACHE,
             function  () {
                 return new FileCache();
             }
         );
 
-        
-        $this->optionable->setDefaultOption(self::PARAM_OUTPUTHANDLER, 
+        $this->optionable->setDefaultOption(self::PARAM_OUTPUTHANDLER,
             function  () {
                 return new ServerOutput();
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_HEADERMANIPULATOR, 
+        $this->optionable->setDefaultOption(self::PARAM_HEADERMANIPULATOR,
             function  () {
                 return new HeaderManipulator();
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_OUTPUTFILTER, 
+        $this->optionable->setDefaultOption(self::PARAM_OUTPUTFILTER,
             function  () {
                 return null;
             }
         );
-        
+
         $this->optionable->setDefaultOption(self::PARAM_DEBUG,
             function  () {
                 return false;
             }
         );
-        
-        $this->optionable->setDefaultOption(self::PARAM_CIA_PROTECTOR, 
+
+        $this->optionable->setDefaultOption(self::PARAM_CIA_PROTECTOR,
             function  () {
                 return null;
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_EVENT_DISPATCHER, 
+        $this->optionable->setDefaultOption(self::PARAM_EVENT_DISPATCHER,
             function  () {
                 return new EventDispatcher();
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_HASHER, 
+        $this->optionable->setDefaultOption(self::PARAM_HASHER,
             function  () {
                 return new Hasher();
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_FILTER, 
+        $this->optionable->setDefaultOption(self::PARAM_FILTER,
             function  () {
                 return new Filter();
             }
         );
-        
+
     }
 
     /**
@@ -336,9 +335,9 @@ class Poc implements PocParams
         $this->outputFilter = $this->optionable[self::PARAM_OUTPUTFILTER];
 
         $this->setDebug($this->optionable['debug']);
-        
+
         $this->filter = $this->optionable[self::PARAM_FILTER];
-        
+
         $this->hasher = $this->optionable[self::PARAM_HASHER];
 
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
@@ -464,8 +463,9 @@ class Poc implements PocParams
     {
         $this->canICacheThisGeneratedContent = $bool;
     }
-    
-    public function getHasher(){
+
+    public function getHasher()
+    {
         return $this->hasher;
     }
 }

@@ -12,19 +12,16 @@
 
 namespace Poc\Tests\PocPlugins\Tagging;
 
-use Poc\PocPlugins\Tagging\Doctrine2Tagging;
-use Poc\Optionable\DoctrineOptionable;
-
 class Doctrine2SqliteTaggingTest extends Doctrine2TaggingTest
 {
     public static function getDoctrineOptionableOptions()
     {
         $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
         $options['orm.entity_managers.default.connection'] = 'sqlite';
+
         return $options;
     }
-    
-    
+
     public static function addCacheToTagsProvider ()
     {
         $data = array(array('tag1,tag2', 'expected_sqlite_01'));

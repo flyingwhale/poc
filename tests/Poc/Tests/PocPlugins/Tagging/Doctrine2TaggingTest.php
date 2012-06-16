@@ -86,7 +86,9 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
     {
         $options = self::$doctrineOptions;
         $tagging = new Doctrine2Tagging($options);
-        $tagging->init(new \Poc\Poc());
+        $cache = new \Poc\Cache\CacheImplementation\FileCache(array(\Poc\Cache\CacheImplementation\CacheParams::PARAM_TTL => $GLOBALS['TTL']));
+        $poc = new \Poc\Poc(array(\Poc\PocParams::PARAM_CACHE => $cache));
+        $tagging->init($poc);
 
         return $tagging;
     }

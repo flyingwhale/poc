@@ -44,7 +44,7 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
         return $options;
     }
 
-    public function cleanDatabase($em)
+    public static function cleanDatabase($em)
     {
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $classes = array(

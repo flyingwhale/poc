@@ -23,7 +23,7 @@ class Doctrine2MysqlTaggingTest extends Doctrine2TaggingTest
         return $options;
     }
 
-    public function cleanDatabase($em)
+    public static function cleanDatabase($em)
     {
         parent::cleanDatabase($em);
         $conn = $em->getConnection();

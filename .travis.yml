@@ -7,4 +7,4 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
   - mysql -e 'create database poc_tests;'
-script: phpunit
+script: vendor/bin/phpunit

@@ -42,7 +42,7 @@ install to your web directory (composer is your friend there as well:) ).
 
 The project uses the composer to download it's dependencies and we already added 
 a script what you can execute by typing ./bin/get_composer scrip. It downloads 
-the composer and gets the packages on what the project relies on.
+the composer.
 
 As the projet is psr-0 compliant it is really easy to map it to your project. 
 To download the dependencies please run the "./bin/get_composer" file from the 
@@ -80,7 +80,7 @@ more insight on the POC.
 
 The project also contains a recent version of the PHPUnit framework. So you 
 don't need to prepare your environment to be suitable for this. By executing the
-./bin/phpunit file you can run the tests.
+vendor/bin/phpunit file you can run the tests.
 
 ### Configuration ###
 

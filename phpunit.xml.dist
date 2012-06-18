@@ -20,11 +20,11 @@
     <var name="CONNECTION_DEFAULT" value="mysql" />
     
     <var name="CONNECTION_MYSQL_HOST" value="localhost" />
-    <var name="CONNECTION_MYSQL_USER" value="username" />
-    <var name="CONNECTION_MYSQL_PASS" value="password" />
-    <var name="CONNECTION_MYSQL_DBNAME" value="db_name" />
+    <var name="CONNECTION_MYSQL_USER" value="root" />
+    <var name="CONNECTION_MYSQL_PASS" value="" />
+    <var name="CONNECTION_MYSQL_DBNAME" value="poc_tests" />
     
-    <var name="CONNECTION_SQLITE_PATH" value="/tmp/poc.sq3" />
+    <var name="CONNECTION_SQLITE_PATH" value="/tmp/poc_tests.sq3" />
     
     
     <var name="TTL" value="3" />

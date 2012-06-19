@@ -7,6 +7,6 @@ if [ -f composer.phar ]
 then
     echo composer.phar file exists
 else
-    wget http://getcomposer.org/composer.phar
+    curl -s http://getcomposer.org/installer | php
     chmod 777 composer.phar    
 fi

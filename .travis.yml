@@ -13,7 +13,7 @@ before_script:
   - tar -xzf mongo-1.2.10.tgz
   - sh -c "cd mongo-1.2.10 && phpize && ./configure && sudo make install"
   - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`  
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - bin/get_composer
+  - php bin/composer.phar install --dev
   - mysql -e 'create database poc_tests;'
 script: vendor/bin/phpunit

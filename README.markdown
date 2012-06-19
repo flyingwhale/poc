@@ -1,5 +1,7 @@
 # POC
 
+[![Build Status](https://secure.travis-ci.org/tothimre/poc.png?branch=master)](http://travis-ci.org/tothimre/poc)
+
 This is the root directory of the
 POC that stands for PHP Output Caching.
 

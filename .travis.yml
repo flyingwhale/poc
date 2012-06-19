@@ -2,6 +2,7 @@ language: php
 
 php:
   - 5.3
+  - 5.4
   
 before_script:
   - wget http://pecl.php.net/get/memcache-2.2.6.tgz

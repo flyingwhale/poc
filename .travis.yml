@@ -4,6 +4,14 @@ php:
   - 5.3
   
 before_script:
+  - wget http://pecl.php.net/get/memcache-2.2.6.tgz
+  - tar -xzf memcache-2.2.6.tgz
+  - sh -c "cd memcache-2.2.6 && phpize && ./configure --enable-memcache && make && sudo make install"
+  - echo "extension=memcache.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  - wget http://pecl.php.net/get/mongo-1.2.10.tgz
+  - tar -xzf mongo-1.2.10.tgz
+  - sh -c "cd mongo-1.2.10 && phpize && ./configure && sudo make install"
+  - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`  
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
   - mysql -e 'create database poc_tests;'

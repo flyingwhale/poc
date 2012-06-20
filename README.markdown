@@ -10,29 +10,34 @@ An article about the
 
 ## Description
 
-The aim of this project is to create an easy to use generic output caching 
-component for  PHP applications.
+The aim of this project is to create an easy to use but really flexible generic 
+output caching component for  PHP applications. The framework is plugin based,
+so it is really easy to extend and use.
 
 ## Features
 
  * Caching of the output on certain circumstances that you define
  * Cache invalidation by TTL (of course)
- * Blacklisting / cache invalidation by application state
- * Blacklisting by Output content
+ * Blacklisting caches by application state.
+
  * For caching it utilizes many interface, those are:
    * Memcached
    * Redis
    * MongoDb
    * It's own filesystem based engine.
- * APC (experimental, performs and works well on a webserver, but unfortunately 
-   the CLI interface is not behaves like it should and cannot be unit tested 
-   properly so I don't include it in the master)
- * Cache tagging
-    * For this feature we utilize MySQL, but more are coming
-    * Cache Invalidation by tags
-    * Minimal overhead on the performance
-    * Easy (one line) to turn off/on
-    * Controls headers
+
+ * Plugins:
+   * Blacklisting by Output content (plugin)
+   * Html output minification (plugin)
+   * Logging with monolog (plugin) 
+
+   * Cache tagging
+     * For this feature we utilize Doctrine2, Mysql and Sqlite is supported at the 
+       moment
+     * Cache Invalidation by tags
+     * Minimal overhead on the performance
+     * Easy (one line) to turn off/on
+     * Controls headers
 
 Even more features are coming, so stay tuned.
 

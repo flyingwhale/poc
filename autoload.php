@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-require_once 'vendor/.composer/autoload.php';
+require_once 'vendor/autoload.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 

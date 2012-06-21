@@ -2,10 +2,6 @@
 #*#
 build
 .*.swp
-.buildpath
-.project
-.settings/
-tmp/
 vendor/
 composer.phar
 composer.lock

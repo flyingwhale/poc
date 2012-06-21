@@ -214,4 +214,3 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
         return $data;
     }
 }
-

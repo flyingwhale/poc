@@ -33,7 +33,7 @@ class Application extends BaseApplication
         parent::__construct('Poc database initialization', 1);
 
         $this->add(new DbInitCommand());
-        
+
     }
 
     public function getLongVersion()

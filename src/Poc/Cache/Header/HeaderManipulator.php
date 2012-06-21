@@ -17,7 +17,7 @@
  * @author Imre Toth
  *
  */
-namespace POC\cache\header;
+namespace Poc\Cache\Header;
 
 use POC\Poc;
 

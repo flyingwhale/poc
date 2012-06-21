@@ -19,14 +19,11 @@
 namespace Poc\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\SchemaConfig;
 use Poc\Optionable\DoctrineOptionable;
 
 class DbInitCommand extends Command
@@ -41,7 +38,7 @@ class DbInitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        
+
         $connectionName = 'mysql';
         $doctrineOptionable = new DoctrineOptionable();
 
@@ -50,36 +47,32 @@ class DbInitCommand extends Command
         $doctrineOptionable['dbal.connections.mysql.password'] =  'poc_test';
         $doctrineOptionable['dbal.connections.mysql.host'] =  'localhost';
         $doctrineOptionable['dbal.connections.mysql.driver'] =  'pdo_mysql';
-        
+
         $this->initDatabase($connectionName, $doctrineOptionable, $output);
         $connectionName = 'sqlite';
         $this->initDatabase($connectionName, $doctrineOptionable, $output);
-        
-        
 
     }
-    
+
     protected function cloneSchemaWithoutForeignKeys($schema)
     {
         $tables = array();
-        foreach($schema->getTables() as $table)
-        {
-            
-            foreach($table->getForeignKeys() as $fkName => $fk)
-            {
-                 
+        foreach ($schema->getTables() as $table) {
+
+            foreach ($table->getForeignKeys() as $fkName => $fk) {
+
                 $table->removeForeignKey($fkName);
-                
+
             }
             $tables[] = $table;
-            
+
         }
-        
+
         $newSchema = new Schema($tables);
-        
+
         return $newSchema;
     }
-    
+
     protected function getTaggingSchema($em)
     {
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
@@ -89,16 +82,15 @@ class DbInitCommand extends Command
         $em->getClassMetadata('Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Tag')
 
         );
-        
-        
+
         $schema = $tool->getSchemaFromMetadata($classes);
-        
+
         return $schema;
     }
-    
+
     protected function getDiffSchema($fromSchema, $toSchema)
     {
-        $comparator = new Comparator();        
+        $comparator = new Comparator();
         $diffSchema = $comparator->compare($fromSchema, $toSchema);
 
         return $diffSchema;
@@ -106,26 +98,24 @@ class DbInitCommand extends Command
 
     protected function executeQueries($conn, $sqls)
     {
-            foreach($sqls as $sql)
-            {
+            foreach ($sqls as $sql) {
                 $conn->executeQuery($sql);
             }
-        
+
     }
-    
+
     protected function initDatabase($connectionName, $doctrineOptionable, $output)
     {
         $doctrineOptionable['orm.entity_managers.default.connection'] =  $connectionName;
-        
+
         $connectionOptions = $doctrineOptionable['dbal.connections.'.$connectionName];
-        
+
         $text = sprintf('Connection name: %s', $connectionName);
         $output->writeln($text);
         $text = sprintf('Connection options:');
         $output->writeln($text);
-        
-        foreach($connectionOptions as $connectionOptionKey => $connectionOptionValue)
-        {
+
+        foreach ($connectionOptions as $connectionOptionKey => $connectionOptionValue) {
             $text = sprintf(' - %s: %s', $connectionOptionKey, $connectionOptionValue);
             $output->writeln($text);
         }
@@ -134,33 +124,30 @@ class DbInitCommand extends Command
         if ($dialog->askConfirmation($output, '<question>Init database?</question>', false)) {
             $initDatabase = true;
         }
-        
+
         $em = $doctrineOptionable['orm.entity_managers.default'];
         $conn = $em->getConnection();
 
         $sm = $conn->getSchemaManager();
-        $fromSchema = $sm->createSchema();        
-        
+        $fromSchema = $sm->createSchema();
+
         $toSchema = $this->getTaggingSchema($em);
         $toSchema = $this->cloneSchemaWithoutForeignKeys($toSchema);
-
 
 //        $schemaDiff = $this->getDiffSchema($fromSchema, $toSchema);
 //        $sqlDiff = $schemaDiff->toSql($conn->getDatabasePlatform());
 //        if (!empty($sqlDiff))
-        
-        if($initDatabase)
-        {
+
+        if ($initDatabase) {
             $output->writeln('Drop and create tables');
-            
+
             $dropSqls = $fromSchema->toDropSql($conn->getDatabasePlatform());
             $createSqls = $toSchema->toSql($conn->getDatabasePlatform());
-
 
             $this->executeQueries($conn, $dropSqls);
             $this->executeQueries($conn, $createSqls);
         }
-        
+
     }
-    
+
 }

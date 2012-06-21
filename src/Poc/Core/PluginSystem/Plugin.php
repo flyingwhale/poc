@@ -31,4 +31,3 @@ class Plugin implements PluginInterface
         $this->poc = $poc;
     }
 }
-

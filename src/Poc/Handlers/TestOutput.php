@@ -119,4 +119,3 @@ class TestOutput extends Output
         $this->output = $output;
     }
 }
-

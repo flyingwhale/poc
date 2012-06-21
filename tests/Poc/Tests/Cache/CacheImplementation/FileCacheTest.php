@@ -24,4 +24,3 @@ class FileCacheTest extends CacheTest
     }
 
 }
-

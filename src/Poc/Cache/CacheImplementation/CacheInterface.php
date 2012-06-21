@@ -17,7 +17,7 @@
  * @author Imre Toth
  *
  */
-namespace Poc\Cache\Cacheimplementation;
+namespace Poc\Cache\CacheImplementation;
 
 interface CacheInterface
 {
@@ -33,4 +33,3 @@ interface CacheInterface
     public function isCacheAvailable ();
 
 }
-

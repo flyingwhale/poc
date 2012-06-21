@@ -25,4 +25,3 @@ class MemcachedCacheTest extends CacheTest
     }
 
 }
-

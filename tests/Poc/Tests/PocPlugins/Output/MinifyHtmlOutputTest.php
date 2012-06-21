@@ -13,7 +13,7 @@ use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 
-class MinifyHtlmOutputTest extends PocTestCore
+class MinifyHtmlOutputTest extends PocTestCore
 {
     const TEST_STRING_MINIFY_EXTRA_SPACE = "A    a      A";
 

@@ -185,4 +185,3 @@ class PocLogs extends Plugin
         $this->logger->setLog($type . '-' . $eventName, $output);
     }
 }
-

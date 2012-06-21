@@ -55,4 +55,3 @@ class CIAProtectorTest extends PocTestCore
          */
     }
 }
-

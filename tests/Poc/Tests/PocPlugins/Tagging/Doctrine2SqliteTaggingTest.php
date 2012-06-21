@@ -29,4 +29,3 @@ class Doctrine2SqliteTaggingTest extends Doctrine2TaggingTest
         return $data;
     }
 }
-

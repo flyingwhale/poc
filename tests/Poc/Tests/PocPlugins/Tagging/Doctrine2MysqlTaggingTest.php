@@ -38,4 +38,3 @@ class Doctrine2MysqlTaggingTest extends Doctrine2TaggingTest
 
     }
 }
-

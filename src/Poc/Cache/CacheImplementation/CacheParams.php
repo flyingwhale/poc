@@ -23,4 +23,3 @@ interface CacheParams
 {
     const PARAM_TTL = 'ttl';
 }
-

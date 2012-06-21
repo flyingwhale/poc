@@ -212,4 +212,3 @@ class CIAProtector extends Plugin
         $this->cache = $cache;
     }
 }
-

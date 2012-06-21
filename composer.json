@@ -26,7 +26,8 @@
         "doctrine/orm":             "2.2.2",
         "symfony/event-dispatcher": "2.0.14",
         "predis/predis":            "0.7.3",
-        "optionable/optionable":    "dev-master"
+        "optionable/optionable":    "dev-master",
+        "symfony/console":          "2.1.*"
     },
    "require-dev": {
         "EHER/PHPUnit":             "1.6",

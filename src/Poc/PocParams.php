@@ -23,7 +23,6 @@ use Poc\Cache\CacheImplementation\CacheParams;
 
 interface PocParams
 {
-
     const PARAM_CACHE = 'cache';
 
     const PARAM_OUTPUTHANDLER = 'outputHandler';

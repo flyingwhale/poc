@@ -45,7 +45,7 @@ use Optionable;
  */
 class Poc implements PocParams
 {
-
+    
     const CALLBACK_GENERATE = 'pocCallbackGenerate';
 
     const CALLBACK_SHOWOUTPUT = 'pocCallbackShowOutput';
@@ -250,54 +250,54 @@ class Poc implements PocParams
         return $this->getOutput();
     }
 
-    protected function setupDefaults ()
+    protected function setupDefaults (&$optionable)
     {
-        $this->optionable->setDefaultOption(self::PARAM_CACHE,
+        $optionable->setDefaultOption(Poc::PARAM_CACHE,
             function  () {
                 return new FileCache();
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_OUTPUTHANDLER,
+        $optionable->setDefaultOption(Poc::PARAM_OUTPUTHANDLER,
             function  () {
                 return new ServerOutput();
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_HEADERMANIPULATOR,
+        $optionable->setDefaultOption(Poc::PARAM_HEADERMANIPULATOR,
             function  () {
                 return new HeaderManipulator();
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_OUTPUTFILTER,
+        $optionable->setDefaultOption(Poc::PARAM_OUTPUTFILTER,
             function  () {
                 return null;
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_DEBUG,
+        $optionable->setDefaultOption(Poc::PARAM_DEBUG,
             function  () {
                 return false;
             }
         );
 
-        $this->optionable->setDefaultOption(self::PARAM_CIA_PROTECTOR,
+        $optionable->setDefaultOption(Poc::PARAM_CIA_PROTECTOR,
             function  () {
                 return null;
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_EVENT_DISPATCHER,
+        $optionable->setDefaultOption(Poc::PARAM_EVENT_DISPATCHER,
             function  () {
                 return new EventDispatcher();
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_HASHER,
+        $optionable->setDefaultOption(Poc::PARAM_HASHER,
             function  () {
                 return new Hasher();
             }
         );
-        $this->optionable->setDefaultOption(self::PARAM_FILTER,
+        $optionable->setDefaultOption(Poc::PARAM_FILTER,
             function  () {
                 return new Filter();
             }
@@ -305,6 +305,22 @@ class Poc implements PocParams
 
     }
 
+    
+    protected function mapFieldsFromOptionable(&$optionable, &$poc)
+    {
+        $poc->pocDispatcher =  $optionable[Poc::PARAM_EVENT_DISPATCHER];
+        $poc->cache = $optionable[Poc::PARAM_CACHE];
+        $poc->outputHandler = $optionable[Poc::PARAM_OUTPUTHANDLER];
+        $poc->outputHandler->setPoc($this);
+        $poc->headerManipulator = $optionable[Poc::PARAM_HEADERMANIPULATOR];
+        $poc->headerManipulator->setOutputHandler($this->outputHandler);
+        $poc->headerManipulator->setPoc($this);
+        $poc->outputFilter = $optionable[Poc::PARAM_OUTPUTFILTER];
+        $poc->setDebug($optionable['debug']);
+        $poc->filter = $optionable[Poc::PARAM_FILTER];
+        $poc->hasher = $optionable[Poc::PARAM_HASHER];   
+    }
+    
     /**
      *
      * @param $cache PocCacheInterface
@@ -315,33 +331,12 @@ class Poc implements PocParams
      *            for develompment purposevags.
      */
     public function __construct ($options = array())
-    {
+    {    
         $this->startTime = microtime();
         $this->optionable = new Optionable($options);
-        $this->setupDefaults();
-        $this->pocDispatcher =
-                     $this->optionable[self::PARAM_EVENT_DISPATCHER];
-        $this->pocDispatcher->dispatch
-                     (PocEventNames::CONSTRUCTOR_BEGINING,new BaseEvent($this));
-        $this->cache = $this->optionable[self::PARAM_CACHE];
-        $this->outputHandler = $this->optionable[
-                self::PARAM_OUTPUTHANDLER];
-        $this->outputHandler->setPoc($this);
-        $this->headerManipulator = $this->optionable[
-                self::PARAM_HEADERMANIPULATOR];
-        $this->headerManipulator->setOutputHandler($this->outputHandler);
-        $this->headerManipulator->setPoc($this);
-
-        $this->outputFilter = $this->optionable[self::PARAM_OUTPUTFILTER];
-
-        $this->setDebug($this->optionable['debug']);
-
-        $this->filter = $this->optionable[self::PARAM_FILTER];
-
-        $this->hasher = $this->optionable[self::PARAM_HASHER];
-
-        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
-                new BaseEvent($this));
+        $this->setupDefaults($this->optionable);
+        $this->mapFieldsFromOptionable($this->optionable, $this);
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
     }
 
     public function fetchCache ($die = true)
@@ -376,6 +371,7 @@ class Poc implements PocParams
 
     public function start ()
     {
+	
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
         new BaseEvent($this));

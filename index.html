@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Php Output Cache</title>
+  <meta name="description" content="Php Output Caching">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Php Output Cache</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Php Output Caching</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/php-output-cache/poc/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/php-output-cache/poc/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/php-output-cache/poc" class="code">View Php Output Cache on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>POC</h1>
+
+<p><a href="http://travis-ci.org/tothimre/poc"><img src="https://secure.travis-ci.org/tothimre/poc.png?branch=master" alt="Build Status"></a></p>
+
+<p>This is the root directory of the
+POC that stands for PHP Output Caching.</p>
+
+<p>An article about the 
+    POC: <a href="http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/">http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/</a></p>
+
+<h2>Description</h2>
+
+<p>The aim of this project is to create an easy to use but really flexible generic 
+output caching component for  PHP applications. The framework is plugin based,
+so it is really easy to extend and use.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Caching of the output on certain circumstances that you define</li>
+<li>Cache invalidation by TTL (of course)</li>
+<li><p>Blacklisting caches by application state.</p></li>
+<li>
+<p>For caching it utilizes many interface, those are:</p>
+
+<ul>
+<li>Memcached</li>
+<li>Redis</li>
+<li>MongoDb</li>
+<li>It's own filesystem based engine.</li>
+</ul>
+</li>
+<li>
+<p>Plugins:</p>
+
+<ul>
+<li>Blacklisting by Output content (plugin)</li>
+<li>Html output minification (plugin)</li>
+<li>Logging with monolog (plugin) </li>
+<li>Cache tagging
+
+<ul>
+<li>For this feature we utilize Doctrine2, Mysql and Sqlite is supported at the 
+moment</li>
+<li>Cache Invalidation by tags</li>
+<li>Minimal overhead on the performance</li>
+<li>Easy (one line) to turn off/on</li>
+<li>Controls headers</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Even more features are coming, so stay tuned.</p>
+
+<h2>Examples</h2>
+
+<p>You can download/see the <a href="https://github.com/tothimre/poc-sandbox">https://github.com/tothimre/poc-sandbox</a> project and
+install to your web directory (composer is your friend there as well:) ).</p>
+
+<h2>Installation</h2>
+
+<p>The project uses the composer to download it's dependencies and we already added 
+a script what you can execute by typing ./bin/get_composer scrip. It downloads 
+the composer.</p>
+
+<p>As the projet is psr-0 compliant it is really easy to map it to your project. 
+To download the dependencies please run the "./bin/get_composer" file from the 
+root of the project or download the composer.phar for yourself.
+After run "bin/composer.phar install" script.</p>
+
+<p>If you want to run unittests or want to improve or extend the framework then
+use the following command:
+"bin/composer.phar install --dev"</p>
+
+<h3>Key-Value databases</h3>
+
+<p>Of course you are not forced to use any external key-value databases,
+because it also supports the file system caching. But to make your application 
+more scalable you can user some more scalable solutions.</p>
+
+<p>For instance You can install the redis-server, also  mongod (Mongodb) or 
+of course Memcached server to your environment and the PHP module as well.</p>
+
+<h3>SQL</h3>
+
+<p>At the moment we only support Mysql, for the tagging feature, but as we 
+implemented it in Doctrine2 this is really likely that we will add more sql DBs
+To this list in the close future.
+So Install Mysql for the tagging feature.</p>
+
+<h2>Unittesting</h2>
+
+<p>The Project already have got 75% code coverage. Of course we work hard on to 
+improve it and make it better. Also the unittests can be nice source of examples.
+For instance this is highly recommended to check out the PocTest.php file to get
+more insight on the POC.</p>
+
+<h3>Shortcuts</h3>
+
+<p>The project also contains a recent version of the PHPUnit framework. So you 
+don't need to prepare your environment to be suitable for this. By executing the
+vendor/bin/phpunit file you can run the tests.</p>
+
+<h3>Configuration</h3>
+
+<p>All PHPUnit configuration data can be found at the phpunit.xml.dist file. 
+The Mysql Database specific information also resides here for the tests If you 
+want to specify your own database. just copy this file to the phpunit.xml 
+and modify the database specific parts.</p>
+
+<h2>COPYRIGHT</h2>
+
+<h3>Copyright [2012] [Imre Toth ]</h3>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/php-output-cache" class="avatar"><img src="https://secure.gravatar.com/avatar/64eb992791d7fc40afeff9d0f1abf5ad?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/php-output-cache">php-output-cache</a> maintains <a href="https://github.com/php-output-cache/poc">Php Output Cache</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/php-output-cache/poc/tarball/master" class="tar">tar</a><a href="https://github.com/php-output-cache/poc/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>

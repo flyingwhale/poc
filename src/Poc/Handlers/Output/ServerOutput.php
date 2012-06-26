@@ -17,7 +17,7 @@
  * @author Imre Toth
  *
  */
-namespace Poc\Handlers;
+namespace Poc\Handlers\Output;
 
 class ServerOutput extends Output
 {
@@ -29,7 +29,7 @@ class ServerOutput extends Output
 
     public function startBuffer ($callbackFunctname)
     {
-        ob_start(array($this->poc, $callbackFunctname));
+        ob_start(array($this->poc->getCallbackHandler(), $callbackFunctname));
     }
 
     public function StopBuffer ($output = '')

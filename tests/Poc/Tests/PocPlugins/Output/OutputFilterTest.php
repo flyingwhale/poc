@@ -5,7 +5,7 @@ namespace Poc\Tests\PocPlugins\Output;
 use Poc\Tests\PocTestCore;
 
 use Poc\PocParams;
-use Poc\Handlers\TestOutput;
+use Poc\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;

@@ -58,7 +58,7 @@ class CIAProtector extends Plugin
 
     /**
      *
-     * @var \POC\Handlers\OutputInterface
+     * @var \Poc\Handlers\Output\OutputInterface
      */
     private $outputHandler;
 

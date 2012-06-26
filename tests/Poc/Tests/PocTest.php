@@ -22,7 +22,7 @@ use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
-use Poc\Handlers\TestOutput;
+use Poc\Handlers\Output\TestOutput;
 
 class PocTest extends PocTestCore
 {

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Handlers;
+namespace Poc\Handlers\Output;
 
 use Poc\Cache\Header\HeaderManipulator;
 use Poc\Poc;
@@ -63,7 +63,7 @@ class TestOutput extends Output
 
     public function startBuffer ($callbackFunctname)
     {
-        ob_start(array($this->poc, $callbackFunctname));
+        ob_start(array($this->poc->getCallbackHandler(), $callbackFunctname));
     }
 
     public function stopBuffer ($output = '')

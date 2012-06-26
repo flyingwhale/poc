@@ -1,14 +1,18 @@
 <?php
-namespace Poc\Handlers;
+namespace Poc\Handlers\Output;
 
-use Poc\Handlers\OutputInterface;
+use Poc\Poc;
 
 abstract class Output implements OutputInterface
 {
 
+    /**
+     *
+     * @var Poc
+     */
     protected $poc;
 
-    public function setPoc ($poc)
+    public function setPoc (Poc $poc)
     {
         $this->poc = $poc;
     }

@@ -7,7 +7,7 @@ use Poc\Tests\PocTestCore;
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
 use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
-use Poc\Handlers\TestOutput;
+use Poc\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;

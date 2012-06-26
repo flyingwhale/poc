@@ -20,11 +20,12 @@
  *
  */
 
-namespace Poc\Handlers;
+namespace Poc\Handlers\Output;
+
+use Poc\Poc;
 
 interface OutputInterface
 {
-
     public function getLevel ();
 
     public function startBuffer ($callbackFunctname);
@@ -45,5 +46,5 @@ interface OutputInterface
      *
      * @param $poc Poc
      */
-    public function setPoc ($poc);
+    public function setPoc (Poc $poc);
 }

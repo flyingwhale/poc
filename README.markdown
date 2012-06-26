@@ -1,16 +1,16 @@
 # POC
 
-[![Build Status](https://secure.travis-ci.org/tothimre/poc.png?branch=master)](http://travis-ci.org/tothimre/poc)
+[![Build Status](https://secure.travis-ci.org/php-output-cache/poc.png?branch=master)](http://travis-ci.org/php-output-cache/poc)
 
 This is the root directory of the
 POC that stands for PHP Output Caching.
 
-An article about the 
+An article about the
     POC: http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/
 
 ## Description
 
-The aim of this project is to create an easy to use but really flexible generic 
+The aim of this project is to create an easy to use but really flexible generic
 output caching component for  PHP applications. The framework is plugin based,
 so it is really easy to extend and use.
 
@@ -29,10 +29,10 @@ so it is really easy to extend and use.
  * Plugins:
    * Blacklisting by Output content (plugin)
    * Html output minification (plugin)
-   * Logging with monolog (plugin) 
+   * Logging with monolog (plugin)
 
    * Cache tagging
-     * For this feature we utilize Doctrine2, Mysql and Sqlite is supported at the 
+     * For this feature we utilize Doctrine2, Mysql and Sqlite is supported at the
        moment
      * Cache Invalidation by tags
      * Minimal overhead on the performance
@@ -47,12 +47,12 @@ install to your web directory (composer is your friend there as well:) ).
 
 ## Installation ##
 
-The project uses the composer to download it's dependencies and we already added 
-a script what you can execute by typing ./bin/get_composer scrip. It downloads 
+The project uses the composer to download it's dependencies and we already added
+a script what you can execute by typing ./bin/get_composer scrip. It downloads
 the composer.
 
-As the projet is psr-0 compliant it is really easy to map it to your project. 
-To download the dependencies please run the "./bin/get_composer" file from the 
+As the projet is psr-0 compliant it is really easy to map it to your project.
+To download the dependencies please run the "./bin/get_composer" file from the
 root of the project or download the composer.phar for yourself.
 After run "bin/composer.phar install" script.
 
@@ -63,37 +63,37 @@ use the following command:
 ### Key-Value databases
 
 Of course you are not forced to use any external key-value databases,
-because it also supports the file system caching. But to make your application 
+because it also supports the file system caching. But to make your application
 more scalable you can user some more scalable solutions.
 
-For instance You can install the redis-server, also  mongod (Mongodb) or 
+For instance You can install the redis-server, also  mongod (Mongodb) or
 of course Memcached server to your environment and the PHP module as well.
 
 ### SQL ###
 
-At the moment we only support Mysql, for the tagging feature, but as we 
+At the moment we only support Mysql, for the tagging feature, but as we
 implemented it in Doctrine2 this is really likely that we will add more sql DBs
 To this list in the close future.
 So Install Mysql for the tagging feature.
 
 ##Unittesting##
 
-The Project already have got 75% code coverage. Of course we work hard on to 
+The Project already have got 75% code coverage. Of course we work hard on to
 improve it and make it better. Also the unittests can be nice source of examples.
 For instance this is highly recommended to check out the PocTest.php file to get
 more insight on the POC.
 
 ### Shortcuts ###
 
-The project also contains a recent version of the PHPUnit framework. So you 
+The project also contains a recent version of the PHPUnit framework. So you
 don't need to prepare your environment to be suitable for this. By executing the
 vendor/bin/phpunit file you can run the tests.
 
 ### Configuration ###
 
-All PHPUnit configuration data can be found at the phpunit.xml.dist file. 
-The Mysql Database specific information also resides here for the tests If you 
-want to specify your own database. just copy this file to the phpunit.xml 
+All PHPUnit configuration data can be found at the phpunit.xml.dist file.
+The Mysql Database specific information also resides here for the tests If you
+want to specify your own database. just copy this file to the phpunit.xml
 and modify the database specific parts.
 
 

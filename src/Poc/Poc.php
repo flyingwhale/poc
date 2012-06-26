@@ -22,15 +22,16 @@ use Poc\Core\Monolog\MonoLogger;
 use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
 use Poc\Core\Event\PocDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Core\Event\EventDictionary;
-use Poc\Handlers\ServerOutput;
+use Poc\Handlers\Callback\CallbackHandler;
+use Poc\Handlers\Output\ServerOutput;
+use Poc\Handlers\Output\OutputInterface;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Handlers\OutputInterface;
 use Poc\Cache\Header\HeaderManipulator;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Optionable;
 /**
  * This class contains the "Entry point" of the caching process.
@@ -45,13 +46,6 @@ use Optionable;
  */
 class Poc implements PocParams
 {
-    
-    const CALLBACK_GENERATE = 'pocCallbackGenerate';
-
-    const CALLBACK_SHOWOUTPUT = 'pocCallbackShowOutput';
-
-    const CALLBACK_CACHE = 'pocCallbackCache';
-
     /**
      *
      * @var OutputInterface
@@ -141,6 +135,21 @@ class Poc implements PocParams
      * @var Cache\Filtering\Filter
      */
     private $filter;
+
+    /**
+     *
+     * @var CallbackHandler
+     */
+    private $callbackHandler;
+    /**
+     *
+     * @param Core\PluginSystem\Plugin $plugin
+     */
+    public function addPlugin ($plugin)
+    {
+        $plugin->init($this);
+    }
+
     /**
      *
      * @return the $pocDispatcher
@@ -159,95 +168,82 @@ class Poc implements PocParams
         return $this->startTime;
     }
 
-    private function setDebug ($debug)
+    public function setDebug ($debug)
     {
         $this->debug = $debug;
     }
 
-    public function pocCallbackShowOutput ($buffer)
+    public function getDebug ()
     {
-        $this->setOutput($buffer);
-        if ($this->debug) {
-            $this->setOutput(
-                $this->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
-        }
-
-        $this->pocDispatcher->dispatch(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
-                new BaseEvent($this));
-        $this->outputHandler->ObPrintCallback($buffer);
-
-        return $this->getOutput();
+        return $this->debug;
     }
 
-    public function pocCallbackGenerate ($buffer)
+        /**
+     *
+     * @return the $output
+     */
+    public function getOutput ()
     {
-        $this->setOutput($buffer);
-        // TODO: call the ob_get_level from the outputHandler.
-        if ($this->level == \ob_get_level() - 1) {
-            $this->setOutput($buffer);
-            $this->pocDispatcher->dispatch(
-                PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
-                new BaseEvent($this));
-            if ($this->canICacheThisGeneratedContent) {
-                if ($this->getOutput()) {
-
-                    if ($this->debug) {
-                        $this->setOutput(
-                                $this->getOutput() .
-                                '<br>This page has been ' .
-                                '<b> generated in ' .
-                                ((microtime() - $this->startTime) * 1000) .
-                                '</b> milliseconds.');
-                    }
-                    $headers = $this->outputHandler->headersList();
-                    $this->headerManipulator->storeHeadersForPreservation(
-                                                                      $headers);
-                    $this->headerManipulator->removeHeaders($headers);
-                    $this->pocDispatcher->dispatch(
-                      PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this));
-
-                    $this->cache->cacheSpecificStore(
-                            $this->hasher->getKey(), $this->getOutput());
-                    $this->headerManipulator->storeHeades($headers);
-
-                    $this->pocDispatcher->dispatch(
-                            PocEventNames::OUTPUT_STORED, new BaseEvent($this));
-
-                }
-            } else {
-                if ($this->debug) {
-                    $this->setOutput(
-                            $this->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
-                }
-            }
-
-            $this->pocDispatcher->dispatch(
-                    PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
-                    new BaseEvent($this));
-
-            if ($buffer) {
-                $this->outputHandler->ObPrintCallback($this->getOutput());
-
-                return ($this->getOutput());
-            }
-        }
+        return $this->output;
     }
 
-    public function pocCallbackCache ($buffer)
+    /**
+     *
+     * @param $output string
+     */
+    public function setOutput ($output)
     {
-        $return = $buffer;
-        $this->setOutput($buffer);
-        if ($this->debug) {
-            $this->setOutput(
-                    $this->getOutput() . '<br>This page has been ' . ' <b> fetched from the cache in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
-        }
-        $this->pocDispatcher->dispatch(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,
-                new BaseEvent($this));
-        $this->outputHandler->ObPrintCallback($this->getOutput());
+        $this->output = $output;
+    }
 
-        return $this->getOutput();
+    public function destruct ()
+    {
+        $this->__destruct();
+    }
+
+    public function getLogger ()
+    {
+        if (! $this->logger) {
+            $this->logger = new MonoLogger();
+        }
+
+        return $this->logger;
+    }
+
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    public function getOutputHandler()
+    {
+        return $this->outputHandler;
+    }
+
+    public function setCanICacheThisGeneratedContent($bool)
+    {
+        $this->canICacheThisGeneratedContent = $bool;
+    }
+
+    public function getHasher()
+    {
+        return $this->hasher;
+    }
+
+    public function getLevel(){
+        return $this->level;
+    }
+
+    public function getCanICacheThisGeneratedContent(){
+        return $this->canICacheThisGeneratedContent;
+    }
+
+    public function getHeaderManipulator(){
+        return $this->headerManipulator;
+    }
+
+    public function getCallbackHandler(){
+        return $this->callbackHandler;
     }
 
     protected function setupDefaults (&$optionable)
@@ -305,7 +301,7 @@ class Poc implements PocParams
 
     }
 
-    
+
     protected function mapFieldsFromOptionable(&$optionable, &$poc)
     {
         $poc->pocDispatcher =  $optionable[Poc::PARAM_EVENT_DISPATCHER];
@@ -318,9 +314,10 @@ class Poc implements PocParams
         $poc->outputFilter = $optionable[Poc::PARAM_OUTPUTFILTER];
         $poc->setDebug($optionable['debug']);
         $poc->filter = $optionable[Poc::PARAM_FILTER];
-        $poc->hasher = $optionable[Poc::PARAM_HASHER];   
+        $poc->hasher = $optionable[Poc::PARAM_HASHER];
+        $this->callbackHandler = new CallbackHandler($this);
     }
-    
+
     /**
      *
      * @param $cache PocCacheInterface
@@ -331,7 +328,7 @@ class Poc implements PocParams
      *            for develompment purposevags.
      */
     public function __construct ($options = array())
-    {    
+    {
         $this->startTime = microtime();
         $this->optionable = new Optionable($options);
         $this->setupDefaults($this->optionable);
@@ -346,7 +343,7 @@ class Poc implements PocParams
 
         $output = $this->fetchCacheValue();
         if ($output) {
-            $this->outputHandler->startBuffer(self::CALLBACK_CACHE);
+            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
             $this->headerManipulator->fetchHeaders();
             // TODO:Replace it to it's appropriate place.(OutputHandler)
             $arr = headers_list();
@@ -371,7 +368,7 @@ class Poc implements PocParams
 
     public function start ()
     {
-	
+
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
         new BaseEvent($this));
@@ -379,14 +376,14 @@ class Poc implements PocParams
         $this->level = \ob_get_level();
         if ($this->filter->evaluate()) {
             if (! $this->fetchCache()) {
-                $this->outputHandler->startBuffer(self::CALLBACK_GENERATE);
+                $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
 
                 $this->pocDispatcher->dispatch(PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
                         new BaseEvent($this));
             }
         } else {
 
-            $this->outputHandler->startBuffer(self::CALLBACK_SHOWOUTPUT);
+            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
 
             $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                     new BaseEvent($this));
@@ -404,64 +401,4 @@ class Poc implements PocParams
                 new BaseEvent($this));*/
     }
 
-    /**
-     *
-     * @return the $output
-     */
-    public function getOutput ()
-    {
-        return $this->output;
-    }
-
-    /**
-     *
-     * @param $output string
-     */
-    public function setOutput ($output)
-    {
-        $this->output = $output;
-    }
-
-    public function destruct ()
-    {
-        $this->__destruct();
-    }
-
-    public function getLogger ()
-    {
-        if (! $this->logger) {
-            $this->logger = new MonoLogger();
-        }
-
-        return $this->logger;
-    }
-
-    /**
-     *
-     * @param Core\PluginSystem\Plugin $plugin
-     */
-    public function addPlugin ($plugin)
-    {
-        $plugin->init($this);
-    }
-
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    public function getOutputHandler()
-    {
-        return $this->outputHandler;
-    }
-
-    public function setCanICacheThisGeneratedContent($bool)
-    {
-        $this->canICacheThisGeneratedContent = $bool;
-    }
-
-    public function getHasher()
-    {
-        return $this->hasher;
-    }
 }

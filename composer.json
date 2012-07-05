@@ -36,5 +36,8 @@
    "autoload": {
         "psr-0": { "Poc": "src/" }
     },
-    "bin": ["bin/console"]
+    "bin": ["bin/console"],
+
+    "minimum-stability": "dev" 
+
 }

@@ -5,8 +5,8 @@
 This is the root directory of the
 POC that stands for PHP Output Caching.
 
-An article about the
-    POC: http://www.leaseweblabs.com/2012/01/poc-flexible-php-output-caching/
+The website is:
+    POC: http://www.phpcache.org
 
 ## Description
 

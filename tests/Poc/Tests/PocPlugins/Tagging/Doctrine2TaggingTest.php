@@ -177,7 +177,7 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $initDataSet;
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
-
+        
         $cacheMock = $this->getMock('Cache', array('cacheSpecificClearItem'));
         $cacheMock->expects($this->any())
             ->method('cacheSpecificClearItem')
@@ -209,7 +209,15 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
 
     public static function tagInvalidateProvider ()
     {
-        $data = array(array('init_01.xml', 'tag2', 'expected_01.xml'));
+        $data = array(
+            array('init_01.xml', 'tag1', 'expected_01-01.xml'),
+            array('init_01.xml', 'tag2', 'expected_01-02.xml'),
+            array('init_01.xml', 'tag3', 'expected_01-03.xml'),
+            array('init_01.xml', 'tag1,tag2', 'expected_01-04.xml'),
+            array('init_01.xml', 'tag1,tag3', 'expected_01-05.xml'),
+            array('init_01.xml', 'tag2,tag3', 'expected_01-06.xml'),
+            array('init_01.xml', 'tag1,tag2,tag3', 'expected_01-07.xml')
+        );
 
         return $data;
     }

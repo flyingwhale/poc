@@ -2,35 +2,23 @@
 <dataset>
     <table name="caches">
         <column>id</column>
-        <column>hash</column>
-        <column>expires</column>
-        <row>
-            <value>1</value>
-            <value>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</value>
-            <value>1234</value>
-        </row>
-        <row>
+	<column>hash</column>
+	<column>expires</column>
+	<row>
             <value>2</value>
             <value>BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</value>
             <value>1234</value>
-        </row>
-        <row>
+	</row>
+	<row>
             <value>3</value>
             <value>CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</value>
             <value>1234</value>
-        </row>
+	</row>
+
     </table>
     <table name="tags_has_caches">
         <column>tag_id</column>
         <column>cache_id</column>
-        <row>
-            <value>1</value>
-            <value>1</value>
-        </row>
-        <row>
-            <value>2</value>
-            <value>1</value>
-        </row>
         <row>
             <value>2</value>
             <value>2</value>
@@ -47,10 +35,6 @@
     <table name="tags">
         <column>id</column>
         <column>tag</column>
-        <row>
-            <value>1</value>
-            <value>tag1</value>
-        </row>
         <row>
             <value>2</value>
             <value>tag2</value>

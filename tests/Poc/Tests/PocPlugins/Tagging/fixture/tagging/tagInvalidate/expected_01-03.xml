@@ -9,16 +9,6 @@
             <value>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</value>
             <value>1234</value>
         </row>
-        <row>
-            <value>2</value>
-            <value>BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</value>
-            <value>1234</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value>CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</value>
-            <value>1234</value>
-        </row>
     </table>
     <table name="tags_has_caches">
         <column>tag_id</column>
@@ -31,18 +21,6 @@
             <value>2</value>
             <value>1</value>
         </row>
-        <row>
-            <value>2</value>
-            <value>2</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value>2</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value>3</value>
-        </row>
     </table>
     <table name="tags">
         <column>id</column>
@@ -54,10 +32,6 @@
         <row>
             <value>2</value>
             <value>tag2</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value>tag3</value>
         </row>
     </table>
 </dataset>

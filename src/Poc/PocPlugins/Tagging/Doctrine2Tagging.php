@@ -118,6 +118,7 @@ class Doctrine2Tagging extends AbstractDb
         $entityManager = $this->getEntityManager();
 
         $cacheRepository = $this->getCacheRepository();
+        $tagRepository = $this->getTagRepository();
 
         $tagNames = $this->splitTags($tagsString);
 
@@ -126,7 +127,11 @@ class Doctrine2Tagging extends AbstractDb
         foreach ($invalidateCaches as $invalidateCache) {
             $this->cache->clearItem($this->poc->getHasher()->getKey());
             $entityManager->remove($invalidateCache);
+            $entityManager->flush();
         }
+        
+        $tagRepository->removeByNames($tagNames);
+        
     }
 
     protected function deleteOrphans ()

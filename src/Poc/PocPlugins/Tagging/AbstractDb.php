@@ -57,7 +57,7 @@ abstract class AbstractDb extends Plugin
 
     public function __construct ()
     {
-        $this->flushOutdated();
+//        $this->flushOutdated();
     }
 
     public function setCache ($cache)

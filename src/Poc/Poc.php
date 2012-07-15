@@ -329,7 +329,7 @@ class Poc implements PocParams
      */
     public function __construct ($options = array())
     {
-        $this->startTime = microtime();
+        $this->startTime = microtime(true);
         $this->optionable = new Optionable($options);
         $this->setupDefaults($this->optionable);
         $this->mapFieldsFromOptionable($this->optionable, $this);

@@ -153,7 +153,7 @@ class PocLogs extends Plugin
     private function logTime (BaseEvent $event, $eventName, $type)
     {
         $this->logOutputMatix($eventName,
-               \microtime() - $event->getEvent()
+               \microtime(true) - $event->getEvent()
                     ->getStartTime() . '|' . $eventName, $type);
     }
 

@@ -31,7 +31,7 @@ class CallbackHandler
         $this->poc->setOutput($buffer);
         if ($this->poc->getDebug()) {
             $this->poc->setOutput(
-                $this->poc->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime() - $this->startTime) * 1000) . '</b> milliseconds.');
+                $this->poc->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime(true) - $this->startTime) * 1000) . '</b> milliseconds.');
         }
 
         $this->poc->getPocDispatcher()->dispatch(
@@ -59,7 +59,7 @@ class CallbackHandler
                                 $this->poc->getOutput() .
                                 '<br>This page has been ' .
                                 '<b> generated in ' .
-                                ((microtime() - $this->poc->getStartTime()) * 1000) .
+                                ((microtime(true) - $this->poc->getStartTime()) * 1000) .
                                 '</b> milliseconds.');
                     }
                     $headers = $this->poc->getOutputHandler()->headersList();
@@ -80,7 +80,7 @@ class CallbackHandler
             } else {
                 if ($this->poc->getDebug()) {
                     $this->poc->setOutput(
-                            $this->poc->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime() - $this->poc->getStartTime()) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
+                            $this->poc->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime(true) - $this->poc->getStartTime()) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
                 }
             }
 
@@ -101,7 +101,7 @@ class CallbackHandler
         $this->poc->setOutput($buffer);
         if ($this->poc->getDebug()) {
             $this->poc->setOutput(
-                    $this->poc->getOutput() . '<br>This page has been ' . ' <b> fetched from the cache in ' . ((microtime() - $this->poc->getStartTime()) * 1000) . '</b> milliseconds.');
+                    $this->poc->getOutput() . '<br>This page has been ' . ' <b> fetched from the cache in ' . ((microtime(true) - $this->poc->getStartTime()) * 1000) . '</b> milliseconds.');
         }
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,

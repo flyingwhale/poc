@@ -71,6 +71,8 @@ class PocLogs extends Plugin
                 array($this, 'beforeStoreOutputTime'));
         $this->pocDispatcher->addListener(PocEventNames::BEFORE_STORE_OUTPUT,
                 array($this, 'beforeStoreOutputOutput'));
+        $this->pocDispatcher->addListener(PocEventNames::OUTPUT_STORED,
+                array($this, 'outputStoredTime'));
 
         // todo: If it is turned on, the php fly away with segmentation fault
         // when phpunit runs.
@@ -184,4 +186,11 @@ class PocLogs extends Plugin
         $this->logger->setLog($eventName, $output);
         $this->logger->setLog($type . '-' . $eventName, $output);
     }
+    
+    public function outputStoredTime (BaseEvent $event)
+    {
+        $this->logTime($event, PocEventNames::OUTPUT_STORED,
+                self::LOG_TYPE_TIME);
+    }
+    
 }

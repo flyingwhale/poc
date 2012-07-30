@@ -26,6 +26,8 @@ use POC\cache\cacheimplementation\Cache;
 class HeaderManipulator
 {
 
+    const HEADER_POSTFIX = "_HE";
+
     public $headersToPreserve;
 
     public $headersToStore;
@@ -33,10 +35,6 @@ class HeaderManipulator
     public $headersToSend;
 
     public $headersToRemove;
-
-    public $eTag;
-
-    public $outputHeader;
 
     /**
      *
@@ -94,53 +92,32 @@ class HeaderManipulator
         }
     }
 
-    // TODO: still not works
-    public function etagGeneration ($output)
+
+    public function storeHeaders ()
     {
-        if ($this->isEtagGeneration) {
-            $etag = md5($output);
-            $this->headersToStore[] = 'Etag : ' . $etag;
-
-            return $etag;
-        }
-    }
-
-    public function setEtagGeneration ($boolean = true)
-    {
-        $this->isEtagGeneration = $boolean;
-    }
-
-    public function setOutputHandler ($outputHeader)
-    {
-        $this->outputHeader = $outputHeader;
-    }
-
-    public function storeHeades ($output)
-    {
-
-        // TODO: still not working.
-        if ($this->isEtagGeneration) {
-            $this->cache->cacheSpecificStore(
-                    $this->poc->getHasher()
-                        ->getKey() . 'e', $this->etagGeneration($output));
-        }
-
         if ($this->headersToStore) {
-            $this->cache->cacheSpecificStore(
+            $this->poc->getCache()->cacheSpecificStore(
                     $this->poc->getHasher()
-                        ->getKey() . 'h', serialize($this->headersToStore));
+                    ->getKey() .
+                        self::HEADER_POSTFIX, serialize($this->headersToStore));
         }
     }
+
 
     public function fetchHeaders ()
     {
-        $this->headersToSend = unserialize(
-                $this->poc->getCache()->fetch(
-                        $this->poc->getHasher()
-                            ->getKey() . 'h'));
-        $this->eTag = ($this->poc->getCache()->fetch(
-                $this->poc->getHasher()
-                    ->getKey() . 'e'));
+        $this->headersToSend = unserialize( $this->poc->getCache()->fetch(
+                                              $this->poc->getHasher()->getKey().
+                                                         self::HEADER_POSTFIX));
+
+        $this->poc->getLogger()->setLog("headers__", serialize($this->headersToSend));
+
+        if($this->headersToSend)
+        {
+            foreach($this->headersToSend as $header){
+              header($header);
+            }
+        }
     }
 
 }

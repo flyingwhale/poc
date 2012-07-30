@@ -225,6 +225,10 @@ class Poc implements PocParams
         $this->canICacheThisGeneratedContent = $bool;
     }
 
+    /**
+     *
+     * @return Hasher
+     */
     public function getHasher()
     {
         return $this->hasher;
@@ -238,6 +242,10 @@ class Poc implements PocParams
         return $this->canICacheThisGeneratedContent;
     }
 
+    /**
+     *
+     * @return Poc\Cache\Header\HeaderManipulator
+     */
     public function getHeaderManipulator(){
         return $this->headerManipulator;
     }
@@ -309,7 +317,6 @@ class Poc implements PocParams
         $poc->outputHandler = $optionable[Poc::PARAM_OUTPUTHANDLER];
         $poc->outputHandler->setPoc($this);
         $poc->headerManipulator = $optionable[Poc::PARAM_HEADERMANIPULATOR];
-        $poc->headerManipulator->setOutputHandler($this->outputHandler);
         $poc->headerManipulator->setPoc($this);
         $poc->outputFilter = $optionable[Poc::PARAM_OUTPUTFILTER];
         $poc->setDebug($optionable['debug']);
@@ -336,39 +343,23 @@ class Poc implements PocParams
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
     }
 
-    public function fetchCache ($die = true)
+    public function fetchCache ()
     {
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINING, new BaseEvent($this));
 
-        $output = $this->fetchCacheValue();
+        $output = $this->cache->fetch($this->hasher->getKey());
         if ($output) {
             $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
             $this->headerManipulator->fetchHeaders();
-            // TODO:Replace it to it's appropriate place.(OutputHandler)
-            $arr = headers_list();
-            if ($this->headerManipulator->headersToSend) {
-                foreach ($this->headerManipulator->headersToSend as $header) {
-                    $this->outputHandler->header($header);
-                }
-                $this->headerManipulator->removeHeaders($arr);
-            }
             $this->outputHandler->stopBuffer($output);
         }
-
-        return $output;
-    }
-
-    public function fetchCacheValue ()
-    {
-        $output = $this->cache->fetch($this->hasher->getKey());
-
-        return $output;
+        else{
+        }
     }
 
     public function start ()
     {
-
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
         new BaseEvent($this));

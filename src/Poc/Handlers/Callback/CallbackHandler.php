@@ -63,18 +63,22 @@ class CallbackHandler
                                 '</b> milliseconds.');
                     }
                     $headers = $this->poc->getOutputHandler()->headersList();
-                    $this->poc->getHeaderManipulator()->storeHeadersForPreservation(
-                                                                      $headers);
+
+                    $this->poc->getHeaderManipulator()
+                                        ->storeHeadersForPreservation($headers);
+
                     $this->poc->getHeaderManipulator()->removeHeaders($headers);
+
                     $this->poc->getPocDispatcher()->dispatch(
                       PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this->poc));
 
                     $this->poc->getCache()->cacheSpecificStore(
                             $this->poc->getHasher()->getKey(), $this->poc->getOutput());
-                    $this->poc->getHeaderManipulator()->storeHeades($headers);
 
                     $this->poc->getPocDispatcher()->dispatch(
                             PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
+
+                    $this->poc->getHeaderManipulator()->storeHeaders();
 
                 }
             } else {
@@ -111,4 +115,3 @@ class CallbackHandler
         return $this->poc->getOutput();
     }
 }
-?>

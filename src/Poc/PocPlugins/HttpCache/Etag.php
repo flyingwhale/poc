@@ -48,11 +48,14 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
     public function checkEtag (BaseEvent $event)
     {
         $requestHeaders = getallheaders();
-        $etag = $requestHeaders['If-None-Match'];
-        if($event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX)){
-            header("HTTP/1.0 304 Not Modified");
-            header('Etag: ' . $etag);
-            $event->getEvent()->getOutputHandler()->obEnd();
+        if (isset($requestHeaders['If-None-Match']))
+        {
+            $etag = $requestHeaders['If-None-Match'];
+            if($event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX)){
+                header("HTTP/1.0 304 Not Modified");
+                header('Etag: ' . $etag);
+                $event->getEvent()->getOutputHandler()->obEnd();
+            }
         }
     }
 

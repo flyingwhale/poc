@@ -61,4 +61,9 @@ class ServerOutput extends Output
     {
         echo $output;
     }
+
+    public function getallheaders(){
+        return getallheaders();
+    }
+
 }

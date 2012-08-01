@@ -41,13 +41,12 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
         $etag = md5($event->getEvent()->getOutput());
         $event->getEvent()->getCache()->cacheSpecificStore($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX, $etag);
         $etagHeader = 'Etag: ' . $etag;
-        $event->getEvent()->getHeaderManipulator()->headersToStore[] = $etagHeader;
-        header($etagHeader);
+        $event->getEvent()->getOutputHandler()->header($etagHeader);
     }
 
     public function checkEtag (BaseEvent $event)
     {
-        $requestHeaders = getallheaders();
+        $requestHeaders = $event->getEvent()->getOutputHandler()->getallheaders();
         if (isset($requestHeaders['If-None-Match']))
         {
             $etag = $requestHeaders['If-None-Match'];
@@ -56,8 +55,8 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
 
               if ($storedEtag == $etag ){
                   $event->getEvent()->getLogger()->setLog("inCheckEtag", $requestHeaders['If-None-Match']);
-                  header("HTTP/1.0 304 Not Modified");
-                  header('Etag: ' . $etag);
+                  $event->getEvent()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
+                  $event->getEvent()->getOutputHandler()->header('Etag: ' . $etag);
                   $event->getEvent()->getLogger()->setLog("ETAGGED", "Etag");
                   $event->getEvent()->getOutputHandler()->StopBuffer();
               }

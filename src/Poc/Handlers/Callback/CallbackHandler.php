@@ -92,7 +92,7 @@ class CallbackHandler
                     $this->poc->getHeaderManipulator()->storeHeaders();
 
                     $this->poc->getPocDispatcher()->dispatch(
-                            PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
+                            PocEventNames::HEADERS_STORED, new BaseEvent($this->poc));
 
                 }
             } else {

@@ -26,6 +26,8 @@ use Poc\Poc;
 
 use Poc\Core\PluginSystem\Plugin;
 
+use Poc\PocPlugins\HttpCache\Events\EtagEvents;
+
 class PocLogs extends Plugin
 {
 
@@ -84,6 +86,13 @@ class PocLogs extends Plugin
                 array($this, 'beforeStoreOutputOutput'));
         $this->pocDispatcher->addListener(PocEventNames::OUTPUT_STORED,
                 array($this, 'outputStoredTime'));
+
+        $this->pocDispatcher->addListener(EtagEvents::ETAG_FOUND,
+                array($this, 'etagFoundTime'));
+
+        $this->pocDispatcher->addListener(EtagEvents::ETAG_NOT_FOUND,
+                array($this, 'etagNotFoundTime'));
+
 
         // todo: If it is turned on, the php fly away with segmentation fault
         // when phpunit runs.
@@ -149,11 +158,21 @@ class PocLogs extends Plugin
                 self::LOG_TYPE_OUTPUT);
     }
 
-    public function diesTime ($event)
+    public function etagFoundTime(BaseEvent $event){
+        $this->logTime($event, EtagEvents::ETAG_FOUND,
+                self::LOG_TYPE_TIME);
+    }
+
+    public function etagNotFoundTime(BaseEvent $event){
+        $this->logTime($event, EtagEvents::ETAG_NOT_FOUND,
+                self::LOG_TYPE_TIME);
+    }
+
+    public function diesTime (BaseEvent $event)
     {
-        $this->logTime($event, PocEventNames::DIES, self::LOG_TYPE_TIME);
+        /*$this->logTime($event, PocEventNames::DIES, self::LOG_TYPE_TIME);
         $this->pocDispatcher->removeListener(PocEventNames::DIES,
-                array($this, 'beforeStoreOutputOutput'));
+                array($this, 'beforeStoreOutputOutput'));*/
     }
 
     private function logOutput (BaseEvent $event, $eventName, $type)
@@ -166,8 +185,8 @@ class PocLogs extends Plugin
     private function logTime (BaseEvent $event, $eventName, $type)
     {
         $this->logOutputMatix($eventName,
-               \microtime(true) - $event->getEvent()
-                    ->getStartTime() . '|' . $eventName, $type);
+                \microtime(true) - ($event->getEvent()->getStartTime()) .
+                                                       '|' . $eventName, $type);
     }
 
     private function logOutputMatix ($eventName, $saveIt, $type)

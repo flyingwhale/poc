@@ -17,6 +17,7 @@ use Poc\Poc;
 
 use Poc\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
+use Poc\PocPlugins\HttpCache\Events\EtagEvents;
 
 class Etag extends \Poc\Core\PluginSystem\Plugin
 {
@@ -50,15 +51,21 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
         if (isset($requestHeaders['If-None-Match']))
         {
             $etag = $requestHeaders['If-None-Match'];
-            if($etag){
+            if($etag)
+            {
               $storedEtag = $event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX);
 
-              if ($storedEtag == $etag ){
+              if ($storedEtag == $etag )
+              {
+                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
                   $event->getEvent()->getLogger()->setLog("inCheckEtag", $requestHeaders['If-None-Match']);
                   $event->getEvent()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
                   $event->getEvent()->getOutputHandler()->header('Etag: ' . $etag);
-                  $event->getEvent()->getLogger()->setLog("ETAGGED", "Etag");
                   $event->getEvent()->getOutputHandler()->StopBuffer();
+              }
+              else
+              {
+                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_NOT_FOUND, new BaseEvent($this->poc));
               }
             }
         }

@@ -43,6 +43,8 @@ interface OutputInterface
 
     public function printOutputCallback ($output);
 
+    public function getallheaders();
+
     /**
      *
      * @param $poc Poc

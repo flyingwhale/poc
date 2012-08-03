@@ -116,7 +116,7 @@ class HeaderManipulator
         if($this->headersToSend)
         {
             foreach($this->headersToSend as $header){
-              header($header);
+                $this->poc->getOutputHandler()->header($header);
             }
         }
     }

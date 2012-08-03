@@ -30,10 +30,6 @@ class TestOutput extends Output
      */
     private $actHeader;
 
-    /**
-     *
-     * @var HeaderManipulator
-     */
     private $header = null;
 
     private $outputFlow = 1;
@@ -43,6 +39,8 @@ class TestOutput extends Output
     private $stopBufferOutut = null;
 
     private $optionable;
+
+    public $allheaders;
 
     public function setupDefaults ()
     {
@@ -76,7 +74,7 @@ class TestOutput extends Output
 
     public function header ($header)
     {
-        $this->header = $header;
+        $this->header[] = $header;
     }
 
     public function getHeader ()
@@ -117,5 +115,9 @@ class TestOutput extends Output
     public function printOutputCallback ($output)
     {
         $this->output = $output;
+    }
+
+    public function getallheaders(){
+        return $this->allheaders;
     }
 }

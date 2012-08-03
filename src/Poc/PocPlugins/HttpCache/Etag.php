@@ -17,6 +17,7 @@ use Poc\Poc;
 
 use Poc\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
+use Poc\PocPlugins\HttpCache\Events\EtagEvents;
 
 class Etag extends \Poc\Core\PluginSystem\Plugin
 {
@@ -39,22 +40,33 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
     public function addEtag (BaseEvent $event)
     {
         $etag = md5($event->getEvent()->getOutput());
-        $event->getEvent()->getCache()->cacheSpecificStore($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX, 1);
+        $event->getEvent()->getCache()->cacheSpecificStore($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX, $etag);
         $etagHeader = 'Etag: ' . $etag;
-        $event->getEvent()->getHeaderManipulator()->headersToStore[] = $etagHeader;
-        header($etagHeader);
+        $event->getEvent()->getOutputHandler()->header($etagHeader);
     }
 
     public function checkEtag (BaseEvent $event)
     {
-        $requestHeaders = getallheaders();
+        $requestHeaders = $event->getEvent()->getOutputHandler()->getallheaders();
         if (isset($requestHeaders['If-None-Match']))
         {
             $etag = $requestHeaders['If-None-Match'];
-            if($event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX == $requestHeaders['If-None-Match'])){
-                header("HTTP/1.0 304 Not Modified");
-                header('Etag: ' . $etag);
-                $event->getEvent()->getOutputHandler()->obEnd();
+            if($etag)
+            {
+              $storedEtag = $event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX);
+
+              if ($storedEtag == $etag )
+              {
+                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
+                  $event->getEvent()->getLogger()->setLog("inCheckEtag", $requestHeaders['If-None-Match']);
+                  $event->getEvent()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
+                  $event->getEvent()->getOutputHandler()->header('Etag: ' . $etag);
+                  $event->getEvent()->getOutputHandler()->StopBuffer();
+              }
+              else
+              {
+                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_NOT_FOUND, new BaseEvent($this->poc));
+              }
             }
         }
     }

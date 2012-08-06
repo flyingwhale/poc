@@ -40,7 +40,7 @@ class TestOutput extends Output
 
     private $optionable;
 
-    public $allheaders;
+    private $allheaders;
 
     public function setupDefaults ()
     {
@@ -77,7 +77,8 @@ class TestOutput extends Output
 
     public function header ($header)
     {
-        $this->header[] = $header;
+        $headerArray = explode(":", $header);
+        $this->header[$headerArray[0]] = $headerArray[1];
     }
 
     public function getHeader ()

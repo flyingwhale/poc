@@ -66,10 +66,13 @@ class TestOutput extends Output
 
     public function stopBuffer ($output = '')
     {
-        echo ($output);
-        $this->stopBufferOutut = $output;
-        $this->outputFlow = 0;
-        ob_flush();
+        if($this->outputFlow)
+        {
+            echo ($output);
+            $this->stopBufferOutut = $output;
+            $this->outputFlow = 0;
+            ob_flush();
+        }
     }
 
     public function header ($header)
@@ -84,8 +87,11 @@ class TestOutput extends Output
 
     public function obEnd ()
     {
-        $this->outputFlow = 0;
-        ob_flush();
+        if($this->outputFlow)
+        {
+            $this->outputFlow = 0;
+            ob_flush();
+        }
     }
 
     public function getOutputFlow ()

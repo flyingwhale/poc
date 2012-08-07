@@ -42,12 +42,10 @@ class PocTest extends PocTestCore
         };
 
         $objects['predis'] = function  () use ($ttl) {
-
             return new PredisCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 
         $objects['mongo'] = function  () use ($ttl) {
-
             return new MongoDBCache(array(CacheParams::PARAM_TTL => $ttl));
         };
 

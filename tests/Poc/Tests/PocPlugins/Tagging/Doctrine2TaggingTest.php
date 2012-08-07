@@ -73,7 +73,6 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
      */
     public function getConnection ()
     {
-
         return $this->createDefaultDBConnection(self::$pdo);
     }
 
@@ -177,7 +176,7 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
                 array('caches', 'tags_has_caches', 'tags'));
         $expectedDataset = $initDataSet;
         $this->assertDataSetsEqual($expectedDataset, $dataSet);
-        
+
         $cacheMock = $this->getMock('Cache', array('cacheSpecificClearItem'));
         $cacheMock->expects($this->any())
             ->method('cacheSpecificClearItem')

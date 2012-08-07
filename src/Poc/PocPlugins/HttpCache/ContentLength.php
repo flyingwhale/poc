@@ -24,7 +24,6 @@ use Poc\Poc;
 
 use Poc\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
-use Poc\PocPlugins\HttpCache\Events\EtagEvents;
 
 class ContentLength extends \Poc\Core\PluginSystem\Plugin
 {

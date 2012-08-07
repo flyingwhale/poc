@@ -12,7 +12,6 @@
 
 namespace Poc\Handlers\Output;
 
-use Poc\Cache\Header\HeaderManipulator;
 use Poc\Poc;
 use Optionable;
 
@@ -40,7 +39,7 @@ class TestOutput extends Output
 
     private $optionable;
 
-    public $allheaders;
+    private $allheaders;
 
     public function setupDefaults ()
     {
@@ -66,8 +65,7 @@ class TestOutput extends Output
 
     public function stopBuffer ($output = '')
     {
-        if($this->outputFlow)
-        {
+        if ($this->outputFlow) {
             echo ($output);
             $this->stopBufferOutut = $output;
             $this->outputFlow = 0;
@@ -77,7 +75,8 @@ class TestOutput extends Output
 
     public function header ($header)
     {
-        $this->header[] = $header;
+        $headerArray = explode(":", $header);
+        $this->header[$headerArray[0]] = $headerArray[1];
     }
 
     public function getHeader ()
@@ -87,8 +86,7 @@ class TestOutput extends Output
 
     public function obEnd ()
     {
-        if($this->outputFlow)
-        {
+        if ($this->outputFlow) {
             $this->outputFlow = 0;
             ob_flush();
         }
@@ -123,7 +121,8 @@ class TestOutput extends Output
         $this->output = $output;
     }
 
-    public function getallheaders(){
+    public function getallheaders()
+    {
         return $this->allheaders;
     }
 }

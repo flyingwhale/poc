@@ -13,7 +13,6 @@ namespace Poc\Core\Monolog;
 
 use Monolog\Handler\StreamHandler;
 
-
 class MonoLogger implements LoggerInterface
 {
 

@@ -235,11 +235,13 @@ class Poc implements PocParams
         return $this->hasher;
     }
 
-    public function getLevel(){
+    public function getLevel()
+    {
         return $this->level;
     }
 
-    public function getCanICacheThisGeneratedContent(){
+    public function getCanICacheThisGeneratedContent()
+    {
         return $this->canICacheThisGeneratedContent;
     }
 
@@ -247,11 +249,13 @@ class Poc implements PocParams
      *
      * @return Poc\Cache\Header\HeaderManipulator
      */
-    public function getHeaderManipulator(){
+    public function getHeaderManipulator()
+    {
         return $this->headerManipulator;
     }
 
-    public function getCallbackHandler(){
+    public function getCallbackHandler()
+    {
         return $this->callbackHandler;
     }
 
@@ -310,7 +314,6 @@ class Poc implements PocParams
 
     }
 
-
     protected function mapFieldsFromOptionable(&$optionable, &$poc)
     {
         $poc->pocDispatcher =  $optionable[Poc::PARAM_EVENT_DISPATCHER];
@@ -354,8 +357,7 @@ class Poc implements PocParams
             $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
             $this->headerManipulator->fetchHeaders();
             $this->outputHandler->stopBuffer($output);
-        }
-        else{
+        } else {
         }
     }
 

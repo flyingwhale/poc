@@ -129,9 +129,9 @@ class Doctrine2Tagging extends AbstractDb
             $entityManager->remove($invalidateCache);
             $entityManager->flush();
         }
-        
+
         $tagRepository->removeByNames($tagNames);
-        
+
     }
 
     protected function deleteOrphans ()

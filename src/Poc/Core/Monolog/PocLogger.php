@@ -11,13 +11,12 @@
  */
 namespace Poc\Core\Monolog;
 
-
 use Monolog\Logger;
 
 class PocLogger extends \Monolog\Logger
 {
 
-    static $globalCounter;
+    public static $globalCounter;
     private $selfCounter;
 
     public function __construct($name)
@@ -29,9 +28,9 @@ class PocLogger extends \Monolog\Logger
     /**
      * Adds a log record.
      *
-     * @param integer $level The logging level
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  integer $level   The logging level
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addRecord($level, $message, array $context = array())

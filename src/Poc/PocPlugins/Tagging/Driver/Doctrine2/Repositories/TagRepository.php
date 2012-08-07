@@ -26,24 +26,22 @@ class TagRepository extends EntityRepository
 
         return $rowsAffected;
     }
-    
+
     public function removeByName($name)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->delete('\\Poc\\PocPlugins\\Tagging\\Driver\\Doctrine2\\Entities\\Tag', 't')
             ->where('t.tag = :name')
             ->setParameter('name', $name);
-                
 
         return $qb->getQuery()->getResult();
     }
-    
+
     public function removeByNames($names)
     {
-        foreach($names as $name)
-        {
+        foreach ($names as $name) {
             $this->removeByName($name);
-        }        
+        }
     }
 
 }

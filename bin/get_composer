@@ -7,6 +7,15 @@ if [ -f composer.phar ]
 then
     echo composer.phar file exists
 else
-    curl -s http://getcomposer.org/installer | php
+    if [ `command -v curl` ]
+    then
+        curl -s http://getcomposer.org/installer | php
+    elif [ `command -v wget` ]
+    then
+        wget http://getcomposer.org/composer.phar
+    else
+        echo >&2 "To download the composer.phar file either curl or wget is required but none of them is installed.  Aborting."
+        exit 1
+    fi
     chmod 777 composer.phar    
 fi

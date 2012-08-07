@@ -93,7 +93,6 @@ class HeaderManipulator
         }
     }
 
-
     public function storeHeaders ()
     {
         if ($this->headersToStore) {
@@ -104,7 +103,6 @@ class HeaderManipulator
         }
     }
 
-
     public function fetchHeaders ()
     {
         $this->headersToSend = unserialize( $this->poc->getCache()->fetch(
@@ -113,9 +111,8 @@ class HeaderManipulator
 
         $this->poc->getLogger()->setLog("headers__", serialize($this->headersToSend));
 
-        if($this->headersToSend)
-        {
-            foreach($this->headersToSend as $header){
+        if ($this->headersToSend) {
+            foreach ($this->headersToSend as $header) {
                 $this->poc->getOutputHandler()->header($header);
             }
         }

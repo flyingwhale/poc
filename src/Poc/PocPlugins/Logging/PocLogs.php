@@ -93,7 +93,6 @@ class PocLogs extends Plugin
         $this->pocDispatcher->addListener(EtagEvents::ETAG_NOT_FOUND,
                 array($this, 'etagNotFoundTime'));
 
-
         // todo: If it is turned on, the php fly away with segmentation fault
         // when phpunit runs.
         /*
@@ -158,12 +157,14 @@ class PocLogs extends Plugin
                 self::LOG_TYPE_OUTPUT);
     }
 
-    public function etagFoundTime(BaseEvent $event){
+    public function etagFoundTime(BaseEvent $event)
+    {
         $this->logTime($event, EtagEvents::ETAG_FOUND,
                 self::LOG_TYPE_TIME);
     }
 
-    public function etagNotFoundTime(BaseEvent $event){
+    public function etagNotFoundTime(BaseEvent $event)
+    {
         $this->logTime($event, EtagEvents::ETAG_NOT_FOUND,
                 self::LOG_TYPE_TIME);
     }

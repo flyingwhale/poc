@@ -16,7 +16,6 @@ use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
 use Poc\Poc;
 
-
 class CallbackHandler
 {
     const CALLBACK_GENERATE = 'pocCallbackGenerate';
@@ -27,13 +26,14 @@ class CallbackHandler
      *
      * @var Poc
      */
-    var $poc;
+    public $poc;
 
     /**
      *
      * @param Poc $poc
      */
-    public function __construct(Poc $poc){
+    public function __construct(Poc $poc)
+    {
         $this->poc = $poc;
     }
 

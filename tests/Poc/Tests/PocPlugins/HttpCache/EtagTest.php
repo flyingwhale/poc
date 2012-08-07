@@ -14,29 +14,54 @@ use Poc\PocPlugins\HttpCache\Etag;
 class EtagTest extends PocTestCore
 {
 
+    const ETAG_MD5 = 'c075eba9c04d3faf4ac21fd29cae6fd8';
+    const ETAG_TEXT = 'whatever!123';
+    
     public function testEtagSend ()
     {
         $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestMinify".  rand());
+        $hasher->addDistinguishVariable("TestEtag" . rand());
 
         $outputHandler = new TestOutput;
 
         $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
-                            PocParams::PARAM_HASHER=>$hasher
+                              PocParams::PARAM_HASHER=>$hasher
                         ));
 
         $poc->addPlugin(new PocLogs);
 
         $poc->addPlugin(new Etag);
 
-        $testString = "whatever!123";
-
-        $this->pocBurner($poc, $testString);
-
-        echo serialize($outputHandler->getHeader());
+        $this->pocBurner($poc, self::ETAG_TEXT);
 
         $header = $outputHandler->getHeader();
 
-        $this->assertEquals(' ' . md5($testString), $header['Etag']);
+        $this->assertEquals(md5(self::ETAG_TEXT), $header['Etag']);
+    }
+    
+    public function testEtagReceive ()
+    {
+        $hasher = new Hasher();
+        $hasher->addDistinguishVariable("TestEtag" . rand());
+
+        $outputHandler = new TestOutput;
+
+        $outputHandler->allheaders['If-None-Match'] = 'c075eba9c04d3faf4ac21fd29cae6fd8';
+        echo"TT";
+        echo serialize($outputHandler->getallheaders());
+        echo"TT";
+        $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
+                              PocParams::PARAM_HASHER=>$hasher
+                        ));
+
+        $poc->addPlugin(new PocLogs);
+
+        $poc->addPlugin(new Etag);
+
+        $this->pocBurner($poc, self::ETAG_TEXT);
+
+        $header = $outputHandler->getHeader();
+        
+        $this->assertTrue(isset($header['HTTP/1.0 304 Not Modified']));
     }
 }

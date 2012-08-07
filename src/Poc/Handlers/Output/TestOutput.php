@@ -39,7 +39,7 @@ class TestOutput extends Output
 
     private $optionable;
 
-    private $allheaders;
+    public $allheaders;
 
     public function setupDefaults ()
     {
@@ -75,8 +75,15 @@ class TestOutput extends Output
 
     public function header ($header)
     {
-        $headerArray = explode(":", $header);
-        $this->header[$headerArray[0]] = $headerArray[1];
+        if(strstr($header,':'))
+        {
+            $headerArray = explode(":", $header);
+            $this->header[$headerArray[0]] = trim ($headerArray[1]);
+        }
+        else
+        {
+            $this->header[$header]=''; 
+        }
     }
 
     public function getHeader ()
@@ -125,4 +132,5 @@ class TestOutput extends Output
     {
         return $this->allheaders;
     }
+    
 }

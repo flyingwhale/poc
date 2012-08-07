@@ -13,7 +13,6 @@ namespace Poc\Core\Monolog;
 
 use Monolog\Handler\StreamHandler;
 
-use Monolog\Logger;
 
 class MonoLogger implements LoggerInterface
 {
@@ -39,11 +38,11 @@ class MonoLogger implements LoggerInterface
     public function getLogger ($eventName)
     {
         if (! isset($this->loggers[$eventName])) {
-            $this->loggers[$eventName] = new Logger($this->token);
+            $this->loggers[$eventName] = new PocLogger($this->token);
             $this->loggers[$eventName]->pushHandler(
                     new StreamHandler(
                             $this->logFolder . $this->logPrefix . 'POC_' . $eventName . '.log',
-                            Logger::INFO));
+                            PocLogger::INFO));
         }
 
         return $this->loggers[$eventName];

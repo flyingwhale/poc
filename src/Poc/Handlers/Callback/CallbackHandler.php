@@ -83,6 +83,12 @@ class CallbackHandler
                     $this->poc->getPocDispatcher()->dispatch(
                       PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this->poc));
 
+                    $this->poc->getPocDispatcher()->dispatch(
+                      PocEventNames::COMPRESS_OUTPUT, new BaseEvent($this->poc));
+
+                    $this->poc->getPocDispatcher()->dispatch(
+                      PocEventNames::AFTER_COMPRESS_OUTPUT, new BaseEvent($this->poc));
+
                     $this->poc->getCache()->cacheSpecificStore(
                             $this->poc->getHasher()->getKey(), $this->poc->getOutput());
 

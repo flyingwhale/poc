@@ -44,7 +44,6 @@ class Filter
                 return true;
             }
         }
-
         return false;
     }
 

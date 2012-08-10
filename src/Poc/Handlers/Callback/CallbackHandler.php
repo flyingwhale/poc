@@ -48,6 +48,11 @@ class CallbackHandler
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
                 new BaseEvent($this->poc));
+
+        $this->poc->getPocDispatcher()->dispatch(
+                PocEventNames::COMPRESS_OUTPUT,
+                new BaseEvent($this->poc));
+
         $this->poc->getOutputHandler()->ObPrintCallback($buffer);
 
         return $this->poc->getOutput();

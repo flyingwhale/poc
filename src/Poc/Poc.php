@@ -88,12 +88,6 @@ class Poc implements PocParams
 
     /**
      *
-     * @var OutputFilter
-     */
-    private $outputFilter = null;
-
-    /**
-     *
      * @var Cache
      */
     private $cache = null;
@@ -376,7 +370,6 @@ class Poc implements PocParams
                         new BaseEvent($this));
             }
         } else {
-
             $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
 
             $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
@@ -393,6 +386,14 @@ class Poc implements PocParams
         }
         /*$this->pocDispatcher->dispatch(PocEventNames::DIES,
                 new BaseEvent($this));*/
+    }
+
+    /**
+     *
+     * @return Filter
+     */
+    public function getFilter(){
+        return $this->filter;
     }
 
 }

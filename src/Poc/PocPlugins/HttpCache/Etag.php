@@ -29,7 +29,7 @@ class Etag extends \Poc\Core\PluginSystem\Plugin
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'addEtag'));
 
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                        array($this, 'checkEtag'));
 
         $poc->getPocDispatcher()->addListener(PocEventNames::HEADERS_STORED,

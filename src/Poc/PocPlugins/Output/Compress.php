@@ -39,7 +39,7 @@ class Compress extends \Poc\Core\PluginSystem\Plugin
         $poc->getPocDispatcher()->addListener(PocEventNames::COMPRESS_OUTPUT,
                                                     array($this, 'compress'));
 
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                     array($this, 'modifyHasher'));
 
     }

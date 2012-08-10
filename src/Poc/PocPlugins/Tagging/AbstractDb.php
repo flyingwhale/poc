@@ -50,7 +50,7 @@ abstract class AbstractDb extends Plugin
 
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                   array($this, 'cacheAddTags'));
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                     array($this, 'cacheTagsInvalidation'));
 
     }

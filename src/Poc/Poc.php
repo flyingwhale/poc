@@ -344,7 +344,7 @@ class Poc implements PocParams
     public function fetchCache ()
     {
         $this->pocDispatcher->dispatch(
-        PocEventNames::FUNCTION_FETCHCACHE_BEGINING, new BaseEvent($this));
+        PocEventNames::FUNCTION_FETCHCACHE_BEGINNING, new BaseEvent($this));
 
         $output = $this->cache->fetch($this->hasher->getKey());
         if ($output) {
@@ -358,7 +358,7 @@ class Poc implements PocParams
     public function start ()
     {
         $this->pocDispatcher->dispatch(
-        PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
         new BaseEvent($this));
 
         $this->level = \ob_get_level();

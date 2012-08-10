@@ -35,7 +35,7 @@ class ContentLength extends \Poc\Core\PluginSystem\Plugin
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'calculateSize'));
 
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINING,
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                        array($this, 'printSize'));
 
         $poc->getPocDispatcher()->addListener(PocEventNames::HEADERS_STORED,

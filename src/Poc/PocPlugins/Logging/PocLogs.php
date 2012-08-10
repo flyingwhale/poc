@@ -67,10 +67,10 @@ class PocLogs extends Plugin
                 array($this, 'beforeOutputSentToClinetAfterOutputStoredOutput'));
 
         $this->pocDispatcher->addListener(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
+                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
                 array($this, 'beforeOutputSentToClientNoCachingProcessInvolvedTime'));
         $this->pocDispatcher->addListener(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
+                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
                 array($this, 'beforeOutputSentToClientNoCachingProcessInvolvedOutput'));
 
         $this->pocDispatcher->addListener(
@@ -119,7 +119,7 @@ class PocLogs extends Plugin
             BaseEvent $event)
     {
         $this->logTime($event,
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
+                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
                 self::LOG_TYPE_TIME);
     }
 
@@ -127,7 +127,7 @@ class PocLogs extends Plugin
             BaseEvent $event)
     {
         $this->logOutput($event,
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVLOVED,
+                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
                 self::LOG_TYPE_OUTPUT);
     }
 

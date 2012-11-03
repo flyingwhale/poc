@@ -23,7 +23,6 @@ use Poc\Core\Monolog\MonoLogger;
 use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
 use Poc\Core\Event\PocDispatcher;
-use Poc\Core\Event\EventDictionary;
 use Poc\Handlers\Callback\CallbackHandler;
 use Poc\Handlers\Output\ServerOutput;
 use Poc\Handlers\Output\OutputInterface;
@@ -34,11 +33,18 @@ use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Optionable;
+
 /**
  * This class contains the "Entry point" of the caching process.
- * Therefor is is
- * a really crucial part of the framework. This class implements the
- * PocParams interface.
+ * Therefor is a really crucial part of the framework. The whole process has
+ * got bindings at this class. The framework storngly builds on the observer pattern,
+ * Tehre fore this is completely plugin based. Every component of the framework can be
+ * viewed as an external addition. This makes the the whole development of new modules
+ * really easy, all component all decoupled, it also makes the system simple
+ * and will use as small amount resources as possible.
+ *
+ * This aproach also helps the refactoring, and retinking of the basic idea, nameli the
+ * really easy and scalable output caching.
  *
  *
  * @package Poc
@@ -48,20 +54,30 @@ use Optionable;
 class Poc implements PocParams
 {
     /**
+     * This object stands for the output handling. I had to make
+     * this abstraction because we whant testable code, and for the tests we
+     * don't have the server environmnet, and we weeded to mock it somehow.
+     * This is the solution for this problem.
      *
      * @var OutputInterface
      */
     private $outputHandler = null;
 
     /**
+     * This variable holds the output that has been created by the output
+     * buffering functionality of the PHP. With this captured output the.
+     * Plugins we have can make modifications on the output.
      *
      * @var String
      */
     private $output = null;
 
     /**
-     * If its value is true teh debug mod is turned on.
+     * If its value is true the debug mod is turned on.
+     * Tehre are already modules that helps debugging, this variable
+     * and the code uses this will be source out to other plugins.
      *
+     * @depreceted
      * @var boolean
      */
     private $debug = null;
@@ -70,48 +86,52 @@ class Poc implements PocParams
      * When the start function of the class executed sets its value by
      * calling the microtime function.
      *
-     * @var unknown_type
+     *
+     * @var integer
      */
     private $startTime = null;
 
     /**
+     * This variable sotres the level of the output buffering, when the poc
+     * has been turned on.
      *
      * @var unknown_type
      */
     private $level = null;
 
     /**
+     * This class handles the header related manipulations, also takes care
+     * about stroing it.
      *
      * @var \POC\cache\header\HeaderManipulator
      */
     private $headerManipulator = null;
 
     /**
+     * This variable contains the object that handles the caching process.
      *
      * @var Cache
      */
     private $cache = null;
 
     /**
+     * This a little extension of the wordfamous micro depenency injection
+     * framework pimple that supportts default parameters. This handles the
+     * default dependencies of the objects.
      *
      * @var Optionable
-     *
      */
     private $optionable;
 
     /**
-     *
-     * @var EventDictionary
-     */
-    private $eventDictionary;
-
-    /**
+     * With the help of this class we implement the observer pattern.;
      *
      * @var EventDispatcher;
      */
     private $pocDispatcher;
 
     /**
+     * This variable takes care about the logging related issues.
      *
      * @var MonoLogger;
      */
@@ -120,12 +140,14 @@ class Poc implements PocParams
     private $canICacheThisGeneratedContent = true;
 
     /**
+     * This class helps too distinguish between more caches.
      *
      * @var Cache\Filtering\Hasher
      */
     private $hasher;
 
     /**
+     * This helps in balck/white listin the pages that has to be cached or not.
      *
      * @var Cache\Filtering\Filter
      */
@@ -384,8 +406,8 @@ class Poc implements PocParams
                 $this->outputHandler->obEnd();
             }
         }
-        /*$this->pocDispatcher->dispatch(PocEventNames::DIES,
-                new BaseEvent($this));*/
+//        $this->pocDispatcher->dispatch(PocEventNames::DIES,
+//                new BaseEvent($this));
     }
 
     /**
@@ -395,5 +417,4 @@ class Poc implements PocParams
     public function getFilter(){
         return $this->filter;
     }
-
 }

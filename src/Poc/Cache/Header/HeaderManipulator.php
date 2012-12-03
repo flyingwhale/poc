@@ -20,10 +20,6 @@
  */
 namespace Poc\Cache\Header;
 
-use POC\Poc;
-
-use POC\cache\cacheimplementation\Cache;
-
 class HeaderManipulator
 {
 
@@ -59,7 +55,7 @@ class HeaderManipulator
         $this->headersToRemove[] = $headerVariable;
     }
 
-    public function removeHeaders ($reponseHeaders)
+    public function removeHeaders ()
     {
         if ($this->headersToRemove) {
             foreach ($this->headersToRemove as $removeThisHeader) {

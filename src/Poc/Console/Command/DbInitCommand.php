@@ -37,9 +37,9 @@ class DbInitCommand extends Command
         $connectionName = 'mysql';
         $doctrineOptionable = new DoctrineOptionable();
 
-        $doctrineOptionable['dbal.connections.mysql.dbname'] =  'poc_tagging';
-        $doctrineOptionable['dbal.connections.mysql.user'] =  'poc_test';
-        $doctrineOptionable['dbal.connections.mysql.password'] =  'poc_test';
+        $doctrineOptionable['dbal.connections.mysql.dbname'] =  'poc_tests';
+        $doctrineOptionable['dbal.connections.mysql.user'] =  'root';
+        $doctrineOptionable['dbal.connections.mysql.password'] =  'qweasd';
         $doctrineOptionable['dbal.connections.mysql.host'] =  'localhost';
         $doctrineOptionable['dbal.connections.mysql.driver'] =  'pdo_mysql';
 

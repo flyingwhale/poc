@@ -102,14 +102,12 @@ class PocTest extends PocTestCore
     public function testPocBlacklist ()
     {
         $blackList = new Filter();
+        $blackList->addBlacklistCondition(false);
         $blackList->addBlacklistCondition(true);
+        $blackList->addBlacklistCondition(false);
 
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("testPocBlacklist".  rand());
-
-        $cacheHandler = new FileCache(
-                array(CacheParams::PARAM_TTL => PocTest::BIGTTL,
-                      ));
 
         $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
@@ -129,7 +127,7 @@ class PocTest extends PocTestCore
         $this->pocBurner($poc4, self::TESTSTRING2);
         $output2 = $this->getOutput();
 
-        $this->assertTrue(! empty($output1));
+        $this->assertTrue(!empty($output1));
         $this->assertTrue($output1 != $output2);
     }
 

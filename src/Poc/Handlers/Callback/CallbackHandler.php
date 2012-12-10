@@ -80,10 +80,12 @@ class CallbackHandler
                     }
                     $headers = $this->poc->getOutputHandler()->headersList();
 
+                    //Headers stored here.
                     $this->poc->getHeaderManipulator()
                                         ->storeHeadersForPreservation($headers);
 
-                    $this->poc->getHeaderManipulator()->removeHeaders($headers);
+                    //Remove unneeded headers.
+                    $this->poc->getHeaderManipulator()->removeHeaders();
 
                     $this->poc->getPocDispatcher()->dispatch(
                       PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this->poc));
@@ -101,7 +103,7 @@ class CallbackHandler
                             PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
 
                     $this->poc->getHeaderManipulator()->storeHeaders();
-
+                    
                     $this->poc->getPocDispatcher()->dispatch(
                             PocEventNames::HEADERS_STORED, new BaseEvent($this->poc));
 

@@ -12,12 +12,11 @@
 
 namespace Poc\PocPlugins\CacheInvalidationProtection;
 
-use Poc\Core\Event\PocDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Poc;
 use Optionable;
 
-class CIAProtectorLogger implements CIAProtectorEventNames
+class ROIProtectorLogger implements ROIProtectorEventNames
 {
 
     /**
@@ -35,7 +34,8 @@ class CIAProtectorLogger implements CIAProtectorEventNames
 
     /**
      *
-     * @var Poc;
+     * @var  Poc\Poc;
+;
      */
     private $poc;
 
@@ -63,43 +63,43 @@ class CIAProtectorLogger implements CIAProtectorEventNames
         $this->pocDispatcher = $this->poc->getPocDispatcher();
 
         $this->pocDispatcher->addListener(
-                CIAProtectorEventNames::CONSULT_STARTED,
+                ROIProtectorEventNames::CONSULT_STARTED,
                 array($this, 'consultLogger'));
 
         $this->pocDispatcher->addListener(
-                CIAProtectorEventNames::CONSULT_STARTED_NOT_FIRST,
+                ROIProtectorEventNames::CONSULT_STARTED_NOT_FIRST,
                 array($this, 'consultFirstLogger'));
 
         $this->pocDispatcher->addListener(
-                CIAProtectorEventNames::CONSULT_STARTED_FIRST,
+                ROIProtectorEventNames::CONSULT_STARTED_FIRST,
                 array($this, 'consultNotFirstLogger'));
 
-        $this->pocDispatcher->addListener(CIAProtectorEventNames::CONSULT_SLEEP,
+        $this->pocDispatcher->addListener(ROIProtectorEventNames::CONSULT_SLEEP,
                 array($this, 'consultSleep'));
 
         // 'I am sleeping '.$sentinelCnt);
     }
 
-    public function consultLogger (CiaEvent $event)
+    public function consultLogger (ROIEvent $event)
     {
-        $this->logger->setLog(CIAProtector::LOG_TYPE_CIA,
+        $this->logger->setLog(ROIProtector::LOG_TYPE_CIA,
                 'sentiel after inc cnt: ' . $event->getCia()
                     ->getSentinel());
     }
 
-    public function consultFirstLogger (CiaEvent $event)
+    public function consultFirstLogger (ROIEvent $event)
     {
-        $this->logger->setLog(CIAProtector::LOG_TYPE_CIA, 'FIRST');
+        $this->logger->setLog(ROIProtector::LOG_TYPE_CIA, 'FIRST');
     }
 
-    public function consultNotFirstLogger (CiaEvent $event)
+    public function consultNotFirstLogger (ROIEvent $event)
     {
-        $this->logger->setLog(CIAProtector::LOG_TYPE_CIA, 'NOT FIRST');
+        $this->logger->setLog(ROIProtector::LOG_TYPE_CIA, 'NOT FIRST');
     }
 
-    public function consultSleep (CiaEvent $event)
+    public function consultSleep (ROIEvent $event)
     {
-        $this->logger->setLog(CIAProtector::LOG_TYPE_CIA,
+        $this->logger->setLog(ROIProtector::LOG_TYPE_CIA,
                 'I am sleeping: ' . $event->getCia()
                     ->getSentinel());
     }

@@ -14,12 +14,12 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class CiaEvent extends Event
+class ROIEvent extends Event
 {
 
     /**
      *
-     * @var CIAProtector
+     * @var ROIProtector
      */
     protected $cia;
 

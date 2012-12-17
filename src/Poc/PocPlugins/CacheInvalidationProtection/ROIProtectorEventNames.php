@@ -12,7 +12,7 @@
 
 namespace Poc\PocPlugins\CacheInvalidationProtection;
 
-interface CIAProtectorEventNames
+interface ROIProtectorEventNames
 {
 
     const CONSULT_STARTED = 'consult';

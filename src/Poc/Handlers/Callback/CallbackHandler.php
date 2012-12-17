@@ -79,7 +79,7 @@ class CallbackHandler
                                 '</b> milliseconds.');
                     }
                     $headers = $this->poc->getOutputHandler()->headersList();
-
+                    
                     //Headers stored here.
                     $this->poc->getHeaderManipulator()
                                         ->storeHeadersForPreservation($headers);

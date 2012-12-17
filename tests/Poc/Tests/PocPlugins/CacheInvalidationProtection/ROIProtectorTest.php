@@ -14,14 +14,16 @@ namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Tests\PocTestCore;
 
-use Poc\PocPlugins\CacheInvalidationProtection\CIAProtector;
+use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
 use Poc\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
 
-class CIAProtectorTest extends PocTestCore
+class ROIProtectorTest extends PocTestCore
 {
-    public function testCIAProtection ()
+    
+    // todo: Add more relevant tests!
+    public function testROIProtection ()
     {
         $outputHandler = new TestOutput();
         $cache = new FileCache();
@@ -29,7 +31,7 @@ class CIAProtectorTest extends PocTestCore
         $poc = new Poc(
                 array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $outputHandler));
 
-        $cia = new CIAProtector();
+        $cia = new ROIProtector();
         $poc->addPlugin($cia);
 
         /*this 3 lines id for the tests only, in real life we don't do such things*/

@@ -14,7 +14,7 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Poc\Core\Monolog\MonoLogger;
+//use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
@@ -42,7 +42,7 @@ use Optionable;
  * @author Imre Toth
  *
  */
-class CIAProtector extends Plugin
+class ROIProtector extends Plugin
 {
 
     const LOG_TYPE_CIA = 'CIA';
@@ -107,7 +107,6 @@ class CIAProtector extends Plugin
          * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
          * });
          */
-
     }
 
     /**
@@ -144,8 +143,8 @@ class CIAProtector extends Plugin
     public function deleteSentinel ()
     {
         $this->cache->clearItem($this->getKey());
-        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
-                "deleted key:" . $this->getKey());
+//        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
+//                "deleted key:" . $this->getKey());
     }
 
     public function getRefreshPage ()
@@ -188,13 +187,13 @@ class CIAProtector extends Plugin
         {
             if ($sentinelCnt) {
                 $this->eventDispatcher->dispatch(
-                        CIAProtectorEventNames::CONSULT_STARTED,
-                        new CiaEvent($this));
+                        ROIProtectorEventNames::CONSULT_STARTED,
+                        new ROIEvent($this));
 
                 if ($sentinelCnt >= 1 and $sentinelCnt <= 2) {
                     while ($this->getSentinel()) {
-                        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
-                                "Sleep: $sentinelCnt");
+//                        $this->monoLogger->setLog(self::LOG_TYPE_CIA,
+//                                "Sleep: $sentinelCnt");
                         usleep(500000);
                     }
                     echo $this->poc->fetchCache();
@@ -206,7 +205,7 @@ class CIAProtector extends Plugin
                 }
             }
         }
-        $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
+//        $this->monoLogger->setLog(self::LOG_TYPE_CIA, "end: $sentinelCnt");
     }
 
     public function consultFinish (BaseEvent $event)

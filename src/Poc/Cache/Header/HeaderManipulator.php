@@ -102,8 +102,6 @@ class HeaderManipulator
                     $this->poc->getHasher()
                     ->getKey() .
                         self::HEADER_POSTFIX, serialize($this->headersToStore));
-            $this->poc->getLogger()->setLog("headers_store", serialize($this->headersToStore));
-
         }
     }
 
@@ -112,9 +110,6 @@ class HeaderManipulator
         $this->headersToSend = unserialize( $this->poc->getCache()->fetch(
                                               $this->poc->getHasher()->getKey().
                                                          self::HEADER_POSTFIX));
-
-        $this->poc->getLogger()->setLog("headers__", serialize($this->headersToSend));
-
         if ($this->headersToSend) {
             foreach ($this->headersToSend as $header) {
                 $this->poc->getOutputHandler()->header($header);

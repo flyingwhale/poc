@@ -114,7 +114,7 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
         $this->optionable[self::PARAM_REDIRECT_CONTENT] = 
                 '<HTML>
                 <HEAD>
-                <META HTTP-EQUIV="refresh" content="1; url=' . $pageURL . '">
+                <META HTTP-EQUIV="refresh" content="1; url=' . $this->getPageUrl() . '">
                 <TITLE>My new webpage</TITLE>
                 </HEAD>
                 <BODY>
@@ -165,7 +165,7 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
 //                "deleted key:" . $this->getKey());
     }
 
-    public function getRefreshPage ()
+    public function getPageUrl()
     {
         $servername = '';
         if (isset($_SERVER["SERVER_NAME"])) {
@@ -186,7 +186,11 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
         } else {
             $pageURL .= $servername . $ru;
         }
-
+        return $pageURL;
+    }
+    
+    public function getRefreshPage ()
+    {
         return $this->optionable[self::PARAM_REDIRECT_CONTENT];
         
     }

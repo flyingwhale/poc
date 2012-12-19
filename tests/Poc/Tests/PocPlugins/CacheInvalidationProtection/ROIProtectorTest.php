@@ -18,6 +18,7 @@ use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
 use Poc\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
+use Poc\Cache\Filtering\Hasher;
 
 class ROIProtectorTest extends PocTestCore
 {
@@ -44,6 +45,8 @@ class ROIProtectorTest extends PocTestCore
         {
             $outputHandler = new TestOutput();
             $cache = new FileCache();
+            $hasher = new Hasher();
+            $hasher->addDistinguishVariable(rand());
             $poc = new Poc(
                     array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $outputHandler));
 
@@ -89,8 +92,8 @@ class ROIProtectorTest extends PocTestCore
         
         $this->pocBurner($poc2, $rnd);
         $this->assertNotEquals($this->cia->getRefreshPage(), $this->getOutput());
-        $this->assertEquals($this->cia->getSentinel(), 0);
-        
+        $this->assertEquals($this->cia->getSentinel(), 0);        
+        $this->assertequals($rnd, $this->getOutput());
         
         
         /*

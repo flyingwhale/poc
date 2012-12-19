@@ -218,7 +218,7 @@ class Poc implements PocParams
 
     public function getLogger ()
     {
-        if (! $this->logger) {
+        if (!$this->logger) {
             $this->logger = new MonoLogger();
         }
 
@@ -305,11 +305,6 @@ class Poc implements PocParams
             }
         );
 
-        $optionable->setDefaultOption(Poc::PARAM_CIA_PROTECTOR,
-            function  () {
-                return null;
-            }
-        );
         $optionable->setDefaultOption(Poc::PARAM_EVENT_DISPATCHER,
             function  () {
                 return new EventDispatcher();
@@ -383,17 +378,14 @@ class Poc implements PocParams
 
         $this->level = \ob_get_level();
         if ($this->filter->evaluate()) {
-            if (! $this->fetchCache()) {
+            if (!$this->fetchCache()) {
                 $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
-
-                $this->pocDispatcher->dispatch(PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
-                        new BaseEvent($this));
+                $this->pocDispatcher->dispatch(
+                                PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+                                                          new BaseEvent($this));
             }
         } else {
             $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
-
-            $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
-                    new BaseEvent($this));
         }
     }
 

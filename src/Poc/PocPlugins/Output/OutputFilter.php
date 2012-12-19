@@ -41,7 +41,6 @@ class OutputFilter extends Plugin
                 $result = preg_match($condititon, $this->poc->getOutput());
                 if ($result) {
                   $this->poc->setCanICacheThisGeneratedContent(false);
-
                   return;
                 }
             }

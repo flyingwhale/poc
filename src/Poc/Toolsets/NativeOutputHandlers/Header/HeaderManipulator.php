@@ -18,7 +18,7 @@
  * @author Imre Toth
  *
  */
-namespace Poc\Cache\Header;
+namespace Poc\Toolsets\NativeOutputHandlers\Header;
 
 class HeaderManipulator
 {

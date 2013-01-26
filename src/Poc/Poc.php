@@ -26,7 +26,7 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Cache\Header\HeaderManipulator;
+use Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -101,7 +101,7 @@ class Poc implements PocParams
      * This class handles the header related manipulations, also takes care
      * about stroing it.
      *
-     * @var \POC\cache\header\HeaderManipulator
+     * @var Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator
      */
     private $headerManipulator = null;
 
@@ -261,7 +261,7 @@ class Poc implements PocParams
 
     /**
      *
-     * @return Poc\Cache\Header\HeaderManipulator
+     * @return Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator
      */
     public function getHeaderManipulator()
     {

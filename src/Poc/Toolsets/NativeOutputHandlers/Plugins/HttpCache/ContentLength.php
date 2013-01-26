@@ -17,7 +17,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\PocPlugins\HttpCache;
+namespace Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;

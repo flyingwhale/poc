@@ -22,7 +22,7 @@ use Poc\Poc;
 
 use Poc\Core\PluginSystem\Plugin;
 
-use Poc\PocPlugins\HttpCache\Events\EtagEvents;
+use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
 class PocLogs extends Plugin
 {

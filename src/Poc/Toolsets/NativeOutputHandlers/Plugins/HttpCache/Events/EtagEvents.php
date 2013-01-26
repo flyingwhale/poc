@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\PocPlugins\HttpCache\Events;
+namespace Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events;
 
 interface EtagEvents
 {

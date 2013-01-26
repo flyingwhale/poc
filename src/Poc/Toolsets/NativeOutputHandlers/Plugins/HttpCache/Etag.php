@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\PocPlugins\HttpCache;
+namespace Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
-use Poc\PocPlugins\HttpCache\Events\EtagEvents;
+use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
 class Etag extends Plugin
 {

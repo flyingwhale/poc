@@ -1,6 +1,6 @@
 <?php
 
-namespace Poc\Tests\PocPlugins\Output;
+namespace Poc\Tests\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
 use Poc\Tests\PocTestCore;
 
@@ -9,7 +9,7 @@ use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\Filtering\Hasher;
-use Poc\PocPlugins\HttpCache\ContentLength;
+use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\ContentLength;
 
 class ContentLenghtTest extends PocTestCore
 {

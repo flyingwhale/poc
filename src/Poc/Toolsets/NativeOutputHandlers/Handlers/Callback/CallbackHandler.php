@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Handlers\Callback;
+namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Callback;
 
 use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;

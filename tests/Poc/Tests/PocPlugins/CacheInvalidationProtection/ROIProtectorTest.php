@@ -15,7 +15,7 @@ namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
-use Poc\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
 

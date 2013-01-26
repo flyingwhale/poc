@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Handlers\Output;
+namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Output;
 
 use Poc\Poc;
 use Optionable;

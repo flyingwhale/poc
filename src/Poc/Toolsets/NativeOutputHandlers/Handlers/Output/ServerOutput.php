@@ -17,7 +17,7 @@
  * @author Imre Toth
  *
  */
-namespace Poc\Handlers\Output;
+namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Output;
 
 class ServerOutput extends Output
 {

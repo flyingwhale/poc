@@ -6,7 +6,7 @@ use Poc\Tests\PocTestCore;
 
 use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
-use Poc\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\Filtering\Hasher;
 use Poc\PocPlugins\HttpCache\ContentLength;

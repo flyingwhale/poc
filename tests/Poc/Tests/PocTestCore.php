@@ -15,7 +15,7 @@ namespace Poc\Tests;
 use Poc\PocPlugins\Logging\PocLogs;
 
 use Poc\PocParams;
-use Poc\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 
 const UNITTESTING = 1;

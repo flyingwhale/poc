@@ -69,7 +69,7 @@ class ROIProtector extends Plugin
 
     /**
      *
-     * @var \Poc\Handlers\Output\OutputInterface
+     * @var \Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface
      */
     private $outputHandler;
 

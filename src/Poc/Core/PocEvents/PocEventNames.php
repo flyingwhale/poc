@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\PocEvents;
+namespace Poc\Core\PocEvents;
 
 interface PocEventNames
 {

@@ -16,8 +16,8 @@ use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 //use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\PluginSystem\Plugin;
-use Poc\PocEvents\PocEventNames;
-use Poc\Events\BaseEvent;
+use Poc\Core\PocEvents\PocEventNames;
+use Poc\Core\Events\BaseEvent;
 use Optionable;
 /**
  * This calss name comes form the "RelOad and cache Invalidation Attack Protection" name.

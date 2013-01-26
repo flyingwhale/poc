@@ -12,10 +12,10 @@
 
 namespace Poc\PocPlugins\Output;
 
-use Poc\PocEvents\PocEventNames;
+use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Poc;
-use Poc\Events\BaseEvent;
+use Poc\Core\Events\BaseEvent;
 
 class OutputFilter extends Plugin
 {

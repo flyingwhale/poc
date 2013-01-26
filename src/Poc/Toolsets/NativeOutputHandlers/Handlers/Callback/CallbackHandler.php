@@ -12,8 +12,8 @@
 
 namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Callback;
 
-use Poc\PocEvents\PocEventNames;
-use Poc\Events\BaseEvent;
+use Poc\Core\PocEvents\PocEventNames;
+use Poc\Core\Events\BaseEvent;
 use Poc\Poc;
 
 class CallbackHandler

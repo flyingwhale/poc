@@ -12,13 +12,9 @@
 
 namespace Poc\PocPlugins\Logging;
 
-use Poc\Events\BaseEvent;
+use Poc\Core\Events\BaseEvent;
 
-use Poc\PocEvents\PocEventNames;
-
-use Monolog\Logger;
-
-use Poc\Core\Event\PocDispatcher;
+use Poc\Core\PocEvents\PocEventNames;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

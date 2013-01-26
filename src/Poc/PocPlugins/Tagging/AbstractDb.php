@@ -14,7 +14,7 @@ namespace Poc\PocPlugins\Tagging;
 
 use Poc\Core\PluginSystem\Plugin;
 use Poc\Poc;
-use Poc\PocEvents\PocEventNames;
+use Poc\Core\PocEvents\PocEventNames;
 
 abstract class AbstractDb extends Plugin
 {

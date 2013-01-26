@@ -20,8 +20,8 @@
 namespace Poc;
 
 use Poc\Core\Monolog\MonoLogger;
-use Poc\PocEvents\PocEventNames;
-use Poc\Events\BaseEvent;
+use Poc\Core\PocEvents\PocEventNames;
+use Poc\Core\Events\BaseEvent;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;

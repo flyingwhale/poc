@@ -19,10 +19,10 @@
 
 namespace Poc\PocPlugins\HttpCache;
 
-use Poc\PocEvents\PocEventNames;
+use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
-use Poc\Events\BaseEvent;
+use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
 
 class ContentLength extends \Poc\Core\PluginSystem\Plugin

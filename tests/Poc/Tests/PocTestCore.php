@@ -93,7 +93,7 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
         $poc->start();
 
         $outputHandler = $poc->getOutputHandler();
-
+        
         if ($outputHandler->getOutputFlow()) {
             echo $testString;
             $poc->destruct();

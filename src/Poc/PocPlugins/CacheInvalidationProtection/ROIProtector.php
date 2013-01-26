@@ -20,7 +20,7 @@ use Poc\PocEvents\PocEventNames;
 use Poc\Events\BaseEvent;
 use Optionable;
 /**
- * This calss name comes form the "Cache Invalidation Attack Protection" name.
+ * This calss name comes form the "RelOad and cache Invalidation Attack Protection" name.
  * This integrates transpanently to the framework.
  *
  * The basic idea was to implement a subsytem to the framework that protects
@@ -42,14 +42,14 @@ use Optionable;
  * @author Imre Toth
  *
  */
-class ROIProtector extends Plugin
+class ROIProtector extends Plugin implements ROIProtectorParameters
 {
 
-    const LOG_TYPE_CIA = 'CIA';
+    const LOG_TYPE_CIA = 'ROI';
 
     public $monoLogger;
 
-    const KEY_POSTFIX = "ci";
+    const KEY_POSTFIX = "roi";
 
     const PARAM_CLIENT_UNIQUE = 'clinetUnique';
 
@@ -79,10 +79,12 @@ class ROIProtector extends Plugin
      */
     private $eventDispatcher;
 
+    private $maxNumberOfConcurrentConnections;
+    
     /**
      *
      * @param $poc \Poc\Poc
-     */
+     */    
     public function init(Poc $poc)
     {
         parent::init($poc);
@@ -99,7 +101,8 @@ class ROIProtector extends Plugin
 
     }
 
-    public function setupDefaults ()
+    
+    public function setupDefaults (&$optionable)
     {
         /*
          * $this->optionable->setDefaultOption('self::PARAM_CLIENT_UNIQUE', function(){ return
@@ -107,6 +110,18 @@ class ROIProtector extends Plugin
          * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
          * });
          */
+        
+        $this->optionable[self::PARAM_REDIRECT_CONTENT] = 
+                '<HTML>
+                <HEAD>
+                <META HTTP-EQUIV="refresh" content="1; url=' . $this->getPageUrl() . '">
+                <TITLE>My new webpage</TITLE>
+                </HEAD>
+                <BODY>
+                PLEASE WAIT!
+                </BODY>
+                </HTML>';
+        $this->optionable[self::PARAM_CONCURRENT_CLIENTS_IN_THE_ROW] = 3;
     }
 
     /**
@@ -116,6 +131,9 @@ class ROIProtector extends Plugin
     public function __construct ($options = array())
     {
         $this->optionable = new Optionable($options);
+        $this->setupDefaults($optionable);
+        
+        $this->maxNumberOfConcurrentConnections = $this->optionable[self::PARAM_CONCURRENT_CLIENTS_IN_THE_ROW];
         // $this->clientUnique =
         // $this->optionable[self::PARAM_CLIENT_UNIQUE];
     }
@@ -131,7 +149,7 @@ class ROIProtector extends Plugin
         if (! $sentinel) {
             $sentinel = 0;
         }
-
+        
         return ($sentinel);
     }
 
@@ -147,7 +165,7 @@ class ROIProtector extends Plugin
 //                "deleted key:" . $this->getKey());
     }
 
-    public function getRefreshPage ()
+    public function getPageUrl()
     {
         $servername = '';
         if (isset($_SERVER["SERVER_NAME"])) {
@@ -168,17 +186,14 @@ class ROIProtector extends Plugin
         } else {
             $pageURL .= $servername . $ru;
         }
-
-        return '<HTML>
-                <HEAD>
-                <META HTTP-EQUIV="refresh" content="1; url=' . $pageURL . '">
-                <TITLE>My new webpage</TITLE>
-                </HEAD>
-                <BODY>
-                PLEASE WAIT!
-                </BODY>
-                </HTML>';
-                }
+        return $pageURL;
+    }
+    
+    public function getRefreshPage ()
+    {
+        return $this->optionable[self::PARAM_REDIRECT_CONTENT];
+        
+    }
 
     public function consult (BaseEvent $event)
     {
@@ -198,7 +213,7 @@ class ROIProtector extends Plugin
                     }
                     echo $this->poc->fetchCache();
                 }
-                if ($sentinelCnt >= 3) {
+                if ($sentinelCnt >= $this->maxNumberOfConcurrentConnections) {
                     $this->outputHandler->ObPrintCallback(
                             $this->getRefreshPage());
                     $this->outputHandler->stopBuffer();

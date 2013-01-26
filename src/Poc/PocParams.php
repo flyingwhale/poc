@@ -33,7 +33,7 @@ interface PocParams
 
     const PARAM_DEBUG = 'debug';
 
-    const PARAM_CIA_PROTECTOR = 'cia_protection';
+    const PARAM_ROI_PROTECTOR = 'cia_protection';
 
     const PARAM_EVENT_DISPATCHER = 'event_dispatcher';
 

@@ -12,11 +12,20 @@
 
 namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Output;
 
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
+
 use Poc\Poc;
+
 
 abstract class Output implements OutputInterface
 {
 
+     /**
+     *
+     * @var CallbackHandler
+     */
+     private $callbackHandler;
+     
     /**
      *
      * @var Poc
@@ -26,6 +35,15 @@ abstract class Output implements OutputInterface
     public function setPoc (Poc $poc)
     {
         $this->poc = $poc;
+    }
+    
+    /**
+     * 
+     * @param CallbackHandler $callbackHandler
+     */
+    public function setCallbackHandler(CallbackHandler $callbackHandler)
+    {
+        $this->callbackHandler = $callbackHandler;
     }
 
 }

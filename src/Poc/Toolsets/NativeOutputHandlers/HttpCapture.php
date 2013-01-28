@@ -47,8 +47,10 @@ class HttpCapture extends Plugin
     {
         parent::init($poc);
 
-        $this->callbackHandler = $poc->getCallbackHandler();
+        $this->callbackHandler = new CallbackHandler($poc);
+        
         $this->outputHandler =  $poc->getOutputHandler();
+        $this->outputHandler->setCallbackHandler($this->callbackHandler);
         
         $this->outputHandler->setPoc($poc);
 

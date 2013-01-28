@@ -24,6 +24,7 @@
 namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Output;
 
 use Poc\Poc;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 
 interface OutputInterface
 {
@@ -50,4 +51,10 @@ interface OutputInterface
      * @param $poc Poc
      */
     public function setPoc (Poc $poc);
+    
+    /**
+     * 
+     * @param CallbackHandler $callbackHandler
+     */
+    public function setCallbackHandler(CallbackHandler $callbackHandler);
 }

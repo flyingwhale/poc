@@ -348,10 +348,6 @@ class Poc implements PocParams
             $this->pocDispatcher->dispatch(
                     PocEventNames::GET_OUTPUT_FROM_CACHE, new BaseEvent($this));
             
-//            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
-//            //todo test it!
-//            $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
-//            $this->outputHandler->stopBuffer($output);
         } else {
         }
     }
@@ -365,13 +361,13 @@ class Poc implements PocParams
         $this->level = \ob_get_level();
         if ($this->filter->evaluate()) {
             if (!$this->fetchCache()) {
-//                $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
                 $this->pocDispatcher->dispatch(
                                 PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
                                                           new BaseEvent($this));
             }
         } else {
-            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
+                $this->pocDispatcher->dispatch(
+                                  PocEventNames::MONITOR, new BaseEvent($this));
         }
     }
 

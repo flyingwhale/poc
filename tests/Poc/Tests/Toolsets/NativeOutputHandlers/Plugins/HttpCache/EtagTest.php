@@ -16,7 +16,7 @@ class EtagTest extends PocTestCore
 
     const ETAG_MD5 = 'c075eba9c04d3faf4ac21fd29cae6fd8';
     const ETAG_TEXT = 'whatever!123';
-    
+
     public function testEtagSend ()
     {
         $hasher = new Hasher();
@@ -38,7 +38,7 @@ class EtagTest extends PocTestCore
 
         $this->assertEquals(md5(self::ETAG_TEXT), $header['Etag']);
     }
-    
+
     public function testEtagReceive ()
     {
         $hasher = new Hasher();
@@ -61,7 +61,7 @@ class EtagTest extends PocTestCore
         $this->pocBurner($poc, self::ETAG_TEXT);
 
         $header = $outputHandler->getHeader();
-        
+
         $this->assertTrue(isset($header['HTTP/1.0 304 Not Modified']));
     }
 }

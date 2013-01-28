@@ -29,20 +29,19 @@ class ROIProtectorTest extends PocTestCore
      * @var \Pimple
      */
     private $pocContainer;
-    
+
     /**
      *
      * @var ROIProtector
      */
     private $cia;
-    
-    
-    public function __construct($name = NULL, array $data = array(), $dataName = '') {
+
+    public function __construct($name = NULL, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
-        
+
         $this->pocContainer = new \Pimple;
-        $this->pocContainer['poc'] = function ()
-        {
+        $this->pocContainer['poc'] = function () {
             $outputHandler = new TestOutput();
             $cache = new FileCache();
             $hasher = new Hasher();
@@ -52,19 +51,17 @@ class ROIProtectorTest extends PocTestCore
 
             return $poc;
         };
-        
+
         $this->cia = new ROIProtector();
 
-        
     }
-
 
     // todo: Add more relevant tests!
     public function testROIProtection ()
     {
 
         $poc1 = $this->pocContainer['poc'];
-        
+
         $poc1->addPlugin($this->cia);
 
         /*this 3 lines id for the tests only, in real life we don't do such things*/
@@ -81,21 +78,20 @@ class ROIProtectorTest extends PocTestCore
 
         $cnt2 = $this->cia->getSentinel();
         $this->assertEquals($cnt2, self::BIG_SENTIEL_VALUE + 1);
-        
+
         $this->cia->setSentinel(1);
-        
+
         $rnd = rand();
 
         $poc2 = $this->pocContainer['poc'];
-        
+
         $poc2->addPlugin($this->cia);
-        
+
         $this->pocBurner($poc2, $rnd);
         $this->assertNotEquals($this->cia->getRefreshPage(), $this->getOutput());
-        $this->assertEquals($this->cia->getSentinel(), 0);        
+        $this->assertEquals($this->cia->getSentinel(), 0);
         $this->assertequals($rnd, $this->getOutput());
-        
-        
+
         /*
          * $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
          * Poc::PARAM_OUTPUTHANDLER => $outputHandler, Poc::PARAM_CIA_PROTECTOR

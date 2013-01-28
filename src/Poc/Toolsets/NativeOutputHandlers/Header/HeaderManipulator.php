@@ -72,8 +72,7 @@ class HeaderManipulator
 
     public function storeHeadersForPreservation ($responseHeaders)
     {
-        //if ($this->headersToPreserve)
-        {
+        //if ($this->headersToPreserve) {
             $headerTmp = array();
 
             foreach ($responseHeaders as $header) {
@@ -81,23 +80,20 @@ class HeaderManipulator
             }
 
             //foreach ($this->headersToPreserve as $findThisHeader) {
-                foreach ($headerTmp as $preserveThisHeader)
-                {
-                    //if ($preserveThisHeader[0] == $findThisHeader)
-                    {
+                foreach ($headerTmp as $preserveThisHeader) {
+                    //if ($preserveThisHeader[0] == $findThisHeader) {
 //                        $this->headersToStore[] = $findThisHeader . ': ' .
                         $this->headersToStore[] = $preserveThisHeader[0] . ': ' .
                                                          $preserveThisHeader[1];
-                    }
                 }
+            }
             //}
-        }
-    }
+//        }
+//    }
 
     public function storeHeaders ()
     {
-        if ($this->headersToStore)
-        {
+        if ($this->headersToStore) {
             $this->poc->getCache()->cacheSpecificStore(
                     $this->poc->getHasher()
                     ->getKey() .

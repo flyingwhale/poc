@@ -42,7 +42,7 @@ class PocLogs extends Plugin
     public function init (Poc $poc)
     {
         parent::init($poc);
-        
+
         $this->logger = $this->poc->getLogger();
 
         $this->pocDispatcher->addListener(

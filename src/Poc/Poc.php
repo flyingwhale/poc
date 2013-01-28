@@ -87,7 +87,6 @@ class Poc implements PocParams
      */
     private $level = null;
 
-
     /**
      * This variable contains the object that handles the caching process.
      *
@@ -139,7 +138,7 @@ class Poc implements PocParams
      * @var CallbackHandler
      */
     private $callbackHandler;
-    
+
     /**
      * This object stands for the output handling. I had to make
      * this abstraction because we whant testable code, and for the tests we
@@ -150,7 +149,7 @@ class Poc implements PocParams
      */
     private $outputHandler = null;
 
-    
+
     /**
      *
      * @param Core\PluginSystem\Plugin $plugin
@@ -344,10 +343,10 @@ class Poc implements PocParams
 
         $this->output = $this->cache->fetch($this->hasher->getKey());
         if ($this->output) {
-            
+
             $this->pocDispatcher->dispatch(
                     PocEventNames::GET_OUTPUT_FROM_CACHE, new BaseEvent($this));
-            
+
         } else {
         }
     }
@@ -386,7 +385,8 @@ class Poc implements PocParams
      *
      * @return Filter
      */
-    public function getFilter(){
+    public function getFilter()
+    {
         return $this->filter;
     }
 }

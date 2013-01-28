@@ -80,11 +80,11 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
     private $eventDispatcher;
 
     private $maxNumberOfConcurrentConnections;
-    
+
     /**
      *
      * @param $poc \Poc\Poc
-     */    
+     */
     public function init(Poc $poc)
     {
         parent::init($poc);
@@ -101,7 +101,6 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
 
     }
 
-    
     public function setupDefaults (&$optionable)
     {
         /*
@@ -110,8 +109,8 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
          * $_SERVER['HTTP_ACCEPT_LANGUAGE'].$_SERVER['HTTP_ACCEPT_ENCODING'].$_SERVER['HTTP_ACCEPT_CHARSET']);
          * });
          */
-        
-        $this->optionable[self::PARAM_REDIRECT_CONTENT] = 
+
+        $this->optionable[self::PARAM_REDIRECT_CONTENT] =
                 '<HTML>
                 <HEAD>
                 <META HTTP-EQUIV="refresh" content="1; url=' . $this->getPageUrl() . '">
@@ -132,7 +131,7 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
     {
         $this->optionable = new Optionable($options);
         $this->setupDefaults($optionable);
-        
+
         $this->maxNumberOfConcurrentConnections = $this->optionable[self::PARAM_CONCURRENT_CLIENTS_IN_THE_ROW];
         // $this->clientUnique =
         // $this->optionable[self::PARAM_CLIENT_UNIQUE];
@@ -149,7 +148,7 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
         if (! $sentinel) {
             $sentinel = 0;
         }
-        
+
         return ($sentinel);
     }
 
@@ -186,13 +185,14 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
         } else {
             $pageURL .= $servername . $ru;
         }
+
         return $pageURL;
     }
-    
+
     public function getRefreshPage ()
     {
         return $this->optionable[self::PARAM_REDIRECT_CONTENT];
-        
+
     }
 
     public function consult (BaseEvent $event)

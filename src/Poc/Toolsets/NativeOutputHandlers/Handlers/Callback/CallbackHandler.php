@@ -28,7 +28,7 @@ class CallbackHandler
      * @var Poc
      */
     public $poc;
-    
+
     /**
      *
      * @var HeaderManipulator
@@ -45,8 +45,9 @@ class CallbackHandler
         $this->headerManipulator = new HeaderManipulator();
         $this->headerManipulator->setPoc($poc);
     }
-    
-    public function getHeaderManipulator(){
+
+    public function getHeaderManipulator()
+    {
         return $this->headerManipulator;
     }
 
@@ -92,7 +93,7 @@ class CallbackHandler
                                 '</b> milliseconds.');
                     }
                     $headers = $this->poc->getOutputHandler()->headersList();
-                    
+
                     //Headers stored here.
                     $this->headerManipulator
                                         ->storeHeadersForPreservation($headers);
@@ -116,7 +117,7 @@ class CallbackHandler
                             PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
 
                     $this->headerManipulator->storeHeaders();
-                    
+
                     $this->poc->getPocDispatcher()->dispatch(
                             PocEventNames::HEADERS_STORED, new BaseEvent($this->poc));
 

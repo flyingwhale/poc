@@ -27,7 +27,6 @@ class Compress extends Plugin
 
     private $compressionType;
 
-
     public function init (Poc $poc)
     {
         parent::init($poc);
@@ -44,12 +43,11 @@ class Compress extends Plugin
 
     }
 
-    private function setCompressiontype(Poc $poc){
+    private function setCompressiontype(Poc $poc)
+    {
         $headers = $poc->getOutputHandler()->getallheaders();
-        if(isset($headers['Accept-Encoding']))
-        {
-            if( strstr($headers['Accept-Encoding'], self::COMPRESSION_GZIP) )
-            {
+        if (isset($headers['Accept-Encoding'])) {
+            if ( strstr($headers['Accept-Encoding'], self::COMPRESSION_GZIP) ) {
                 $this->compressionType = self::COMPRESSION_GZIP;
 
             }
@@ -65,10 +63,9 @@ class Compress extends Plugin
     public function compress (BaseEvent $event)
     {
         $event->getPoc()->getOutputHandler()->header('Content-Encoding: gzip');
-        if($this->compressionType == self::COMPRESSION_GZIP){
+        if ($this->compressionType == self::COMPRESSION_GZIP) {
             $event->getPoc()->setOutput(\gzencode($event->getPoc()->getOutput(), 9, FORCE_GZIP));
-        }
-        elseif($this->compressionType == self::COMPRESSION_DEFLATE){
+        } elseif ($this->compressionType == self::COMPRESSION_DEFLATE) {
             $event->getPoc()->setOutput(\gzdeflate($event->getPoc()->getOutput()));
         }
     }

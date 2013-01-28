@@ -53,8 +53,7 @@ class Etag extends Plugin
             if ($etag) {
               $storedEtag = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::ETAG_POSTFIX);
 
-              if ($storedEtag == $etag)
-              {
+              if ($storedEtag == $etag) {
                   $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
                   $event->getPoc()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
                   $event->getPoc()->getOutputHandler()->header('Etag: ' . $etag);

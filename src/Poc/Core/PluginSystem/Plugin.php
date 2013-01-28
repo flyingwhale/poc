@@ -25,7 +25,7 @@ class Plugin implements PluginInterface
      * @var Poc
      */
     protected $poc;
-    
+
     /**
      *
      * @var \Symfony\Component\EventDispatcher\EventDispatcher

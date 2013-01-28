@@ -13,14 +13,14 @@ use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-class HttpCapture extends Plugin{
-    
+class HttpCapture extends Plugin
+{
     /**
      *
      * @var Handlers\Callback\CallbackHandler
      */
     private $callbackHandler;
-    
+
     /**
      * This object stands for the output handling. I had to make
      * this abstraction because we whant testable code, and for the tests we
@@ -29,8 +29,8 @@ class HttpCapture extends Plugin{
      *
      * @var Handlers\Output\OutputInterface
      */
-    private $outputHandler = null; 
-    
+    private $outputHandler = null;
+
     public function init (Poc $poc)
     {
         parent::init($poc);
@@ -38,24 +38,24 @@ class HttpCapture extends Plugin{
         $this->callbackHandler = new CallbackHandler($poc);
         $this->outputHandler = new ServerOutput();
         $this->outputHandler->setPoc($poc);
-        
+
         $this->pocDispatcher->addListener(
-                                           PocEventNames::GET_OUTPUT_FROM_CACHE, 
+                                           PocEventNames::GET_OUTPUT_FROM_CACHE,
                                             array($this, 'getOutputFromCache'));
- 
+
         $this->pocDispatcher->addListener(
                                 PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
                                                         array($this, 'capture'));
-        
+
     }
-     
+
 //     $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
-     
+
      public function capture(BaseEvent $event)
      {
          $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
      }
-     
+
      public function getOutputFromCache(BaseEvent $event)
      {
          $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
@@ -63,14 +63,12 @@ class HttpCapture extends Plugin{
          $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
          $this->outputHandler->stopBuffer($this->poc->getOutput());
      }
-     
+
      /*
       *     $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
             //todo test it!
             $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
             $this->outputHandler->stopBuffer($output);
-      * 
+      *
       */
 }
-
-?>

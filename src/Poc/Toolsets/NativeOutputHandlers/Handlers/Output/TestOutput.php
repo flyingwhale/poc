@@ -75,14 +75,11 @@ class TestOutput extends Output
 
     public function header ($header)
     {
-        if(strstr($header,':'))
-        {
+        if (strstr($header,':')) {
             $headerArray = explode(":", $header);
             $this->header[$headerArray[0]] = trim ($headerArray[1]);
-        }
-        else
-        {
-            $this->header[$header]=''; 
+        } else {
+            $this->header[$header]='';
         }
     }
 
@@ -132,5 +129,5 @@ class TestOutput extends Output
     {
         return $this->allheaders;
     }
-    
+
 }

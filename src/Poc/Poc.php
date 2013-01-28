@@ -134,12 +134,6 @@ class Poc implements PocParams
     private $filter;
 
     /**
-     *
-     * @var CallbackHandler
-     */
-    private $callbackHandler;
-
-    /**
      * This object stands for the output handling. I had to make
      * this abstraction because we whant testable code, and for the tests we
      * don't have the server environmnet, and we weeded to mock it somehow.
@@ -253,12 +247,6 @@ class Poc implements PocParams
         return $this->canICacheThisGeneratedContent;
     }
 
-
-    public function getCallbackHandler()
-    {
-        return $this->callbackHandler;
-    }
-
     protected function setupDefaults (&$optionable)
     {
         $optionable->setDefaultOption(Poc::PARAM_CACHE,
@@ -333,7 +321,7 @@ class Poc implements PocParams
         $this->setupDefaults($this->optionable);
         $this->mapFieldsFromOptionable($this->optionable, $this);
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
-        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture);
+        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
     }
 
     public function fetchCache ()

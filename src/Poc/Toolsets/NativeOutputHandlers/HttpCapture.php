@@ -3,7 +3,9 @@ namespace Poc\Toolsets\NativeOutputHandlers;
 
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
 use Poc\Core\Events\BaseEvent;
 
@@ -27,7 +29,7 @@ class HttpCapture extends Plugin
      * don't have the server environmnet, and we weeded to mock it somehow.
      * This is the solution for this problem.
      *
-     * @var Handlers\Output\OutputInterface
+     * @var OutputInterface
      */
     private $outputHandler = null;
     
@@ -43,13 +45,30 @@ class HttpCapture extends Plugin
         return $this->level;
     }
 
+    /**
+     * 
+     * @param OutputInterface $outputHandler
+     */
+    public function __construct($outputHandler = null) {
+        parent::__construct();
+        if ($outputHandler != null)
+        {
+            $this->outputHandler = $outputHandler;
+        }
+        else
+        {
+            $this->outputHandler = new TestOutput();         
+        }
+    }
+
+
     public function init (Poc $poc)
     {
         parent::init($poc);
 
         $this->callbackHandler = new CallbackHandler($poc);
         
-        $this->outputHandler =  $poc->getOutputHandler();
+        $this->outputHandler =  $this->outputHandler;
         $this->outputHandler->setCallbackHandler($this->callbackHandler);
         
         $this->outputHandler->setPoc($poc);

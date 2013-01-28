@@ -38,7 +38,5 @@
         "psr-0": { "Poc": "src/" }
     },
     "bin": ["bin/console"],
-
     "minimum-stability": "dev" 
-
 }

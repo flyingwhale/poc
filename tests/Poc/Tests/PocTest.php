@@ -26,9 +26,10 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
 class PocTest extends PocTestCore
 {
-
+    
     public function testBasicPocFunctionality ()
     {
+                
         $objects = new \Pimple();
         $ttl = self::$TTL;
 
@@ -53,12 +54,15 @@ class PocTest extends PocTestCore
         $handlers[] = 'memcached';
         $handlers[] = 'predis';
         $handlers[] = 'mongo';
-
+        
         foreach ($handlers as $cacheHandlerName) {
+       
+            
             $cacheHandler = $objects[$cacheHandlerName];
 
             $hasher = new Hasher();
             $hasher->addDistinguishVariable($cacheHandlerName.rand());
+
 
             $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
@@ -68,25 +72,25 @@ class PocTest extends PocTestCore
             $output1 = $this->getOutput();
 
             for ($i = 0; $i < 10; $i ++) {
-                $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                $poc2 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                     Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                     Poc::PARAM_HASHER => $hasher ));
-                $this->pocBurner($poc1, self::TESTSTRING1 . "Whatever $i");
+                $this->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
 
             }
 
-            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+            $poc3 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher ));
-            $this->pocBurner($poc1, self::TESTSTRING2);
+            $this->pocBurner($poc3, self::TESTSTRING2);
             $output2 = $this->getOutput();
 
             sleep(self::$TTL + 1);
 
-            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+            $poc4 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_OUTPUTHANDLER => new TestOutput(),
                                   Poc::PARAM_HASHER => $hasher ));
-            $this->pocBurner($poc1, self::TESTSTRING3);
+            $this->pocBurner($poc4, self::TESTSTRING3);
             $output3 = $this->getOutput();
 
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);

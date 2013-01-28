@@ -96,7 +96,7 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
 
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                  array($this, 'consultFinish'));
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+        $poc->getPocDispatcher()->addListener(PocEventNames::CAPTURE,
                                                        array($this, 'consult'));
 
     }

@@ -22,7 +22,7 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 
-class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
+abstract class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
 {
 
     public function testTagging ()

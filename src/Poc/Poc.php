@@ -361,7 +361,7 @@ class Poc implements PocParams
         if ($this->filter->evaluate()) {
             if (!$this->fetchCache()) {
                 $this->pocDispatcher->dispatch(
-                                PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+                                PocEventNames::CAPTURE,
                                                           new BaseEvent($this));
             }
         } else {
@@ -377,6 +377,7 @@ class Poc implements PocParams
                 $this->outputHandler->obEnd();
             }
         }
+//        $this->pocDispatcher->dispatch(PocEventNames::DIES, new BaseEvent($this));
 //        $this->pocDispatcher->dispatch(PocEventNames::DIES,
 //                new BaseEvent($this));
     }

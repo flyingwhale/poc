@@ -26,7 +26,6 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -259,14 +258,6 @@ class Poc implements PocParams
         return $this->canICacheThisGeneratedContent;
     }
 
-    /**
-     *
-     * @return Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator
-     */
-    public function getHeaderManipulator()
-    {
-        return $this->headerManipulator;
-    }
 
     public function getCallbackHandler()
     {
@@ -287,11 +278,6 @@ class Poc implements PocParams
             }
         );
 
-        $optionable->setDefaultOption(Poc::PARAM_HEADERMANIPULATOR,
-            function  () {
-                return new HeaderManipulator();
-            }
-        );
 
         $optionable->setDefaultOption(Poc::PARAM_OUTPUTFILTER,
             function  () {
@@ -329,8 +315,6 @@ class Poc implements PocParams
         $poc->cache = $optionable[Poc::PARAM_CACHE];
         $poc->outputHandler = $optionable[Poc::PARAM_OUTPUTHANDLER];
         $poc->outputHandler->setPoc($this);
-        $poc->headerManipulator = $optionable[Poc::PARAM_HEADERMANIPULATOR];
-        $poc->headerManipulator->setPoc($this);
         $poc->outputFilter = $optionable[Poc::PARAM_OUTPUTFILTER];
         $poc->setDebug($optionable['debug']);
         $poc->filter = $optionable[Poc::PARAM_FILTER];
@@ -364,7 +348,8 @@ class Poc implements PocParams
         $output = $this->cache->fetch($this->hasher->getKey());
         if ($output) {
             $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
-            $this->headerManipulator->fetchHeaders();
+            //todo test it!
+            $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
             $this->outputHandler->stopBuffer($output);
         } else {
         }

@@ -21,11 +21,11 @@ abstract class Output implements OutputInterface
      *
      * @var Poc
      */
-    protected $poc;
-
+    protected $poc = null;
+   
     public function setPoc (Poc $poc)
     {
         $this->poc = $poc;
     }
-
+    
 }

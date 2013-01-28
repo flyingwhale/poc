@@ -27,8 +27,6 @@ interface PocParams
 
     const PARAM_OUTPUTHANDLER = 'outputHandler';
 
-    const PARAM_HEADERMANIPULATOR = 'headerManipulator';
-
     const PARAM_OUTPUTFILTER = 'outputFilter';
 
     const PARAM_DEBUG = 'debug';

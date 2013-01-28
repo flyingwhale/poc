@@ -15,6 +15,7 @@ namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Callback;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Poc\Poc;
+use Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator;
 
 class CallbackHandler
 {
@@ -27,6 +28,12 @@ class CallbackHandler
      * @var Poc
      */
     public $poc;
+    
+    /**
+     *
+     * @var HeaderManipulator
+     */
+    private $headerManipulator;
 
     /**
      *
@@ -35,6 +42,12 @@ class CallbackHandler
     public function __construct(Poc $poc)
     {
         $this->poc = $poc;
+        $this->headerManipulator = new HeaderManipulator();
+        $this->headerManipulator->setPoc($poc);
+    }
+    
+    public function getHeaderManipulator(){
+        return $this->headerManipulator;
     }
 
     public function pocCallbackShowOutput ($buffer)
@@ -81,11 +94,11 @@ class CallbackHandler
                     $headers = $this->poc->getOutputHandler()->headersList();
                     
                     //Headers stored here.
-                    $this->poc->getHeaderManipulator()
+                    $this->headerManipulator
                                         ->storeHeadersForPreservation($headers);
 
                     //Remove unneeded headers.
-                    $this->poc->getHeaderManipulator()->removeHeaders();
+                    $this->headerManipulator->removeHeaders();
 
                     $this->poc->getPocDispatcher()->dispatch(
                       PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this->poc));
@@ -102,7 +115,7 @@ class CallbackHandler
                     $this->poc->getPocDispatcher()->dispatch(
                             PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
 
-                    $this->poc->getHeaderManipulator()->storeHeaders();
+                    $this->headerManipulator->storeHeaders();
                     
                     $this->poc->getPocDispatcher()->dispatch(
                             PocEventNames::HEADERS_STORED, new BaseEvent($this->poc));

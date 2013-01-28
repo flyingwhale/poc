@@ -365,7 +365,7 @@ class Poc implements PocParams
         $this->level = \ob_get_level();
         if ($this->filter->evaluate()) {
             if (!$this->fetchCache()) {
-                $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
+//                $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
                 $this->pocDispatcher->dispatch(
                                 PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
                                                           new BaseEvent($this));

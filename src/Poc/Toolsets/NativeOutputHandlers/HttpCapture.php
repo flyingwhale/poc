@@ -40,8 +40,20 @@ class HttpCapture extends Plugin{
         $this->outputHandler->setPoc($poc);
         
         $this->pocDispatcher->addListener(
-        PocEventNames::GET_OUTPUT_FROM_CACHE,array($this, 'getOutputFromCache'));
+                                           PocEventNames::GET_OUTPUT_FROM_CACHE, 
+                                            array($this, 'getOutputFromCache'));
+ 
+        $this->pocDispatcher->addListener(
+                                PocEventNames::FUNCTION_START_ENDS_CACHE_STARTS,
+                                                        array($this, 'capture'));
         
+    }
+     
+//     $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
+     
+     public function capture(BaseEvent $event)
+     {
+         $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
      }
      
      public function getOutputFromCache(BaseEvent $event)

@@ -19,7 +19,7 @@ class HttpCapture extends Plugin
      *
      * @var Handlers\Callback\CallbackHandler
      */
-    private $callbackHandler;
+    private $callbackHandler = null;
 
     /**
      * This object stands for the output handling. I had to make
@@ -67,13 +67,16 @@ class HttpCapture extends Plugin
                                 PocEventNames::MONITOR,
                                                     array($this, 'monitor'));
         
+        $this->pocDispatcher->addListener(
+                                PocEventNames::END_OF_BUFFERING,
+                                                array($this, 'endOfBuffering'));
+        
     }
 
-//     $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);
 
      public function setObLevel(BaseEvent $event)
      {
-         $this->level = \ob_get_level();
+         $this->level = $this->outputHandler->getLevel();
      }
 
      public function capture(BaseEvent $event)
@@ -93,4 +96,14 @@ class HttpCapture extends Plugin
      {
         $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
      }
+     
+     public function endOfBuffering (BaseEvent $event)
+     {
+        if (isset($this->level)) {
+            if ($this->level) {
+                $this->outputHandler->obEnd();
+            }
+        }         
+    }
+//        
 }

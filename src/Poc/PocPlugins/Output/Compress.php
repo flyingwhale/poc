@@ -69,4 +69,9 @@ class Compress extends Plugin
             $event->getPoc()->setOutput(\gzdeflate($event->getPoc()->getOutput()));
         }
     }
+    
+    
+    public function setName() {
+        $this->name = "Compress";
+    }
 }

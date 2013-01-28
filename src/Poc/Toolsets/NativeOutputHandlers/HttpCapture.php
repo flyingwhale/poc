@@ -105,5 +105,8 @@ class HttpCapture extends Plugin
             }
         }         
     }
-//        
+
+    public function setName() {
+        $this->name = "HttpCapture";
+    }
 }

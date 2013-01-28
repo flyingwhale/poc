@@ -47,4 +47,9 @@ class OutputFilter extends Plugin
             }
         }
     }
+    
+    public function setName() {
+        $this->name = "OutputFilter";
+    }
+
 }

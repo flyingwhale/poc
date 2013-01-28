@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2012 Imre Toth <tothimre at gmail> Licensed under the Apache
  * License, Version 2.0 (the "License"); you may not use this file except in
@@ -14,45 +15,39 @@ namespace Poc\PocPlugins\Output;
 
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
-
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
 
-class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
-{
+class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin {
 
-    public function init (Poc $poc)
-    {
+    public function init(Poc $poc) {
         parent::init($poc);
-        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT,
-                                                    array($this, 'minifyHtml'));
+        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }
 
-    public function minifyHtml (BaseEvent $event)
-    {
+    public function minifyHtml(BaseEvent $event) {
         $search =
-        array(
-
-        '/ {2,}/',
-        '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
-
-        '/\>[^\S ]+/s', //strip whitespaces after tags, except space
-        '/[^\S ]+\</s', //strip whitespaces before tags, except space
-        '/(\s)+/s',  // shorten multiple whitespace sequences
-
+                array(
+                    '/ {2,}/',
+                    '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
+                    '/\>[^\S ]+/s', //strip whitespaces after tags, except space
+                    '/[^\S ]+\</s', //strip whitespaces before tags, except space
+                    '/(\s)+/s', // shorten multiple whitespace sequences
         );            // shorten multiple whitespace sequences
         $replace =
-        array(
-
-        ' ',
-        ' ',
-
-         '>',
-        '<',
-        '\\1',
-
+                array(
+                    ' ',
+                    ' ',
+                    '>',
+                    '<',
+                    '\\1',
         );
         $event->getPoc()->setOutput(
-        preg_replace($search, $replace, $event->getPoc()->getOutput()));
+                preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
+
+    public function setName() {
+        $this->name = "MinifyHtmlOutput";
+    }
+
 }

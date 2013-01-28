@@ -64,5 +64,9 @@ class Etag extends Plugin
             }
         }
     }
+        
+    public function setName() {
+        $this->name = "HttpEtag";
+    }
 
 }

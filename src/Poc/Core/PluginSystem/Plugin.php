@@ -18,8 +18,18 @@ namespace Poc\Core\PluginSystem;
 
 use Poc\Poc;
 
-class Plugin implements PluginInterface
+abstract class Plugin implements PluginInterface
 {
+    
+    protected $name = null;
+    
+    protected $baseOptions = array();
+    
+    public function __construct() {
+        $this->setName();
+    }
+    
+
     /**
      *
      * @var Poc
@@ -37,4 +47,6 @@ class Plugin implements PluginInterface
         $this->poc = $poc;
         $this->pocDispatcher = $poc->getPocDispatcher();
     }
+    
+    abstract public function setName();
 }

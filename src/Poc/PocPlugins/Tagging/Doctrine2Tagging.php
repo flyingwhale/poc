@@ -12,7 +12,6 @@
 
 namespace Poc\PocPlugins\Tagging;
 
-use Doctrine\ORM\EntityManager;
 use Poc\PocPlugins\Tagging\Driver\Doctrine2\Entities\Cache;
 use Poc\PocPlugins\Tagging\AbstractDb;
 use Poc\Optionable\DoctrineOptionable;
@@ -25,6 +24,7 @@ class Doctrine2Tagging extends AbstractDb
 
     public function __construct ($options = array())
     {
+        $this->name = "Doctrine2Tagging";
         $this->optionable = new DoctrineOptionable($options);
         $this->entityManager = $this->optionable['orm.entity_managers.default'];
         parent::__construct();
@@ -175,6 +175,10 @@ class Doctrine2Tagging extends AbstractDb
     protected function splitTags ($tags)
     {
         return explode(',', $tags);
+    }
+    
+    public function setName() {
+        $this->name = "Doctrine2Tagging";
     }
 
 }

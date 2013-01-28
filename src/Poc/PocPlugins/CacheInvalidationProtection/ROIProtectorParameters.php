@@ -14,6 +14,6 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 interface ROIProtectorParameters
 {
-    const PARAM_REDIRECT_CONTENT = 'rc';
+    const PARAM_REDIRECT_CONTENT = 'rc1';
     const PARAM_CONCURRENT_CLIENTS_IN_THE_ROW = 'rc';
 }

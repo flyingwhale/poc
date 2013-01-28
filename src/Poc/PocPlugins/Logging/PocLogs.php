@@ -210,4 +210,9 @@ class PocLogs extends Plugin
                 self::LOG_TYPE_TIME);
     }
 
+    
+    public function setName() {
+        $this->name = "PocLogs";
+    }
+
 }

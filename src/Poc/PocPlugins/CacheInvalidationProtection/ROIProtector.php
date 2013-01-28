@@ -235,5 +235,9 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
     public function setCache($cache)
     {
         $this->cache = $cache;
+    }    
+    
+    public function setName() {
+        $this->name = "ROIP";
     }
 }

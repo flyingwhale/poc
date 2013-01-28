@@ -25,7 +25,7 @@ use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
 
-class ContentLength extends \Poc\Core\PluginSystem\Plugin
+class ContentLength extends Plugin
 {
 
     const LENGTH_POSTFIX = "_LN";
@@ -55,6 +55,10 @@ class ContentLength extends \Poc\Core\PluginSystem\Plugin
     {
         $LengthHeader = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX);
         $event->getPoc()->getOutputHandler()->header('Content-Length: ' . $LengthHeader);
+    }
+    
+    public function setName() {
+        $this->name = "HttpHeaderContentLength";
     }
 
 }

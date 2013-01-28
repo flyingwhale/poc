@@ -54,12 +54,7 @@ abstract class AbstractDb extends Plugin
                                                     array($this, 'cacheTagsInvalidation'));
 
     }
-
-    public function __construct ()
-    {
-//        $this->flushOutdated();
-    }
-
+    
     public function setCache ($cache)
     {
         $this->cache = $cache;
@@ -91,6 +86,5 @@ abstract class AbstractDb extends Plugin
         foreach ($this->cacheInvalidationTags as $tags) {
             $this->tagInvalidate($tags);
         }
-
     }
 }

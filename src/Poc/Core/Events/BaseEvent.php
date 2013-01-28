@@ -22,20 +22,20 @@ class BaseEvent extends Event
      *
      * @var Poc
      */
-    private $event;
+    private $poc;
 
     /**
      *
      * @return Poc
      */
-    public function getEvent ()
+    public function getPoc ()
     {
-        return $this->event;
+        return $this->poc;
     }
 
     public function __construct ($Poc)
     {
-        $this->event = $Poc;
+        $this->poc = $Poc;
     }
 
 }

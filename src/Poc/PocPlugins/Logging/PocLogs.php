@@ -16,8 +16,6 @@ use Poc\Core\Events\BaseEvent;
 
 use Poc\Core\PocEvents\PocEventNames;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Poc\Poc;
 
 use Poc\Core\PluginSystem\Plugin;
@@ -37,23 +35,15 @@ class PocLogs extends Plugin
 
     /**
      *
-     * @var EventDispatcher
-     */
-    private $pocDispatcher;
-
-    /**
-     *
      * @var LoggerInterface
      */
     private $logger;
 
     public function init (Poc $poc)
     {
-
-        $this->poc = $poc;
+        parent::init($poc);
+        
         $this->logger = $this->poc->getLogger();
-
-        $this->pocDispatcher = $this->poc->getPocDispatcher();
 
         $this->pocDispatcher->addListener(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
@@ -175,14 +165,14 @@ class PocLogs extends Plugin
     private function logOutput (BaseEvent $event, $eventName, $type)
     {
         $this->logOutputMatix($eventName,
-                $event->getEvent()
+                $event->getPoc()
                     ->getOutput(), $type);
     }
 
     private function logTime (BaseEvent $event, $eventName, $type)
     {
         $this->logOutputMatix($eventName,
-                \microtime(true) - ($event->getEvent()->getStartTime()) .
+                \microtime(true) - ($event->getPoc()->getStartTime()) .
                                                        '|' . $eventName, $type);
     }
 

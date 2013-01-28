@@ -39,26 +39,26 @@ class Etag extends Plugin
 
     public function addEtag (BaseEvent $event)
     {
-        $etag = md5($event->getEvent()->getOutput());
-        $event->getEvent()->getCache()->cacheSpecificStore($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX, $etag);
+        $etag = md5($event->getPoc()->getOutput());
+        $event->getPoc()->getCache()->cacheSpecificStore($event->getPoc()->getHasher()->getKey() . self::ETAG_POSTFIX, $etag);
         $etagHeader = 'Etag: ' . $etag;
-        $event->getEvent()->getOutputHandler()->header($etagHeader);
+        $event->getPoc()->getOutputHandler()->header($etagHeader);
     }
 
     public function checkEtag (BaseEvent $event)
     {
-        $requestHeaders = $event->getEvent()->getOutputHandler()->getallheaders();
+        $requestHeaders = $event->getPoc()->getOutputHandler()->getallheaders();
         if (isset($requestHeaders['If-None-Match'])) {
             $etag = $requestHeaders['If-None-Match'];
             if ($etag) {
-              $storedEtag = $event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::ETAG_POSTFIX);
+              $storedEtag = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::ETAG_POSTFIX);
 
               if ($storedEtag == $etag)
               {
                   $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
-                  $event->getEvent()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
-                  $event->getEvent()->getOutputHandler()->header('Etag: ' . $etag);
-                  $event->getEvent()->getOutputHandler()->StopBuffer();
+                  $event->getPoc()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
+                  $event->getPoc()->getOutputHandler()->header('Etag: ' . $etag);
+                  $event->getPoc()->getOutputHandler()->StopBuffer();
               } else {
                   $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_NOT_FOUND, new BaseEvent($this->poc));
               }

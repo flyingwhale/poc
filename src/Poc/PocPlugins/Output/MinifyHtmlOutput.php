@@ -52,7 +52,7 @@ class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin
         '\\1',
 
         );
-        $event->getEvent()->setOutput(
-        preg_replace($search, $replace, $event->getEvent()->getOutput()));
+        $event->getPoc()->setOutput(
+        preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
 }

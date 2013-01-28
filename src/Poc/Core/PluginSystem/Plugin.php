@@ -25,9 +25,16 @@ class Plugin implements PluginInterface
      * @var Poc
      */
     protected $poc;
+    
+    /**
+     *
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    protected $pocDispatcher;
 
     public function init(Poc $poc)
     {
         $this->poc = $poc;
+        $this->pocDispatcher = $poc->getPocDispatcher();
     }
 }

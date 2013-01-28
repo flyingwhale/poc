@@ -45,16 +45,16 @@ class ContentLength extends \Poc\Core\PluginSystem\Plugin
 
     public function calculateSize (BaseEvent $event)
     {
-        $size = strlen($event->getEvent()->getOutput());
-        $event->getEvent()->getCache()->cacheSpecificStore($event->getEvent()->getHasher()->getKey() . self::LENGTH_POSTFIX, $size);
+        $size = strlen($event->getPoc()->getOutput());
+        $event->getPoc()->getCache()->cacheSpecificStore($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX, $size);
         $LengthHeader = 'Content-Length: ' . $size;
-        $event->getEvent()->getOutputHandler()->header($LengthHeader);
+        $event->getPoc()->getOutputHandler()->header($LengthHeader);
     }
 
     public function printSize (BaseEvent $event)
     {
-        $LengthHeader = $event->getEvent()->getCache()->fetch($event->getEvent()->getHasher()->getKey() . self::LENGTH_POSTFIX);
-        $event->getEvent()->getOutputHandler()->header('Content-Length: ' . $LengthHeader);
+        $LengthHeader = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX);
+        $event->getPoc()->getOutputHandler()->header('Content-Length: ' . $LengthHeader);
     }
 
 }

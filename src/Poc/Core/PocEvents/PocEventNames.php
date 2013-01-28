@@ -44,6 +44,8 @@ interface PocEventNames
     const COMPRESS_OUTPUT = 'COMPRESS_OUTPUT';
 
     const AFTER_COMPRESS_OUTPUT = 'AFTER_COMPRESS_OUTPUT';
+    
+    const GET_OUTPUT_FROM_CACHE = 'GET_OUTPUT_FROM_CACHE';
 
     // const BEFORE_OUTPUT_SENT_TO_CLIENT = 'bcostc';
 }

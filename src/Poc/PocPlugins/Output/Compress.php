@@ -18,7 +18,7 @@ use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\Plugin;
 
-class Compress extends \Poc\Core\PluginSystem\Plugin
+class Compress extends Plugin
 {
 
     const COMPRESSION_NONE = 'text/html';
@@ -59,17 +59,17 @@ class Compress extends \Poc\Core\PluginSystem\Plugin
 
     public function modifyHasher(BaseEvent $event)
     {
-        $event->getEvent()->getHasher()->addDistinguishVariable($this->compressionType);
+        $event->getPoc()->getHasher()->addDistinguishVariable($this->compressionType);
     }
 
     public function compress (BaseEvent $event)
     {
-        $event->getEvent()->getOutputHandler()->header('Content-Encoding: gzip');
+        $event->getPoc()->getOutputHandler()->header('Content-Encoding: gzip');
         if($this->compressionType == self::COMPRESSION_GZIP){
-            $event->getEvent()->setOutput(\gzencode($event->getEvent()->getOutput(), 9, FORCE_GZIP));
+            $event->getPoc()->setOutput(\gzencode($event->getPoc()->getOutput(), 9, FORCE_GZIP));
         }
         elseif($this->compressionType == self::COMPRESSION_DEFLATE){
-            $event->getEvent()->setOutput(\gzdeflate($event->getEvent()->getOutput()));
+            $event->getPoc()->setOutput(\gzdeflate($event->getPoc()->getOutput()));
         }
     }
 }

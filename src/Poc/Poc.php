@@ -50,15 +50,6 @@ use Optionable;
  */
 class Poc implements PocParams
 {
-    /**
-     * This object stands for the output handling. I had to make
-     * this abstraction because we whant testable code, and for the tests we
-     * don't have the server environmnet, and we weeded to mock it somehow.
-     * This is the solution for this problem.
-     *
-     * @var OutputInterface
-     */
-    private $outputHandler = null;
 
     /**
      * This variable holds the output that has been created by the output
@@ -96,13 +87,6 @@ class Poc implements PocParams
      */
     private $level = null;
 
-    /**
-     * This class handles the header related manipulations, also takes care
-     * about stroing it.
-     *
-     * @var Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator
-     */
-    private $headerManipulator = null;
 
     /**
      * This variable contains the object that handles the caching process.
@@ -155,6 +139,18 @@ class Poc implements PocParams
      * @var CallbackHandler
      */
     private $callbackHandler;
+    
+    /**
+     * This object stands for the output handling. I had to make
+     * this abstraction because we whant testable code, and for the tests we
+     * don't have the server environmnet, and we weeded to mock it somehow.
+     * This is the solution for this problem.
+     *
+     * @var OutputInterface
+     */
+    private $outputHandler = null;
+
+    
     /**
      *
      * @param Core\PluginSystem\Plugin $plugin
@@ -338,6 +334,7 @@ class Poc implements PocParams
         $this->setupDefaults($this->optionable);
         $this->mapFieldsFromOptionable($this->optionable, $this);
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
+        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture);
     }
 
     public function fetchCache ()
@@ -345,12 +342,16 @@ class Poc implements PocParams
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINNING, new BaseEvent($this));
 
-        $output = $this->cache->fetch($this->hasher->getKey());
-        if ($output) {
-            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
-            //todo test it!
-            $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
-            $this->outputHandler->stopBuffer($output);
+        $this->output = $this->cache->fetch($this->hasher->getKey());
+        if ($this->output) {
+            
+            $this->pocDispatcher->dispatch(
+                    PocEventNames::GET_OUTPUT_FROM_CACHE, new BaseEvent($this));
+            
+//            $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
+//            //todo test it!
+//            $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
+//            $this->outputHandler->stopBuffer($output);
         } else {
         }
     }

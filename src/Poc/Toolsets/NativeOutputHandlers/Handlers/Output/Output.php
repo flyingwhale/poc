@@ -24,7 +24,7 @@ abstract class Output implements OutputInterface
      *
      * @var CallbackHandler
      */
-     private $callbackHandler;
+     protected $callbackHandler;
      
     /**
      *

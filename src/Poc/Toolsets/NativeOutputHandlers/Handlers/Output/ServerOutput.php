@@ -29,7 +29,7 @@ class ServerOutput extends Output
 
     public function startBuffer ($callbackFunctname)
     {
-        ob_start(array($this->poc->getCallbackHandler(), $callbackFunctname));
+        ob_start(array($this->callbackHandler, $callbackFunctname));
     }
 
     public function StopBuffer ($output = '')

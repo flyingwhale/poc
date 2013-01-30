@@ -99,7 +99,9 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
             $poc->destruct();
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
-        } else {
+        } 
+        else 
+        {
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
             $poc->destruct();

@@ -20,7 +20,7 @@ class EtagTest extends PocTestCore
     public function testEtagSend ()
     {
         $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestEtag" . rand());
+        $hasher->addDistinguishVariable("TestEtag1" . rand());
 
         $outputHandler = new TestOutput;
 
@@ -42,7 +42,7 @@ class EtagTest extends PocTestCore
     public function testEtagReceive ()
     {
         $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestEtag" . rand());
+        $hasher->addDistinguishVariable("TestEtag2" . rand());
 
         $outputHandler = new TestOutput;
 

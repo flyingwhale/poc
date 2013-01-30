@@ -57,7 +57,7 @@ class Etag extends Plugin
                   $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
                   $event->getPoc()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
                   $event->getPoc()->getOutputHandler()->header('Etag: ' . $etag);
-                  $event->getPoc()->getOutputHandler()->StopBuffer();
+                  //$event->getPoc()->getOutputHandler()->StopBuffer();
               } else {
                   $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_NOT_FOUND, new BaseEvent($this->poc));
               }

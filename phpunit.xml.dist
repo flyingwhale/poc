@@ -14,7 +14,7 @@
 
   <php>
     <!--
-    Please change this settings!
+     Please change this settings!
     -->
     
     <var name="CONNECTION_DEFAULT" value="mysql" />

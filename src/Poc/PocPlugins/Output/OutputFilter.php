@@ -13,18 +13,17 @@
 namespace Poc\PocPlugins\Output;
 
 use Poc\Core\PocEvents\PocEventNames;
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 
-class OutputFilter extends Plugin
+class OutputFilter implements PluginInterface
 {
 
     private $outputBlacklist = null;
 
-    public function init(Poc $poc)
+    public function init($poc)
     {
-        parent::init($poc);
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
                                            array($this, 'isOutputBlacklisted'));
     }
@@ -38,18 +37,17 @@ class OutputFilter extends Plugin
     {
         if ($this->outputBlacklist) {
             foreach ($this->outputBlacklist as $condititon) {
-                $result = preg_match($condititon, $this->poc->getOutput());
+                $result = preg_match($condititon, $event->getPoc()->getOutput());
                 if ($result) {
-                  $this->poc->setCanICacheThisGeneratedContent(false);
-
+                  $event->getPoc()->setCanICacheThisGeneratedContent(false);
                   return;
                 }
             }
         }
     }
     
-    public function setName() {
-        $this->name = "OutputFilter";
+    public function getName() {
+        return "OutputFilter";
     }
 
 }

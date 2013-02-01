@@ -19,6 +19,7 @@
  */
 namespace Poc;
 
+use Poc\Core\PluginSystem\PluginContainer;
 use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
@@ -48,7 +49,7 @@ use Optionable;
  * @author Imre Toth
  *
  */
-class Poc implements PocParams
+class Poc implements PocParams,  PluginContainer
 {
 
     /**

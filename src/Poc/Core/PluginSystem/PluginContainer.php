@@ -1,8 +1,6 @@
 <?php
 namespace Poc\Core\PluginSystem;
 
-class PluginContainer {
+interface PluginContainer {
     //put your code here
 }
-
-?>

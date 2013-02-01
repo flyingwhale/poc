@@ -16,16 +16,18 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
-class Etag extends Plugin
+class Etag implements PluginInterface
 {
 
     const ETAG_POSTFIX = "_ET";
-    public function init (Poc $poc)
+    
+    public function init ($poc)
     {
-        parent::init($poc);
+        
+
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'addEtag'));
 
@@ -54,19 +56,20 @@ class Etag extends Plugin
               $storedEtag = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::ETAG_POSTFIX);
 
               if ($storedEtag == $etag) {
-                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($this->poc));
+                  $event->getPoc()->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($event->getPoc()));
                   $event->getPoc()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
                   $event->getPoc()->getOutputHandler()->header('Etag: ' . $etag);
                   //$event->getPoc()->getOutputHandler()->StopBuffer();
               } else {
-                  $this->poc->getPocDispatcher()->dispatch(EtagEvents::ETAG_NOT_FOUND, new BaseEvent($this->poc));
+                  $event->getPoc()->getPocDispatcher()->dispatch
+                  (EtagEvents::ETAG_NOT_FOUND, new BaseEvent($event->getPoc()));
               }
             }
         }
     }
         
-    public function setName() {
-        $this->name = "HttpEtag";
+    public function getName() {
+        return "HttpEtag";
     }
 
 }

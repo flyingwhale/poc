@@ -12,11 +12,11 @@
 
 namespace Poc\PocPlugins\Tagging;
 
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 use Poc\Poc;
 use Poc\Core\PocEvents\PocEventNames;
 
-abstract class AbstractDb extends Plugin
+abstract class AbstractDb implements PluginInterface
 {
 
     protected $tags;
@@ -41,9 +41,10 @@ abstract class AbstractDb extends Plugin
 
     abstract public function tagInvalidate ($tags);
 
-    public function init(Poc $poc)
+    public function init($poc)
     {
-        parent::init($poc);
+
+        $this->poc = $poc;
         $this->cache = $poc->getCache();
         $this->ttl = $poc->getCache()->getTtl();
         $this->hash = $poc->getHasher()->getKey();

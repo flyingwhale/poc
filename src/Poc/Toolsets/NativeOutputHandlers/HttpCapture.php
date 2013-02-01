@@ -9,13 +9,13 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
 use Poc\Core\Events\BaseEvent;
 
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
 use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-class HttpCapture extends Plugin
+class HttpCapture implements PluginInterface
 {
     /**
      *
@@ -50,7 +50,7 @@ class HttpCapture extends Plugin
      * @param OutputInterface $outputHandler
      */
     public function __construct($outputHandler = null) {
-        parent::__construct();
+
         if ($outputHandler != null)
         {
             $this->outputHandler = $outputHandler;
@@ -62,11 +62,12 @@ class HttpCapture extends Plugin
     }
 
 
-    public function init (Poc $poc)
+    public function init ($poc)
     {
-        parent::init($poc);
-
+        $this->poc = $poc;
         $this->callbackHandler = new CallbackHandler($poc);
+        
+        $this->pocDispatcher = $poc->getPocDispatcher();
         
         $this->outputHandler =  $this->outputHandler;
         $this->outputHandler->setCallbackHandler($this->callbackHandler);
@@ -127,7 +128,7 @@ class HttpCapture extends Plugin
         }         
     }
 
-    public function setName() {
-        $this->name = "HttpCapture";
+    public function getName() {
+        return "HttpCapture";
     }
 }

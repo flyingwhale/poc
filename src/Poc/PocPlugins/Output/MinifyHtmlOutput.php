@@ -16,12 +16,11 @@ namespace Poc\PocPlugins\Output;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
-class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin {
+class MinifyHtmlOutput implements PluginInterface {
 
-    public function init(Poc $poc) {
-        parent::init($poc);
+    public function init($poc) {
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }
 
@@ -46,8 +45,8 @@ class MinifyHtmlOutput extends \Poc\Core\PluginSystem\Plugin {
                 preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
 
-    public function setName() {
-        $this->name = "MinifyHtmlOutput";
+    public function getName() {
+        return "MinifyHtmlOutput";
     }
 
 }

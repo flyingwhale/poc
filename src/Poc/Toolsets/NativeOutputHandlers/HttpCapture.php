@@ -94,6 +94,7 @@ class HttpCapture implements PluginInterface
                                                 array($this, 'endOfBuffering'));
         
      }
+     
     public function isMultipleInstanced()
     {
         return false;

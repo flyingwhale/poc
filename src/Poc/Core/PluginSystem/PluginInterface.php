@@ -19,5 +19,5 @@ Interface PluginInterface
 {
   public function init($pluginContainer);
   public function getName();
-//  public function isMultipleInstanced();
+  public function isMultipleInstanced();
 }

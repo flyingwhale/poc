@@ -2,5 +2,5 @@
 namespace Poc\Core\PluginSystem;
 
 interface PluginContainer {
-    //put your code here
+    public function addPlugin($plugin);
 }

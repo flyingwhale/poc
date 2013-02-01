@@ -28,8 +28,6 @@ class EtagTest extends PocTestCore
                               PocParams::PARAM_HASHER=>$hasher
                         ));
 
-        $poc->addPlugin(new PocLogs);
-
         $poc->addPlugin(new Etag);
 
         $this->pocBurner($poc, self::ETAG_TEXT);
@@ -53,8 +51,6 @@ class EtagTest extends PocTestCore
         $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
                               PocParams::PARAM_HASHER=>$hasher
                         ));
-
-        $poc->addPlugin(new PocLogs);
 
         $poc->addPlugin(new Etag);
 

@@ -30,6 +30,7 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Poc\Core\PluginSystem\PluginRegistry;
 use Optionable;
 
 /**
@@ -144,13 +145,19 @@ class Poc implements PocParams,  PluginContainer
      */
     private $outputHandler = null;
 
+    
+    /**
+     *
+     * @var PluginRegistry
+     */
+    private $pluginRegistry = null;
 
     /**
      *
-     * @param Core\PluginSystem\Plugin $plugin
      */
     public function addPlugin ($plugin)
     {
+        $this->pluginRegistry->addPlugin($plugin);
         $plugin->init($this);
     }
 
@@ -317,6 +324,7 @@ class Poc implements PocParams,  PluginContainer
      */
     public function __construct ($options = array())
     {
+        $this->pluginRegistry = new PluginRegistry();
         $this->startTime = microtime(true);
         $this->optionable = new Optionable($options);
         $this->setupDefaults($this->optionable);

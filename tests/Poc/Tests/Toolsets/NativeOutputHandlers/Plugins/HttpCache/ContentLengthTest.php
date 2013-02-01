@@ -25,8 +25,6 @@ class ContentLenghtTest extends PocTestCore
                             PocParams::PARAM_HASHER=>$hasher
                         ));
 
-        $poc->addPlugin(new PocLogs);
-
         $poc->addPlugin(new ContentLength);
 
         $testString = "123";

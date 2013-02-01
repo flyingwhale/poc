@@ -28,7 +28,6 @@
         "predis/predis":            "0.7.3",
         "optionable/optionable":    "dev-master",
         "symfony/console":          "2.1.*"
-
     },
    "require-dev": {
         "EHER/PHPUnit":             "1.6",

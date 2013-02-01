@@ -70,8 +70,12 @@ class Compress implements PluginInterface
         }
     }
     
-    
     public function getName() {
         return "Compress";
     }
+    
+    public function isMultipleInstanced(){
+        return false;
+    }
+    
 }

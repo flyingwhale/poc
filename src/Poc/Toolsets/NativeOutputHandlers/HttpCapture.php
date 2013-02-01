@@ -93,7 +93,12 @@ class HttpCapture implements PluginInterface
                                 PocEventNames::END_OF_BUFFERING,
                                                 array($this, 'endOfBuffering'));
         
+     }
+    public function isMultipleInstanced()
+    {
+        return false;
     }
+
 
 
      public function setObLevel(BaseEvent $event)

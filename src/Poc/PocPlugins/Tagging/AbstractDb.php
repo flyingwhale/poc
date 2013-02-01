@@ -56,6 +56,12 @@ abstract class AbstractDb implements PluginInterface
 
     }
     
+    public function isMultipleInstanced()
+    {
+        return false;
+    }
+    
+    
     public function setCache ($cache)
     {
         $this->cache = $cache;

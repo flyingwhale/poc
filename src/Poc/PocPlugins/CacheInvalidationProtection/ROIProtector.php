@@ -99,6 +99,10 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
                                                        array($this, 'consult'));
 
     }
+    
+    public function isMultipleInstanced(){
+        return false;
+    }
 
     public function getName() {
         return 'roip';

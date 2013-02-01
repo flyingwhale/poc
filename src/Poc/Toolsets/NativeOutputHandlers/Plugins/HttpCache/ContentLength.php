@@ -41,6 +41,11 @@ class ContentLength implements PluginInterface
                                                      array($this, 'printSize'));
 
     }
+    
+    public function isMultipleInstanced()
+    {
+        return false;
+    }
 
     public function calculateSize (BaseEvent $event)
     {

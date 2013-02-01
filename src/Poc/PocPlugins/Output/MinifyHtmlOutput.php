@@ -49,4 +49,8 @@ class MinifyHtmlOutput implements PluginInterface {
         return "MinifyHtmlOutput";
     }
 
+    public function isMultipleInstanced()
+    {
+        return false;
+    }
 }

@@ -216,5 +216,8 @@ class PocLogs implements PluginInterface
     public function getName() {
         return "PocLogs";
     }
-
+    
+    public function isMultipleInstanced(){
+        return false;
+    }    
 }

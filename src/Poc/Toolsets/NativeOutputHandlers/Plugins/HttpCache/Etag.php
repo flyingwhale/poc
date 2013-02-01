@@ -38,6 +38,11 @@ class Etag implements PluginInterface
                                                      array($this, 'checkEtag'));
 
     }
+    
+    public function isMultipleInstanced()
+    {
+        return false;
+    }
 
     public function addEtag (BaseEvent $event)
     {

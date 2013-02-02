@@ -20,15 +20,13 @@ class EtagTest extends PocTestCore
     public function testEtagSend ()
     {
         $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestEtag" . rand());
+        $hasher->addDistinguishVariable("TestEtag1" . rand());
 
         $outputHandler = new TestOutput;
 
         $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
                               PocParams::PARAM_HASHER=>$hasher
                         ));
-
-        $poc->addPlugin(new PocLogs);
 
         $poc->addPlugin(new Etag);
 
@@ -42,7 +40,7 @@ class EtagTest extends PocTestCore
     public function testEtagReceive ()
     {
         $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestEtag" . rand());
+        $hasher->addDistinguishVariable("TestEtag2" . rand());
 
         $outputHandler = new TestOutput;
 
@@ -53,8 +51,6 @@ class EtagTest extends PocTestCore
         $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
                               PocParams::PARAM_HASHER=>$hasher
                         ));
-
-        $poc->addPlugin(new PocLogs);
 
         $poc->addPlugin(new Etag);
 

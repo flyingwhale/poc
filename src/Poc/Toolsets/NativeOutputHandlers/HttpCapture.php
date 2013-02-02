@@ -9,14 +9,16 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
 use Poc\Core\Events\BaseEvent;
 
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
 use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-class HttpCapture extends Plugin
+class HttpCapture implements PluginInterface
 {
+    
+    const PLUGIN_NAME = 'hCap';
     /**
      *
      * @var Handlers\Callback\CallbackHandler
@@ -34,6 +36,12 @@ class HttpCapture extends Plugin
     private $outputHandler = null;
     
     private $level;
+    
+    /**
+     *
+     * @var Poc
+     */
+    private $poc;
 
     public function setLevel($value)
     {
@@ -50,7 +58,6 @@ class HttpCapture extends Plugin
      * @param OutputInterface $outputHandler
      */
     public function __construct($outputHandler = null) {
-        parent::__construct();
         if ($outputHandler != null)
         {
             $this->outputHandler = $outputHandler;
@@ -62,19 +69,19 @@ class HttpCapture extends Plugin
     }
 
 
-    public function init (Poc $poc)
+    public function init ($poc)
     {
-        parent::init($poc);
-
+        $this->poc = $poc;
         $this->callbackHandler = new CallbackHandler($poc);
+        
+        $this->pocDispatcher = $poc->getPocDispatcher();
         
         $this->outputHandler =  $this->outputHandler;
         $this->outputHandler->setCallbackHandler($this->callbackHandler);
         
         $this->outputHandler->setPoc($poc);
 
-        $this->pocDispatcher->addListener(
-                                           PocEventNames::GET_OUTPUT_FROM_CACHE,
+        $this->pocDispatcher->addListener( PocEventNames::GET_OUTPUT_FROM_CACHE,
                                             array($this, 'getOutputFromCache'));
 
         $this->pocDispatcher->addListener(
@@ -92,8 +99,12 @@ class HttpCapture extends Plugin
                                 PocEventNames::END_OF_BUFFERING,
                                                 array($this, 'endOfBuffering'));
         
-    }
-
+     }
+     
+     public function isMultipleInstanced()
+     {
+        return false;
+     }
 
      public function setObLevel(BaseEvent $event)
      {
@@ -127,7 +138,16 @@ class HttpCapture extends Plugin
         }         
     }
 
-    public function setName() {
-        $this->name = "HttpCapture";
+    public function getName()
+    {
+        return self::PLUGIN_NAME;
+    }
+    
+    /**
+     * 
+     */
+    public function getOutputHandler()
+    {
+        return $this->outputHandler; 
     }
 }

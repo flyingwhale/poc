@@ -56,7 +56,6 @@ a
                             PocParams::PARAM_HASHER=>$hasher
                         ));
 
-        $poc->addPlugin(new PocLogs);
 
         $poc->addPlugin(new MinifyHtmlOutput);
 

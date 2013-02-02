@@ -1,8 +1,7 @@
 <?php
 namespace Poc\Core\PluginSystem;
 
-class PluginContainer {
-    //put your code here
+interface PluginContainer {
+    public function addPlugin($plugin);
+    public function getPluginRegistry();
 }
-
-?>

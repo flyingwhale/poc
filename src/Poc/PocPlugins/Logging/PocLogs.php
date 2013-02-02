@@ -18,11 +18,11 @@ use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
-class PocLogs extends Plugin
+class PocLogs implements PluginInterface
 {
 
     const LOG_TYPE_OUTPUT = "OUTPUT";
@@ -39,9 +39,18 @@ class PocLogs extends Plugin
      */
     private $logger;
 
-    public function init (Poc $poc)
+    /**
+     *
+     * @var Poc
+     */
+    private $poc;
+
+    
+    public function init ($poc)
     {
-        parent::init($poc);
+        $this->poc = $poc;
+        
+        $this->pocDispatcher = $poc->getPocDispatcher();
 
         $this->logger = $this->poc->getLogger();
 
@@ -210,9 +219,11 @@ class PocLogs extends Plugin
                 self::LOG_TYPE_TIME);
     }
 
-    
-    public function setName() {
-        $this->name = "PocLogs";
+    public function getName() {
+        return "PocLogs";
     }
-
+    
+    public function isMultipleInstanced(){
+        return false;
+    }    
 }

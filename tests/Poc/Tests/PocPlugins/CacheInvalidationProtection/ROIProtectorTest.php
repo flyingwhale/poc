@@ -42,18 +42,15 @@ class ROIProtectorTest extends PocTestCore
 
         $this->pocContainer = new \Pimple;
         $this->pocContainer['poc'] = function () {
-            $outputHandler = new TestOutput();
             $cache = new FileCache();
             $hasher = new Hasher();
             $hasher->addDistinguishVariable(rand());
             $poc = new Poc(
-                    array(Poc::PARAM_CACHE => $cache, Poc::PARAM_OUTPUTHANDLER => $outputHandler));
-
+                    array(Poc::PARAM_CACHE => $cache));
             return $poc;
         };
 
-        $this->cia = new ROIProtector();
-
+        $this->cia = new ROIProtector;
     }
 
     // todo: Add more relevant tests!
@@ -62,7 +59,7 @@ class ROIProtectorTest extends PocTestCore
 
         $poc1 = $this->pocContainer['poc'];
 
-        $poc1->addPlugin($this->cia);
+        $poc1->addPlugin(new ROIProtector);
 
         /*this 3 lines id for the tests only, in real life we don't do such things*/
         $cnt = $this->cia->getSentinel();

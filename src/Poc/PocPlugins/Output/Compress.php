@@ -16,9 +16,9 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
-class Compress extends Plugin
+class Compress implements PluginInterface
 {
 
     const COMPRESSION_NONE = 'text/html';
@@ -27,9 +27,16 @@ class Compress extends Plugin
 
     private $compressionType;
 
+    /**
+     *
+     * @var Poc
+     */
+    private $poc;
+
+
     public function init (Poc $poc)
-    {
-        parent::init($poc);
+    {        
+        $this->poc = $poc;
 
         $this->setCompressiontype($poc);
 
@@ -70,8 +77,12 @@ class Compress extends Plugin
         }
     }
     
-    
-    public function setName() {
-        $this->name = "Compress";
+    public function getName() {
+        return "Compress";
     }
+    
+    public function isMultipleInstanced(){
+        return false;
+    }
+    
 }

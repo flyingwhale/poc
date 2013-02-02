@@ -15,9 +15,9 @@
  */
 namespace Poc\Core\PluginSystem;
 
-use Poc\Poc;
-
 Interface PluginInterface
 {
-  public function init(Poc $poc);
+  public function init($pluginContainer);
+  public function getName();
+  public function isMultipleInstanced();
 }

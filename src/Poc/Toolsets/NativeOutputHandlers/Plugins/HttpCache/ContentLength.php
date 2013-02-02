@@ -23,15 +23,14 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\Plugin;
+use Poc\Core\PluginSystem\PluginInterface;
 
-class ContentLength extends Plugin
+class ContentLength implements PluginInterface
 {
 
     const LENGTH_POSTFIX = "_LN";
-    public function init (Poc $poc)
+    public function init ($poc)
     {
-        parent::init($poc);
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'calculateSize'));
 
@@ -41,6 +40,11 @@ class ContentLength extends Plugin
         $poc->getPocDispatcher()->addListener(PocEventNames::HEADERS_STORED,
                                                      array($this, 'printSize'));
 
+    }
+    
+    public function isMultipleInstanced()
+    {
+        return false;
     }
 
     public function calculateSize (BaseEvent $event)
@@ -57,8 +61,8 @@ class ContentLength extends Plugin
         $event->getPoc()->getOutputHandler()->header('Content-Length: ' . $LengthHeader);
     }
     
-    public function setName() {
-        $this->name = "HttpHeaderContentLength";
+    public function getName() {
+        return "HttpHeaderContentLength";
     }
 
 }

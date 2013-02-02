@@ -14,11 +14,12 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-//use Poc\Core\Monolog\MonoLogger;
-use Poc\Core\PluginSystem\Plugin;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Optionable;
+use Poc\Core\PluginSystem\PluginInterface;
+use Poc\Core\PluginSystem\PluginContainer;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 /**
  * This calss name comes form the "RelOad and cache Invalidation Attack Protection" name.
  * This integrates transpanently to the framework.
@@ -42,7 +43,7 @@ use Optionable;
  * @author Imre Toth
  *
  */
-class ROIProtector extends Plugin implements ROIProtectorParameters
+class ROIProtector implements ROIProtectorParameters, PluginInterface
 {
 
     const LOG_TYPE_CIA = 'ROI';
@@ -83,14 +84,20 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
 
     /**
      *
-     * @param $poc \Poc\Poc
+     * @var Poc
      */
-    public function init(Poc $poc)
-    {
-        parent::init($poc);
+    private $poc;
 
+    
+    /**
+     *
+     * @param PluginContainer $poc 
+     */
+    public function init($poc)
+    {
+        $this->poc = $poc;
         $this->cache = $poc->getCache();
-        $this->outputHandler =$poc->getOutputHandler();
+        $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
 
@@ -100,8 +107,16 @@ class ROIProtector extends Plugin implements ROIProtectorParameters
                                                        array($this, 'consult'));
 
     }
+    
+    public function isMultipleInstanced(){
+        return false;
+    }
 
-    public function setupDefaults (&$optionable)
+    public function getName() {
+        return 'roip';
+    }
+
+        public function setupDefaults (&$optionable)
     {
         /*
          * $this->optionable->setDefaultOption('self::PARAM_CLIENT_UNIQUE', function(){ return

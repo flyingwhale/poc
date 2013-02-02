@@ -27,7 +27,6 @@ class Doctrine2Tagging extends AbstractDb
         $this->name = "Doctrine2Tagging";
         $this->optionable = new DoctrineOptionable($options);
         $this->entityManager = $this->optionable['orm.entity_managers.default'];
-        parent::__construct();
     }
 
     public function addCacheToTags ($tagNamesString)
@@ -177,8 +176,8 @@ class Doctrine2Tagging extends AbstractDb
         return explode(',', $tags);
     }
     
-    public function setName() {
-        $this->name = "Doctrine2Tagging";
+    public function getName() {
+        return "Doctrine2Tagging";
     }
 
 }

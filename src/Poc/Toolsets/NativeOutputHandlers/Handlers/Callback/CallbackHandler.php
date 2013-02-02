@@ -16,6 +16,7 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Poc\Poc;
 use Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class CallbackHandler
 {
@@ -44,6 +45,7 @@ class CallbackHandler
         $this->poc = $poc;
         $this->headerManipulator = new HeaderManipulator();
         $this->headerManipulator->setPoc($poc);
+        $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
     }
 
     public function getHeaderManipulator()
@@ -67,7 +69,7 @@ class CallbackHandler
                 PocEventNames::COMPRESS_OUTPUT,
                 new BaseEvent($this->poc));
 
-        $this->poc->getOutputHandler()->ObPrintCallback($buffer);
+        $this->outputHandler->ObPrintCallback($buffer);
 
         return $this->poc->getOutput();
     }
@@ -92,7 +94,7 @@ class CallbackHandler
                                 ((microtime(true) - $this->poc->getStartTime()) * 1000) .
                                 '</b> milliseconds.');
                     }
-                    $headers = $this->poc->getOutputHandler()->headersList();
+                    $headers = $this->outputHandler->headersList();
 
                     //Headers stored here.
                     $this->headerManipulator
@@ -134,7 +136,7 @@ class CallbackHandler
                     new BaseEvent($this->poc));
 
             if ($buffer) {
-                $this->poc->getOutputHandler()->ObPrintCallback($this->poc->getOutput());
+                $this->outputHandler->ObPrintCallback($this->poc->getOutput());
 
                 return ($this->poc->getOutput());
             }
@@ -151,7 +153,7 @@ class CallbackHandler
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,
                 new BaseEvent($this->poc));
-        $this->poc->getOutputHandler()->ObPrintCallback($this->poc->getOutput());
+        $this->outputHandler->ObPrintCallback($this->poc->getOutput());
 
         return $this->poc->getOutput();
     }

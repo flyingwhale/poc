@@ -10,6 +10,7 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\ContentLength;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class ContentLenghtTest extends PocTestCore
 {
@@ -19,19 +20,15 @@ class ContentLenghtTest extends PocTestCore
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestMinify".  rand());
 
-        $outputHandler = new TestOutput;
-
-        $poc  = new Poc(array(PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
-                            PocParams::PARAM_HASHER=>$hasher
-                        ));
-
+        $poc  = new Poc(array( PocParams::PARAM_HASHER=>$hasher ));
+        $outputHandler = $poc->getPluginRegistry()->
+        getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        
         $poc->addPlugin(new ContentLength);
 
         $testString = "123";
 
         $this->pocBurner($poc, $testString);
-
-        var_dump($outputHandler->getHeader());
 
         $header = $outputHandler->getHeader();
 

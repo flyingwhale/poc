@@ -292,7 +292,7 @@ class Poc implements PocParams, PluginContainer
     protected function mapFieldsFromOptionable(&$optionable, &$poc)
     {
         $poc->cache = $optionable[Poc::PARAM_CACHE];
-//        $poc->setDebug($optionable['debug']);
+        $poc->setDebug($optionable['debug']);
         $poc->filter = $optionable[Poc::PARAM_FILTER];
         $poc->hasher = $optionable[Poc::PARAM_HASHER];
     }
@@ -319,7 +319,7 @@ class Poc implements PocParams, PluginContainer
         $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
 //        $this->setupDefaults($this->optionable);
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
-        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
+//        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
     }
 
     public function fetchCache ()

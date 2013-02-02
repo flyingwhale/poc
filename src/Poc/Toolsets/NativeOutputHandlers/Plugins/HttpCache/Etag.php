@@ -14,6 +14,7 @@ namespace Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\PluginInterface;
@@ -44,14 +45,20 @@ class Etag implements PluginInterface
     public function addEtag (BaseEvent $event)
     {
         $etag = md5($event->getPoc()->getOutput());
-        $event->getPoc()->getCache()->cacheSpecificStore($event->getPoc()->getHasher()->getKey() . self::ETAG_POSTFIX, $etag);
+        $event->getPoc()->getCache()->
+                cacheSpecificStore($event->getPoc()->getHasher()
+                                        ->getKey() . self::ETAG_POSTFIX, $etag);
+        
         $etagHeader = 'Etag: ' . $etag;
-        $event->getPoc()->getOutputHandler()->header($etagHeader);
+        $event->getPoc()->getPluginRegistry()
+                ->getPlugin(HttpCapture::PLUGIN_NAME)->
+                                        getOutputHandler()->header($etagHeader);
     }
 
     public function checkEtag (BaseEvent $event)
     {
-        $requestHeaders = $event->getPoc()->getOutputHandler()->getallheaders();
+        $requestHeaders = $event->getPoc()->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->
+                                            getOutputHandler()->getallheaders();
         if (isset($requestHeaders['If-None-Match'])) {
             $etag = $requestHeaders['If-None-Match'];
             if ($etag) {
@@ -59,8 +66,10 @@ class Etag implements PluginInterface
 
               if ($storedEtag == $etag) {
                   $event->getPoc()->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($event->getPoc()));
-                  $event->getPoc()->getOutputHandler()->header('HTTP/1.0 304 Not Modified');
-                  $event->getPoc()->getOutputHandler()->header('Etag: ' . $etag);
+                  $outputHandler = $event->getPoc()->getPluginRegistry()->
+                        getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+                  $outputHandler->header('HTTP/1.0 304 Not Modified');
+                  $outputHandler->header('Etag: ' . $etag);
                   //$event->getPoc()->getOutputHandler()->StopBuffer();
               } else {
                   $event->getPoc()->getPocDispatcher()->dispatch

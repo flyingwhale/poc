@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-<?php
 /*
  * Copyright 2012 Imre Toth <tothimre at gmail> Licensed under the Apache
  * License, Version 2.0 (the "License"); you may not use this file except in
@@ -24,6 +17,7 @@ use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\PluginInterface;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class ContentLength implements PluginInterface
 {
@@ -52,13 +46,16 @@ class ContentLength implements PluginInterface
         $size = strlen($event->getPoc()->getOutput());
         $event->getPoc()->getCache()->cacheSpecificStore($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX, $size);
         $LengthHeader = 'Content-Length: ' . $size;
-        $event->getPoc()->getOutputHandler()->header($LengthHeader);
+        $event->getPoc()->getPluginRegistry()->
+        getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler()->header($LengthHeader);
     }
 
     public function printSize (BaseEvent $event)
     {
         $LengthHeader = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX);
-        $event->getPoc()->getOutputHandler()->header('Content-Length: ' . $LengthHeader);
+        $event->getPoc()->getPluginRegistry()->
+        getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler()->header
+                                           ('Content-Length: ' . $LengthHeader);
     }
     
     public function getName() {

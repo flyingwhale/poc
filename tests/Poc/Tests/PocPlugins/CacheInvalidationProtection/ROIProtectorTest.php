@@ -59,7 +59,7 @@ class ROIProtectorTest extends PocTestCore
 
         $poc1 = $this->pocContainer['poc'];
 
-        $poc1->addPlugin(new ROIProtector);
+        $poc1->addPlugin($this->cia);
 
         /*this 3 lines id for the tests only, in real life we don't do such things*/
         $cnt = $this->cia->getSentinel();

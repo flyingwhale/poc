@@ -97,7 +97,9 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
     {
         $this->poc = $poc;
         $this->cache = $poc->getCache();
+
         $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
 

@@ -17,6 +17,7 @@ use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 const UNITTESTING = 1;
 
@@ -92,7 +93,7 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
         $this->setOutput('');
         $poc->start();
 
-        $outputHandler = $poc->getOutputHandler();
+        $outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
 
         if ($outputHandler->getOutputFlow()) {
             echo $testString;

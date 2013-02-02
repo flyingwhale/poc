@@ -18,7 +18,8 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Optionable;
 use Poc\Core\PluginSystem\PluginInterface;
-use \Poc\Core\PluginSystem\PluginContainer;
+use Poc\Core\PluginSystem\PluginContainer;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 /**
  * This calss name comes form the "RelOad and cache Invalidation Attack Protection" name.
  * This integrates transpanently to the framework.
@@ -83,13 +84,20 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
 
     /**
      *
+     * @var Poc
+     */
+    private $poc;
+
+    
+    /**
+     *
      * @param PluginContainer $poc 
      */
     public function init($poc)
     {
         $this->poc = $poc;
         $this->cache = $poc->getCache();
-        $this->outputHandler =$poc->getOutputHandler();
+        $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
 

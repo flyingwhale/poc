@@ -21,13 +21,11 @@ use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
 class Etag implements PluginInterface
 {
-
+    
     const ETAG_POSTFIX = "_ET";
     
     public function init ($poc)
     {
-        
-
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'addEtag'));
 
@@ -36,7 +34,6 @@ class Etag implements PluginInterface
 
         $poc->getPocDispatcher()->addListener(PocEventNames::HEADERS_STORED,
                                                      array($this, 'checkEtag'));
-
     }
     
     public function isMultipleInstanced()

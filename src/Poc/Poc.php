@@ -50,7 +50,7 @@ use Optionable;
  * @author Imre Toth
  *
  */
-class Poc implements PocParams,  PluginContainer
+class Poc implements PocParams, PluginContainer
 {
 
     /**
@@ -134,17 +134,6 @@ class Poc implements PocParams,  PluginContainer
      * @var Cache\Filtering\Filter
      */
     private $filter;
-
-    /**
-     * This object stands for the output handling. I had to make
-     * this abstraction because we whant testable code, and for the tests we
-     * don't have the server environmnet, and we weeded to mock it somehow.
-     * This is the solution for this problem.
-     *
-     * @var OutputInterface
-     */
-    private $outputHandler = null;
-
     
     /**
      *
@@ -153,12 +142,22 @@ class Poc implements PocParams,  PluginContainer
     private $pluginRegistry = null;
 
     /**
-     *
+     * 
+     * @param Core\PluginSystem\PluginInterface $plugin
      */
     public function addPlugin ($plugin)
     {
         $this->pluginRegistry->addPlugin($plugin);
         $plugin->init($this);
+    }
+    
+    /**
+     * 
+     * @return PluginRegistry
+     */
+    public function getPluginRegistry()
+    {
+        return $this->pluginRegistry;
     }
 
     /**
@@ -226,11 +225,6 @@ class Poc implements PocParams,  PluginContainer
         return $this->cache;
     }
 
-    public function getOutputHandler()
-    {
-        return $this->outputHandler;
-    }
-
     public function setCanICacheThisGeneratedContent($bool)
     {
         $this->canICacheThisGeneratedContent = $bool;
@@ -282,11 +276,6 @@ class Poc implements PocParams,  PluginContainer
             }
         );
 
-        $optionable->setDefaultOption(Poc::PARAM_EVENT_DISPATCHER,
-            function  () {
-                return new EventDispatcher();
-            }
-        );
         $optionable->setDefaultOption(Poc::PARAM_HASHER,
             function  () {
                 return new Hasher();
@@ -302,15 +291,10 @@ class Poc implements PocParams,  PluginContainer
 
     protected function mapFieldsFromOptionable(&$optionable, &$poc)
     {
-        $poc->pocDispatcher =  $optionable[Poc::PARAM_EVENT_DISPATCHER];
         $poc->cache = $optionable[Poc::PARAM_CACHE];
-        $poc->outputHandler = $optionable[Poc::PARAM_OUTPUTHANDLER];
-        $poc->outputHandler->setPoc($this);
-        $poc->outputFilter = $optionable[Poc::PARAM_OUTPUTFILTER];
-        $poc->setDebug($optionable['debug']);
+//        $poc->setDebug($optionable['debug']);
         $poc->filter = $optionable[Poc::PARAM_FILTER];
         $poc->hasher = $optionable[Poc::PARAM_HASHER];
-        $this->callbackHandler = new CallbackHandler($this);
     }
 
     /**
@@ -324,13 +308,17 @@ class Poc implements PocParams,  PluginContainer
      */
     public function __construct ($options = array())
     {
-        $this->pluginRegistry = new PluginRegistry();
         $this->startTime = microtime(true);
+        $this->pocDispatcher = new EventDispatcher;
+        $this->pluginRegistry = new PluginRegistry();
+        
         $this->optionable = new Optionable($options);
+        $this->optionable = new Optionable($options);        
         $this->setupDefaults($this->optionable);
         $this->mapFieldsFromOptionable($this->optionable, $this);
-        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
         $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
+//        $this->setupDefaults($this->optionable);
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
     }
 
     public function fetchCache ()

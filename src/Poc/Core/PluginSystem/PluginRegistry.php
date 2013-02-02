@@ -17,12 +17,20 @@ namespace Poc\Core\PluginSystem;
 
 class PluginRegistry
 {
-
-    private $singleInstancedPlugins;
+    private $singleInstancedPlugins = array("a","b","c");
     
     public function addPlugin($plugin)
     {
-        if($plugin->isMultipleInstanced())
+//        
+//                        echo"
+//--------".                    
+//$plugin->getName()
+//."********
+//";
+                        
+        $this->singleInstancedPlugins = null;
+        
+        //if($plugin->isMultipleInstanced())
         {
             if (isset($this->singleInstancedPlugins[$plugin->getName()]))
             {
@@ -37,13 +45,26 @@ class PluginRegistry
     
     public function getPlugin($name)
     {
+        echo "
+            
+
+
+".$name."   
+
+
+
+";
+        
+        var_dump($this->singleInstancedPlugins);
+        echo $name."   
+            ";
         if (isset($this->singleInstancedPlugins[$name]))
         {
            return $this->singleInstancedPlugins[$name];
         }
         else
         {
-     //       throw (new \Exception("Plugin is not registered!")); 
+           throw (new \Exception("Plugin is not registered! ")); 
         }
     }
 }

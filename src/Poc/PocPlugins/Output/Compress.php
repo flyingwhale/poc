@@ -27,6 +27,13 @@ class Compress implements PluginInterface
 
     private $compressionType;
 
+    /**
+     *
+     * @var Poc
+     */
+    private $poc;
+
+
     public function init (Poc $poc)
     {        
         $this->poc = $poc;

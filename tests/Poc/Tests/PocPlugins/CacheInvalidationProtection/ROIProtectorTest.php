@@ -12,7 +12,7 @@
 
 namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 
-use Poc\Tests\PocTestCore;
+use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
@@ -20,7 +20,7 @@ use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 
-class ROIProtectorTest extends PocTestCore
+class ROIProtectorTest extends NativeOutputHandlersTestCore
 {
     const BIG_SENTIEL_VALUE = 10;
 

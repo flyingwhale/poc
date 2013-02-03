@@ -110,24 +110,31 @@ class CallbackHandler
                       PocEventNames::COMPRESS_OUTPUT, new BaseEvent($this->poc));
 
                     $this->poc->getPocDispatcher()->dispatch(
-                      PocEventNames::AFTER_COMPRESS_OUTPUT, new BaseEvent($this->poc));
+                                           PocEventNames::AFTER_COMPRESS_OUTPUT, 
+                                                     new BaseEvent($this->poc));
 
                     $this->poc->getCache()->cacheSpecificStore(
-                            $this->poc->getHasher()->getKey(), $this->poc->getOutput());
+                                              $this->poc->getHasher()->getKey(), 
+                                                       $this->poc->getOutput());
 
                     $this->poc->getPocDispatcher()->dispatch(
-                            PocEventNames::OUTPUT_STORED, new BaseEvent($this->poc));
+                                                   PocEventNames::OUTPUT_STORED, 
+                                                     new BaseEvent($this->poc));
 
                     $this->headerManipulator->storeHeaders();
 
                     $this->poc->getPocDispatcher()->dispatch(
-                            PocEventNames::HEADERS_STORED, new BaseEvent($this->poc));
+                                                  PocEventNames::HEADERS_STORED, 
+                                                     new BaseEvent($this->poc));
 
                 }
             } else {
                 if ($this->poc->getDebug()) {
                     $this->poc->setOutput(
-                            $this->poc->getOutput() . '<br>This page has been ' . '<b> generated in ' . ((microtime(true) - $this->poc->getStartTime()) * 1000) . '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
+                        $this->poc->getOutput() . 
+                        '<br>This page has been ' . '<b> generated in ' . 
+                        ((microtime(true) - $this->poc->getStartTime()) * 1000).
+                        '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
                 }
             }
 
@@ -148,7 +155,10 @@ class CallbackHandler
         $this->poc->setOutput($buffer);
         if ($this->poc->getDebug()) {
             $this->poc->setOutput(
-                    $this->poc->getOutput() . '<br>This page has been ' . ' <b> fetched from the cache in ' . ((microtime(true) - $this->poc->getStartTime()) * 1000) . '</b> milliseconds.');
+                    $this->poc->getOutput() . '<br>This page has been ' . 
+                    ' <b> fetched from the cache in ' . 
+                    ((microtime(true) - $this->poc->getStartTime()) * 1000) . 
+                                                          '</b> milliseconds.');
         }
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,

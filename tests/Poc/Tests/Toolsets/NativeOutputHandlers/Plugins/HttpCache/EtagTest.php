@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
-use Poc\Tests\PocTestCore;
+use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
@@ -12,7 +12,7 @@ use Poc\Cache\Filtering\Hasher;
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Etag;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
-class EtagTest extends PocTestCore
+class EtagTest extends NativeOutputHandlersTestCore
 {
 
     const ETAG_MD5 = 'c075eba9c04d3faf4ac21fd29cae6fd8';
@@ -47,13 +47,9 @@ class EtagTest extends PocTestCore
         $outputHandler = $poc->getPluginRegistry()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
         
-        $outputHandler->allheaders['If-None-Match'] = 'c075eba9c04d3faf4ac21fd29cae6fd8';
-        echo"TT";
-        echo serialize($outputHandler->getallheaders());
-        echo"TT";
-        
+        $outputHandler->allheaders['If-None-Match'] = 
+                                             'c075eba9c04d3faf4ac21fd29cae6fd8';
         $poc->addPlugin(new Etag);
-
         $this->pocBurner($poc, self::ETAG_TEXT);
 
         $header = $outputHandler->getHeader();

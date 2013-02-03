@@ -12,7 +12,7 @@
 
 namespace Poc\Tests\PocPlugins\Tagging;
 
-use Poc\Tests\PocTestCore;
+use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
@@ -22,7 +22,7 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 
-abstract class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
+abstract class Doctrine2TaggingPocTest extends \Poc\Tests\NativeOutputHandlersTestCore
 {
 
     public function testTagging ()
@@ -32,7 +32,7 @@ abstract class Doctrine2TaggingPocTest extends \Poc\Tests\PocTestCore
                                                  $addCacheInvalidationTags='') {
             $getCache = function  () {
                 return new FileCache(
-                        array(CacheParams::PARAM_TTL =>  PocTestCore::BIGTTL ));
+                        array(CacheParams::PARAM_TTL =>  NativeOutputHandlersTestCore::BIGTTL ));
             };
             $hasher1 = new Hasher();
             $hasher1->addDistinguishVariable($key);

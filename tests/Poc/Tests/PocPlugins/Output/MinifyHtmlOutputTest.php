@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\PocPlugins\Output;
 
-use Poc\Tests\PocTestCore;
+use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
 use Poc\PocPlugins\Logging\PocLogs;
@@ -13,7 +13,7 @@ use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 
-class MinifyHtmlOutputTest extends PocTestCore
+class MinifyHtmlOutputTest extends NativeOutputHandlersTestCore
 {
     const TEST_STRING_MINIFY_EXTRA_SPACE = "A    a      A";
 

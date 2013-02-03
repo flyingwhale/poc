@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\PocPlugins\Output;
 
-use Poc\Tests\PocTestCore;
+use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
@@ -12,7 +12,7 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\PocPlugins\Output\OutputFilter;
 
-class OutputFilterTest extends PocTestCore
+class OutputFilterTest extends NativeOutputHandlersTestCore
 {
 
     public function testOutputFilter ()

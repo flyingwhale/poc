@@ -21,7 +21,7 @@ use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 const UNITTESTING = 1;
 
-abstract class PocTestCore extends \PHPUnit_Framework_TestCase
+class NativeOutputHandlersTestCore extends \PHPUnit_Framework_TestCase
 {
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
@@ -34,23 +34,22 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
     protected $analizeThisOutput;
     protected $analizeThisHeader;
 
-    public static function setUpBeforeClass()
-    {
-        PocTestCore::$TTL = $GLOBALS['TTL'];
-//        \ob_start(function($output){return"";});
-    }
+//    public static function setUpBeforeClass()
+//    {
+//        NativeOutputHandlersTestCore::$TTL = $GLOBALS['TTL'];
+//    }
 
     protected function setOutput ($o)
     {
         $this->analizeThisOutput = $o;
     }
 
-    protected function getOutput ()
+    public function getOutput ()
     {
         return $this->analizeThisOutput;
     }
 
-    protected function getHeader ()
+    public function getHeader ()
     {
         return $this->analizeThisHeader;
     }
@@ -68,11 +67,9 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
      * @param $cache Cache
      * @param $testString string
      */
-    protected function cacheBurner ($cache, $testString = "testString")
+    public function cacheBurner ($cache, $testString = "testString")
     {
-        $outputHandler = new TestOutput();
-        $poc = new Poc(
-                array(PocParams::PARAM_CACHE => $cache, PocParams::PARAM_OUTPUTHANDLER => $outputHandler));
+        $poc = new Poc(array(PocParams::PARAM_CACHE => $cache));
         $this->pocBurner($poc, $testString);
     }
 
@@ -86,7 +83,7 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
      * @param $outputHandler TestOutput
      * @param $testString string
      */
-    protected function pocBurner (Poc $poc, $testString = "testString")
+    public function pocBurner (Poc $poc, $testString = "testString")
     {
         $poc->addPlugin(new PocLogs());
 
@@ -113,5 +110,4 @@ abstract class PocTestCore extends \PHPUnit_Framework_TestCase
             }
         }
     }
-
 }

@@ -15,7 +15,9 @@ use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-class HttpCapture implements PluginInterface
+use Poc\Toolsets\CaptureIntrerface;
+
+class HttpCapture implements CaptureIntrerface
 {
     
     const PLUGIN_NAME = 'hCap';
@@ -111,6 +113,8 @@ class HttpCapture implements PluginInterface
          $this->level = $this->outputHandler->getLevel();
      }
 
+//   public function capture(BaseEvent $event);
+     
      public function capture(BaseEvent $event)
      {
          $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);

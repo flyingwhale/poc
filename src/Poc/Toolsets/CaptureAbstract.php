@@ -1,7 +1,7 @@
 <?php
 namespace Poc\Toolsets;
 
-abstract class  CaptureIntrerface implements CaptureIntrerface 
+abstract class  CaptureAbstract implements CaptureIntrerface 
 {
     
     const NAME_START="CaptureInterface";
@@ -13,7 +13,8 @@ abstract class  CaptureIntrerface implements CaptureIntrerface
         $this->poc = $pluginContainer;
     }
     
-    public function getName(){
+    public function getName()
+    {
         $rnd = rand(0, 1);
         return self::NAME_START.$rnd;
     }

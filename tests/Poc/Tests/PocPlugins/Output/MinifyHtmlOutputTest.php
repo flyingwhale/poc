@@ -5,13 +5,13 @@ namespace Poc\Tests\PocPlugins\Output;
 use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
-use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class MinifyHtmlOutputTest extends NativeOutputHandlersTestCore
 {
@@ -51,9 +51,10 @@ a
         $outputHandler = new TestOutput();
 
         $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(),
-                            PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
-                            PocParams::PARAM_CACHE=>$cache,
-                            PocParams::PARAM_HASHER=>$hasher
+                              PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
+                              PocParams::PARAM_CACHE=>$cache,
+                              PocParams::PARAM_HASHER=>$hasher,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())
                         ));
 
 

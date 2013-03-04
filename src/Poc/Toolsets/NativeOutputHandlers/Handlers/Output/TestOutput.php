@@ -35,8 +35,6 @@ class TestOutput extends Output
 
     private $output = '';
 
-    private $stopBufferOutut = null;
-
     private $optionable;
 
     public $allheaders;
@@ -67,7 +65,6 @@ class TestOutput extends Output
     {
         if ($this->outputFlow) {
             echo ($output);
-            $this->stopBufferOutut = $output;
             $this->outputFlow = 0;
             ob_flush();
         }

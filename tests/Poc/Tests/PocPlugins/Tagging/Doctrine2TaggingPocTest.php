@@ -15,12 +15,13 @@ namespace Poc\Tests\PocPlugins\Tagging;
 use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
 abstract class Doctrine2TaggingPocTest extends \Poc\Tests\NativeOutputHandlersTestCore
 {
@@ -39,12 +40,11 @@ abstract class Doctrine2TaggingPocTest extends \Poc\Tests\NativeOutputHandlersTe
             $cache1 = $getCache($hasher1);
             $cache1->clearAll();
 
-            $oh1 = new TestOutput();
-
             $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
 
-            $poc1 = new Poc(array(PocParams::PARAM_CACHE => $cache1,
-                                  PocParams::PARAM_OUTPUTHANDLER => $oh1,
+            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => 
+                                              new HttpCapture(new TestOutput()),
+                                  PocParams::PARAM_CACHE => $cache1,
                                   PocParams::PARAM_HASHER => $hasher1));
             $tagger1 = new Doctrine2Tagging($options);
 

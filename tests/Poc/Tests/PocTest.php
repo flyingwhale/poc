@@ -23,6 +23,7 @@ use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class PocTest 
 extends 
@@ -87,8 +88,9 @@ extends
             $hasher = new Hasher();
             $hasher->addDistinguishVariable($cacheHandlerName.rand());
 
-
-            $poc1 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+            
+            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                                  Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_HASHER => $hasher));
 
             $this->testAdapter->pocBurner($poc1, self::TESTSTRING1);
@@ -96,13 +98,15 @@ extends
             $output1 = $this->testAdapter->getOutput();
 
             for ($i = 0; $i < 10; $i ++) {
-                $poc2 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
-                                    Poc::PARAM_HASHER => $hasher ));
+                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                                      Poc::PARAM_CACHE => $cacheHandler,
+                                      Poc::PARAM_HASHER => $hasher ));
                 $this->testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
 
             }
 
-            $poc3 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                                  Poc::PARAM_CACHE => $cacheHandler,
                                   Poc::PARAM_HASHER => $hasher ));
             $this->testAdapter->pocBurner($poc3, self::TESTSTRING2);
             $output2 = $this->testAdapter->getOutput();
@@ -110,6 +114,7 @@ extends
             sleep(self::$TTL + 1);
 
             $poc4 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                                  Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                                   Poc::PARAM_HASHER => $hasher ));
             $this->testAdapter->pocBurner($poc4, self::TESTSTRING3);
             $output3 = $this->testAdapter->getOutput();
@@ -137,19 +142,23 @@ extends
         $hasher->addDistinguishVariable("testPocBlacklist".  rand());
 
         $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc1, rand());
 
         $poc2 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc2, '1');
 
         $poc3 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc3, self::NEEDLE);
         $output1 = $this->testAdapter->getOutput();
 
         $poc4 = new Poc(array(Poc::PARAM_FILTER => $blackList,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc4, self::TESTSTRING2);
         $output2 = $this->testAdapter->getOutput();
@@ -179,6 +188,7 @@ extends
         $hasher1 = new Hasher();
         $hasher1->addDistinguishVariable("a".rand());
         $poc1 = new Poc(array(Poc::PARAM_HASHER => $hasher1,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc1, self::NEEDLE);
         $output1 = $this->testAdapter->getOutput();
@@ -186,6 +196,7 @@ extends
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("b".rand());
         $poc2 = new Poc(array(Poc::PARAM_HASHER => $hasher2,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                               Poc::PARAM_OUTPUTHANDLER => new TestOutput() ));
         $this->testAdapter->pocBurner($poc2, self::TESTSTRING2);
         $output2 = $this->testAdapter->getOutput();

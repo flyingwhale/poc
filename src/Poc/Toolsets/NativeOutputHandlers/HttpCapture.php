@@ -4,12 +4,10 @@ namespace Poc\Toolsets\NativeOutputHandlers;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 
 use Poc\Core\Events\BaseEvent;
-
-use Poc\Core\PluginSystem\PluginInterface;
 
 use Poc\Core\PocEvents\PocEventNames;
 
@@ -21,6 +19,7 @@ class HttpCapture implements CaptureIntrerface
 {
     
     const PLUGIN_NAME = 'hCap';
+
     /**
      *
      * @var Handlers\Callback\CallbackHandler
@@ -66,7 +65,7 @@ class HttpCapture implements CaptureIntrerface
         }
         else
         {
-            $this->outputHandler = new TestOutput();         
+            $this->outputHandler = new ServerOutput();         
         }
     }
 
@@ -78,7 +77,6 @@ class HttpCapture implements CaptureIntrerface
         
         $this->pocDispatcher = $poc->getPocDispatcher();
         
-        $this->outputHandler =  $this->outputHandler;
         $this->outputHandler->setCallbackHandler($this->callbackHandler);
         
         $this->outputHandler->setPoc($poc);
@@ -94,8 +92,7 @@ class HttpCapture implements CaptureIntrerface
                                                     array($this, 'setObLevel'));
         
         $this->pocDispatcher->addListener(
-                                PocEventNames::MONITOR,
-                                                    array($this, 'monitor'));
+                                PocEventNames::MONITOR,array($this, 'monitor'));
         
         $this->pocDispatcher->addListener(
                                 PocEventNames::END_OF_BUFFERING,
@@ -113,8 +110,6 @@ class HttpCapture implements CaptureIntrerface
          $this->level = $this->outputHandler->getLevel();
      }
 
-//   public function capture(BaseEvent $event);
-     
      public function capture(BaseEvent $event)
      {
          $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_GENERATE);

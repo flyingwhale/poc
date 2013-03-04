@@ -23,7 +23,10 @@ class EtagTest extends NativeOutputHandlersTestCore
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestEtag1" . rand());
 
-        $poc  = new Poc(array(PocParams::PARAM_HASHER=>$hasher));
+        $poc  = new Poc(array(PocParams::PARAM_HASHER=>$hasher,
+                              Poc::PARAM_TOOLSET => 
+                                              new HttpCapture(new TestOutput()),
+                ));
         
         $outputHandler = $poc->getPluginRegistry()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
@@ -42,7 +45,9 @@ class EtagTest extends NativeOutputHandlersTestCore
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestEtag2" . rand());
 
-        $poc  = new Poc(array(PocParams::PARAM_HASHER=>$hasher));
+        $poc  = new Poc(array(Poc::PARAM_TOOLSET => 
+                                              new HttpCapture(new TestOutput()),
+                              PocParams::PARAM_HASHER=>$hasher));
 
         $outputHandler = $poc->getPluginRegistry()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();

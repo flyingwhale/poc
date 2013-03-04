@@ -15,10 +15,12 @@ namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+
 
 class ROIProtectorTest extends NativeOutputHandlersTestCore
 {
@@ -46,7 +48,9 @@ class ROIProtectorTest extends NativeOutputHandlersTestCore
             $hasher = new Hasher();
             $hasher->addDistinguishVariable(rand());
             $poc = new Poc(
-                    array(Poc::PARAM_CACHE => $cache));
+                    array(Poc::PARAM_CACHE => $cache,
+                          Poc::PARAM_TOOLSET => 
+                                            new HttpCapture(new TestOutput())));
             return $poc;
         };
 

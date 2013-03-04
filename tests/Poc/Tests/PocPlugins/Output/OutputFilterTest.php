@@ -6,6 +6,7 @@ use Poc\Tests\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
@@ -29,6 +30,7 @@ class OutputFilterTest extends NativeOutputHandlersTestCore
         $outputFilter->addBlacklistCondition(self::NEEDLE);
         $poc = new Poc(
                 array(PocParams::PARAM_CACHE => $cache,
+                      Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                       PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
                       PocParams::PARAM_OUTPUTFILTER => $outputFilter,
                       PocParams::PARAM_DEBUG => true,

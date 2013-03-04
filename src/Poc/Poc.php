@@ -32,6 +32,10 @@ use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Core\PluginSystem\PluginRegistry;
 use Optionable;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NullOutputHandler\NullCapture;
+
 
 /**
  * This class contains the "Entry point" of the caching process.
@@ -257,18 +261,12 @@ class Poc implements PocParams, PluginContainer
             }
         );
 
-        $optionable->setDefaultOption(Poc::PARAM_OUTPUTHANDLER,
+        $optionable->setDefaultOption(Poc::PARAM_TOOLSET,
             function  () {
-                return new ServerOutput();
+//              return new HttpCapture(new ServerOutput());
+                return new NullCapture();
             }
-        );
-
-
-        $optionable->setDefaultOption(Poc::PARAM_OUTPUTFILTER,
-            function  () {
-                return null;
-            }
-        );
+        ); 
 
         $optionable->setDefaultOption(Poc::PARAM_DEBUG,
             function  () {
@@ -281,6 +279,7 @@ class Poc implements PocParams, PluginContainer
                 return new Hasher();
             }
         );
+        
         $optionable->setDefaultOption(Poc::PARAM_FILTER,
             function  () {
                 return new Filter();
@@ -316,10 +315,8 @@ class Poc implements PocParams, PluginContainer
         $this->optionable = new Optionable($options);        
         $this->setupDefaults($this->optionable);
         $this->mapFieldsFromOptionable($this->optionable, $this);
-        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
-//        $this->setupDefaults($this->optionable);
+        $this->addPlugin($this->optionable[PocParams::PARAM_TOOLSET]);
         $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
-//        $this->addPlugin(new Toolsets\NativeOutputHandlers\HttpCapture(new Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput()));
     }
 
     public function fetchCache ()

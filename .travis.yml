@@ -3,7 +3,6 @@ language: php
 php:
   - 5.3
   - 5.4
-  - 5.3.3  
 
 services: 
   - mongodb
@@ -11,16 +10,9 @@ services:
   - redis-server  
 
 before_script:
-  - wget http://pecl.php.net/get/memcache-2.2.6.tgz
-  - tar -xzf memcache-2.2.6.tgz
-  - sh -c "cd memcache-2.2.6 && phpize && ./configure --enable-memcache && make && sudo make install"
-  - echo "extension=memcache.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - wget http://pecl.php.net/get/mongo-1.2.10.tgz
-  - tar -xzf mongo-1.2.10.tgz
-  - sh -c "cd mongo-1.2.10 && phpize && ./configure && sudo make install"
-  - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`  
-  - php -i
-  - bin/get_composer
-  - php bin/composer.phar install --dev
+  - composer install --dev
+  - phpenv config-add tests/travis/php.ini
   - mysql -e 'create database poc_tests;'
-script: vendor/bin/phpunit
+
+script: 
+  - vendor/bin/phpunit --verbose --coverage-text

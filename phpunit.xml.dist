@@ -13,6 +13,7 @@
          >
 
   <php>
+
     <!--
     Please change this settings!
     -->
@@ -44,10 +45,10 @@
   </filter>
 
   <logging>
-    <log type="coverage-html" target="build/coverage" title="POC"
+<!--    <log type="coverage-html" target="build/coverage" title="POC"
          charset="UTF-8" yui="true" highlight="true"
          lowUpperBound="35" highLowerBound="70"/>
-    <log type="coverage-clover" target="build/logs/clover.xml"/>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>-->
     <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
     <log type="testdox-text" target="php://stdout" />
   </logging>

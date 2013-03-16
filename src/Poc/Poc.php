@@ -210,9 +210,12 @@ class Poc implements PocParams, PluginContainer
         $this->output = $output;
     }
 
-    public function destruct ()
+    public function end ()
     {
-        $this->__destruct();
+        
+        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, 
+                                                          new BaseEvent($this));
+        //$this->__destruct();
     }
 
     public function getLogger ()
@@ -263,8 +266,8 @@ class Poc implements PocParams, PluginContainer
 
         $optionable->setDefaultOption(Poc::PARAM_TOOLSET,
             function  () {
-//              return new HttpCapture(new ServerOutput());
                 return new NullCapture();
+                die("ZIZI");
             }
         ); 
 
@@ -309,14 +312,15 @@ class Poc implements PocParams, PluginContainer
     {
         $this->startTime = microtime(true);
         $this->pocDispatcher = new EventDispatcher;
-        $this->pluginRegistry = new PluginRegistry();
+        $this->pluginRegistry = new PluginRegistry();        
+        $this->optionable = new Optionable($options);  
         
-        $this->optionable = new Optionable($options);
-        $this->optionable = new Optionable($options);        
         $this->setupDefaults($this->optionable);
+        
         $this->mapFieldsFromOptionable($this->optionable, $this);
         $this->addPlugin($this->optionable[PocParams::PARAM_TOOLSET]);
-        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, new BaseEvent($this));
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, 
+                                                          new BaseEvent($this));
     }
 
     public function fetchCache ()
@@ -354,7 +358,8 @@ class Poc implements PocParams, PluginContainer
 
     public function __destruct ()
     {
-        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, new BaseEvent($this));
+//        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, 
+//                                                          new BaseEvent($this));
     }
 
     /**

@@ -24,6 +24,10 @@ class NullCapture extends CaptureAbstract
         throw new \Exception("Please add a capture interface to the POC!");
     }
 
+    public function __construct() {
+        $this->throwException();
+    }
+
     public function capture(BaseEvent $event)
     {
         $this->throwException();

@@ -38,10 +38,14 @@ class ROIProtectorTest extends NativeOutputHandlersTestCore
      */
     private $cia;
 
+    private $nativeOutputHandler;
+    
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
+        $this->nativeOutputHandler = new NativeOutputHandlersTestCore();
+        
         $this->pocContainer = new \Pimple;
         $this->pocContainer['poc'] = function () {
             $cache = new FileCache();
@@ -54,45 +58,87 @@ class ROIProtectorTest extends NativeOutputHandlersTestCore
             return $poc;
         };
 
+        $this->pocContainer['noh'] = function () {
+            return new NativeOutputHandlersTestCore();
+        };
+
+        $this->pocContainer['cia'] = function () {
+            return new ROIProtector();
+        };
+
         $this->cia = new ROIProtector;
     }
 
     // todo: Add more relevant tests!
-    public function testROIProtection ()
+    public function testROIProtectionResettingSentinel ()
     {
+//        $poc1 = $this->pocContainer['poc'];
+//        $cia = $this->pocContainer['cia'];
+//
+//        $poc1->addPlugin($cia);
+//
+//        //this 3 lines id for the tests only, in real life we don't do such things
+//        
+//        $cnt = $cia->getSentinel();
+//        $cia->setSentinel(self::BIG_SENTIEL_VALUE);
+//        $cnt1 = $cia->getSentinel();
+//
+//        $this->assertEquals($cnt, 0);
+//        $this->assertEquals($cnt1, self::BIG_SENTIEL_VALUE);
+//
+//        $noh = $this->pocContainer['noh'];        
+//        $noh->pocBurner($poc1, rand());
+//        $this->assertequals($this->cia->getRefreshPage(),$noh->getOutput());
+//        $cnt2 = $cia->getSentinel();
+//        $this->assertEquals($cnt2, self::BIG_SENTIEL_VALUE + 1);
+        
+        //********************************************************************//
+        
+        $poc2 = $this->pocContainer['poc'];        
+        $cia2 = $this->pocContainer['cia'];
+        $rnd = rand();        
+        $poc2->addPlugin($cia2);
+        $cia2->setSentinel(1);
+        $noh2 = $this->pocContainer['noh'];
+        $noh2->pocBurner($poc2, $rnd);
+        
+        $this->assertNotEquals($cia2->getRefreshPage(), $this->getOutput());
+        $this->assertEquals($cia2->getSentinel(), 0);
+        $this->assertequals($rnd, $noh2->getOutput());
 
+        
+        /*
+         * $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+         * Poc::PARAM_OUTPUTHANDLER => $outputHandler, Poc::PARAM_CIA_PROTECTOR
+         * => new CIAProtector())); $this->pocBurner($poc, $outputHandler,
+         * rand().rand()); $this->assertTrue($this->getOutput() !=
+         * $cia->getRefreshPage());
+         */
+    }
+    
+    
+    public function testROIProtectionIncreasingSentinelAndShowingRefreshPage ()
+    {
         $poc1 = $this->pocContainer['poc'];
+        $cia = $this->pocContainer['cia'];
 
-        $poc1->addPlugin($this->cia);
+        $poc1->addPlugin($cia);
 
-        /*this 3 lines id for the tests only, in real life we don't do such things*/
-        $cnt = $this->cia->getSentinel();
-        $this->cia->setSentinel(self::BIG_SENTIEL_VALUE);
-        $cnt1 = $this->cia->getSentinel();
+        //this 3 lines id for the tests only, in real life we don't do such things
+        
+        $cnt = $cia->getSentinel();
+        $cia->setSentinel(self::BIG_SENTIEL_VALUE);
+        $cnt1 = $cia->getSentinel();
 
         $this->assertEquals($cnt, 0);
         $this->assertEquals($cnt1, self::BIG_SENTIEL_VALUE);
 
-        $this->pocBurner($poc1, rand());
-
-        $this->assertequals($this->cia->getRefreshPage(),$this->getOutput());
-
-        $cnt2 = $this->cia->getSentinel();
+        $noh = $this->pocContainer['noh'];        
+        $noh->pocBurner($poc1, rand());
+        $this->assertequals($this->cia->getRefreshPage(),$noh->getOutput());
+        $cnt2 = $cia->getSentinel();
         $this->assertEquals($cnt2, self::BIG_SENTIEL_VALUE + 1);
-
-        $this->cia->setSentinel(1);
-
-        $rnd = rand();
-
-        $poc2 = $this->pocContainer['poc'];
-
-        $poc2->addPlugin($this->cia);
-
-        $this->pocBurner($poc2, $rnd);
-        $this->assertNotEquals($this->cia->getRefreshPage(), $this->getOutput());
-        $this->assertEquals($this->cia->getSentinel(), 0);
-        $this->assertequals($rnd, $this->getOutput());
-
+        
         /*
          * $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
          * Poc::PARAM_OUTPUTHANDLER => $outputHandler, Poc::PARAM_CIA_PROTECTOR

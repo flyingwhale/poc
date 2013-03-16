@@ -15,13 +15,13 @@ namespace Poc\Tests;
 use Poc\PocPlugins\Logging\PocLogs;
 
 use Poc\PocParams;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 const UNITTESTING = 1;
 
-class NativeOutputHandlersTestCore extends \PHPUnit_Framework_TestCase
+class NativeOutputHandlersTestCore 
+extends \PHPUnit_Framework_TestCase
 {
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
@@ -91,10 +91,13 @@ class NativeOutputHandlersTestCore extends \PHPUnit_Framework_TestCase
         $poc->start();
 
         $outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-
+        
         if ($outputHandler->getOutputFlow()) {
             echo $testString;
-            $poc->destruct();
+            $poc->end();
+            
+            //var_dump($outputHandler);
+            
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
         } 
@@ -102,7 +105,9 @@ class NativeOutputHandlersTestCore extends \PHPUnit_Framework_TestCase
         {
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
-            $poc->destruct();
+            $poc->end();
+            
+            //var_dump($outputHandler);
 
             if ($outputHandler->getOutput()) {
                 $this->setHeader($outputHandler->getHeader());

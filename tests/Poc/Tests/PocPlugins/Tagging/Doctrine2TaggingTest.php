@@ -14,6 +14,10 @@ namespace Poc\Tests\PocPlugins\Tagging;
 
 use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 use Poc\Optionable\DoctrineOptionable;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
+use Poc\Poc;
+
 
 abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCase
 {
@@ -86,7 +90,11 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
         $options = self::$doctrineOptions;
         $tagging = new Doctrine2Tagging($options);
         $cache = new \Poc\Cache\CacheImplementation\FileCache(array(\Poc\Cache\CacheImplementation\CacheParams::PARAM_TTL => $GLOBALS['TTL']));
-        $poc = new \Poc\Poc(array(\Poc\PocParams::PARAM_CACHE => $cache));
+        $poc = new Poc(
+                        array(Poc::PARAM_CACHE => $cache,
+                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())
+                    
+                    ));
         $tagging->init($poc);
 
         return $tagging;

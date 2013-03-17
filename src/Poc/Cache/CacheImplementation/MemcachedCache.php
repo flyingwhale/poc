@@ -43,9 +43,13 @@ class MemcachedCache extends Cache
 
         $className = 'Memcache';
 
+        // @codeCoverageIgnoreStart
+        // @codeCoverageIgnoreEnd
+        // @codeCoverageIgnoreStart
         if (! class_exists($className)) {
             throw new \Exception(sprintf("%s class not exists", $className));
         }
+        // @codeCoverageIgnoreEnd
         $this->memcache = new $className();
 
         $this->isConnected = $this->memcache->connect(

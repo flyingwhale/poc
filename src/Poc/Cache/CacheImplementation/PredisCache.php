@@ -37,10 +37,12 @@ class PredisCache extends Cache
         parent::__construct($options);
 
         $className = 'Predis\Client';
+        // @codeCoverageIgnoreStart
         if (! class_exists($className)) {
             throw new \Exception(sprintf("%s class not exists", $className));
         }
-
+       // @codeCoverageIgnoreEnd
+ 
         $this->redis = new $className($this->optionable['servers']);
         $this->isNotConnected = 1;
     }
@@ -70,7 +72,9 @@ class PredisCache extends Cache
 
     public function isCacheAvailable ()
     {
+        // @codeCoverageIgnoreStart
         return $this->isNotConnected;
+        // @codeCoverageIgnoreEnd
     }
 
 }

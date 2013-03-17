@@ -31,7 +31,8 @@
     },
    "require-dev": {
         "EHER/PHPUnit":             "1.6",
-        "fabpot/php-cs-fixer":      "dev-master"
+        "fabpot/php-cs-fixer":      "dev-master",
+        "mockery/mockery": "dev-master"
     },
    "autoload": {
         "psr-0": { "Poc": "src/" }

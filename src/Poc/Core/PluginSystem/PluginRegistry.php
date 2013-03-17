@@ -25,7 +25,7 @@ class PluginRegistry
         {
             if (isset($this->singleInstancedPlugins[$plugin->getName()]))
             {
-               throw (new \Exception("Please Don't register this plugin twice!")); 
+               throw (new MultipleSameTypePluginRegistrationExeption("Please Don't register this plugin twice!")); 
             }
             else
             {

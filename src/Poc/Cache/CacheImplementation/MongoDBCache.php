@@ -44,7 +44,7 @@ class MongoDBCache extends Cache
         $this->dbName = $this->optionable['db_name'];
         $this->collectionName = $this->optionable['collection_name'];
         $this->isNotConnected = 0;
-
+        // @codeCoverageIgnoreStart
         try {
             $className = 'Mongo';
 
@@ -57,6 +57,8 @@ class MongoDBCache extends Cache
             $this->throwDbException();
 
         }
+        // @codeCoverageIgnoreEnd
+
     }
 
     public function fetch ($key)
@@ -107,7 +109,9 @@ class MongoDBCache extends Cache
 
     public function isCacheAvailable ()
     {
+        // @codeCoverageIgnoreStart
         return $this->isNotConnected;
+        // @codeCoverageIgnoreEnd
     }
 
     private function getDb ()

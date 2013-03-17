@@ -25,7 +25,8 @@ use Poc\Cache\Filtering\Filter;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
-class PocTest extends \PHPUnit_Framework_TestCase{
+class PocTest extends \PHPUnit_Framework_TestCase
+{
 
 //\extends NativeOutputHandlersTestCore {
 

@@ -53,9 +53,11 @@ abstract class Cache implements CacheInterface, CacheParams
 
     public function throwDbException ()
     {
+        // @codeCoverageIgnoreStart
         if (! $this->isCacheAvailable()) {
             throw new \Exception("The cache database is not reachable!");
         }
+        // @codeCoverageIgnoreEnd
     }
 
     public function getTtl()

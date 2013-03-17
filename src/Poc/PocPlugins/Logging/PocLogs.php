@@ -164,12 +164,12 @@ class PocLogs implements PluginInterface
                 self::LOG_TYPE_TIME);
     }
 
-    public function diesTime (BaseEvent $event)
-    {
+//    public function diesTime (BaseEvent $event)
+//    {
         /*$this->logTime($event, PocEventNames::DIES, self::LOG_TYPE_TIME);
         $this->pocDispatcher->removeListener(PocEventNames::DIES,
                 array($this, 'beforeStoreOutputOutput'));*/
-    }
+//    }
 
     private function logOutput (BaseEvent $event, $eventName, $type)
     {

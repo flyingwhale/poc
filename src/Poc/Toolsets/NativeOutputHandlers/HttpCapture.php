@@ -4,7 +4,6 @@ namespace Poc\Toolsets\NativeOutputHandlers;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
 
 use Poc\Core\Events\BaseEvent;
@@ -65,7 +64,9 @@ class HttpCapture implements CaptureIntrerface
         }
         else
         {
+            // @codeCoverageIgnoreStart
             $this->outputHandler = new ServerOutput();         
+            // @codeCoverageIgnoreEnd
         }
     }
 

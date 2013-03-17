@@ -19,6 +19,11 @@ class PluginRegistry
 {
     private $singleInstancedPlugins = array();
     
+    /**
+     * 
+     * @param PluginInterface $plugin
+     * @throws MultipleSameTypePluginRegistrationExeption
+     */
     public function addPlugin($plugin)
     {
         //if($plugin->isMultipleInstanced())
@@ -29,7 +34,10 @@ class PluginRegistry
             }
             else
             {
-                $this->singleInstancedPlugins[$plugin->getName()] = $plugin;
+                if(!$plugin->isMultipleInstanced())
+                {
+                    $this->singleInstancedPlugins[$plugin->getName()] = $plugin;
+                }
             }
         }        
     }
@@ -42,7 +50,7 @@ class PluginRegistry
         }
         else
         {
-           throw (new \Exception("Plugin is not registered! ")); 
+           throw (new PluginIsNotRegisteredExeption("Plugin is not registered! ")); 
         }
     }
 }

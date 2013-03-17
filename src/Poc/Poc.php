@@ -23,17 +23,12 @@ use Poc\Core\PluginSystem\PluginContainer;
 use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\ServerOutput;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Poc\Core\PluginSystem\PluginRegistry;
 use Optionable;
-use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
-use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NullOutputHandler\NullCapture;
 
 

@@ -39,4 +39,22 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
         $pluginRegistry->addPlugin($plugin1Delta);
         
     }
+    public function testGetPlugin()
+    {
+        $pluginRegistry = new PluginRegistry();
+        $plugin = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
+  
+        $pluginRegistry->addPlugin($plugin);
+                
+        $pluginRegistry->getPlugin('name');
+
+        $this->setExpectedException('Poc\Core\PluginSystem\PluginIsNotRegisteredExeption');
+        $pl = $pluginRegistry->getPlugin('noname');
+
+        $this->assertEquals($plugin->getName(), $pl->getName());
+        
+
+        $pluginRegistry->getPlugin('noname');
+        
+    }
 }

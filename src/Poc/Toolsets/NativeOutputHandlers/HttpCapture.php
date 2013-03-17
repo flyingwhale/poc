@@ -48,7 +48,7 @@ class HttpCapture implements CaptureIntrerface
         $this->level = $value;
     }
 
-    public function getLevel($value)
+    public function getLevel()
     {
         return $this->level;
     }

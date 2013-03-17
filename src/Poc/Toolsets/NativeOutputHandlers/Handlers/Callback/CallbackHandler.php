@@ -36,6 +36,20 @@ class CallbackHandler
      */
     private $headerManipulator;
 
+    
+    /**
+     *
+     * @var \Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface
+     */
+    private $outputHandler;
+    
+    
+    /**
+     *
+     * @var HttpCapture;
+     */
+    private $httpCapture;
+    
     /**
      *
      * @param Poc $poc
@@ -46,6 +60,7 @@ class CallbackHandler
         $this->headerManipulator = new HeaderManipulator();
         $this->headerManipulator->setPoc($poc);
         $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        $this->httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
     }
 
     public function getHeaderManipulator()
@@ -78,7 +93,11 @@ class CallbackHandler
     {
         $this->poc->setOutput($buffer);
         // TODO: call the ob_get_level from the outputHandler.
-        if ($this->poc->getLevel() == \ob_get_level() - 1) {
+        
+//        $this->poc->getLogger()->setLog("/tmp/aaaa",$this->httpCapture->getLevel()." - ".($this->outputHandler->getLevel()-1));
+
+        
+        if ($this->httpCapture->getLevel() == $this->outputHandler->getLevel() - 1) {
             $this->poc->setOutput($buffer);
             $this->poc->getPocDispatcher()->dispatch(
             PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,

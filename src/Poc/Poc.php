@@ -81,14 +81,6 @@ class Poc implements PocParams, PluginContainer
     private $startTime = null;
 
     /**
-     * This variable sotres the level of the output buffering, when the poc
-     * has been turned on.
-     *
-     * @var unknown_type
-     */
-    private $level = null;
-
-    /**
      * This variable contains the object that handles the caching process.
      *
      * @var Cache
@@ -241,11 +233,6 @@ class Poc implements PocParams, PluginContainer
         return $this->hasher;
     }
 
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
     public function getCanICacheThisGeneratedContent()
     {
         return $this->canICacheThisGeneratedContent;
@@ -339,7 +326,6 @@ class Poc implements PocParams, PluginContainer
         PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
         new BaseEvent($this));
 
-        $this->level = \ob_get_level();
         if ($this->filter->evaluate()) {
             if (!$this->fetchCache()) {
                 $this->pocDispatcher->dispatch(

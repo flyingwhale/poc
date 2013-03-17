@@ -92,10 +92,6 @@ class CallbackHandler
     public function pocCallbackGenerate ($buffer)
     {
         $this->poc->setOutput($buffer);
-        // TODO: call the ob_get_level from the outputHandler.
-        
-//        $this->poc->getLogger()->setLog("/tmp/aaaa",$this->httpCapture->getLevel()." - ".($this->outputHandler->getLevel()-1));
-
         
         if ($this->httpCapture->getLevel() == $this->outputHandler->getLevel() - 1) {
             $this->poc->setOutput($buffer);

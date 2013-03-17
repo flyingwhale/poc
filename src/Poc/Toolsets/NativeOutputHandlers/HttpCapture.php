@@ -43,11 +43,6 @@ class HttpCapture implements CaptureIntrerface
      */
     private $poc;
 
-    public function setLevel($value)
-    {
-        $this->level = $value;
-    }
-
     public function getLevel()
     {
         return $this->level;

@@ -30,6 +30,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
 //\extends NativeOutputHandlersTestCore {
 
+    const CACHE_MEMCACHED = 'mc';
+    const CACHE_FILE = 'fl';
+    const CACHE_RESIDH = 'rd';
+    const CACHE_MONGO = 'mn';
+    
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
     const TESTSTRING3 = "3";
@@ -37,12 +42,42 @@ class PocTest extends \PHPUnit_Framework_TestCase
     const NEEDLE = '/amiga1200/';
 
     public static $TTL;
+    
     private $testAdapter;
-    private $testAdapter2;
+    public static $caches;
+    public static $handlers;
 
     public static function setUpBeforeClass() {
+        
         NativeOutputHandlersTestCore::$TTL = $GLOBALS['TTL'];
+        
         self::$TTL = $GLOBALS['TTL'];
+        
+        self::$caches = new \Pimple();
+        
+        self::$caches['ttl'] = $GLOBALS['TTL'];
+        
+        self::$caches[self::CACHE_FILE] = function ($c) {
+                    return new FileCache(array(CacheParams::PARAM_TTL => $c['ttl']));
+                };
+
+        self::$caches[self::CACHE_MEMCACHED] = function ($c) {
+                    return new MemcachedCache(array(CacheParams::PARAM_TTL => $c['ttl']));
+                };
+
+        self::$caches[self::CACHE_RESIDH] = function ($c){
+                    return new PredisCache(array(CacheParams::PARAM_TTL => $c['ttl']));
+                };
+
+        self::$caches[self::CACHE_MONGO] = function ($c){
+                    return new MongoDBCache(array(CacheParams::PARAM_TTL => $c['ttl']));
+                };
+
+        self::$handlers[] = self::CACHE_FILE;
+        self::$handlers[] = self::CACHE_MEMCACHED;
+        self::$handlers[] = self::CACHE_RESIDH;
+        self::$handlers[] = self::CACHE_MONGO;
+
     }
 
     public function setTestAdapter($testAdapter) {
@@ -53,34 +88,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
         
         $this->setTestAdapter(new NativeOutputHandlersTestCore);
 
-        $objects = new \Pimple();
-        $ttl = self::$TTL;
+        foreach (self::$handlers as $cacheHandlerName) {
 
-        $objects['file'] = function () use ($ttl) {
-                    return new FileCache(array(CacheParams::PARAM_TTL => $ttl));
-                };
-
-        $objects['memcached'] = function () use ($ttl) {
-                    return new MemcachedCache(
-                                    array(CacheParams::PARAM_TTL => $ttl));
-                };
-
-        $objects['predis'] = function () use ($ttl) {
-                    return new PredisCache(array(CacheParams::PARAM_TTL => $ttl));
-                };
-
-        $objects['mongo'] = function () use ($ttl) {
-                    return new MongoDBCache(array(CacheParams::PARAM_TTL => $ttl));
-                };
-
-        $handlers[] = 'file';
-        $handlers[] = 'memcached';
-        $handlers[] = 'predis';
-        $handlers[] = 'mongo';
-
-        foreach ($handlers as $cacheHandlerName) {
-
-            $cacheHandler = $objects[$cacheHandlerName];
+            $cacheHandler = self::$caches[$cacheHandlerName];
 
             $hasher = new Hasher();
             $hasher->addDistinguishVariable($cacheHandlerName . rand());
@@ -93,20 +103,20 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $output1 = $this->testAdapter->getOutput();
 
-            for ($i = 0; $i < 1; $i++) {
-                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                            Poc::PARAM_CACHE => $objects[$cacheHandlerName],
-                            Poc::PARAM_HASHER => $hasher
-                        ));
-                //TODO: investigate why it is not working!
+//            for ($i = 0; $i < 1; $i++) {
+//                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+//                            Poc::PARAM_CACHE => $objects[$cacheHandlerName],
+//                            Poc::PARAM_HASHER => $hasher
+//                        ));
+//                TODO: investigate why it is not working!
 //                $this->testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
-            }
-
-            
-            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_HASHER => $hasher));
-            //TODO: investigate why it is not working!
+//            }
+//
+//            
+//            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+//                        Poc::PARAM_CACHE => $cacheHandler,
+//                        Poc::PARAM_HASHER => $hasher));
+//            TODO: investigate why it is not working!
 //          $this->testAdapter->pocBurner($poc3, self::TESTSTRING2);
 //          $output2 = $this->testAdapter->getOutput();
 

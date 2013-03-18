@@ -42,16 +42,15 @@ class PocTest extends \PHPUnit_Framework_TestCase
     const NEEDLE = '/amiga1200/';
 
     public static $TTL;
-    
-    private $testAdapter;
     public static $caches;
     public static $handlers;
+    public static $rand;
 
     public static function setUpBeforeClass() {
         
-        NativeOutputHandlersTestCore::$TTL = $GLOBALS['TTL'];
-        
         self::$TTL = $GLOBALS['TTL'];
+        
+        self::$rand = rand();
         
         self::$caches = new \Pimple();
         
@@ -80,15 +79,61 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function setTestAdapter($testAdapter) {
-        $this->testAdapter = $testAdapter;
+
+    public function testBasicPocFunctionalityBigTTL() {
+        
+        self::$caches['ttl'] = 100;
+        
+        foreach (self::$handlers as $cacheHandlerName) {
+            $testAdapter = new NativeOutputHandlersTestCore;
+            $cacheHandler = self::$caches[$cacheHandlerName];
+            $hasher = new Hasher();
+            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
+
+            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                        Poc::PARAM_CACHE => $cacheHandler,
+                        Poc::PARAM_HASHER => $hasher));
+
+            $testAdapter->pocBurner($poc1, self::TESTSTRING1);
+
+            $output1 = $testAdapter->getOutput();
+            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
+ 
+        }
     }
 
+    /**
+     * @depends testBasicPocFunctionalityBigTTL
+     */
+//    public function testBasicPocFunctionalityGetCacheWithBigTTL() {
+//        
+//        self::$caches['ttl'] = 100;
+//        
+//        foreach (self::$handlers as $cacheHandlerName) {
+//            $testAdapter = new NativeOutputHandlersTestCore;
+//            $cacheHandler = self::$caches[$cacheHandlerName];
+//            $hasher = new Hasher();
+//            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
+//
+//            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+//                        Poc::PARAM_CACHE => $cacheHandler,
+//                        Poc::PARAM_HASHER => $hasher));
+//
+//            $testAdapter->pocBurner($poc1, self::TESTSTRING1."aaa");
+//
+//            $output1 = $testAdapter->getOutput();
+//            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
+// 
+//        }
+//    }
+//
+    
     public function testBasicPocFunctionality() {
-        
-        $this->setTestAdapter(new NativeOutputHandlersTestCore);
+
+        self::$caches['ttl'] = $GLOBALS['TTL'];
 
         foreach (self::$handlers as $cacheHandlerName) {
+        $testAdapter = new NativeOutputHandlersTestCore;
 
             $cacheHandler = self::$caches[$cacheHandlerName];
 
@@ -99,19 +144,20 @@ class PocTest extends \PHPUnit_Framework_TestCase
                         Poc::PARAM_CACHE => $cacheHandler,
                         Poc::PARAM_HASHER => $hasher));
 
-            $this->testAdapter->pocBurner($poc1, self::TESTSTRING1);
+            $testAdapter->pocBurner($poc1, self::TESTSTRING1);
 
-            $output1 = $this->testAdapter->getOutput();
+            $output1 = $testAdapter->getOutput();
 
 //            for ($i = 0; $i < 1; $i++) {
+//                $testAdapter = new NativeOutputHandlersTestCore;
 //                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-//                            Poc::PARAM_CACHE => $objects[$cacheHandlerName],
+//                            Poc::PARAM_CACHE => self::$caches[$cacheHandlerName],
 //                            Poc::PARAM_HASHER => $hasher
 //                        ));
-//                TODO: investigate why it is not working!
-//                $this->testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
+////                TODO: investigate why it is not working!
+//                $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
 //            }
-//
+
 //            
 //            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
 //                        Poc::PARAM_CACHE => $cacheHandler,
@@ -125,8 +171,9 @@ class PocTest extends \PHPUnit_Framework_TestCase
             $poc4 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
                         Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                         Poc::PARAM_HASHER => $hasher));
-            $this->testAdapter->pocBurner($poc4, self::TESTSTRING3);
-            $output3 = $this->testAdapter->getOutput();
+            $testAdapter = new NativeOutputHandlersTestCore;
+            $testAdapter->pocBurner($poc4, self::TESTSTRING3);
+            $output3 = $testAdapter->getOutput();
 
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
 //          $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
@@ -139,7 +186,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testPocBlacklist() {
-        $this->setTestAdapter(new NativeOutputHandlersTestCore);
+        $testAdapter = (new NativeOutputHandlersTestCore);
 
         $blackList = new Filter();
         $blackList->addBlacklistCondition(false);
@@ -152,31 +199,31 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $poc1 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     ));
-        $this->testAdapter->pocBurner($poc1, rand());
+        $testAdapter->pocBurner($poc1, rand());
 
         $poc2 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     ));
-        $this->testAdapter->pocBurner($poc2, '1');
+        $testAdapter->pocBurner($poc2, '1');
 
         $poc3 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     ));
-        $this->testAdapter->pocBurner($poc3, self::NEEDLE);
-        $output1 = $this->testAdapter->getOutput();
+        $testAdapter->pocBurner($poc3, self::NEEDLE);
+        $output1 = $testAdapter->getOutput();
 
         $poc4 = new Poc(array(Poc::PARAM_FILTER => $blackList,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     ));
-        $this->testAdapter->pocBurner($poc4, self::TESTSTRING2);
-        $output2 = $this->testAdapter->getOutput();
+        $testAdapter->pocBurner($poc4, self::TESTSTRING2);
+        $output2 = $testAdapter->getOutput();
 
         $this->assertTrue(!empty($output1));
         $this->assertTrue($output1 != $output2);
     }
 
     public function testPocWithDifferentHashers() {
-        $this->setTestAdapter(new NativeOutputHandlersTestCore);
+        $testAdapter = (new NativeOutputHandlersTestCore);
 
         $objects = new \Pimple();
         $ttl = self::$TTL;
@@ -197,16 +244,16 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $poc1 = new Poc(array(Poc::PARAM_HASHER => $hasher1,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     Poc::PARAM_OUTPUTHANDLER => new TestOutput()));
-        $this->testAdapter->pocBurner($poc1, self::NEEDLE);
-        $output1 = $this->testAdapter->getOutput();
+        $testAdapter->pocBurner($poc1, self::NEEDLE);
+        $output1 = $testAdapter->getOutput();
 
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("b" . rand());
         $poc2 = new Poc(array(Poc::PARAM_HASHER => $hasher2,
                     Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                     Poc::PARAM_OUTPUTHANDLER => new TestOutput()));
-        $this->testAdapter->pocBurner($poc2, self::TESTSTRING2);
-        $output2 = $this->testAdapter->getOutput();
+        $testAdapter->pocBurner($poc2, self::TESTSTRING2);
+        $output2 = $testAdapter->getOutput();
 
         $this->assertTrue($output1 != $output2);
     }

@@ -21,23 +21,11 @@ use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 const UNITTESTING = 1;
 
 class NativeOutputHandlersTestCore 
-extends \PHPUnit_Framework_TestCase
+//extends \PHPUnit_Framework_TestCase
 {
-    const TESTSTRING1 = "1";
-    const TESTSTRING2 = "2";
-    const TESTSTRING3 = "3";
-    const BIGTTL = 100;
-    const NEEDLE = '/amiga1200/';
-
-    public static $TTL;
 
     protected $analizeThisOutput;
     protected $analizeThisHeader;
-
-//    public static function setUpBeforeClass()
-//    {
-//        NativeOutputHandlersTestCore::$TTL = $GLOBALS['TTL'];
-//    }
 
     protected function setOutput ($o)
     {
@@ -58,9 +46,6 @@ extends \PHPUnit_Framework_TestCase
     {
         $this->analizeThisHeader = $header;
     }
-    /*
-     * public function __construct(){ new PocLogs(); }
-     */
 
     /**
      *

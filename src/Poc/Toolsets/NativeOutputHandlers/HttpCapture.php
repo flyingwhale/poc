@@ -114,7 +114,9 @@ class HttpCapture implements CaptureIntrerface
      public function getOutputFromCache(BaseEvent $event)
      {
          $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_CACHE);
-         //todo test it!
+//
+//         //todo test it!
+//
          $this->callbackHandler->getHeaderManipulator()->fetchHeaders();
          $this->outputHandler->stopBuffer($this->poc->getOutput());
      }

@@ -219,11 +219,6 @@ class Poc implements PocParams, PluginContainer
         return $this->cache;
     }
 
-    public function setCanICacheThisGeneratedContent($bool)
-    {
-        $this->canICacheThisGeneratedContent = $bool;
-    }
-
     /**
      *
      * @return Hasher
@@ -248,8 +243,9 @@ class Poc implements PocParams, PluginContainer
 
         $optionable->setDefaultOption(Poc::PARAM_TOOLSET,
             function  () {
+                // @codeCoverageIgnoreStart
                 return new NullCapture();
-                die("ZIZI");
+                // @codeCoverageIgnoreEnd
             }
         ); 
 
@@ -316,8 +312,7 @@ class Poc implements PocParams, PluginContainer
             $this->pocDispatcher->dispatch(
                     PocEventNames::GET_OUTPUT_FROM_CACHE, new BaseEvent($this));
 
-        } else {
-        }
+        } 
     }
 
     public function start ()
@@ -335,20 +330,5 @@ class Poc implements PocParams, PluginContainer
                 $this->pocDispatcher->dispatch(
                                   PocEventNames::MONITOR, new BaseEvent($this));
         }
-    }
-
-    public function __destruct ()
-    {
-//        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, 
-//                                                          new BaseEvent($this));
-    }
-
-    /**
-     *
-     * @return Filter
-     */
-    public function getFilter()
-    {
-        return $this->filter;
     }
 }

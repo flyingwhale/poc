@@ -152,25 +152,6 @@ class PocLogs implements PluginInterface
                 self::LOG_TYPE_OUTPUT);
     }
 
-    public function etagFoundTime(BaseEvent $event)
-    {
-        $this->logTime($event, EtagEvents::ETAG_FOUND,
-                self::LOG_TYPE_TIME);
-    }
-
-    public function etagNotFoundTime(BaseEvent $event)
-    {
-        $this->logTime($event, EtagEvents::ETAG_NOT_FOUND,
-                self::LOG_TYPE_TIME);
-    }
-
-//    public function diesTime (BaseEvent $event)
-//    {
-        /*$this->logTime($event, PocEventNames::DIES, self::LOG_TYPE_TIME);
-        $this->pocDispatcher->removeListener(PocEventNames::DIES,
-                array($this, 'beforeStoreOutputOutput'));*/
-//    }
-
     private function logOutput (BaseEvent $event, $eventName, $type)
     {
         $this->logOutputMatix($eventName,
@@ -203,7 +184,6 @@ class PocLogs implements PluginInterface
                 }
                 $output .= '... |the output size is ' . $size . ' bytes';
             } else {
-                // this case is currently is not stored by the poc
                 $output = 'There was no output';
             }
         } else {

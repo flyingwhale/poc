@@ -67,6 +67,7 @@ class TestOutput extends Output
             echo ($output);
             $this->outputFlow = 0;
             ob_end_flush();
+            flush();
         }
     }
 
@@ -75,9 +76,7 @@ class TestOutput extends Output
         if (strstr($header,':')) {
             $headerArray = explode(":", $header);
             $this->header[$headerArray[0]] = trim ($headerArray[1]);
-        } else {
-            $this->header[$header]='';
-        }
+        } 
     }
 
     public function getHeader ()
@@ -117,10 +116,6 @@ class TestOutput extends Output
         return \unserialize($this->actHeader);
     }
 
-    public function printOutputCallback ($output)
-    {
-        $this->output = $output;
-    }
 
     public function getallheaders()
     {

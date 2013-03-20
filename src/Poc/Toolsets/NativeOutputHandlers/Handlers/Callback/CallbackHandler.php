@@ -71,10 +71,6 @@ class CallbackHandler
     public function pocCallbackShowOutput ($buffer)
     {
         $this->poc->setOutput($buffer);
-        if ($this->poc->getDebug()) {
-            $this->poc->setOutput(
-                $this->poc->getOutput() . '<br>This page has not been cached because the page is Blacklisted.' . ' <b> Was Generated in ' . ((microtime(true) - $this->startTime) * 1000) . '</b> milliseconds.');
-        }
 
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
@@ -101,14 +97,6 @@ class CallbackHandler
             if ($this->poc->getCanICacheThisGeneratedContent()) {
                 if ($this->poc->getOutput()) {
 
-                    if ($this->poc->getDebug()) {
-                        $this->poc->setOutput(
-                                $this->poc->getOutput() .
-                                '<br>This page has been ' .
-                                '<b> generated in ' .
-                                ((microtime(true) - $this->poc->getStartTime()) * 1000) .
-                                '</b> milliseconds.');
-                    }
                     $headers = $this->outputHandler->headersList();
 
                     //Headers stored here.
@@ -143,16 +131,8 @@ class CallbackHandler
                                                      new BaseEvent($this->poc));
 
                 }
-            } else {
-                if ($this->poc->getDebug()) {
-                    $this->poc->setOutput(
-                        $this->poc->getOutput() . 
-                        '<br>This page has been ' . '<b> generated in ' . 
-                        ((microtime(true) - $this->poc->getStartTime()) * 1000).
-                        '</b> milliseconds and is not cached because the outputfilter blacklisted it!');
-                }
-            }
-
+            } 
+            
             $this->poc->getPocDispatcher()->dispatch(
                     PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
                     new BaseEvent($this->poc));
@@ -168,13 +148,6 @@ class CallbackHandler
     public function pocCallbackCache ($buffer)
     {
         $this->poc->setOutput($buffer);
-        if ($this->poc->getDebug()) {
-            $this->poc->setOutput(
-                    $this->poc->getOutput() . '<br>This page has been ' . 
-                    ' <b> fetched from the cache in ' . 
-                    ((microtime(true) - $this->poc->getStartTime()) * 1000) . 
-                                                          '</b> milliseconds.');
-        }
         $this->poc->getPocDispatcher()->dispatch(
                 PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,
                 new BaseEvent($this->poc));

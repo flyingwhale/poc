@@ -57,11 +57,6 @@ class ServerOutput extends Output
         return \headers_list();
     }
 
-    public function printOutputCallback ($output)
-    {
-        echo $output;
-    }
-
     public function getallheaders()
     {
         return getallheaders();

@@ -39,7 +39,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     const TESTSTRING2 = "2";
     const TESTSTRING3 = "3";
     const BIGTTL = 100;
-    const NEEDLE = '/amiga1200/';
+    const NEEDLE = '/amiga1000/amiga500/amiga600/amiga1200/amiga4000/amiga/amiga1000/amiga500/amiga600/amiga1200/amiga4000/amiga/';
 
     public static $TTL;
     public static $caches;

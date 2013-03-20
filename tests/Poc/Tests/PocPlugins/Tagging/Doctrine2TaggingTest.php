@@ -95,7 +95,7 @@ abstract class Doctrine2TaggingTest extends \PHPUnit_Extensions_Database_TestCas
                               Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())
                     
                     ));
-        $tagging->init($poc);
+        $poc->addPlugin($tagging);
 
         return $tagging;
     }

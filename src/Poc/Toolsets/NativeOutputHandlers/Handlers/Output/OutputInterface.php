@@ -42,8 +42,6 @@ interface OutputInterface
 
     public function headersList ();
 
-    public function printOutputCallback ($output);
-
     public function getallheaders();
 
     /**

@@ -105,29 +105,32 @@ class PocTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testBasicPocFunctionalityBigTTL
      */
-//    public function testBasicPocFunctionalityGetCacheWithBigTTL() {
-//        
-//        self::$caches['ttl'] = 100;
-//        
-//        foreach (self::$handlers as $cacheHandlerName) {
-//            $testAdapter = new NativeOutputHandlersTestCore;
-//            $cacheHandler = self::$caches[$cacheHandlerName];
-//            $hasher = new Hasher();
-//            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
-//
-//            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-//                        Poc::PARAM_CACHE => $cacheHandler,
-//                        Poc::PARAM_HASHER => $hasher));
-//
-//            $testAdapter->pocBurner($poc1, self::TESTSTRING1."aaa");
-//
-//            $output1 = $testAdapter->getOutput();
-//            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
-// 
-//        }
-//    }
-//
-    
+    public function testBasicPocFunctionalityGetCacheWithBigTTL() {
+        
+        self::$caches['ttl'] = 100;
+        
+        foreach (self::$handlers as $cacheHandlerName) 
+        {
+            $testAdapter = new NativeOutputHandlersTestCore;
+            $cacheHandler = self::$caches[$cacheHandlerName];
+            $hasher = new Hasher();
+            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
+
+            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                        Poc::PARAM_CACHE => $cacheHandler,
+                        Poc::PARAM_HASHER => $hasher));
+
+            $testAdapter->pocBurner($poc1, self::TESTSTRING1."aaa");
+
+            $output1 = $testAdapter->getOutput();
+            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
+ 
+        }
+    }
+
+     /**
+     * @depends testBasicPocFunctionalityGetCacheWithBigTTL
+     */
     public function testBasicPocFunctionality() {
 
         self::$caches['ttl'] = $GLOBALS['TTL'];
@@ -148,23 +151,22 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $output1 = $testAdapter->getOutput();
 
-//            for ($i = 0; $i < 1; $i++) {
-//                $testAdapter = new NativeOutputHandlersTestCore;
-//                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-//                            Poc::PARAM_CACHE => self::$caches[$cacheHandlerName],
-//                            Poc::PARAM_HASHER => $hasher
-//                        ));
-////                TODO: investigate why it is not working!
-//                $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
-//            }
+            for ($i = 0; $i < 1; $i++) {
+                $testAdapter = new NativeOutputHandlersTestCore;
+                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                            Poc::PARAM_CACHE => self::$caches[$cacheHandlerName],
+                            Poc::PARAM_HASHER => $hasher
+                        ));
+                $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
+            }
 
-//            
-//            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-//                        Poc::PARAM_CACHE => $cacheHandler,
-//                        Poc::PARAM_HASHER => $hasher));
-//            TODO: investigate why it is not working!
-//          $this->testAdapter->pocBurner($poc3, self::TESTSTRING2);
-//          $output2 = $this->testAdapter->getOutput();
+            
+            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                        Poc::PARAM_CACHE => $cacheHandler,
+                        Poc::PARAM_HASHER => $hasher));
+            
+          $testAdapter->pocBurner($poc3, self::TESTSTRING2);
+          $output2 = $testAdapter->getOutput();
 
             sleep(self::$TTL + 1);
 
@@ -176,11 +178,11 @@ class PocTest extends \PHPUnit_Framework_TestCase
             $output3 = $testAdapter->getOutput();
 
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
-//          $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
+            $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
             $this->assertEquals(self::TESTSTRING3, $output3, $cacheHandlerName);
 
             $this->assertNotEquals($output1, $output3, $cacheHandlerName);
- //         $this->assertEquals($output1, $output2, $cacheHandlerName);
+            $this->assertEquals($output1, $output2, $cacheHandlerName);
  
         }
     }

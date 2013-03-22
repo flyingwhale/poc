@@ -58,7 +58,7 @@ class TestOutput extends Output
 
     public function startBuffer ($callbackFunctname)
     {
-        ob_start(array($this->callbackHandler, $callbackFunctname));
+        ob_start(array($this->callbackHandler, $callbackFunctname),0);
     }
 
     public function stopBuffer ($output = '')
@@ -67,7 +67,7 @@ class TestOutput extends Output
             echo ($output);
             $this->outputFlow = 0;
             ob_end_flush();
-            flush();
+//            flush();
         }
     }
 

@@ -66,7 +66,7 @@ class TestOutput extends Output
         if ($this->outputFlow) {
             echo ($output);
             $this->outputFlow = 0;
-            ob_end_flush();
+//            ob_end_flush();
 //            flush();
         }
     }

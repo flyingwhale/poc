@@ -16,4 +16,4 @@ before_script:
   - vendor/bin/phploc  src/
 
 script: 
-  - vendor/bin/phpunit --verbose --coverage-text
+  - vendor/bin/phpunit --verbose

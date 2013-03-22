@@ -66,9 +66,10 @@ class TestOutput extends Output
         if ($this->outputFlow) {
             echo ($output);
             $this->outputFlow = 0;
+//          in real life this is a realoutput callback
             $this->callbackHandler->pocCallbackCache($output);
-//            ob_end_flush();
-//            flush();
+//          This part works perfectly under php5.4, but php5.3 wiht phpunit just segfaults
+//          ob_end_flush();
         }
     }
 

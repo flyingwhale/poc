@@ -66,6 +66,7 @@ class TestOutput extends Output
         if ($this->outputFlow) {
             echo ($output);
             $this->outputFlow = 0;
+            $this->callbackHandler->pocCallbackCache($output);
 //            ob_end_flush();
 //            flush();
         }

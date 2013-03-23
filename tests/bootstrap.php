@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-if(function_exists('xdebug_disable'))
-{
-    xdebug_disable();
-    echo("xdebug disabled-----------------");
-}
+//if(function_exists('xdebug_disable'))
+//{
+//    xdebug_disable();
+//    echo("xdebug disabled-----------------");
+//}
 
 require_once 'vendor/autoload.php';
 

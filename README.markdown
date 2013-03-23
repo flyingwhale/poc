@@ -42,7 +42,7 @@ so it is really easy to extend and use.
 Even more features are coming, so stay tuned.
 
 ## Examples ##
-You can download/see the https://github.com/tothimre/poc-sandbox project and
+You can download/see the https://github.com/poc/poc-sandbox project and
 install to your web directory (composer is your friend there as well:) ).
 
 ## Installation ##
@@ -99,7 +99,7 @@ and modify the database specific parts.
 
 ## COPYRIGHT ##
 
-### Copyright [2012] [Imre Toth <tothimre at gmail>] ###
+### Copyright [2013] [Imre Toth <tothimre at gmail>] ###
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

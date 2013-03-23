@@ -1,5 +1,6 @@
 {
     "name": "poc/poc",
+    "license": "Apache-2.0",
     "type": "library",
     "keywords": ["reverse proxy", "caching", "poc"],
     "authors": [

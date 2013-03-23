@@ -62,16 +62,6 @@ class Poc implements PocParams, PluginContainer
     private $output = null;
 
     /**
-     * If its value is true the debug mod is turned on.
-     * Tehre are already modules that helps debugging, this variable
-     * and the code uses this will be source out to other plugins.
-     *
-     * @depreceted
-     * @var boolean
-     */
-    private $debug = null;
-
-    /**
      * When the start function of the class executed sets its value by
      * calling the microtime function.
      *
@@ -169,17 +159,7 @@ class Poc implements PocParams, PluginContainer
         return $this->startTime;
     }
 
-    public function setDebug ($debug)
-    {
-        $this->debug = $debug;
-    }
-
-    public function getDebug ()
-    {
-        return $this->debug;
-    }
-
-        /**
+    /**
      *
      * @return the $output
      */
@@ -248,13 +228,7 @@ class Poc implements PocParams, PluginContainer
                 // @codeCoverageIgnoreEnd
             }
         ); 
-
-        $optionable->setDefaultOption(Poc::PARAM_DEBUG,
-            function  () {
-                return false;
-            }
-        );
-
+        
         $optionable->setDefaultOption(Poc::PARAM_HASHER,
             function  () {
                 return new Hasher();
@@ -272,20 +246,10 @@ class Poc implements PocParams, PluginContainer
     protected function mapFieldsFromOptionable(&$optionable, &$poc)
     {
         $poc->cache = $optionable[Poc::PARAM_CACHE];
-        $poc->setDebug($optionable['debug']);
         $poc->filter = $optionable[Poc::PARAM_FILTER];
         $poc->hasher = $optionable[Poc::PARAM_HASHER];
     }
 
-    /**
-     *
-     * @param $cache PocCacheInterface
-     *            this placeholder class contains the various
-     *            caches.
-     * @param $debug bool
-     *            If true debug messages are provided in the output, only
-     *            for develompment purposevags.
-     */
     public function __construct ($options = array())
     {
         $this->startTime = microtime(true);

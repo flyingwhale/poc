@@ -70,10 +70,12 @@ class Cache
      *
      * @return Doctrine\Common\Collections\Collection
      */
+    // @codeCoverageIgnoreStart
     public function getCacheTags ()
     {
         return $this->cacheTags;
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Get expires
@@ -95,6 +97,7 @@ class Cache
         return $this->hash;
     }
 
+    // @codeCoverageIgnoreStart
     /**
      * Get id
      *
@@ -104,6 +107,7 @@ class Cache
     {
         return $this->id;
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Set expires

@@ -9,11 +9,13 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 if(function_exists('xdebug_disable'))
 {
     xdebug_disable();
     echo("xdebug disabled-----------------");
 }
+
 require_once 'vendor/autoload.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;

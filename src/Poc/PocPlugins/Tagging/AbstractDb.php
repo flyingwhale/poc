@@ -61,7 +61,7 @@ abstract class AbstractDb implements PluginInterface
         return false;
     }
     
-    
+    // @codeCoverageIgnoreStart
     public function setCache ($cache)
     {
         $this->cache = $cache;
@@ -94,4 +94,5 @@ abstract class AbstractDb implements PluginInterface
             $this->tagInvalidate($tags);
         }
     }
+    // @codeCoverageIgnoreEnd
 }

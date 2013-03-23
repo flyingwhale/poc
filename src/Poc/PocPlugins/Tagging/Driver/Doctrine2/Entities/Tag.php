@@ -50,6 +50,7 @@ class Tag
         $this->tagCaches[] = $tagCaches;
     }
 
+    // @codeCoverageIgnoreStart
     /**
      * Get id
      *

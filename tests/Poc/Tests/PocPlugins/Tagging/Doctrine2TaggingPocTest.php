@@ -42,7 +42,7 @@ abstract class Doctrine2TaggingPocTest extends \Poc\Tests\NativeOutputHandlersTe
 
             $options = $GLOBALS['DOCTRINE_OPTIONABLE'];
 
-            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => 
+            $poc1 = new Poc(array(Poc::PARAM_TOOLSET =>
                                               new HttpCapture(new TestOutput()),
                                   PocParams::PARAM_CACHE => $cache1,
                                   PocParams::PARAM_HASHER => $hasher1));

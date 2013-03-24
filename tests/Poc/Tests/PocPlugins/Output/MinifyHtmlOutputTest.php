@@ -57,7 +57,6 @@ a
                               Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())
                         ));
 
-
         $poc->addPlugin(new MinifyHtmlOutput);
 
         $this->pocBurner($poc, $input);

@@ -4,7 +4,6 @@ namespace Poc\Tests\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
 use Poc\Tests\NativeOutputHandlersTestCore;
 
-use Poc\PocPlugins\Logging\PocLogs;
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Poc;
@@ -24,13 +23,13 @@ class EtagTest extends NativeOutputHandlersTestCore
         $hasher->addDistinguishVariable("TestEtag1" . rand());
 
         $poc  = new Poc(array(PocParams::PARAM_HASHER=>$hasher,
-                              Poc::PARAM_TOOLSET => 
+                              Poc::PARAM_TOOLSET =>
                                               new HttpCapture(new TestOutput()),
                 ));
-        
+
         $outputHandler = $poc->getPluginRegistry()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-        
+
         $poc->addPlugin(new Etag);
 
         $this->pocBurner($poc, self::ETAG_TEXT);
@@ -45,14 +44,14 @@ class EtagTest extends NativeOutputHandlersTestCore
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestEtag2" . rand());
 
-        $poc  = new Poc(array(Poc::PARAM_TOOLSET => 
+        $poc  = new Poc(array(Poc::PARAM_TOOLSET =>
                                               new HttpCapture(new TestOutput()),
                               PocParams::PARAM_HASHER=>$hasher));
 
         $outputHandler = $poc->getPluginRegistry()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-        
-        $outputHandler->allheaders['If-None-Match'] = 
+
+        $outputHandler->allheaders['If-None-Match'] =
                                              'c075eba9c04d3faf4ac21fd29cae6fd8';
         $poc->addPlugin(new Etag);
         $this->pocBurner($poc, self::ETAG_TEXT);

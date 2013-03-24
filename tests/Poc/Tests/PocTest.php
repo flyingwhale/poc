@@ -33,7 +33,7 @@ class PocTest extends \PHPUnit_Framework_TestCase
     const CACHE_FILE = 'fl';
     const CACHE_RESIDH = 'rd';
     const CACHE_MONGO = 'mn';
-    
+
     const TESTSTRING1 = "1";
     const TESTSTRING2 = "2";
     const TESTSTRING3 = "3";
@@ -45,16 +45,16 @@ class PocTest extends \PHPUnit_Framework_TestCase
     public static $handlers;
     public static $rand;
 
-    public static function setUpBeforeClass() {
-        
+    public static function setUpBeforeClass()
+    {
         self::$TTL = $GLOBALS['TTL'];
-        
+
         self::$rand = rand();
-        
+
         self::$caches = new \Pimple();
-        
+
         self::$caches['ttl'] = $GLOBALS['TTL'];
-        
+
         self::$caches[self::CACHE_FILE] = function ($c) {
                     return new FileCache(array(CacheParams::PARAM_TTL => $c['ttl']));
                 };
@@ -78,11 +78,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
-    public function testBasicPocFunctionalityBigTTL() {
-        
+    public function testBasicPocFunctionalityBigTTL()
+    {
         self::$caches['ttl'] = 100;
-        
+
         foreach (self::$handlers as $cacheHandlerName) {
             $testAdapter = new NativeOutputHandlersTestCore;
             $cacheHandler = self::$caches[$cacheHandlerName];
@@ -97,19 +96,18 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $output1 = $testAdapter->getOutput();
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
- 
+
         }
     }
 
     /**
      * @depends testBasicPocFunctionalityBigTTL
      */
-    public function testBasicPocFunctionalityGetCacheWithBigTTL() {
-        
+    public function testBasicPocFunctionalityGetCacheWithBigTTL()
+    {
         self::$caches['ttl'] = 100;
-        
-        foreach (self::$handlers as $cacheHandlerName) 
-        {
+
+        foreach (self::$handlers as $cacheHandlerName) {
             $testAdapter = new NativeOutputHandlersTestCore;
             $cacheHandler = self::$caches[$cacheHandlerName];
             $hasher = new Hasher();
@@ -123,15 +121,15 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $output1 = $testAdapter->getOutput();
             $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
- 
+
         }
     }
 
      /**
      * @depends testBasicPocFunctionalityGetCacheWithBigTTL
      */
-    public function testBasicPocFunctionality() {
-
+    public function testBasicPocFunctionality()
+    {
         self::$caches['ttl'] = $GLOBALS['TTL'];
 
         foreach (self::$handlers as $cacheHandlerName) {
@@ -159,11 +157,10 @@ class PocTest extends \PHPUnit_Framework_TestCase
                 $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
             }
 
-            
             $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
                         Poc::PARAM_CACHE => $cacheHandler,
                         Poc::PARAM_HASHER => $hasher));
-            
+
           $testAdapter->pocBurner($poc3, self::TESTSTRING2);
           $output2 = $testAdapter->getOutput();
 
@@ -182,11 +179,12 @@ class PocTest extends \PHPUnit_Framework_TestCase
 
             $this->assertNotEquals($output1, $output3, $cacheHandlerName);
             $this->assertEquals($output1, $output2, $cacheHandlerName);
- 
+
         }
     }
 
-    public function testPocBlacklist() {
+    public function testPocBlacklist()
+    {
         $testAdapter = (new NativeOutputHandlersTestCore);
 
         $blackList = new Filter();
@@ -223,7 +221,8 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($output1 != $output2);
     }
 
-    public function testPocWithDifferentHashers() {
+    public function testPocWithDifferentHashers()
+    {
         $testAdapter = (new NativeOutputHandlersTestCore);
 
         $objects = new \Pimple();

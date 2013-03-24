@@ -18,43 +18,42 @@ use Poc\Core\PluginSystem\MultipleSameTypePluginRegistrationExeption;
 
 class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     public function tearDown()
     {
         m::close();
     }
-    
+
     public function testAddPlugin()
     {
         $plugin1 = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
         $plugin1Delta = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
         $plugin2 = m::mock('plugin',array('init'=>null,'getName'=>'name1','isMultipleInstanced'=>false));
-        
+
         $pluginRegistry = new PluginRegistry();
         $pluginRegistry->addPlugin($plugin1);
         $pluginRegistry->addPlugin($plugin2);
-        
+
         $this->setExpectedException('Poc\Core\PluginSystem\MultipleSameTypePluginRegistrationExeption');
-        
+
         $pluginRegistry->addPlugin($plugin1Delta);
-        
+
     }
     public function testGetPlugin()
     {
         $pluginRegistry = new PluginRegistry();
         $plugin = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
-  
+
         $pluginRegistry->addPlugin($plugin);
-                
+
         $pluginRegistry->getPlugin('name');
 
         $this->setExpectedException('Poc\Core\PluginSystem\PluginIsNotRegisteredExeption');
         $pl = $pluginRegistry->getPlugin('noname');
 
         $this->assertEquals($plugin->getName(), $pl->getName());
-        
 
         $pluginRegistry->getPlugin('noname');
-        
+
     }
 }

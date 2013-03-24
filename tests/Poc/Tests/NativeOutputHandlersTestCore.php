@@ -20,7 +20,7 @@ use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 const UNITTESTING = 1;
 
-class NativeOutputHandlersTestCore 
+class NativeOutputHandlersTestCore
 //extends \PHPUnit_Framework_TestCase
 {
 
@@ -76,22 +76,20 @@ class NativeOutputHandlersTestCore
         $poc->start();
 
         $outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-        
+
         if ($outputHandler->getOutputFlow()) {
             echo $testString;
             $poc->end();
-            
+
             //var_dump($outputHandler);
-            
+
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
-        } 
-        else 
-        {
+        } else {
             $this->setHeader($outputHandler->getHeader());
             $this->setOutput($outputHandler->getOutput());
             $poc->end();
-            
+
             //var_dump($outputHandler);
 
             if ($outputHandler->getOutput()) {

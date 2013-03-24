@@ -2,7 +2,7 @@
     "name": "poc/poc",
     "license": "Apache-2.0",
     "type": "library",
-    "keywords": ["reverse proxy", "caching", "poc"],
+    "keywords": ["reverse proxy", "caching", "poc", "Etag"],
     "authors": [
         {
           "name":   "Imre Toth",

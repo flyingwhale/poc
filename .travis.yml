@@ -10,12 +10,12 @@ services:
   - redis-server  
 
 before_script:
-  - php tests/travis/mongo_version.php
   - php --info
   - composer install --dev
   - phpenv config-add tests/travis/php.ini
   - mysql -e 'create database poc_tests;'
   - vendor/bin/phploc  src/
 
-script: 
+script:
+  - php tests/travis/mongo_version.php
   - vendor/bin/phpunit --verbose

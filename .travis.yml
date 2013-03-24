@@ -10,6 +10,7 @@ services:
   - redis-server  
 
 before_script:
+  - php -r '$m = new MongoClient();echo "Mongo driver version: ".$m::VERSION."\n";'
   - php --info
   - composer install --dev
   - phpenv config-add tests/travis/php.ini

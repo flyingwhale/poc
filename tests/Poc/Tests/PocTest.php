@@ -244,16 +244,14 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $hasher1 = new Hasher();
         $hasher1->addDistinguishVariable("a" . rand());
         $poc1 = new Poc(array(Poc::PARAM_HASHER => $hasher1,
-                    Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                    Poc::PARAM_OUTPUTHANDLER => new TestOutput()));
+                    Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())));
         $testAdapter->pocBurner($poc1, self::NEEDLE);
         $output1 = $testAdapter->getOutput();
 
         $hasher2 = new Hasher();
         $hasher2->addDistinguishVariable("b" . rand());
         $poc2 = new Poc(array(Poc::PARAM_HASHER => $hasher2,
-                    Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                    Poc::PARAM_OUTPUTHANDLER => new TestOutput()));
+                    Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())));
         $testAdapter->pocBurner($poc2, self::TESTSTRING2);
         $output2 = $testAdapter->getOutput();
 

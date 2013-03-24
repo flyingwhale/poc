@@ -154,19 +154,19 @@ class PocLogs implements PluginInterface
 
     private function logOutput (BaseEvent $event, $eventName, $type)
     {
-        $this->logOutputMatix($eventName,
+        $this->logOutputMatrix($eventName,
                 $event->getPoc()
                     ->getOutput(), $type);
     }
 
     private function logTime (BaseEvent $event, $eventName, $type)
     {
-        $this->logOutputMatix($eventName,
+        $this->logOutputMatrix($eventName,
                 \microtime(true) - ($event->getPoc()->getStartTime()) .
                                                        '|' . $eventName, $type);
     }
 
-    private function logOutputMatix ($eventName, $saveIt, $type)
+    private function logOutputMatrix ($eventName, $saveIt, $type)
     {
         $this->logger->setLog($type, $saveIt);
 

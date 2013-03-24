@@ -31,9 +31,6 @@ class OutputFilterTest extends NativeOutputHandlersTestCore
         $poc = new Poc(
                 array(PocParams::PARAM_CACHE => $cache,
                       Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                      PocParams::PARAM_OUTPUTHANDLER => $outputHandler,
-                      PocParams::PARAM_OUTPUTFILTER => $outputFilter,
-                      PocParams::PARAM_DEBUG => true,
                       PocParams::PARAM_HASHER => $hasher,
                       ));
 

@@ -12,7 +12,7 @@
 
 /**
  * This is tha main class this of the system this is the conductor of the
- * system every functionalitys root if we inspect the flow of the application.
+ * system every functionality's root if we inspect the flow of the application.
  *
  * @author Imre Toth
  *
@@ -35,13 +35,13 @@ use Poc\Toolsets\NullOutputHandler\NullCapture;
 /**
  * This class contains the "Entry point" of the caching process.
  * Therefor is a really crucial part of the framework. The whole process has
- * got bindings at this class. The framework storngly builds on the observer pattern,
- * Tehre fore this is completely plugin based. Every component of the framework can be
+ * got bindings at this class. The framework strongly builds on the observer pattern,
+ * There fore this is completely plugin based. Every component of the framework can be
  * viewed as an external addition. This makes the the whole development of new modules
  * really easy, all component all decoupled, it also makes the system simple
  * and will use as small amount resources as possible.
  *
- * This aproach also helps the refactoring, and retinking of the basic idea, nameli the
+ * This approach also helps the refactoring, and rethinking of the basic idea, namely the
  * really easy and scalable output caching.
  *
  *
@@ -78,8 +78,8 @@ class Poc implements PocParams, PluginContainer
     private $cache = null;
 
     /**
-     * This a little extension of the wordfamous micro depenency injection
-     * framework pimple that supportts default parameters. This handles the
+     * This is a little extension of the world famous micro dependency injection
+     * framework pimple that supports default parameters. This handles the
      * default dependencies of the objects.
      *
      * @var Optionable
@@ -103,14 +103,14 @@ class Poc implements PocParams, PluginContainer
     private $canICacheThisGeneratedContent = true;
 
     /**
-     * This class helps too distinguish between more caches.
+     * This class helps to distinguish between more caches.
      *
      * @var Cache\Filtering\Hasher
      */
     private $hasher;
 
     /**
-     * This helps in balck/white listin the pages that has to be cached or not.
+     * This helps in black/white listing the pages that has to be cached or not.
      *
      * @var Cache\Filtering\Filter
      */
@@ -126,7 +126,7 @@ class Poc implements PocParams, PluginContainer
      * 
      * @param Core\PluginSystem\PluginInterface $plugin
      */
-    public function addPlugin ($plugin)
+    public function addPlugin($plugin)
     {
         $this->pluginRegistry->addPlugin($plugin);
         $plugin->init($this);
@@ -145,7 +145,7 @@ class Poc implements PocParams, PluginContainer
      *
      * @return the $pocDispatcher
      */
-    public function getPocDispatcher ()
+    public function getPocDispatcher()
     {
         return $this->pocDispatcher;
     }
@@ -154,7 +154,7 @@ class Poc implements PocParams, PluginContainer
      *
      * @return the $startTime
      */
-    public function getStartTime ()
+    public function getStartTime()
     {
         return $this->startTime;
     }
@@ -163,7 +163,7 @@ class Poc implements PocParams, PluginContainer
      *
      * @return the $output
      */
-    public function getOutput ()
+    public function getOutput()
     {
         return $this->output;
     }
@@ -172,12 +172,12 @@ class Poc implements PocParams, PluginContainer
      *
      * @param $output string
      */
-    public function setOutput ($output)
+    public function setOutput($output)
     {
         $this->output = $output;
     }
 
-    public function end ()
+    public function end()
     {
         
         $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, 
@@ -185,7 +185,7 @@ class Poc implements PocParams, PluginContainer
         //$this->__destruct();
     }
 
-    public function getLogger ()
+    public function getLogger()
     {
         if (!$this->logger) {
             $this->logger = new MonoLogger();
@@ -213,7 +213,7 @@ class Poc implements PocParams, PluginContainer
         return $this->canICacheThisGeneratedContent;
     }
 
-    protected function setupDefaults (&$optionable)
+    protected function setupDefaults(&$optionable)
     {
         $optionable->setDefaultOption(Poc::PARAM_CACHE,
             function  () {
@@ -250,7 +250,7 @@ class Poc implements PocParams, PluginContainer
         $poc->hasher = $optionable[Poc::PARAM_HASHER];
     }
 
-    public function __construct ($options = array())
+    public function __construct($options = array())
     {
         $this->startTime = microtime(true);
         $this->pocDispatcher = new EventDispatcher;
@@ -265,7 +265,7 @@ class Poc implements PocParams, PluginContainer
                                                           new BaseEvent($this));
     }
 
-    public function fetchCache ()
+    public function fetchCache()
     {
         $this->pocDispatcher->dispatch(
         PocEventNames::FUNCTION_FETCHCACHE_BEGINNING, new BaseEvent($this));
@@ -279,20 +279,18 @@ class Poc implements PocParams, PluginContainer
         } 
     }
 
-    public function start ()
+    public function start()
     {
         $this->pocDispatcher->dispatch(
-        PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
-        new BaseEvent($this));
+            PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
+            new BaseEvent($this));
 
         if ($this->filter->evaluate()) {
             if (!$this->fetchCache()) {
-                $this->pocDispatcher->dispatch(
-                                  PocEventNames::CAPTURE, new BaseEvent($this));
+                $this->pocDispatcher->dispatch(PocEventNames::CAPTURE, new BaseEvent($this));
             }
         } else {
-                $this->pocDispatcher->dispatch(
-                                  PocEventNames::MONITOR, new BaseEvent($this));
+            $this->pocDispatcher->dispatch(PocEventNames::MONITOR, new BaseEvent($this));
         }
     }
 }

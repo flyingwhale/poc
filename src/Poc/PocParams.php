@@ -23,17 +23,7 @@ use Poc\Cache\CacheImplementation\CacheParams;
 
 interface PocParams
 {
-    const PARAM_CACHE = 'cache';
-
-    const PARAM_OUTPUTHANDLER = 'outputHandler';
-
-    const PARAM_OUTPUTFILTER = 'outputFilter';
-
-    const PARAM_DEBUG = 'debug';
-
-    const PARAM_ROI_PROTECTOR = 'cia_protection';
-
-    const PARAM_EVENT_DISPATCHER = 'event_dispatcher';
+    const PARAM_CACHE = 'PARAM_CACHE';
 
     const PARAM_HASHER = 'PARAM_HASHER';
 

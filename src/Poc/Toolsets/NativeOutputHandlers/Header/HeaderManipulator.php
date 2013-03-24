@@ -33,7 +33,7 @@ class HeaderManipulator
     public $headersToSend;
 
     public $headersToRemove;
-    
+
     /**
      *
      * @var \Poc\Poc
@@ -109,7 +109,7 @@ class HeaderManipulator
                                                          self::HEADER_POSTFIX));
         if ($this->headersToSend) {
             foreach ($this->headersToSend as $header) {
-                
+
                 $this->poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->
                                             getOutputHandler()->header($header);
             }

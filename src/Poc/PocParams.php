@@ -28,6 +28,6 @@ interface PocParams
     const PARAM_HASHER = 'PARAM_HASHER';
 
     const PARAM_FILTER = 'PARAM_FILTER';
-    
+
     const PARAM_TOOLSET = 'PARAM_TOOLSET';
 }

@@ -53,7 +53,7 @@ class ROIProtectorLogger implements ROIProtectorEventNames
 
     public function __construct ($options = array())
     {
-        
+
         $this->optionable = new Optionable($options, $this);
         $this->setupDefaults();
 

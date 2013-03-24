@@ -26,7 +26,7 @@ use Poc\Toolsets\CaptureIntrerface;
 
 class HttpCapture implements CaptureIntrerface
 {
-    
+
     const PLUGIN_NAME = 'hCap';
 
     /**
@@ -44,9 +44,9 @@ class HttpCapture implements CaptureIntrerface
      * @var OutputInterface
      */
     private $outputHandler = null;
-    
+
     private $level;
-    
+
     /**
      *
      * @var Poc
@@ -59,18 +59,16 @@ class HttpCapture implements CaptureIntrerface
     }
 
     /**
-     * 
+     *
      * @param OutputInterface $outputHandler
      */
-    public function __construct($outputHandler = null) {
-        if ($outputHandler != null)
-        {
+    public function __construct($outputHandler = null)
+    {
+        if ($outputHandler != null) {
             $this->outputHandler = $outputHandler;
-        }
-        else
-        {
+        } else {
             // @codeCoverageIgnoreStart
-            $this->outputHandler = new ServerOutput();         
+            $this->outputHandler = new ServerOutput();
             // @codeCoverageIgnoreEnd
         }
     }
@@ -80,11 +78,11 @@ class HttpCapture implements CaptureIntrerface
     {
         $this->poc = $poc;
         $this->callbackHandler = new CallbackHandler($poc);
-        
+
         $this->pocDispatcher = $poc->getPocDispatcher();
-        
+
         $this->outputHandler->setCallbackHandler($this->callbackHandler);
-        
+
         $this->outputHandler->setPoc($poc);
 
         $this->pocDispatcher->addListener( PocEventNames::GET_OUTPUT_FROM_CACHE,
@@ -96,16 +94,16 @@ class HttpCapture implements CaptureIntrerface
         $this->pocDispatcher->addListener(
                                 PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                     array($this, 'setObLevel'));
-        
+
         $this->pocDispatcher->addListener(
                                 PocEventNames::MONITOR,array($this, 'monitor'));
-        
+
         $this->pocDispatcher->addListener(
                                 PocEventNames::END_OF_BUFFERING,
                                                 array($this, 'endOfBuffering'));
-        
+
      }
-     
+
      public function isMultipleInstanced()
      {
         return false;
@@ -132,26 +130,26 @@ class HttpCapture implements CaptureIntrerface
      {
         $this->outputHandler->startBuffer(CallbackHandler::CALLBACK_SHOWOUTPUT);
      }
-     
+
      public function endOfBuffering (BaseEvent $event)
      {
         if (isset($this->level)) {
             if ($this->level) {
                 $this->outputHandler->obEnd();
             }
-        }         
+        }
     }
 
     public function getName()
     {
         return self::PLUGIN_NAME;
     }
-    
+
     /**
-     * 
+     *
      */
     public function getOutputHandler()
     {
-        return $this->outputHandler; 
+        return $this->outputHandler;
     }
 }

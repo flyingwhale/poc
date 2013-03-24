@@ -31,7 +31,6 @@ use Poc\Core\PluginSystem\PluginRegistry;
 use Optionable;
 use Poc\Toolsets\NullOutputHandler\NullCapture;
 
-
 /**
  * This class contains the "Entry point" of the caching process.
  * Therefor is a really crucial part of the framework. The whole process has
@@ -115,7 +114,7 @@ class Poc implements PocParams, PluginContainer
      * @var Cache\Filtering\Filter
      */
     private $filter;
-    
+
     /**
      *
      * @var PluginRegistry
@@ -123,7 +122,7 @@ class Poc implements PocParams, PluginContainer
     private $pluginRegistry = null;
 
     /**
-     * 
+     *
      * @param Core\PluginSystem\PluginInterface $plugin
      */
     public function addPlugin($plugin)
@@ -131,9 +130,9 @@ class Poc implements PocParams, PluginContainer
         $this->pluginRegistry->addPlugin($plugin);
         $plugin->init($this);
     }
-    
+
     /**
-     * 
+     *
      * @return PluginRegistry
      */
     public function getPluginRegistry()
@@ -179,8 +178,8 @@ class Poc implements PocParams, PluginContainer
 
     public function end()
     {
-        
-        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING, 
+
+        $this->pocDispatcher->dispatch(PocEventNames::END_OF_BUFFERING,
                                                           new BaseEvent($this));
         //$this->__destruct();
     }
@@ -227,14 +226,14 @@ class Poc implements PocParams, PluginContainer
                 return new NullCapture();
                 // @codeCoverageIgnoreEnd
             }
-        ); 
-        
+        );
+
         $optionable->setDefaultOption(Poc::PARAM_HASHER,
             function  () {
                 return new Hasher();
             }
         );
-        
+
         $optionable->setDefaultOption(Poc::PARAM_FILTER,
             function  () {
                 return new Filter();
@@ -254,14 +253,14 @@ class Poc implements PocParams, PluginContainer
     {
         $this->startTime = microtime(true);
         $this->pocDispatcher = new EventDispatcher;
-        $this->pluginRegistry = new PluginRegistry();        
-        $this->optionable = new Optionable($options);  
-        
+        $this->pluginRegistry = new PluginRegistry();
+        $this->optionable = new Optionable($options);
+
         $this->setupDefaults($this->optionable);
-        
+
         $this->mapFieldsFromOptionable($this->optionable, $this);
         $this->addPlugin($this->optionable[PocParams::PARAM_TOOLSET]);
-        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END, 
+        $this->pocDispatcher->dispatch(PocEventNames::CONSTRUCTOR_END,
                                                           new BaseEvent($this));
     }
 
@@ -276,7 +275,7 @@ class Poc implements PocParams, PluginContainer
             $this->pocDispatcher->dispatch(
                     PocEventNames::GET_OUTPUT_FROM_CACHE, new BaseEvent($this));
 
-        } 
+        }
     }
 
     public function start()

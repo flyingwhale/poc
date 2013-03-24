@@ -35,7 +35,7 @@ class ContentLength implements PluginInterface
                                                      array($this, 'printSize'));
 
     }
-    
+
     public function isMultipleInstanced()
     {
         return false;
@@ -57,8 +57,9 @@ class ContentLength implements PluginInterface
         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler()->header
                                            ('Content-Length: ' . $LengthHeader);
     }
-    
-    public function getName() {
+
+    public function getName()
+    {
         return "HttpHeaderContentLength";
     }
 

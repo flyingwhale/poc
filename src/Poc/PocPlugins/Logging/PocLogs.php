@@ -45,11 +45,10 @@ class PocLogs implements PluginInterface
      */
     private $poc;
 
-    
     public function init ($poc)
     {
         $this->poc = $poc;
-        
+
         $this->pocDispatcher = $poc->getPocDispatcher();
 
         $this->logger = $this->poc->getLogger();
@@ -199,11 +198,13 @@ class PocLogs implements PluginInterface
                 self::LOG_TYPE_TIME);
     }
 
-    public function getName() {
+    public function getName()
+    {
         return "PocLogs";
     }
-    
-    public function isMultipleInstanced(){
+
+    public function isMultipleInstanced()
+    {
         return false;
-    }    
+    }
 }

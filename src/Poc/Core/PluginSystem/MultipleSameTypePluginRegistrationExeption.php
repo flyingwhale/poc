@@ -11,6 +11,6 @@
  */
 namespace Poc\Core\PluginSystem;
 
-class MultipleSameTypePluginRegistrationExeption extends \Exception{
-
+class MultipleSameTypePluginRegistrationExeption extends \Exception
+{
 }

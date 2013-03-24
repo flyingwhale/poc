@@ -33,9 +33,8 @@ class Compress implements PluginInterface
      */
     private $poc;
 
-
     public function init (Poc $poc)
-    {        
+    {
         $this->poc = $poc;
 
         $this->setCompressiontype($poc);
@@ -76,13 +75,15 @@ class Compress implements PluginInterface
             $event->getPoc()->setOutput(\gzdeflate($event->getPoc()->getOutput()));
         }
     }
-    
-    public function getName() {
+
+    public function getName()
+    {
         return "Compress";
     }
-    
-    public function isMultipleInstanced(){
+
+    public function isMultipleInstanced()
+    {
         return false;
     }
-    
+
 }

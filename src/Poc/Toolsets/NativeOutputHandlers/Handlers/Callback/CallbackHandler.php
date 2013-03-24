@@ -36,20 +36,18 @@ class CallbackHandler
      */
     private $headerManipulator;
 
-    
     /**
      *
      * @var \Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface
      */
     private $outputHandler;
-    
-    
+
     /**
      *
      * @var HttpCapture;
      */
     private $httpCapture;
-    
+
     /**
      *
      * @param Poc $poc
@@ -88,7 +86,7 @@ class CallbackHandler
     public function pocCallbackGenerate ($buffer)
     {
         $this->poc->setOutput($buffer);
-        
+
         if ($this->httpCapture->getLevel() == $this->outputHandler->getLevel() - 1) {
             $this->poc->setOutput($buffer);
             $this->poc->getPocDispatcher()->dispatch(
@@ -113,26 +111,26 @@ class CallbackHandler
                       PocEventNames::COMPRESS_OUTPUT, new BaseEvent($this->poc));
 
                     $this->poc->getPocDispatcher()->dispatch(
-                                           PocEventNames::AFTER_COMPRESS_OUTPUT, 
+                                           PocEventNames::AFTER_COMPRESS_OUTPUT,
                                                      new BaseEvent($this->poc));
 
                     $this->poc->getCache()->cacheSpecificStore(
-                                              $this->poc->getHasher()->getKey(), 
+                                              $this->poc->getHasher()->getKey(),
                                                        $this->poc->getOutput());
 
                     $this->poc->getPocDispatcher()->dispatch(
-                                                   PocEventNames::OUTPUT_STORED, 
+                                                   PocEventNames::OUTPUT_STORED,
                                                      new BaseEvent($this->poc));
 
                     $this->headerManipulator->storeHeaders();
 
                     $this->poc->getPocDispatcher()->dispatch(
-                                                  PocEventNames::HEADERS_STORED, 
+                                                  PocEventNames::HEADERS_STORED,
                                                      new BaseEvent($this->poc));
 
                 }
-            } 
-            
+            }
+
             $this->poc->getPocDispatcher()->dispatch(
                     PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
                     new BaseEvent($this->poc));

@@ -175,8 +175,9 @@ class Doctrine2Tagging extends AbstractDb
     {
         return explode(',', $tags);
     }
-    
-    public function getName() {
+
+    public function getName()
+    {
         return "Doctrine2Tagging";
     }
 

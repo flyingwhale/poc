@@ -21,20 +21,20 @@ use Poc\Core\Events\BaseEvent;
 //
 //use Poc\Poc;
 
-
 use Poc\Toolsets\CaptureAbstract;
 
 class NullCapture extends CaptureAbstract
 {
-    
+
     const PLUGIN_NAME = 'NULL';
- 
+
     private function throwException()
     {
         throw new \Exception("Please add a capture interface to the POC!");
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->throwException();
     }
 
@@ -52,7 +52,7 @@ class NullCapture extends CaptureAbstract
     {
         $this->throwException();
     }
-     
+
     public function endOfBuffering (BaseEvent $event)
     {
         $this->throwException();

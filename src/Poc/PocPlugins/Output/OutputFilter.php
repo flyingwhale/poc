@@ -28,7 +28,6 @@ class OutputFilter implements PluginInterface
      */
     private $poc;
 
-    
     public function init($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
@@ -47,13 +46,14 @@ class OutputFilter implements PluginInterface
                 $result = preg_match($condititon, $event->getPoc()->getOutput());
                 if ($result) {
                   $event->getPoc()->setCanICacheThisGeneratedContent(false);
+
                   return;
                 }
             }
         }
     }
-    
-    public function getName() 
+
+    public function getName()
     {
         return "OutputFilter";
     }

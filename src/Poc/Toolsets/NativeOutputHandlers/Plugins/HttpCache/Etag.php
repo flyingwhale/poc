@@ -22,9 +22,9 @@ use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
 class Etag implements PluginInterface
 {
-    
+
     const ETAG_POSTFIX = "_ET";
-    
+
     public function init ($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
@@ -36,7 +36,7 @@ class Etag implements PluginInterface
         $poc->getPocDispatcher()->addListener(PocEventNames::HEADERS_STORED,
                                                      array($this, 'checkEtag'));
     }
-    
+
     public function isMultipleInstanced()
     {
         return false;
@@ -48,7 +48,7 @@ class Etag implements PluginInterface
         $event->getPoc()->getCache()->
                 cacheSpecificStore($event->getPoc()->getHasher()
                                         ->getKey() . self::ETAG_POSTFIX, $etag);
-        
+
         $etagHeader = 'Etag: ' . $etag;
         $event->getPoc()->getPluginRegistry()
                 ->getPlugin(HttpCapture::PLUGIN_NAME)->
@@ -78,8 +78,9 @@ class Etag implements PluginInterface
             }
         }
     }
-        
-    public function getName() {
+
+    public function getName()
+    {
         return "HttpEtag";
     }
 

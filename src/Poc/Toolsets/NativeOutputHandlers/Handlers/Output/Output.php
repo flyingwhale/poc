@@ -16,7 +16,6 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandler;
 
 use Poc\Poc;
 
-
 abstract class Output implements OutputInterface
 {
 
@@ -25,7 +24,7 @@ abstract class Output implements OutputInterface
      * @var CallbackHandler
      */
      protected $callbackHandler;
-     
+
     /**
      *
      * @var Poc
@@ -36,9 +35,9 @@ abstract class Output implements OutputInterface
     {
         $this->poc = $poc;
     }
-    
+
     /**
-     * 
+     *
      * @param CallbackHandler $callbackHandler
      */
     public function setCallbackHandler(CallbackHandler $callbackHandler)

@@ -18,13 +18,15 @@ use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\PluginInterface;
 
-class MinifyHtmlOutput implements PluginInterface {
-
-    public function init($poc) {
+class MinifyHtmlOutput implements PluginInterface
+{
+    public function init($poc)
+    {
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }
 
-    public function minifyHtml(BaseEvent $event) {
+    public function minifyHtml(BaseEvent $event)
+    {
         $search =
                 array(
                     '/ {2,}/',
@@ -45,7 +47,8 @@ class MinifyHtmlOutput implements PluginInterface {
                 preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return "MinifyHtmlOutput";
     }
 

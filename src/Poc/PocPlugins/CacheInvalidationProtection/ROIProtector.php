@@ -88,10 +88,9 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
      */
     private $poc;
 
-    
     /**
      *
-     * @param PluginContainer $poc 
+     * @param PluginContainer $poc
      */
     public function init($poc)
     {
@@ -99,7 +98,7 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
         $this->cache = $poc->getCache();
 
         $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-        
+
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
 
@@ -109,12 +108,14 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
                                                        array($this, 'consult'));
 
     }
-    
-    public function isMultipleInstanced(){
+
+    public function isMultipleInstanced()
+    {
         return false;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'roip';
     }
 
@@ -252,9 +253,10 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
     public function setCache($cache)
     {
         $this->cache = $cache;
-    }    
-    
-    public function setName() {
+    }
+
+    public function setName()
+    {
         $this->name = "ROIP";
     }
 }

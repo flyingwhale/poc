@@ -78,7 +78,7 @@ class TestOutput extends Output
         if (strstr($header,':')) {
             $headerArray = explode(":", $header);
             $this->header[$headerArray[0]] = trim ($headerArray[1]);
-        } 
+        }
     }
 
     public function getHeader ()
@@ -117,7 +117,6 @@ class TestOutput extends Output
     {
         return \unserialize($this->actHeader);
     }
-
 
     public function getallheaders()
     {

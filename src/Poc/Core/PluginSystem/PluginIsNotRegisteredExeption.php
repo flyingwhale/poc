@@ -11,6 +11,6 @@
  */
 namespace Poc\Core\PluginSystem;
 
-class PluginIsNotRegisteredExeption extends \Exception{
-
+class PluginIsNotRegisteredExeption extends \Exception
+{
 }

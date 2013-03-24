@@ -22,6 +22,6 @@ interface CaptureIntrerface extends PluginInterface
     public function getOutputFromCache(BaseEvent $event);
 
     public function monitor(BaseEvent $event);
-     
+
     public function endOfBuffering (BaseEvent $event);
 }

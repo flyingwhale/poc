@@ -55,12 +55,12 @@ abstract class AbstractDb implements PluginInterface
                                                     array($this, 'cacheTagsInvalidation'));
 
     }
-    
+
     public function isMultipleInstanced()
     {
         return false;
     }
-    
+
     // @codeCoverageIgnoreStart
     public function setCache ($cache)
     {

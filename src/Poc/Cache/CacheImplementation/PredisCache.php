@@ -42,7 +42,7 @@ class PredisCache extends Cache
             throw new \Exception(sprintf("%s class not exists", $className));
         }
        // @codeCoverageIgnoreEnd
- 
+
         $this->redis = new $className($this->optionable['servers']);
         $this->isNotConnected = 1;
     }

@@ -49,9 +49,9 @@ interface OutputInterface
      * @param $poc Poc
      */
     public function setPoc (Poc $poc);
-    
+
     /**
-     * 
+     *
      * @param CallbackHandler $callbackHandler
      */
     public function setCallbackHandler(CallbackHandler $callbackHandler);

@@ -24,11 +24,11 @@
         "monolog/monolog":          "1.*",
         "pimple/pimple":            "1.*",
         "symfony/class-loader":     "2.1.*",
-        "doctrine/orm":             "2.2.2",
-        "symfony/event-dispatcher": "2.1.*",
+        "doctrine/orm":             ">=2.2.3,>2.5-dev",
+        "symfony/event-dispatcher": "2.*",
         "predis/predis":            "0.7.3",
-        "optionable/optionable":    "dev-master",
-        "symfony/console":          "2.1.*"
+        "optionable/optionable":    "0.5.*",
+        "symfony/console":          "2.*"
 
     },
    "require-dev": {

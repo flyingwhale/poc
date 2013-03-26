@@ -10,9 +10,9 @@ The website is:
 
 ## Description
 
-The aim of this project is to create an easy to use but really flexible generic
-output caching component for  PHP applications. The framework is plugin based,
-so it is really easy to extend and use.
+The aim of this project is to create an easy to use but really flexible generic Caching component that also has got a great
+implementation for 
+PHP output caching too. This ramework is plugin based, so it is really easy to extend and utilize it's implemented features.
 
 ## Features
 
@@ -30,6 +30,9 @@ so it is really easy to extend and use.
    * Blacklisting by Output content (plugin)
    * Html output minification (plugin)
    * Logging with monolog (plugin)
+   * Reload and cache Invalidation attack protection (plugin)
+   * Compresses the output of your application,if you need it (plugin)
+   * Store the Etag's based on the output (plugin)
 
    * Cache tagging
      * For this feature we utilize Doctrine2, Mysql and Sqlite is supported at the
@@ -78,8 +81,7 @@ So Install Mysql for the tagging feature.
 
 ##Unittesting##
 
-The Project already have got 75% code coverage. Of course we work hard on to
-improve it and make it better. Also the unittests can be nice source of examples.
+The Project already have got 96% code coverage. The unittests can be nice source of examples.
 For instance this is highly recommended to check out the PocTest.php file to get
 more insight on the POC.
 

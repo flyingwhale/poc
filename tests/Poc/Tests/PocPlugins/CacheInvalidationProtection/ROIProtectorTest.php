@@ -12,7 +12,7 @@
 
 namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
 use Poc\Poc;

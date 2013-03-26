@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\PocPlugins\Output;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;

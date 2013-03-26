@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\PocPlugins\Output;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 use Poc\PocPlugins\Output\MinifyHtmlOutput;
 use Poc\PocParams;

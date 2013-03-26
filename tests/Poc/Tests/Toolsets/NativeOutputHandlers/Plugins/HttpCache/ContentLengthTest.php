@@ -2,7 +2,7 @@
 
 namespace Poc\Tests\Toolsets\NativeOutputHandlers\Plugins\HttpCache;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Poc;

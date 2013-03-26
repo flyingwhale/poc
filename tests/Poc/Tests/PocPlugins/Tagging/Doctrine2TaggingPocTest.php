@@ -12,7 +12,7 @@
 
 namespace Poc\Tests\PocPlugins\Tagging;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 use Poc\PocParams;
 use Poc\Poc;
@@ -23,7 +23,7 @@ use Poc\PocPlugins\Tagging\Doctrine2Tagging;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 
-abstract class Doctrine2TaggingPocTest extends \Poc\Tests\NativeOutputHandlersTestCore
+abstract class Doctrine2TaggingPocTest extends NativeOutputHandlersTestCore
 {
 
     public function testTagging ()

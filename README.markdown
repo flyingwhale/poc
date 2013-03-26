@@ -42,7 +42,7 @@ so it is really easy to extend and use.
 Even more features are coming, so stay tuned.
 
 ## Examples ##
-You can download/see the https://github.com/poc/poc-sandbox project and
+You can download/see the https://github.com/php-output-cache/poc-sandbox project and
 install to your web directory (composer is your friend there as well:) ).
 
 ## Installation ##

@@ -40,7 +40,7 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
     public function testCacheSpecificFetch ()
     {
         $this->cache->cacheSpecificStore($this->TESTKEY, self::TESTDATA);
-        //this is for mongodb, sometimes mongodb.
+        //this is for mongodb
         usleep(500);
         $fetchedFromCache = $this->cache->fetch($this->TESTKEY);
         $this->assertEquals($fetchedFromCache, self::TESTDATA);

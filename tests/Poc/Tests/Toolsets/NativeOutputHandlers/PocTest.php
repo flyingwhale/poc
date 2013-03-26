@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Tests;
+namespace Poc\Tests\Toolsets\NativeOutputHandlers;
 
-use Poc\Tests\NativeOutputHandlersTestCore;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;

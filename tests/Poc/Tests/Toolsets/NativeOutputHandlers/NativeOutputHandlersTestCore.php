@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-namespace Poc\Tests;
+namespace Poc\Tests\Toolsets\NativeOutputHandlers;
 
 use Poc\PocPlugins\Logging\PocLogs;
 

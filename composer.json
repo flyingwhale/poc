@@ -30,7 +30,8 @@
         "symfony/console":          "2.*"
     },
    "require-dev": {
-        "EHER/PHPUnit":             "1.6",
+        "phpunit/phpunit":           "3.7.*",
+        "phpunit/dbunit":            "1.2.*",
         "fabpot/php-cs-fixer":      "dev-master",
         "mockery/mockery":          "dev-master"
     },

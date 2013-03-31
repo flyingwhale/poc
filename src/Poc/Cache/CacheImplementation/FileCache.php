@@ -47,7 +47,7 @@ class FileCache extends Cache
         $this->file = $this->optionable[self::PARAM_DIRECTORY] . self::KEY_PREFIX;
         $this->fileTtl = $this->optionable[self::PARAM_DIRECTORY] . self::TTL_PREFIX;
         $this->directory = $this->optionable[self::PARAM_DIRECTORY];
-        $this->throwDbException();
+//        $this->throwDbException();
     }
 
     public function fetch ($key)
@@ -106,10 +106,5 @@ class FileCache extends Cache
         } else
 
             return false;
-    }
-
-    public function isCacheAvailable ()
-    {
-        return is_writable($this->directory);
     }
 }

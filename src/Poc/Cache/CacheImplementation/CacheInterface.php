@@ -21,7 +21,6 @@ namespace Poc\Cache\CacheImplementation;
 
 interface CacheInterface
 {
-
     public function fetch ($key);
 
     public function clearAll ();
@@ -29,7 +28,4 @@ interface CacheInterface
     public function clearItem ($key);
 
     public function cacheSpecificStore ($key, $output);
-
-    public function isCacheAvailable ();
-
 }

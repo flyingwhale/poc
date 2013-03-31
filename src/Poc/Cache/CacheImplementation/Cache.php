@@ -17,9 +17,9 @@
  */
 namespace Poc\Cache\CacheImplementation;
 
-use Poc\Poc;
-use Poc\Cache\CacheImplementation\CacheParams;
 use Optionable;
+use Poc\Cache\CacheImplementation\CacheParams;
+use Poc\Poc;
 
 abstract class Cache implements CacheInterface, CacheParams
 {
@@ -49,15 +49,6 @@ abstract class Cache implements CacheInterface, CacheParams
         $this->setupDefaults();
         $this->ttl = $this->optionable[CacheParams::PARAM_TTL];
 
-    }
-
-    public function throwDbException ()
-    {
-        // @codeCoverageIgnoreStart
-        if (! $this->isCacheAvailable()) {
-            throw new \Exception("The cache database is not reachable!");
-        }
-        // @codeCoverageIgnoreEnd
     }
 
     public function getTtl()

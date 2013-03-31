@@ -21,14 +21,15 @@
 
 namespace Poc\Cache\CacheImplementation;
 
+use Poc\Exception\CacheNotReachableException;
+use Poc\Exception\DriverNotFoundException;
+
 class MemcachedCache extends Cache
 {
 
     private $memcache;
 
     private $compression = false;
-
-    private $isConnected;
 
     protected function setupDefaults ()
     {
@@ -47,15 +48,19 @@ class MemcachedCache extends Cache
         // @codeCoverageIgnoreEnd
         // @codeCoverageIgnoreStart
         if (! class_exists($className)) {
-            throw new \Exception(sprintf("%s class not exists", $className));
+            throw new DriverNotFoundException('Memcache driver not found');
         }
         // @codeCoverageIgnoreEnd
         $this->memcache = new $className();
 
-        $this->isConnected = $this->memcache->connect(
+        $isConnected = $this->memcache->connect(
                 $this->optionable['server'],
                 $this->optionable['port']);
-        $this->throwDbException();
+
+        if (!$isConnected)
+        {
+            throw new CacheNotReachableException('Memcache not reachable');
+        }
     }
 
     public function fetch ($key)
@@ -77,10 +82,4 @@ class MemcachedCache extends Cache
     {
         $this->memcache->set($key, $output, $this->compression, $this->ttl);
     }
-
-    public function isCacheAvailable ()
-    {
-        return $this->isConnected;
-    }
-
 }

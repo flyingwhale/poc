@@ -19,11 +19,11 @@
 
 namespace Poc\Cache\CacheImplementation;
 
+use Poc\Exception\CacheNotReachableException;
+use Poc\Exception\DriverNotFoundException;
+
 class MongoDBCache extends Cache
 {
-
-    private $isNotConnected;
-
     private $mongo;
 
     private $dbName;
@@ -43,19 +43,17 @@ class MongoDBCache extends Cache
 
         $this->dbName = $this->optionable['db_name'];
         $this->collectionName = $this->optionable['collection_name'];
-        $this->isNotConnected = 0;
+        $className = 'Mongo';
+
         // @codeCoverageIgnoreStart
         try {
-            $className = 'Mongo';
 
             if (! class_exists($className)) {
-                throw new \Exception(sprintf("%s class not exists", $className));
+                throw new DriverNotFoundException('Mongo driver not found');
             }
             $this->mongo = new $className();
-            $this->isNotConnected = 1;
         } catch (\MongoConnectionException $e) {
-            $this->throwDbException();
-
+            throw new CacheNotReachableException('Mongo not reachable');
         }
         // @codeCoverageIgnoreEnd
 
@@ -107,13 +105,6 @@ class MongoDBCache extends Cache
 
     }
 
-    public function isCacheAvailable ()
-    {
-        // @codeCoverageIgnoreStart
-        return $this->isNotConnected;
-        // @codeCoverageIgnoreEnd
-    }
-
     private function getDb ()
     {
         $db = $this->mongo->selectDB($this->dbName);
@@ -138,5 +129,4 @@ class MongoDBCache extends Cache
 
         return $keyValue;
     }
-
 }

@@ -12,6 +12,9 @@
 
 namespace Poc\Tests\Cache\CacheImplementation;
 
+use Poc\Exception\CacheNotReachableException;
+use Poc\Exception\DriverNotFoundException;
+
 abstract class CacheTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -25,15 +28,23 @@ abstract class CacheTest extends \PHPUnit_Framework_TestCase
 
     abstract public function setUp_ ();
 
-    protected function setUp ()
+    protected function setUp()
     {
+       $this->TESTKEY .= rand() . rand();
 
-        $this->TESTKEY .= rand() . rand();
         try {
             $this->setUp_();
-        } catch (Exception $e) {
-            $this->asertTrue(false);
         }
+        catch (DriverNotFoundException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+        catch (CacheNotReachableException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+        catch (\Exception $e) {
+            $this->assertTrue(false);
+        }
+
         $this->cache->clearAll();
     }
 

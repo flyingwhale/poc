@@ -19,12 +19,13 @@
 
 namespace Poc\Cache\CacheImplementation;
 
+use Poc\Exception\CacheNotReachableException;
+use Poc\Exception\DriverNotFoundException;
+use Predis\Network\ConnectionException;
+
 class PredisCache extends Cache
 {
-
     protected $redis;
-
-    protected $isNotConnected;
 
     protected function setupDefaults ()
     {
@@ -39,12 +40,17 @@ class PredisCache extends Cache
         $className = 'Predis\Client';
         // @codeCoverageIgnoreStart
         if (! class_exists($className)) {
-            throw new \Exception(sprintf("%s class not exists", $className));
+            throw new DriverNotFoundException('Predis driver not found');
         }
        // @codeCoverageIgnoreEnd
 
         $this->redis = new $className($this->optionable['servers']);
-        $this->isNotConnected = 1;
+
+        try {
+            $this->redis->connect();
+        } catch (ConnectionException $e) {
+            throw new CacheNotReachableException('Redis not reachable');
+        }
     }
 
     public function fetch ($key)
@@ -69,12 +75,4 @@ class PredisCache extends Cache
         $this->redis->set($key, $output);
         $this->redis->expire($key, $this->ttl);
     }
-
-    public function isCacheAvailable ()
-    {
-        // @codeCoverageIgnoreStart
-        return $this->isNotConnected;
-        // @codeCoverageIgnoreEnd
-    }
-
 }

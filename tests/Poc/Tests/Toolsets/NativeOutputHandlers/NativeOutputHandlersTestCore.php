@@ -70,12 +70,17 @@ class NativeOutputHandlersTestCore
      */
     public function pocBurner (Poc $poc, $testString = "testString")
     {
-        $poc->addPlugin(new PocLogs());
-
+        if($poc->getPluginRegistry()->hasPlugin(PocLogs::PLUGIN_NAME))
+        {
+            $poc->addPlugin(new PocLogs());
+        }
         $this->setOutput('');
         $poc->start();
 
-        $outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        if($poc->getPluginRegistry()->hasPlugin(HttpCapture::PLUGIN_NAME))
+        {
+            $outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        }
 
         if ($outputHandler->getOutputFlow()) {
             echo $testString;

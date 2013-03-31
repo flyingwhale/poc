@@ -21,6 +21,8 @@ use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
+use Poc\Exception\CacheNotReachableException;
+use Poc\Exception\DriverNotFoundException;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
@@ -48,139 +50,115 @@ class PocTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$TTL = $GLOBALS['TTL'];
-
         self::$rand = rand();
-
-        self::$caches = new \Pimple();
-
-        self::$caches['ttl'] = $GLOBALS['TTL'];
-
-        self::$caches[self::CACHE_FILE] = function ($c) {
-                    return new FileCache(array(CacheParams::PARAM_TTL => $c['ttl']));
-                };
-
-        self::$caches[self::CACHE_MEMCACHED] = function ($c) {
-                    return new MemcachedCache(array(CacheParams::PARAM_TTL => $c['ttl']));
-                };
-
-        self::$caches[self::CACHE_RESIDH] = function ($c){
-                    return new PredisCache(array(CacheParams::PARAM_TTL => $c['ttl']));
-                };
-
-        self::$caches[self::CACHE_MONGO] = function ($c){
-                    return new MongoDBCache(array(CacheParams::PARAM_TTL => $c['ttl']));
-                };
-
-        self::$handlers[] = self::CACHE_FILE;
-        self::$handlers[] = self::CACHE_MEMCACHED;
-        self::$handlers[] = self::CACHE_RESIDH;
-        self::$handlers[] = self::CACHE_MONGO;
-
-    }
-
-    public function testBasicPocFunctionalityBigTTL()
-    {
-        self::$caches['ttl'] = 100;
-
-        foreach (self::$handlers as $cacheHandlerName) {
-            $testAdapter = new NativeOutputHandlersTestCore;
-            $cacheHandler = self::$caches[$cacheHandlerName];
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
-
-            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_HASHER => $hasher));
-
-            $testAdapter->pocBurner($poc1, self::TESTSTRING1);
-
-            $output1 = $testAdapter->getOutput();
-            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
-
-        }
     }
 
     /**
-     * @depends testBasicPocFunctionalityBigTTL
+     * @dataProvider basicPocFunctionalityBigTTLProvider
      */
-    public function testBasicPocFunctionalityGetCacheWithBigTTL()
+    public function testBasicPocFunctionalityBigTTL($cacheHandlerName, $cacheHandlerOptions)
     {
-        self::$caches['ttl'] = 100;
-
-        foreach (self::$handlers as $cacheHandlerName) {
-            $testAdapter = new NativeOutputHandlersTestCore;
-            $cacheHandler = self::$caches[$cacheHandlerName];
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
-
-            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_HASHER => $hasher));
-
-            $testAdapter->pocBurner($poc1, self::TESTSTRING1."aaa");
-
-            $output1 = $testAdapter->getOutput();
-            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
+        try
+        {
+            $cacheHandler = new $cacheHandlerName($cacheHandlerOptions);
+        }
+        catch (DriverNotFoundException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+        catch (CacheNotReachableException $e) {
+            $this->markTestSkipped($e->getMessage());
 
         }
-    }
 
-     /**
-     * @depends testBasicPocFunctionalityGetCacheWithBigTTL
-     */
-    public function testBasicPocFunctionality()
-    {
-        self::$caches['ttl'] = $GLOBALS['TTL'];
-
-        foreach (self::$handlers as $cacheHandlerName) {
         $testAdapter = new NativeOutputHandlersTestCore;
 
-            $cacheHandler = self::$caches[$cacheHandlerName];
+        $hasher = new Hasher();
+        $hasher->addDistinguishVariable($cacheHandlerName . self::$rand);
 
-            $hasher = new Hasher();
-            $hasher->addDistinguishVariable($cacheHandlerName . rand());
+        $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                    Poc::PARAM_CACHE => $cacheHandler,
+                    Poc::PARAM_HASHER => $hasher));
 
-            $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_HASHER => $hasher));
+        $testAdapter->pocBurner($poc1, self::TESTSTRING1);
+        ob_end_flush();
 
-            $testAdapter->pocBurner($poc1, self::TESTSTRING1);
+        $output1 = $testAdapter->getOutput();
+        $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
 
-            $output1 = $testAdapter->getOutput();
+        $testAdapter->pocBurner($poc1, self::TESTSTRING1."aaa");
 
-            for ($i = 0; $i < 1; $i++) {
-                $testAdapter = new NativeOutputHandlersTestCore;
-                $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                            Poc::PARAM_CACHE => self::$caches[$cacheHandlerName],
-                            Poc::PARAM_HASHER => $hasher
-                        ));
-                $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
-            }
+        $output1 = $testAdapter->getOutput();
+        $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
 
-            $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_HASHER => $hasher));
 
-          $testAdapter->pocBurner($poc3, self::TESTSTRING2);
-          $output2 = $testAdapter->getOutput();
+    }
 
-            sleep(self::$TTL + 1);
-
-            $poc4 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
-                        Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
-                        Poc::PARAM_HASHER => $hasher));
-            $testAdapter = new NativeOutputHandlersTestCore;
-            $testAdapter->pocBurner($poc4, self::TESTSTRING3);
-            $output3 = $testAdapter->getOutput();
-
-            $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
-            $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
-            $this->assertEquals(self::TESTSTRING3, $output3, $cacheHandlerName);
-
-            $this->assertNotEquals($output1, $output3, $cacheHandlerName);
-            $this->assertEquals($output1, $output2, $cacheHandlerName);
+    /**
+     * @dataProvider basicPocFunctionalityProvider
+     */
+    public function testBasicPocFunctionality($cacheHandlerName, $cacheHandlerOptions)
+    {
+        try
+        {
+            $cacheHandler = new $cacheHandlerName($cacheHandlerOptions);
+        }
+        catch (DriverNotFoundException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+        catch (CacheNotReachableException $e) {
+            $this->markTestSkipped($e->getMessage());
 
         }
+
+        $testAdapter = new NativeOutputHandlersTestCore;
+
+        $hasher = new Hasher();
+        $hasher->addDistinguishVariable($cacheHandlerName . rand());
+
+        $poc1 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                    Poc::PARAM_CACHE => $cacheHandler,
+                    Poc::PARAM_HASHER => $hasher));
+
+        $testAdapter->pocBurner($poc1, self::TESTSTRING1);
+        ob_end_flush();
+
+        $output1 = $testAdapter->getOutput();
+
+        for ($i = 0; $i < 10; $i++) {
+            $testAdapter = new NativeOutputHandlersTestCore;
+            $poc2 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                        Poc::PARAM_CACHE => $cacheHandler,
+                        Poc::PARAM_HASHER => $hasher
+                    ));
+            $testAdapter->pocBurner($poc2, self::TESTSTRING1 . "Whatever $i");
+            ob_end_flush();
+
+        }
+
+        $poc3 = new Poc(array(Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                    Poc::PARAM_CACHE => $cacheHandler,
+                    Poc::PARAM_HASHER => $hasher));
+
+        $testAdapter->pocBurner($poc3, self::TESTSTRING2);
+        ob_end_flush();
+        $output2 = $testAdapter->getOutput();
+
+        sleep(self::$TTL + 1);
+
+        $poc4 = new Poc(array(Poc::PARAM_CACHE => $cacheHandler,
+                    Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                    Poc::PARAM_HASHER => $hasher));
+        $testAdapter = new NativeOutputHandlersTestCore;
+        $testAdapter->pocBurner($poc4, self::TESTSTRING3);
+        ob_end_flush();
+        $output3 = $testAdapter->getOutput();
+
+        $this->assertEquals(self::TESTSTRING1, $output1, $cacheHandlerName);
+        $this->assertEquals(self::TESTSTRING1, $output2, $cacheHandlerName);
+        $this->assertEquals(self::TESTSTRING3, $output3, $cacheHandlerName);
+
+        $this->assertNotEquals($output1, $output3, $cacheHandlerName);
+        $this->assertEquals($output1, $output2, $cacheHandlerName);
     }
 
     public function testPocBlacklist()
@@ -256,4 +234,51 @@ class PocTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($output1 != $output2);
     }
 
+    public static function basicPocFunctionalityBigTTLProvider()
+    {
+        $ttl = 100;
+        $caches = self::getCaches($ttl);
+
+        return $caches;
+    }
+
+    public static function basicPocFunctionalityProvider()
+    {
+        $ttl = $GLOBALS['TTL'];
+        $caches = self::getCaches($ttl);
+
+        return $caches;
+    }
+
+    protected static function getCaches($ttl)
+    {
+        $caches = array();
+
+        $cache = array(
+            'Poc\Cache\CacheImplementation\FileCache',
+            array(CacheParams::PARAM_TTL => $ttl)
+        );
+        $caches[] = $cache;
+
+//        $cache = array(
+//            'Poc\Cache\CacheImplementation\MemcachedCache',
+//            array(CacheParams::PARAM_TTL => $ttl)
+//        );
+//
+//        $caches[] = $cache;
+//        $cache = array(
+//            'Poc\Cache\CacheImplementation\MongoDBCache',
+//            array(CacheParams::PARAM_TTL => $ttl)
+//        );
+//        $caches[] = $cache;
+//
+//        $cache = array(
+//            'Poc\Cache\CacheImplementation\PredisCache',
+//            array(CacheParams::PARAM_TTL => $ttl)
+//        );
+//        $caches[] = $cache;
+//
+
+        return $caches;
+    }
 }

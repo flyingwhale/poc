@@ -25,6 +25,8 @@ use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 class PocLogs implements PluginInterface
 {
 
+    const PLUGIN_NAME = 'poc_log';
+
     const LOG_TYPE_OUTPUT = "OUTPUT";
 
     const LOG_TYPE_TIME = "TIME";

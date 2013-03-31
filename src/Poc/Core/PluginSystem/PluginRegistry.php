@@ -36,10 +36,19 @@ class PluginRegistry
 
     public function getPlugin($name)
     {
-        if (isset($this->singleInstancedPlugins[$name])) {
+        if ($this->hasPlugin($name)) {
            return $this->singleInstancedPlugins[$name];
         } else {
            throw (new PluginIsNotRegisteredExeption("Plugin is not registered! "));
         }
+    }
+
+    public function hasPlugin($name)
+    {
+        if (isset($this->singleInstancedPlugins[$name])) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -4,7 +4,6 @@ build
 .*.swp
 vendor/
 composer.phar
-#composer.lock
+composer.lock
 phpunit.xml
 /nbproject
-.idea

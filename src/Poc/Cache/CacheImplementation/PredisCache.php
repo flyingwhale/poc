@@ -46,11 +46,13 @@ class PredisCache extends Cache
 
         $this->redis = new $className($this->optionable['servers']);
 
+        // @codeCoverageIgnoreStart
         try {
             $this->redis->connect();
         } catch (ConnectionException $e) {
             throw new CacheNotReachableException('Redis not reachable');
         }
+        // @codeCoverageIgnoreEnd
     }
 
     public function fetch ($key)

@@ -57,10 +57,12 @@ class MemcachedCache extends Cache
                 $this->optionable['server'],
                 $this->optionable['port']);
 
+        // @codeCoverageIgnoreStart
         if (!$isConnected)
         {
             throw new CacheNotReachableException('Memcache not reachable');
         }
+        // @codeCoverageIgnoreEnd
     }
 
     public function fetch ($key)

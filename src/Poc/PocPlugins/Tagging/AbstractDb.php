@@ -35,11 +35,11 @@ abstract class AbstractDb implements PluginInterface
      */
     protected $cache;
 
-    abstract public function addCacheToTags ($tags);
+    abstract public function addCacheToTags($tags);
 
-    abstract public function flushOutdated ();
+    abstract public function flushOutdated();
 
-    abstract public function tagInvalidate ($tags);
+    abstract public function tagInvalidate($tags);
 
     public function init($poc)
     {
@@ -81,7 +81,7 @@ abstract class AbstractDb implements PluginInterface
         }
     }
 
-    public function cacheAddTags ()
+    public function cacheAddTags()
     {
         foreach ($this->cacheAddTags as $tags) {
             $this->addCacheToTags($tags);

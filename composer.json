@@ -27,6 +27,7 @@
         "symfony/event-dispatcher": "2.*",
         "predis/predis":            "0.7.3",
         "optionable/optionable":    "0.5.0",
+        "poc/cache":                "dev-master",
         "symfony/console":          "2.*"
     },
    "require-dev": {

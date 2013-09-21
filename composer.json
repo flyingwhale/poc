@@ -41,5 +41,6 @@
     },
 
     "bin": ["bin/console"],
-    "minimum-stability": "dev" 
+    "minimum-stability": "dev" ,
+    "process-timeout": "3600"
 }

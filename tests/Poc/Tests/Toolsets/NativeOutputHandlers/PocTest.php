@@ -21,7 +21,7 @@ use Poc\Cache\CacheImplementation\PredisCache;
 use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
-use Poc\Exception\CacheNotReachableException;
+use Poc\Cache\Exception\CacheNotReachableException;
 use Poc\Exception\DriverNotFoundException;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
@@ -67,7 +67,6 @@ class PocTest extends \PHPUnit_Framework_TestCase
         }
         catch (CacheNotReachableException $e) {
             $this->markTestSkipped($e->getMessage());
-
         }
 
         $testAdapter = new NativeOutputHandlersTestCore;

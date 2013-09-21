@@ -1,5 +1,5 @@
 {
-    "name": "poc/poc",
+    "name": "flyingwhale/poc",
     "license": "Apache-2.0",
     "type": "library",
     "keywords": ["reverse proxy", "caching", "poc", "Etag"],

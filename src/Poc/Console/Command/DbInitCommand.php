@@ -38,7 +38,7 @@ class DbInitCommand extends Command
 
         $doctrineOptionable['dbal.connections.mysql.dbname'] =  'poc_tests';
         $doctrineOptionable['dbal.connections.mysql.user'] =  'root';
-        $doctrineOptionable['dbal.connections.mysql.password'] =  'qweasd';
+        $doctrineOptionable['dbal.connections.mysql.password'] =  '';
         $doctrineOptionable['dbal.connections.mysql.host'] =  'localhost';
         $doctrineOptionable['dbal.connections.mysql.driver'] =  'pdo_mysql';
 

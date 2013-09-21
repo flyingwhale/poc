@@ -45,7 +45,7 @@ PHP output caching too. This ramework is plugin based, so it is really easy to e
 Even more features are coming, so stay tuned.
 
 ## Examples ##
-You can download/see the https://github.com/php-output-cache/poc-sandbox project and
+You can download/see the https://github.com/flyingwhale/poc-sandbox project and
 install to your web directory (composer is your friend there as well:) ).
 
 ## Installation ##

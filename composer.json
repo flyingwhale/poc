@@ -26,7 +26,7 @@
         "doctrine/orm":             "2.2.2",
         "symfony/event-dispatcher": "2.*",
         "predis/predis":            "0.7.3",
-        "flyingwhale/optionable":   "0.5.0",
+        "flyingwhale/optionable":   "dev-master",
         "flyingwhale/poc-cache":    "dev-master",
         "symfony/console":          "2.*"
     },

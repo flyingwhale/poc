@@ -23,7 +23,7 @@ class ContentLength implements PluginInterface
 {
 
     const LENGTH_POSTFIX = "_LN";
-    public function init ($poc)
+    public function pluginInit ($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'calculateSize'));

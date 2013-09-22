@@ -92,7 +92,7 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
      *
      * @param PluginContainer $poc
      */
-    public function init($poc)
+    public function pluginInit($poc)
     {
         $this->poc = $poc;
         $this->cache = $poc->getCache();

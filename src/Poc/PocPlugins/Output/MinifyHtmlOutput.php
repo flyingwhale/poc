@@ -20,7 +20,7 @@ use Poc\Core\PluginSystem\PluginInterface;
 
 class MinifyHtmlOutput implements PluginInterface
 {
-    public function init($poc)
+    public function pluginInit($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }

@@ -17,7 +17,7 @@ namespace Poc\Core\PluginSystem;
 
 Interface PluginInterface
 {
-  public function init($pluginContainer);
+  public function pluginInit($pluginContainer);
   public function getName();
   public function isMultipleInstanced();
 }

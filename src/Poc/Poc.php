@@ -128,7 +128,7 @@ class Poc implements PocParams, PluginContainer
     public function addPlugin($plugin)
     {
         $this->pluginRegistry->addPlugin($plugin);
-        $plugin->init($this);
+        $plugin->pluginInit($this);
     }
 
     /**

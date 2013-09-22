@@ -28,7 +28,7 @@ class OutputFilter implements PluginInterface
      */
     private $poc;
 
-    public function init($poc)
+    public function pluginInit($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
                                            array($this, 'isOutputBlacklisted'));

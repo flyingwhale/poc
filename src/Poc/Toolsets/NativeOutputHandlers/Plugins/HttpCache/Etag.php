@@ -25,7 +25,7 @@ class Etag implements PluginInterface
 
     const ETAG_POSTFIX = "_ET";
 
-    public function init ($poc)
+    public function pluginInit ($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'addEtag'));

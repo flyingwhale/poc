@@ -47,7 +47,7 @@ class PocLogs implements PluginInterface
      */
     private $poc;
 
-    public function init ($poc)
+    public function pluginInit ($poc)
     {
         $this->poc = $poc;
 

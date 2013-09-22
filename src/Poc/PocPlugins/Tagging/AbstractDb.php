@@ -41,7 +41,7 @@ abstract class AbstractDb implements PluginInterface
 
     abstract public function tagInvalidate($tags);
 
-    public function init($poc)
+    public function pluginInit($poc)
     {
 
         $this->poc = $poc;

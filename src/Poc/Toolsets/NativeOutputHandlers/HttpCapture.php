@@ -74,7 +74,7 @@ class HttpCapture implements CaptureIntrerface
     }
 
 
-    public function init ($poc)
+    public function pluginInit ($poc)
     {
         $this->poc = $poc;
         $this->callbackHandler = new CallbackHandler($poc);

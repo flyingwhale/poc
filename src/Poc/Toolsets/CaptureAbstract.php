@@ -26,7 +26,7 @@ abstract class  CaptureAbstract implements CaptureIntrerface
      *
      * @param \Poc\Poc $pluginContainer
      */
-    public function init($pluginContainer)
+    public function pluginInit($pluginContainer)
     {
         $this->poc = $pluginContainer;
 

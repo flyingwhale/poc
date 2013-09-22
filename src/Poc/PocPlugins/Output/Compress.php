@@ -33,7 +33,7 @@ class Compress implements PluginInterface
      */
     private $poc;
 
-    public function init (Poc $poc)
+    public function pluginInit (Poc $poc)
     {
         $this->poc = $poc;
 

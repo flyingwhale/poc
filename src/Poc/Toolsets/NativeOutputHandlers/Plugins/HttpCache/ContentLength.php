@@ -36,7 +36,7 @@ class ContentLength implements PluginInterface
 
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }
@@ -58,7 +58,7 @@ class ContentLength implements PluginInterface
                                            ('Content-Length: ' . $LengthHeader);
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return "HttpHeaderContentLength";
     }

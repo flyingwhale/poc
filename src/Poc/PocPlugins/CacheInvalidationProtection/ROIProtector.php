@@ -109,12 +109,12 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
 
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return 'roip';
     }

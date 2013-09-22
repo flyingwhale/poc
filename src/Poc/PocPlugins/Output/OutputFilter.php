@@ -53,12 +53,12 @@ class OutputFilter implements PluginInterface
         }
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return "OutputFilter";
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }

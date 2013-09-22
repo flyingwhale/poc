@@ -37,7 +37,7 @@ class Etag implements PluginInterface
                                                      array($this, 'checkEtag'));
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }
@@ -79,7 +79,7 @@ class Etag implements PluginInterface
         }
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return "HttpEtag";
     }

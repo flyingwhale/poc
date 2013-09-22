@@ -47,12 +47,12 @@ class MinifyHtmlOutput implements PluginInterface
                 preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return "MinifyHtmlOutput";
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }

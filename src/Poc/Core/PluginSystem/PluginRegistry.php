@@ -23,12 +23,12 @@ class PluginRegistry
      */
     public function addPlugin($plugin)
     {
-        //if ($plugin->isMultipleInstanced()) {
-            if (isset($this->singleInstancedPlugins[$plugin->getName()])) {
+        //if ($plugin->isPluginMultipleInstanced()) {
+            if (isset($this->singleInstancedPlugins[$plugin->getPluginName()])) {
                throw (new MultipleSameTypePluginRegistrationExeption("Please Don't register this plugin twice!"));
             } else {
-                if (!$plugin->isMultipleInstanced()) {
-                    $this->singleInstancedPlugins[$plugin->getName()] = $plugin;
+                if (!$plugin->isPluginMultipleInstanced()) {
+                    $this->singleInstancedPlugins[$plugin->getPluginName()] = $plugin;
                 }
             }
         //}

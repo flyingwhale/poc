@@ -26,9 +26,9 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testAddPlugin()
     {
-        $plugin1 = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
-        $plugin1Delta = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
-        $plugin2 = m::mock('plugin',array('init'=>null,'getName'=>'name1','isMultipleInstanced'=>false));
+        $plugin1 = m::mock('plugin',array('pluginInit'=>null,'getPluginName'=>'name','isPluginMultipleInstanced'=>false));
+        $plugin1Delta = m::mock('plugin',array('pluginInit'=>null,'getPluginName'=>'name','isPluginMultipleInstanced'=>false));
+        $plugin2 = m::mock('plugin',array('pluginInit'=>null,'getPluginName'=>'name1','isPluginMultipleInstanced'=>false));
 
         $pluginRegistry = new PluginRegistry();
         $pluginRegistry->addPlugin($plugin1);
@@ -42,7 +42,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetPlugin()
     {
         $pluginRegistry = new PluginRegistry();
-        $plugin = m::mock('plugin',array('init'=>null,'getName'=>'name','isMultipleInstanced'=>false));
+        $plugin = m::mock('plugin',array('init'=>null,'getPluginName'=>'name','isPluginMultipleInstanced'=>false));
 
         $pluginRegistry->addPlugin($plugin);
 

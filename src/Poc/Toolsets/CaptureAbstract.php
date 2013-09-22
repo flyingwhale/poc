@@ -51,14 +51,14 @@ abstract class  CaptureAbstract implements CaptureIntrerface
                                                 array($this, 'endOfBuffering'));
     }
 
-    public function getName()
+    public function getPluginName()
     {
         $rnd = rand(0, 1);
 
         return self::NAME_START.$rnd;
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }

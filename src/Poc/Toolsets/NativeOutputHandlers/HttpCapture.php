@@ -104,7 +104,7 @@ class HttpCapture implements CaptureIntrerface
 
      }
 
-     public function isMultipleInstanced()
+     public function isPluginMultipleInstanced()
      {
         return false;
      }
@@ -140,7 +140,7 @@ class HttpCapture implements CaptureIntrerface
         }
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return self::PLUGIN_NAME;
     }

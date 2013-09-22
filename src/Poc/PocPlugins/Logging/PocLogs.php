@@ -200,12 +200,12 @@ class PocLogs implements PluginInterface
                 self::LOG_TYPE_TIME);
     }
 
-    public function getName()
+    public function getPluginName()
     {
         return "PocLogs";
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }

@@ -56,7 +56,7 @@ abstract class AbstractDb implements PluginInterface
 
     }
 
-    public function isMultipleInstanced()
+    public function isPluginMultipleInstanced()
     {
         return false;
     }

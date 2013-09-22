@@ -12,12 +12,11 @@
 
 namespace Poc\Tests\PocPlugins\CacheInvalidationProtection;
 
-use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
-
-use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
-use Poc\Poc;
 use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
+use Poc\Poc;
+use Poc\PocPlugins\CacheInvalidationProtection\ROIProtector;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 

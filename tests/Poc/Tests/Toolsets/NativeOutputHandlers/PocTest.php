@@ -12,19 +12,16 @@
 
 namespace Poc\Tests\Toolsets\NativeOutputHandlers;
 
-use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 use Poc\Poc;
 use Poc\Cache\CacheImplementation\CacheParams;
 use Poc\Cache\CacheImplementation\FileCache;
-use Poc\Cache\CacheImplementation\MemcachedCache;
-use Poc\Cache\CacheImplementation\PredisCache;
-use Poc\Cache\CacheImplementation\MongoDBCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Poc\Cache\Exception\CacheNotReachableException;
 use Poc\Exception\DriverNotFoundException;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
+use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
 class PocTest extends \PHPUnit_Framework_TestCase
 {

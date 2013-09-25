@@ -34,7 +34,8 @@
         "phpunit/phpunit":          "3.7.*",
         "phpunit/dbunit":           "1.2.*",
         "fabpot/php-cs-fixer":      "dev-master",
-        "mockery/mockery":          "dev-master"
+        "mockery/mockery":          "dev-master",
+        "satooshi/php-coveralls":   "dev-master"
     },
    "autoload": {
         "psr-0": { "Poc": "src/" }

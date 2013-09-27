@@ -18,3 +18,6 @@ before_script:
 script:
   - php tests/travis/mongo_version.php
   - vendor/bin/phpunit --verbose
+
+after_script:
+  - php vendor/bin/coveralls -v

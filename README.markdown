@@ -1,6 +1,7 @@
 # POC
 
 [![Build Status](https://travis-ci.org/flyingwhale/poc.png?branch=master)](https://travis-ci.org/flyingwhale/poc)
+[![Coverage Status](https://coveralls.io/repos/flyingwhale/poc/badge.png?branch=master)](https://coveralls.io/r/flyingwhale/poc?branch=master)
 
 This is the root directory of the
 POC that stands for PHP Output Caching.

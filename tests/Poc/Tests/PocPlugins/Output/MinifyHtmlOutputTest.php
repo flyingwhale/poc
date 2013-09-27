@@ -22,7 +22,7 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\TestOutput;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 use Poc\Tests\Toolsets\NativeOutputHandlers\NativeOutputHandlersTestCore;
 
-class MinifyHtmlOutputTest extends NativeOutputHandlersTestCore
+class MinifyHtmlOutputTest extends \PHPUnit_Framework_TestCase
 {
     const TEST_STRING_MINIFY_EXTRA_SPACE = "A    a      A";
 
@@ -50,26 +50,26 @@ a
      */
     public function testminifyHtmlWithPoc ($input, $expectedOutput)
     {
+        $noh = new NativeOutputHandlersTestCore();
         $hasher = new Hasher();
         $hasher->addDistinguishVariable("TestMinify".  rand());
 
         $cache = new FileCache(
-                                array(CacheParams::PARAM_TTL => self::BIGTTL,
+                                array(CacheParams::PARAM_TTL =>1000,
                                     ));
 
         $outputHandler = new TestOutput();
 
-        $poc  = new Poc(array(PocParams::PARAM_CACHE => new FileCache(),
-                              PocParams::PARAM_OUTPUTHANDLER=> $outputHandler,
-                              PocParams::PARAM_CACHE=>$cache,
-                              PocParams::PARAM_HASHER=>$hasher,
-                              Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput())
-                        ));
+        $poc = new Poc(
+            array(Poc::PARAM_CACHE => $cache,
+                  Poc::PARAM_TOOLSET => new HttpCapture(new TestOutput()),
+                  PocParams::PARAM_HASHER => $hasher
+                ));
 
         $poc->addPlugin(new MinifyHtmlOutput);
 
-        $this->pocBurner($poc, $input);
-        $output = $this->getOutput();
+        $noh->pocBurner($poc, $input);
+        $output = $noh->getOutput();
 
         $this->assertEquals($expectedOutput, $output);
     }

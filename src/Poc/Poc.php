@@ -212,6 +212,11 @@ class Poc implements PocParams, PluginContainer
         return $this->canICacheThisGeneratedContent;
     }
 
+    public function setCanICacheThisGeneratedContent($bool)
+    {
+        return $this->canICacheThisGeneratedContent = $bool;
+    }
+
     protected function setupDefaults(&$optionable)
     {
         $optionable->setDefaultOption(Poc::PARAM_CACHE,

@@ -21,7 +21,6 @@ use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 const UNITTESTING = 1;
 
 class NativeOutputHandlersTestCore
-//extends \PHPUnit_Framework_TestCase
 {
 
     protected $analizeThisOutput;

@@ -12,7 +12,6 @@
 
 namespace Poc\Toolsets\NativeOutputHandlers\Handlers\Callback;
 
-use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Poc\Poc;
 use Poc\Toolsets\NativeOutputHandlers\Header\HeaderManipulator;
@@ -71,11 +70,11 @@ class CallbackHandler
         $this->poc->setOutput($buffer);
 
         $this->poc->getPocDispatcher()->dispatch(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
-                new BaseEvent($this->poc));
+                                    CallbackHandlerEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_NO_CACHING_PROCESS_INVOLVED,
+                                                                                             new BaseEvent($this->poc));
 
         $this->poc->getPocDispatcher()->dispatch(
-                PocEventNames::COMPRESS_OUTPUT,
+                CallbackHandlerEventNames::COMPRESS_OUTPUT,
                 new BaseEvent($this->poc));
 
         $this->outputHandler->ObPrintCallback($buffer);
@@ -90,50 +89,47 @@ class CallbackHandler
         if ($this->httpCapture->getLevel() == $this->outputHandler->getLevel() - 1) {
             $this->poc->setOutput($buffer);
             $this->poc->getPocDispatcher()->dispatch(
-            PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
-                new BaseEvent($this->poc));
+                                   CallbackHandlerEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
+                                                                                             new BaseEvent($this->poc));
             if ($this->poc->getCanICacheThisGeneratedContent()) {
                 if ($this->poc->getOutput()) {
-
                     $headers = $this->outputHandler->headersList();
 
                     //Headers stored here.
-                    $this->headerManipulator
-                                        ->storeHeadersForPreservation($headers);
+                    $this->headerManipulator->storeHeadersForPreservation($headers);
 
                     //Remove unneeded headers.
                     $this->headerManipulator->removeHeaders();
 
-                    $this->poc->getPocDispatcher()->dispatch(
-                      PocEventNames::BEFORE_STORE_OUTPUT, new BaseEvent($this->poc));
+                    $this->poc->getPocDispatcher()->dispatch(CallbackHandlerEventNames::BEFORE_STORE_OUTPUT,
+                                                                                             new BaseEvent($this->poc));
 
-                    $this->poc->getPocDispatcher()->dispatch(
-                      PocEventNames::COMPRESS_OUTPUT, new BaseEvent($this->poc));
+                    $this->poc->getPocDispatcher()->dispatch(CallbackHandlerEventNames::COMPRESS_OUTPUT,
+                                                                                             new BaseEvent($this->poc));
 
-                    $this->poc->getPocDispatcher()->dispatch(
-                                           PocEventNames::AFTER_COMPRESS_OUTPUT,
-                                                     new BaseEvent($this->poc));
+                    $this->poc->getPocDispatcher()->dispatch(CallbackHandlerEventNames::AFTER_COMPRESS_OUTPUT,
+                                                                                             new BaseEvent($this->poc));
 
-                    $this->poc->getCache()->cacheSpecificStore(
-                                              $this->poc->getHasher()->getKey(),
-                                                       $this->poc->getOutput());
+                    $this->poc->getCache()->cacheSpecificStore($this->poc->getHasher()->getKey(),
+                                                                                               $this->poc->getOutput());
 
-                    $this->poc->getPocDispatcher()->dispatch(
-                                                   PocEventNames::OUTPUT_STORED,
-                                                     new BaseEvent($this->poc));
+                    $this->poc->getPocDispatcher()->dispatch(CallbackHandlerEventNames::OUTPUT_STORED,
+                                                                                             new BaseEvent($this->poc));
 
                     $this->headerManipulator->storeHeaders();
 
-                    $this->poc->getPocDispatcher()->dispatch(
-                                                  PocEventNames::HEADERS_STORED,
-                                                     new BaseEvent($this->poc));
+                    $this->poc->getPocDispatcher()->dispatch(CallbackHandlerEventNames::HEADERS_STORED,
+                                                                                             new BaseEvent($this->poc));
 
                 }
             }
+            else{
+
+            }
 
             $this->poc->getPocDispatcher()->dispatch(
-                    PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
-                    new BaseEvent($this->poc));
+                                            CallbackHandlerEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_AFTER_OUTPUT_STORED,
+                                                                                             new BaseEvent($this->poc));
 
             if ($buffer) {
                 $this->outputHandler->ObPrintCallback($this->poc->getOutput());
@@ -147,8 +143,8 @@ class CallbackHandler
     {
         $this->poc->setOutput($buffer);
         $this->poc->getPocDispatcher()->dispatch(
-                PocEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,
-                new BaseEvent($this->poc));
+                                             CallbackHandlerEventNames::BEFORE_OUTPUT_SENT_TO_CLIENT_FETCHED_FROM_CACHE,
+                                                                                             new BaseEvent($this->poc));
         $this->outputHandler->ObPrintCallback($this->poc->getOutput());
 
         return $this->poc->getOutput();

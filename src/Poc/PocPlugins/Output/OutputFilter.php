@@ -16,6 +16,7 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\PluginSystem\PluginInterface;
 use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 
 class OutputFilter implements PluginInterface
 {
@@ -30,7 +31,7 @@ class OutputFilter implements PluginInterface
 
     public function pluginInit($poc)
     {
-        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
                                            array($this, 'isOutputBlacklisted'));
     }
 

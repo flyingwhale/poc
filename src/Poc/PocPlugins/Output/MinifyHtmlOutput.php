@@ -13,16 +13,15 @@
 
 namespace Poc\PocPlugins\Output;
 
-use Poc\Core\PocEvents\PocEventNames;
-use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\PluginInterface;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 
 class MinifyHtmlOutput implements PluginInterface
 {
     public function pluginInit($poc)
     {
-        $poc->getPocDispatcher()->addListener(PocEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }
 
     public function minifyHtml(BaseEvent $event)

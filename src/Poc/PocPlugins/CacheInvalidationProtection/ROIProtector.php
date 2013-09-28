@@ -14,6 +14,7 @@ namespace Poc\PocPlugins\CacheInvalidationProtection;
 
 use Poc\Poc;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Optionable;
@@ -96,17 +97,11 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
     {
         $this->poc = $poc;
         $this->cache = $poc->getCache();
-
         $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
-
-        $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
-                                                 array($this, 'consultFinish'));
-        $poc->getPocDispatcher()->addListener(PocEventNames::CAPTURE,
-                                                       array($this, 'consult'));
-
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::OUTPUT_STORED, array($this, 'consultFinish'));
+        $poc->getPocDispatcher()->addListener(PocEventNames::CAPTURE, array($this, 'consult'));
     }
 
     public function isPluginMultipleInstanced()

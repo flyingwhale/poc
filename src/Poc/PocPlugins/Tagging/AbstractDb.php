@@ -13,8 +13,8 @@
 namespace Poc\PocPlugins\Tagging;
 
 use Poc\Core\PluginSystem\PluginInterface;
-use Poc\Poc;
 use Poc\Core\PocEvents\PocEventNames;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 
 abstract class AbstractDb implements PluginInterface
 {
@@ -49,7 +49,7 @@ abstract class AbstractDb implements PluginInterface
         $this->ttl = $poc->getCache()->getTtl();
         $this->hash = $poc->getHasher()->getKey();
 
-        $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::OUTPUT_STORED,
                                                   array($this, 'cacheAddTags'));
         $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                     array($this, 'cacheTagsInvalidation'));

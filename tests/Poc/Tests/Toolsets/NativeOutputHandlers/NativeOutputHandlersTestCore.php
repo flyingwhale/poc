@@ -87,17 +87,17 @@ class NativeOutputHandlersTestCore
 
             //var_dump($outputHandler);
 
-            $this->setHeader($outputHandler->getHeader());
+            $this->setHeader($outputHandler->getallheaders());
             $this->setOutput($outputHandler->getOutput());
         } else {
-            $this->setHeader($outputHandler->getHeader());
+            $this->setHeader($outputHandler->getallheaders());
             $this->setOutput($outputHandler->getOutput());
             $poc->end();
 
             //var_dump($outputHandler);
 
             if ($outputHandler->getOutput()) {
-                $this->setHeader($outputHandler->getHeader());
+                $this->setHeader($outputHandler->getallheaders());
                 $this->setOutput($outputHandler->getOutput());
             }
         }

@@ -37,8 +37,6 @@ class TestOutput extends Output
 
     private $optionable;
 
-    public $allheaders;
-
     public function setupDefaults ()
     {
         $this->optionable->setDefaultOption(self::PARAM_HEADER, self::HEADER_BASIC);
@@ -81,7 +79,7 @@ class TestOutput extends Output
         }
     }
 
-    public function getHeader ()
+    public function getallheaders()
     {
         return $this->header;
     }
@@ -116,11 +114,6 @@ class TestOutput extends Output
     public function headersList ()
     {
         return \unserialize($this->actHeader);
-    }
-
-    public function getallheaders()
-    {
-        return $this->allheaders;
     }
 
 }

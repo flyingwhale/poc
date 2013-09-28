@@ -17,6 +17,9 @@ use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
 use Poc\Core\PluginSystem\PluginInterface;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
+use Poc\Toolsets\NativeOutputHandlers\Handlers\Output\OutputInterface;
+use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class Compress implements PluginInterface
 {
@@ -28,34 +31,49 @@ class Compress implements PluginInterface
     private $compressionType;
 
     /**
+     * @var OutputInterface
+     */
+    private $outputHandler;
+
+    /**
      *
      * @var Poc
      */
     private $poc;
 
-    public function pluginInit (Poc $poc)
+    public function pluginInit ($poc)
     {
         $this->poc = $poc;
 
         $this->setCompressiontype($poc);
 
-        $poc->getOutputHandler()->header('Content-Encoding: ' . $this->compressionType);
+        $httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
+        $this->outputHandler = $httpCapture->getOutputHandler();
 
-        $poc->getPocDispatcher()->addListener(PocEventNames::COMPRESS_OUTPUT,
+        $this->outputHandler->header('Content-Encoding: ' . $this->compressionType);
+
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::COMPRESS_OUTPUT,
                                                     array($this, 'compress'));
 
         $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
                                                     array($this, 'modifyHasher'));
-
     }
+
 
     private function setCompressiontype(Poc $poc)
     {
-        $headers = $poc->getOutputHandler()->getallheaders();
+        $httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
+        $outputHandler = $httpCapture->getOutputHandler();
+
+        $headers = $outputHandler->getallheaders();
+
         if (isset($headers['Accept-Encoding'])) {
             if ( strstr($headers['Accept-Encoding'], self::COMPRESSION_GZIP) ) {
                 $this->compressionType = self::COMPRESSION_GZIP;
-
+            }
+            else
+            {
+                //die ("CCCCCCCCCCCCC");
             }
         }
         //$this->compressionType = self::COMPRESSION_DEFLATE;
@@ -68,7 +86,7 @@ class Compress implements PluginInterface
 
     public function compress (BaseEvent $event)
     {
-        $event->getPoc()->getOutputHandler()->header('Content-Encoding: gzip');
+        $this->outputHandler->header('Content-Encoding: gzip');
         if ($this->compressionType == self::COMPRESSION_GZIP) {
             $event->getPoc()->setOutput(\gzencode($event->getPoc()->getOutput(), 9, FORCE_GZIP));
         } elseif ($this->compressionType == self::COMPRESSION_DEFLATE) {

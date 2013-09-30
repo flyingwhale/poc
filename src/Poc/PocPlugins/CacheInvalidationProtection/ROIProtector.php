@@ -18,8 +18,8 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventName
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
 use Optionable;
-use Poc\Core\PluginSystem\PluginInterface;
-use Poc\Core\PluginSystem\PluginContainer;
+use FlyingWhale\Plugin\PluginInterface;
+use FlyingWhale\Plugin\PluginContainer;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 /**
  * This calss name comes form the "RelOad and cache Invalidation Attack Protection" name.

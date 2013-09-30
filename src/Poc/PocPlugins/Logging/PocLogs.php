@@ -18,7 +18,7 @@ use Poc\Core\PocEvents\PocEventNames;
 
 use Poc\Poc;
 
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 

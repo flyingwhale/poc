@@ -11,7 +11,7 @@
  */
 namespace Poc\Toolsets;
 
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 
 use Poc\Core\Events\BaseEvent;
 

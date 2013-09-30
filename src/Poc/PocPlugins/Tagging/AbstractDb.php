@@ -12,7 +12,7 @@
 
 namespace Poc\PocPlugins\Tagging;
 
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 

@@ -14,7 +14,7 @@
 namespace Poc\PocPlugins\Output;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;
 
 class MinifyHtmlOutput implements PluginInterface

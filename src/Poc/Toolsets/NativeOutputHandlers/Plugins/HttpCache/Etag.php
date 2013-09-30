@@ -17,7 +17,7 @@ use Poc\Poc;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 use Poc\Toolsets\NativeOutputHandlers\Plugins\HttpCache\Events\EtagEvents;
 
 class Etag implements PluginInterface

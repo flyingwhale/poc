@@ -19,7 +19,8 @@
  */
 namespace Poc;
 
-use Poc\Core\PluginSystem\PluginContainer;
+use FlyingWhale\Plugin\PluginContainer;
+use FlyingWhale\Plugin\PluginRegistry;
 use Poc\Core\Monolog\MonoLogger;
 use Poc\Core\PocEvents\PocEventNames;
 use Poc\Core\Events\BaseEvent;
@@ -27,7 +28,6 @@ use Poc\Cache\CacheImplementation\FileCache;
 use Poc\Cache\Filtering\Hasher;
 use Poc\Cache\Filtering\Filter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Poc\Core\PluginSystem\PluginRegistry;
 use Optionable;
 use Poc\Toolsets\NullOutputHandler\NullCapture;
 
@@ -123,7 +123,7 @@ class Poc implements PocParams, PluginContainer
 
     /**
      *
-     * @param Core\PluginSystem\PluginInterface $plugin
+     * @param \FlyingWhale\Plugin\PluginInterface $plugin
      */
     public function addPlugin($plugin)
     {

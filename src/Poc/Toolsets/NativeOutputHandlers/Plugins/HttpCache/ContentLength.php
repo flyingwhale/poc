@@ -16,7 +16,7 @@ use Poc\Core\PocEvents\PocEventNames;
 use Poc\Poc;
 
 use Poc\Core\Events\BaseEvent;
-use Poc\Core\PluginSystem\PluginInterface;
+use FlyingWhale\Plugin\PluginInterface;
 use Poc\Toolsets\NativeOutputHandlers\HttpCapture;
 
 class ContentLength implements PluginInterface

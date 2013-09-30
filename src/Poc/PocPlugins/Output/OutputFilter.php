@@ -12,8 +12,8 @@
 
 namespace Poc\PocPlugins\Output;
 
-use Poc\Core\PocEvents\PocEventNames;
-use Poc\Core\PluginSystem\PluginInterface;
+//use Poc\Core\PocEvents\PocEventNames;
+use FlyingWhale\Plugin\PluginInterface;
 use Poc\Poc;
 use Poc\Core\Events\BaseEvent;
 use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventNames;

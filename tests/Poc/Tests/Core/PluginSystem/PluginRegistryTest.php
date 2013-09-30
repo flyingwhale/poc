@@ -34,7 +34,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
         $pluginRegistry->addPlugin($plugin1);
         $pluginRegistry->addPlugin($plugin2);
 
-        $this->setExpectedException('Poc\Core\PluginSystem\MultipleSameTypePluginRegistrationExeption');
+        $this->setExpectedException('Poc\Core\PluginSystem\Exceptions\MultipleSameTypePluginRegistrationException');
 
         $pluginRegistry->addPlugin($plugin1Delta);
 
@@ -48,7 +48,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
         $pluginRegistry->getPlugin('name');
 
-        $this->setExpectedException('Poc\Core\PluginSystem\PluginIsNotRegisteredExeption');
+        $this->setExpectedException('Poc\Core\PluginSystem\Exceptions\PluginIsNotRegisteredException');
         $pl = $pluginRegistry->getPlugin('noname');
 
         $this->assertEquals($plugin->getName(), $pl->getName());

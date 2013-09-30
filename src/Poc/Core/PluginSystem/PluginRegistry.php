@@ -18,14 +18,14 @@ class PluginRegistry
 
     /**
      *
-     * @param  PluginInterface                            $plugin
-     * @throws MultipleSameTypePluginRegistrationExeption
+     * @param  PluginInterface $plugin
+     * @throws MultipleSameTypePluginRegistrationException
      */
     public function addPlugin($plugin)
     {
         //if ($plugin->isPluginMultipleInstanced()) {
             if (isset($this->singleInstancedPlugins[$plugin->getPluginName()])) {
-               throw (new MultipleSameTypePluginRegistrationExeption("Please Don't register this plugin twice!"));
+               throw (new \Poc\Core\PluginSystem\Exceptions\MultipleSameTypePluginRegistrationException("Please Don't register this plugin twice!"));
             } else {
                 if (!$plugin->isPluginMultipleInstanced()) {
                     $this->singleInstancedPlugins[$plugin->getPluginName()] = $plugin;
@@ -39,7 +39,7 @@ class PluginRegistry
         if ($this->hasPlugin($name)) {
            return $this->singleInstancedPlugins[$name];
         } else {
-           throw (new PluginIsNotRegisteredExeption("Plugin is not registered! "));
+           throw (new \Poc\Core\PluginSystem\Exceptions\PluginIsNotRegisteredException("Plugin is not registered! "));
         }
     }
 

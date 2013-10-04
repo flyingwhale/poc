@@ -93,23 +93,23 @@ class ROIProtector implements ROIProtectorParameters, PluginInterface
      *
      * @param PluginContainer $poc
      */
-    public function pluginInit($poc)
+    public function init($poc)
     {
         $this->poc = $poc;
         $this->cache = $poc->getCache();
-        $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        $this->outputHandler = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
         $this->eventDispatcher = $poc->getPocDispatcher();
         $this->monoLogger = $poc->getLogger();
         $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::OUTPUT_STORED, array($this, 'consultFinish'));
         $poc->getPocDispatcher()->addListener(PocEventNames::CAPTURE, array($this, 'consult'));
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return 'roip';
     }

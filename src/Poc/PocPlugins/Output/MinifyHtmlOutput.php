@@ -19,7 +19,7 @@ use Poc\Toolsets\NativeOutputHandlers\Handlers\Callback\CallbackHandlerEventName
 
 class MinifyHtmlOutput implements PluginInterface
 {
-    public function pluginInit($poc)
+    public function init($poc)
     {
         $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::BEFORE_STORE_OUTPUT, array($this, 'minifyHtml'));
     }
@@ -46,12 +46,12 @@ class MinifyHtmlOutput implements PluginInterface
                 preg_replace($search, $replace, $event->getPoc()->getOutput()));
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "MinifyHtmlOutput";
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

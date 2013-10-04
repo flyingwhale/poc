@@ -37,7 +37,7 @@ class EtagTest extends NativeOutputHandlersTestCore
                                               new HttpCapture(new TestOutput()),
                 ));
 
-        $outputHandler = $poc->getPluginRegistry()->
+        $outputHandler = $poc->getEventDispatcher()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
 
         $poc->addPlugin(new Etag);
@@ -58,7 +58,7 @@ class EtagTest extends NativeOutputHandlersTestCore
                                               new HttpCapture(new TestOutput()),
                               PocParams::PARAM_HASHER=>$hasher));
 
-        $outputHandler = $poc->getPluginRegistry()->
+        $outputHandler = $poc->getEventDispatcher()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
 
         $outputHandler->allheaders['If-None-Match'] =

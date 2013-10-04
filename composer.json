@@ -28,7 +28,7 @@
         "flyingwhale/optionable":   "dev-master",
         "flyingwhale/poc-cache":    "dev-master",
         "symfony/console":          "2.*",
-        "flyingwhale/plugin":       "0.0.1"
+        "flyingwhale/plugin":       "0.1"
     },
    "require-dev": {
         "phpunit/phpunit":          "3.7.*",

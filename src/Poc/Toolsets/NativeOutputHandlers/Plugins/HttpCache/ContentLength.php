@@ -23,7 +23,7 @@ class ContentLength implements PluginInterface
 {
 
     const LENGTH_POSTFIX = "_LN";
-    public function pluginInit ($poc)
+    public function init ($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'calculateSize'));
@@ -36,7 +36,7 @@ class ContentLength implements PluginInterface
 
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }
@@ -46,19 +46,19 @@ class ContentLength implements PluginInterface
         $size = strlen($event->getPoc()->getOutput());
         $event->getPoc()->getCache()->cacheSpecificStore($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX, $size);
         $LengthHeader = 'Content-Length: ' . $size;
-        $event->getPoc()->getPluginRegistry()->
+        $event->getPoc()->getEventDispatcher()->
         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler()->header($LengthHeader);
     }
 
     public function printSize (BaseEvent $event)
     {
         $LengthHeader = $event->getPoc()->getCache()->fetch($event->getPoc()->getHasher()->getKey() . self::LENGTH_POSTFIX);
-        $event->getPoc()->getPluginRegistry()->
+        $event->getPoc()->getEventDispatcher()->
         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler()->header
                                            ('Content-Length: ' . $LengthHeader);
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "HttpHeaderContentLength";
     }

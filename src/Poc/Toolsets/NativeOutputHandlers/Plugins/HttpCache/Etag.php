@@ -25,7 +25,7 @@ class Etag implements PluginInterface
 
     const ETAG_POSTFIX = "_ET";
 
-    public function pluginInit ($poc)
+    public function init ($poc)
     {
         $poc->getPocDispatcher()->addListener(PocEventNames::OUTPUT_STORED,
                                                        array($this, 'addEtag'));
@@ -37,7 +37,7 @@ class Etag implements PluginInterface
                                                      array($this, 'checkEtag'));
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }
@@ -50,14 +50,14 @@ class Etag implements PluginInterface
                                         ->getKey() . self::ETAG_POSTFIX, $etag);
 
         $etagHeader = 'Etag: ' . $etag;
-        $event->getPoc()->getPluginRegistry()
+        $event->getPoc()->getEventDispatcher()
                 ->getPlugin(HttpCapture::PLUGIN_NAME)->
                                         getOutputHandler()->header($etagHeader);
     }
 
     public function checkEtag (BaseEvent $event)
     {
-        $requestHeaders = $event->getPoc()->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->
+        $requestHeaders = $event->getPoc()->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME)->
                                             getOutputHandler()->getallheaders();
         if (isset($requestHeaders['If-None-Match'])) {
             $etag = $requestHeaders['If-None-Match'];
@@ -66,7 +66,7 @@ class Etag implements PluginInterface
 
               if ($storedEtag == $etag) {
                   $event->getPoc()->getPocDispatcher()->dispatch(EtagEvents::ETAG_FOUND, new BaseEvent($event->getPoc()));
-                  $outputHandler = $event->getPoc()->getPluginRegistry()->
+                  $outputHandler = $event->getPoc()->getEventDispatcher()->
                         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
                   $outputHandler->header('HTTP/1.0 304 Not Modified');
                   $outputHandler->header('Etag: ' . $etag);
@@ -79,7 +79,7 @@ class Etag implements PluginInterface
         }
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "HttpEtag";
     }

@@ -29,7 +29,7 @@ class OutputFilter implements PluginInterface
      */
     private $poc;
 
-    public function pluginInit($poc)
+    public function init($poc)
     {
         $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
                                            array($this, 'isOutputBlacklisted'));
@@ -54,12 +54,12 @@ class OutputFilter implements PluginInterface
         }
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "OutputFilter";
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

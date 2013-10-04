@@ -74,7 +74,7 @@ class HttpCapture implements CaptureIntrerface
     }
 
 
-    public function pluginInit ($poc)
+    public function init ($poc)
     {
         $this->poc = $poc;
         $this->callbackHandler = new CallbackHandler($poc);
@@ -104,7 +104,7 @@ class HttpCapture implements CaptureIntrerface
 
      }
 
-     public function isPluginMultipleInstanced()
+     public function isMultipleInstanced()
      {
         return false;
      }
@@ -140,7 +140,7 @@ class HttpCapture implements CaptureIntrerface
         }
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return self::PLUGIN_NAME;
     }

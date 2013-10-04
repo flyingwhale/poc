@@ -56,8 +56,8 @@ class CallbackHandler
         $this->poc = $poc;
         $this->headerManipulator = new HeaderManipulator();
         $this->headerManipulator->setPoc($poc);
-        $this->outputHandler = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
-        $this->httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
+        $this->outputHandler = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
+        $this->httpCapture = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME);
     }
 
     public function getHeaderManipulator()

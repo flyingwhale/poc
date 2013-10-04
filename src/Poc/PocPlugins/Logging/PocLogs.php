@@ -47,7 +47,7 @@ class PocLogs implements PluginInterface
      */
     private $poc;
 
-    public function pluginInit ($poc)
+    public function init ($poc)
     {
         $this->poc = $poc;
 
@@ -200,12 +200,12 @@ class PocLogs implements PluginInterface
                 self::LOG_TYPE_TIME);
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "PocLogs";
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

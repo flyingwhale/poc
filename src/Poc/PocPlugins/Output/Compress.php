@@ -41,13 +41,13 @@ class Compress implements PluginInterface
      */
     private $poc;
 
-    public function pluginInit ($poc)
+    public function init ($poc)
     {
         $this->poc = $poc;
 
         $this->setCompressiontype($poc);
 
-        $httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
+        $httpCapture = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME);
         $this->outputHandler = $httpCapture->getOutputHandler();
 
         $this->outputHandler->header('Content-Encoding: ' . $this->compressionType);
@@ -62,7 +62,7 @@ class Compress implements PluginInterface
 
     private function setCompressiontype(Poc $poc)
     {
-        $httpCapture = $poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME);
+        $httpCapture = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME);
         $outputHandler = $httpCapture->getOutputHandler();
 
         $headers = $outputHandler->getallheaders();
@@ -94,12 +94,12 @@ class Compress implements PluginInterface
         }
     }
 
-    public function getPluginName()
+    public function getName()
     {
         return "Compress";
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

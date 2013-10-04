@@ -26,7 +26,7 @@ abstract class  CaptureAbstract implements CaptureIntrerface
      *
      * @param \Poc\Poc $pluginContainer
      */
-    public function pluginInit($pluginContainer)
+    public function init($pluginContainer)
     {
         $this->poc = $pluginContainer;
 
@@ -51,14 +51,14 @@ abstract class  CaptureAbstract implements CaptureIntrerface
                                                 array($this, 'endOfBuffering'));
     }
 
-    public function getPluginName()
+    public function getName()
     {
         $rnd = rand(0, 1);
 
         return self::NAME_START.$rnd;
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

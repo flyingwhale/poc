@@ -110,7 +110,7 @@ class HeaderManipulator
         if ($this->headersToSend) {
             foreach ($this->headersToSend as $header) {
 
-                $this->poc->getPluginRegistry()->getPlugin(HttpCapture::PLUGIN_NAME)->
+                $this->poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME)->
                                             getOutputHandler()->header($header);
             }
         }

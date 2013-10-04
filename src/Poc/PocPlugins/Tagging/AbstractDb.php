@@ -41,7 +41,7 @@ abstract class AbstractDb implements PluginInterface
 
     abstract public function tagInvalidate($tags);
 
-    public function pluginInit($poc)
+    public function init($poc)
     {
 
         $this->poc = $poc;
@@ -56,7 +56,7 @@ abstract class AbstractDb implements PluginInterface
 
     }
 
-    public function isPluginMultipleInstanced()
+    public function isMultipleInstanced()
     {
         return false;
     }

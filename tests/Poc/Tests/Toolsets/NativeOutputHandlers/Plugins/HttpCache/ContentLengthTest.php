@@ -32,7 +32,7 @@ class ContentLenghtTest extends NativeOutputHandlersTestCore
         $poc  = new Poc(array( Poc::PARAM_TOOLSET =>
                                               new HttpCapture(new TestOutput()),
                                PocParams::PARAM_HASHER=>$hasher ));
-        $outputHandler = $poc->getPluginRegistry()->
+        $outputHandler = $poc->getEventDispatcher()->
         getPlugin(HttpCapture::PLUGIN_NAME)->getOutputHandler();
 
         $poc->addPlugin(new ContentLength);

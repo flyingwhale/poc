@@ -44,19 +44,12 @@ class Compress implements PluginInterface
     public function init ($poc)
     {
         $this->poc = $poc;
-
         $this->setCompressiontype($poc);
-
         $httpCapture = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME);
         $this->outputHandler = $httpCapture->getOutputHandler();
-
         $this->outputHandler->header('Content-Encoding: ' . $this->compressionType);
-
-        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::COMPRESS_OUTPUT,
-                                                    array($this, 'compress'));
-
-        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING,
-                                                    array($this, 'modifyHasher'));
+        $poc->getPocDispatcher()->addListener(CallbackHandlerEventNames::COMPRESS_OUTPUT, array($this, 'compress'));
+        $poc->getPocDispatcher()->addListener(PocEventNames::FUNCTION_FETCHCACHE_BEGINNING, array($this, 'modifyHasher'));
     }
 
 
@@ -64,9 +57,7 @@ class Compress implements PluginInterface
     {
         $httpCapture = $poc->getEventDispatcher()->getPlugin(HttpCapture::PLUGIN_NAME);
         $outputHandler = $httpCapture->getOutputHandler();
-
         $headers = $outputHandler->getallheaders();
-
         if (isset($headers['Accept-Encoding'])) {
             if ( strstr($headers['Accept-Encoding'], self::COMPRESSION_GZIP) ) {
                 $this->compressionType = self::COMPRESSION_GZIP;

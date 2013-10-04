@@ -85,9 +85,7 @@ class CallbackHandler
     public function pocCallbackGenerate ($buffer)
     {
         $this->poc->setOutput($buffer);
-
         if ($this->httpCapture->getLevel() == $this->outputHandler->getLevel() - 1) {
-            $this->poc->setOutput($buffer);
             $this->poc->getPocDispatcher()->dispatch(
                                    CallbackHandlerEventNames::BEFORE_THE_DECISION_IF_WE_CAN_STORE_THE_GENERATED_CONTENT,
                                                                                              new BaseEvent($this->poc));
@@ -122,9 +120,6 @@ class CallbackHandler
                                                                                              new BaseEvent($this->poc));
 
                 }
-            }
-            else{
-
             }
 
             $this->poc->getPocDispatcher()->dispatch(

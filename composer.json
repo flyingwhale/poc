@@ -20,11 +20,11 @@
         }
     ],
    "require": {
-        "php":                      ">=5.3.0",
+        "php":                      ">=5.3.3",
         "symfony/class-loader":     "2.*",
         "monolog/monolog":          "1.*",
-        "doctrine/orm":             "2.2.2",
-        "symfony/event-dispatcher": "2.*",
+        "doctrine/orm":             ">=2.2.0",
+        "symfony/event-dispatcher": ">=2.1",
         "flyingwhale/optionable":   "dev-master",
         "flyingwhale/poc-cache":    "dev-master",
         "symfony/console":          "2.*",

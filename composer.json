@@ -39,7 +39,6 @@
    "autoload": {
         "psr-0": { "Poc": "src/" }
     },
-
     "bin": ["bin/console"],
     "minimum-stability": "dev" ,
     "process-timeout": "3600"

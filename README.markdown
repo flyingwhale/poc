@@ -7,7 +7,7 @@ This is the root directory of the
 POC that stands for PHP Output Caching.
 
 The website is:
-    POC: http://www.phpcache.org
+     POC: http://www.phpcache.org
 
 ## Description
 
@@ -102,7 +102,7 @@ and modify the database specific parts.
 
 ## COPYRIGHT ##
 
-### Copyright [2013] [Imre Toth <tothimre at gmail>] ###
+### Copyright [2015] [Imre Toth <tothimre at gmail>] ###
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

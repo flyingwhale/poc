@@ -6,9 +6,6 @@
 This is the root directory of the
 POC that stands for PHP Output Caching.
 
-The website is:
-     POC: http://www.phpcache.org
-
 ## Description
 
 The aim of this project is to create an easy to use but really flexible generic Caching component that also has got a great

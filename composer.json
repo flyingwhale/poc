@@ -21,9 +21,7 @@
     ],
    "require": {
         "php":                      ">=5.3.3",
-        "symfony/class-loader":     "2.*",
         "monolog/monolog":          "1.*",
-        "doctrine/orm":             ">=2.2.0",
         "symfony/event-dispatcher": ">=2.1",
         "flyingwhale/optionable":   "dev-master",
         "flyingwhale/poc-cache":    "dev-master",
@@ -31,6 +29,7 @@
         "flyingwhale/plugin":       "0.1"
     },
    "require-dev": {
+        "symfony/class-loader":     "2.*",
         "phpunit/phpunit":          "3.7.*",
         "phpunit/dbunit":           "1.2.*",
         "fabpot/php-cs-fixer":      "dev-master",

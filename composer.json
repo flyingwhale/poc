@@ -9,20 +9,10 @@
           "email":  "tothimre@gmail.com"
         }
     ],
-    "contributors": [
-        {
-          "name":   "Zsolt Javorszky",
-          "email":  "zsolt.javorszky@gmail.com"
-        },
-        {
-          "name":   "Sandor Legoza",
-          "email":  "sandor.legoza@gmail.com"
-        }
-    ],
    "require": {
         "php":                      ">=5.3.3",
         "monolog/monolog":          "1.*",
-        "symfony/event-dispatcher": ">=2.1",
+        "symfony/event-dispatcher": ">=2.*",
         "flyingwhale/optionable":   "dev-master",
         "flyingwhale/poc-cache":    "dev-master",
         "symfony/console":          "2.*",

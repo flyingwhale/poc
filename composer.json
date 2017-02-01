@@ -22,8 +22,7 @@
         "symfony/class-loader":     "2.*",
         "phpunit/phpunit":          "3.7.*",
         "phpunit/dbunit":           "1.2.*",
-        "fabpot/php-cs-fixer":      "dev-master",
-        "satooshi/php-coveralls":   "dev-master"
+        "fabpot/php-cs-fixer":      "dev-master"
     },
    "autoload": {
         "psr-0": { "Poc": "src/" }

@@ -12,13 +12,13 @@ services:
   - redis-server  
 
 before_script:
-  - php --info
+#  - php --info
   - composer install --dev
   - phpenv config-add tests/travis/php.ini
-  - mysql -e 'create database poc_tests;'
+ # - mysql -e 'create database poc_tests;'
 
 script:
-  - php tests/travis/mongo_version.php
+#  - php tests/travis/mongo_version.php
   - vendor/bin/phpunit --verbose
 
 #after_script:

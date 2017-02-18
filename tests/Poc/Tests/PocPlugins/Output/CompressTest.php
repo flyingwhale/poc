@@ -28,34 +28,32 @@ class CompressTest extends \PHPUnit_Framework_TestCase
 
     public function testCompression ()
     {
-        $noh = new NativeOutputHandlersTestCore();
-        $hasher = new Hasher();
-        $hasher->addDistinguishVariable("TestCompress".  rand());
-        $cache = new FileCache();
-        $outputHandler = new TestOutput();
-        $outputHandler->header('Accept-Encoding:'.Compress::COMPRESSION_GZIP);
-//        var_dump($outputHandler->getallheaders());
+       if (function_exists("gzcompress")) {
+         $noh = new NativeOutputHandlersTestCore();
+         $hasher = new Hasher();
+         $hasher->addDistinguishVariable("TestCompress".  rand());
+         $cache = new FileCache();
+         $outputHandler = new TestOutput();
+         $outputHandler->header('Accept-Encoding:'.Compress::COMPRESSION_GZIP);
 
-        $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
-                             Poc::PARAM_TOOLSET => new HttpCapture($outputHandler),
-                             PocParams::PARAM_HASHER => $hasher));
+         $poc = new Poc(array(Poc::PARAM_CACHE => $cache,
+                              Poc::PARAM_TOOLSET => new HttpCapture($outputHandler),
+                              PocParams::PARAM_HASHER => $hasher));
 
-        $poc->addPlugin(new Compress());
+         $poc->addPlugin(new Compress());
 
-        $input1 = "absdefg";
-        $noh->pocBurner($poc, $input1);
-        $output1 = $noh->getOutput();
-        $header1 = $outputHandler->getallheaders();
+         $input1 = "absdefg";
+         $noh->pocBurner($poc, $input1);
+         $output1 = $noh->getOutput();
+         $header1 = $outputHandler->getallheaders();
 
-        $input2 = "habsdefgh";
-        $noh->pocBurner($poc, $input2);
-        $output2 = $noh->getOutput();
-        $header2 = $outputHandler->getallheaders();
+         $input2 = "habsdefgh";
+         $noh->pocBurner($poc, $input2);
+         $output2 = $noh->getOutput();
+         $header2 = $outputHandler->getallheaders();
 
-//        die("BBBBBBBBBBBB".print_r($outputHandler->getallheaders())."AAAAAAAAAAAAAAAA");
-
-        $this->assertEquals($output1, $output2);
-        $this->assertEquals(\gzdecode($output1), $input1);
-//        $this->assertEquals($header1, $header2);
+         $this->assertEquals($output1, $output2);
+         $this->assertEquals(\gzdecode($output1), $input1);
+       } 
     }
 }

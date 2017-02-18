@@ -7,10 +7,11 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
-services: 
-  - mongodb
-  - memcached
-  - redis-server  
+
+#services: 
+#  - mongodb
+#  - memcached
+#  - redis-server  
 
 before_script:
 #  - php --info

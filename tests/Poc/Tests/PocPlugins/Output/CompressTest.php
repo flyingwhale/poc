@@ -28,7 +28,7 @@ class CompressTest extends \PHPUnit_Framework_TestCase
 
     public function testCompression ()
     {
-       if (function_exists("gzcompress")) {
+       if (function_exists("\gzcompress")) {
          $noh = new NativeOutputHandlersTestCore();
          $hasher = new Hasher();
          $hasher->addDistinguishVariable("TestCompress".  rand());
